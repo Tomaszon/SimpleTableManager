@@ -1,0 +1,30 @@
+table characters: ╔ ╦ ╤ ╕ ║ │ ╠ ═ ╬ ╪ ╡ ╟ ─ ╫ ┼ ┤ ╙ ╨ ┴ ┘
+
+Metadata
+	Title: Some document
+	Size: 42 B
+	Path: C:\dsadasd\dsadd\dsadasd\SomeDocument.json
+
+│ [ Table1 ] │ Table2 │ Table3 │							
+╔═══════╦═══════╤═══════╤═══════╕
+║ y \ x ║   1   │   2   │ [ 3 ] │
+╠═══════╬═══════╪═══════╪═══════╡
+║   1   ║       │       │       │
+╟───────╫───────┼───────┼───────┤
+║ [ 2 ] ║       │       │ [ X ] │
+╟───────╫───────┼───────┼───────┤
+║   3   ║       │       │       │
+╙───────╨───────┴───────┴───────┘
+
+[ add ] delete modify ...
+>
+
+tab [ column ] row ...
+> add 
+
+[ after ] before ...
+> add column
+
+> add column after 5
+
+
