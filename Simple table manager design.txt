@@ -1,4 +1,4 @@
-table characters: ╔ ╦ ╤ ╕ ║ │ ╠ ═ ╬ ╪ ╡ ╟ ─ ╫ ┼ ┤ ╙ ╨ ┴ ┘
+modern table characters: ╔ ╦ ╤ ╕ ║ │ ╠ ═ ╬ ╪ ╡ ╟ ─ ╫ ┼ ┤ ╙ ╨ ┴ ┘
 
 Metadata
 	Title: Some document

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Collections.Generic;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
@@ -8,114 +8,177 @@ namespace SimpleTableManager.Services
 {
 	public static class TableRenderer
 	{
-		public static string Render(Table table, ViewOptions viewOptions = null)
+		public static void Render(Table table, ViewOptions viewOptions = null)
 		{
-			StringBuilder sb = new StringBuilder();
-
 			Size cellSize = new Size(7, 1);
 
 			viewOptions ??= new ViewOptions(0, 0, table.Size.Width, table.Size.Height);
 
-			DrawHeaderRow(sb, viewOptions, cellSize);
+			DrawHeaderRow(viewOptions, cellSize);
 
 			for (int y = viewOptions.Position.Y; y < viewOptions.Position.Y + viewOptions.Size.Height - 1; y++)
 			{
-				var cellsInRow = table.Cells.GetRange(y * table.Size.Width, table.Size.Width);
-
-				DrawInnerRows(sb, y, cellSize, cellsInRow.GetRange(viewOptions.Position.X, viewOptions.Size.Width));
+				DrawInnerRow(y, cellSize, table[viewOptions.Position.X, y, viewOptions.Position.X + viewOptions.Size.Width - 1, y]);
 			}
 
-			var cellsInLastRow = table.Cells.GetRange(table.Cells.Count - table.Size.Width, table.Size.Width);
+			int lastRowIndex = viewOptions.Position.Y + viewOptions.Size.Height - 1;
 
-			DrawLastRow(sb, table.Size.Height - 1, cellSize, cellsInLastRow.GetRange(viewOptions.Position.X, viewOptions.Size.Width));
-
-			return sb.ToString();
+			DrawLastRow(lastRowIndex, cellSize, table[viewOptions.Position.X, lastRowIndex, viewOptions.Position.X + viewOptions.Size.Width - 1, lastRowIndex]);
 		}
 
-		private static void DrawHeaderRow(StringBuilder sb, ViewOptions viewOptions, Size cellSize)
+		private static void DrawHeaderRow(ViewOptions viewOptions, Size cellSize)
 		{
-			sb.Append(TableBorderCharacter.DoubleRight_DoubleDown);
-			sb.Append(new string(TableBorderCharacter.DoubleLeft_DoubleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleLeft_DoubleRight_DoubleDown);
+			DrawFirstHorizontalBorder(cellSize, viewOptions);
+
+			DrawHeaderContentLine(cellSize, viewOptions);
+
+			DrawHeaderSeparatorBorder(cellSize, viewOptions);
+		}
+
+		private static void DrawInnerRow(int row, Size cellSize, List<Cell> cells)
+		{
+			DrawContentLine(row, cellSize, cells);
+
+			DrawInnerHorizontalBorder(cellSize, cells);
+		}
+
+		private static void DrawLastRow(int row, Size cellSize, List<Cell> cells)
+		{
+			DrawContentLine(row, cellSize, cells);
+
+			DrawLastHorizontalBorder(cellSize, cells);
+		}
+
+		private static void DrawFirstHorizontalBorder(Size cellSize, ViewOptions viewOptions)
+		{
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleRight_DoubleDown), DrawColorSet.Border);
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight_DoubleDown), DrawColorSet.Border);
 			for (int i = 0; i < viewOptions.Size.Width - 1; i++)
 			{
-				sb.Append(new string(TableBorderCharacter.DoubleLeft_DoubleRight, cellSize.Width));
-				sb.Append(TableBorderCharacter.DoubleLeft_DoubleRight_SingleDown);
+				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight_SingleDown), DrawColorSet.Border);
 			}
-			sb.Append(new string(TableBorderCharacter.DoubleLeft_DoubleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleLeft_SingleDown);
-			sb.AppendLine();
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_SingleDown), DrawColorSet.Border);
+			Console.WriteLine();
+		}
 
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleDown);
-			sb.Append(@"y \ x".PadLeftRight(cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleDown);
+		private static void DrawHeaderContentLine(Size cellSize, ViewOptions viewOptions)
+		{
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
+			Draw(@"y \ x".PadLeftRight(cellSize.Width), DrawColorSet.Default);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
 			for (int i = viewOptions.Position.X; i < viewOptions.Position.X + viewOptions.Size.Width; i++)
 			{
-				sb.Append($"{i + 1}".PadLeftRight(cellSize.Width));
-				sb.Append(TableBorderCharacter.SingleUp_SingleDown);
+				Draw($"{i + 1}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleDown), DrawColorSet.Border);
 			}
-			sb.AppendLine();
+			Console.WriteLine();
+		}
 
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleRight_DoubleDown);
-			sb.Append(new string(TableBorderCharacter.DoubleLeft_DoubleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleLeft_DoubleRight_DoubleDown);
+		private static void DrawHeaderSeparatorBorder(Size cellSize, ViewOptions viewOptions)
+		{
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleRight_DoubleDown), DrawColorSet.Border);
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleLeft_DoubleRight_DoubleDown), DrawColorSet.Border);
 			for (int i = 0; i < viewOptions.Size.Width - 1; i++)
 			{
-				sb.Append(new string(TableBorderCharacter.DoubleLeft_DoubleRight, cellSize.Width));
-				sb.Append(TableBorderCharacter.SingleUp_DoubleLeft_DoubleRight_SingleDown);
+				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_DoubleLeft_DoubleRight_SingleDown), DrawColorSet.Border);
 			}
-			sb.Append(new string(TableBorderCharacter.DoubleLeft_DoubleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.SingleUp_DoubleLeft_SingleDown);
-			sb.AppendLine();
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_DoubleLeft_SingleDown), DrawColorSet.Border);
+			Console.WriteLine();
 		}
 
-		private static void DrawInnerRows(StringBuilder sb, int row, Size cellSize, List<Cell> cells)
+		private static void DrawContentLine(int row, Size cellSize, List<Cell> cells)
 		{
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleDown);
-			sb.Append($"{row + 1}".PadLeftRight(cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleDown);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
+			Draw($"{row + 1}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
 			foreach (var cell in cells)
 			{
-				sb.Append(cell.Content.ToString().PadLeftRight(cell.Size.Width));
-				sb.Append(TableBorderCharacter.SingleUp_SingleDown);
+				Draw(cell);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleDown), DrawColorSet.Border);
 			}
-			sb.AppendLine();
-
-			sb.Append(TableBorderCharacter.DoubleUp_SingleRight_DoubleDown);
-			sb.Append(new string(TableBorderCharacter.SingleLeft_SingleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleUp_SingleLeft_SingleRight_DoubleDown);
-			for (int i = 0; i < cells.Count - 1; i++)
-			{
-				sb.Append(new string(TableBorderCharacter.SingleLeft_SingleRight, cellSize.Width));
-				sb.Append(TableBorderCharacter.SingleUp_SingleLeft_SingleRight_SingleDown);
-			}
-			sb.Append(new string(TableBorderCharacter.SingleLeft_SingleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.SingleUp_SingleLeft_SingleDown);
-			sb.AppendLine();
+			Console.WriteLine();
 		}
 
-		private static void DrawLastRow(StringBuilder sb, int row, Size cellSize, List<Cell> cells)
+		private static void DrawInnerHorizontalBorder(Size cellSize, List<Cell> cells)
 		{
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleDown);
-			sb.Append($"{row + 1}".PadLeftRight(cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleUp_DoubleDown);
-			foreach (var cell in cells)
-			{
-				sb.Append(cell.Content.ToString().PadLeftRight(cell.Size.Width));
-				sb.Append(TableBorderCharacter.SingleUp_SingleDown);
-			}
-			sb.AppendLine();
-
-			sb.Append(TableBorderCharacter.DoubleUp_SingleRight);
-			sb.Append(new string(TableBorderCharacter.SingleLeft_SingleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.DoubleUp_SingleLeft_SingleRight);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleRight_DoubleDown), DrawColorSet.Border);
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleLeft_SingleRight_DoubleDown), DrawColorSet.Border);
 			for (int i = 0; i < cells.Count - 1; i++)
 			{
-				sb.Append(new string(TableBorderCharacter.SingleLeft_SingleRight, cellSize.Width));
-				sb.Append(TableBorderCharacter.SingleUp_SingleLeft_SingleRight);
+				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft_SingleRight_SingleDown), DrawColorSet.Border);
 			}
-			sb.Append(new string(TableBorderCharacter.SingleLeft_SingleRight, cellSize.Width));
-			sb.Append(TableBorderCharacter.SingleUp_SingleLeft);
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft_SingleDown), DrawColorSet.Border);
+			Console.WriteLine();
+		}
+
+		private static void DrawLastHorizontalBorder(Size cellSize, List<Cell> cells)
+		{
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleRight), DrawColorSet.Border);
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleLeft_SingleRight), DrawColorSet.Border);
+			for (int i = 0; i < cells.Count - 1; i++)
+			{
+				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft_SingleRight), DrawColorSet.Border);
+			}
+			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft), DrawColorSet.Border);
+			Console.WriteLine();
+
+			ChangeToDefaultColors();
+		}
+
+		private static void Draw(Cell cell)
+		{
+			Console.BackgroundColor = cell.BackgroundColor;
+			Console.ForegroundColor = cell.ForegroundColor;
+
+			Console.Write(cell.Content.ToString().PadLeftRight(cell.Size.Width));
+
+			ChangeToDefaultColors();
+		}
+
+		private static void Draw(object content, DrawColorSet colorSet)
+		{
+			switch (colorSet)
+			{
+				case DrawColorSet.Default:
+					ChangeToDefaultColors();
+					break;
+
+				case DrawColorSet.Border:
+					ChangeToBorderColors();
+					break;
+			}
+
+			Console.Write(content);
+		}
+
+		private static void ChangeToDefaultColors()
+		{
+			Console.ForegroundColor = Settings.DefaultForegroundColor;
+			Console.BackgroundColor = Settings.DefaultBackgroundColor;
+		}
+
+		private static void ChangeToBorderColors()
+		{
+			Console.ForegroundColor = Settings.BorderColor;
+			Console.BackgroundColor = Settings.DefaultBackgroundColor;
+		}
+
+		private enum DrawColorSet
+		{
+			Default,
+			Border
 		}
 	}
 }

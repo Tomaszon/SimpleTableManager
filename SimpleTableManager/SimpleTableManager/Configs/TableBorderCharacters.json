@@ -1,0 +1,82 @@
+{
+	"SingleUp_SingleDown": {
+		"Retro": "│",
+		"Modern": "│"
+	},
+	"SingleUp_SingleLeft": {
+		"Retro": "+",
+		"Modern": "┘"
+	},
+	"SingleLeft_SingleRight": {
+		"Retro": "-",
+		"Modern": "─"
+	},
+	"DoubleLeft_SingleDown": {
+		"Retro": "#",
+		"Modern": "╕"
+	},
+	"DoubleRight_DoubleDown": {
+		"Retro": "#",
+		"Modern": "╔"
+	},
+	"DoubleLeft_DoubleRight": {
+		"Retro": "=",
+		"Modern": "═"
+	},
+	"DoubleLeft_DoubleRight_DoubleDown": {
+		"Retro": "#",
+		"Modern": "╦"
+	},
+	"DoubleLeft_DoubleRight_SingleDown": {
+		"Retro": "#",
+		"Modern": "╤"
+	},
+	"DoubleUp_DoubleDown": {
+		"Retro": "║",
+		"Modern": "║"
+	},
+	"DoubleUp_DoubleRight_DoubleDown": {
+		"Retro": "#",
+		"Modern": "╠"
+	},
+	"DoubleUp_DoubleLeft_DoubleRight_DoubleDown": {
+		"Retro": "#",
+		"Modern": "╬"
+	},
+	"SingleUp_DoubleLeft_DoubleRight_SingleDown": {
+		"Retro": "#",
+		"Modern": "╪"
+	},
+	"SingleUp_DoubleLeft_SingleDown": {
+		"Retro": "#",
+		"Modern": "╡"
+	},
+	"DoubleUp_SingleRight_DoubleDown": {
+		"Retro": "#",
+		"Modern": "╟"
+	},
+	"DoubleUp_SingleLeft_SingleRight_DoubleDown": {
+		"Retro": "#",
+		"Modern": "╫"
+	},
+	"SingleUp_SingleLeft_SingleRight_SingleDown": {
+		"Retro": "+",
+		"Modern": "┼"
+	},
+	"SingleUp_SingleLeft_SingleDown": {
+		"Retro": "+",
+		"Modern": "┤"
+	},
+	"DoubleUp_SingleRight": {
+		"Retro": "#",
+		"Modern": "╙"
+	},
+	"DoubleUp_SingleLeft_SingleRight": {
+		"Retro": "#",
+		"Modern": "╨"
+	},
+	"SingleUp_SingleLeft_SingleRight": {
+		"Retro": "+",
+		"Modern": "┴"
+	}
+}

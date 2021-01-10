@@ -12,13 +12,26 @@ namespace SimpleTableManager
 		{
 			Console.WriteLine("Hello World!");
 
-			var viewOptions = new ViewOptions(3, 4, 3, 2);
+			TableBorderCharacters.FromJson($@".\Configs\TableBorderCharacters.json");
 
-			var table = new Table("", 9, 5);
+			Settings.ModernTableBorder = false;
+
+			var viewOptions = new ViewOptions(2, 1, 4, 4);
+
+			var table = new Table("", 9, 9);
+
+			foreach (var cell in table.Cells)
+			{
+				if(cell.Position.X %2 == 0)
+				{
+					cell.ForegroundColor = ConsoleColor.Black;
+					cell.BackgroundColor = ConsoleColor.White;
+				}
+			}
 
 			Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
 
-			Console.WriteLine(TableRenderer.Render(table, viewOptions));
+			TableRenderer.Render(table, viewOptions);
 
 			Console.ReadKey();
 		}
