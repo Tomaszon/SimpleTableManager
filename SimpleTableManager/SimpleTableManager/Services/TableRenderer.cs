@@ -71,7 +71,7 @@ namespace SimpleTableManager.Services
 			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
 			for (int i = viewOptions.Position.X; i < viewOptions.Position.X + viewOptions.Size.Width; i++)
 			{
-				Draw($"{i + 1}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
+				Draw($"{i}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
 				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleDown), DrawColorSet.Border);
 			}
 			Console.WriteLine();
@@ -95,7 +95,7 @@ namespace SimpleTableManager.Services
 		private static void DrawContentLine(int row, Size cellSize, List<Cell> cells)
 		{
 			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
-			Draw($"{row + 1}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
+			Draw($"{row}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
 			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
 			foreach (var cell in cells)
 			{
