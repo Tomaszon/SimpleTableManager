@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -46,9 +45,9 @@ namespace SimpleTableManager.Models
 						throw new KeyNotFoundException($"Unknow command key '{keys.FirstOrDefault()}' in '{fullValue}'");
 					}
 
-					if (keys.Count <= 1)
+					if (v is ExpandoObject && keys.Count <= 1 || !(v is ExpandoObject) && keys.Count < 1)
 					{
-						throw new InvalidOperationException($"Incomplete command '{fullValue}'");
+						throw new IncompleteCommandException(fullValue);
 					}
 
 					return GetReferenceRecursive(v, keys.GetRange(1, keys.Count - 1), fullValue, out parameters, out availableKeys);

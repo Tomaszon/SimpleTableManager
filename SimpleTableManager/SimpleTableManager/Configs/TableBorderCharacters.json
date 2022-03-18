@@ -1,81 +1,81 @@
 {
-	"SingleUp_SingleDown": {
+	"SU_SD": {
 		"Retro": "│",
 		"Modern": "│"
 	},
-	"SingleUp_SingleLeft": {
+	"SU_SL": {
 		"Retro": "+",
 		"Modern": "┘"
 	},
-	"SingleLeft_SingleRight": {
+	"SL_SR": {
 		"Retro": "-",
 		"Modern": "─"
 	},
-	"DoubleLeft_SingleDown": {
+	"DL_SD": {
 		"Retro": "#",
 		"Modern": "╕"
 	},
-	"DoubleRight_DoubleDown": {
+	"DR_DD": {
 		"Retro": "#",
 		"Modern": "╔"
 	},
-	"DoubleLeft_DoubleRight": {
+	"DL_DR": {
 		"Retro": "=",
 		"Modern": "═"
 	},
-	"DoubleLeft_DoubleRight_DoubleDown": {
+	"DL_DR_DD": {
 		"Retro": "#",
 		"Modern": "╦"
 	},
-	"DoubleLeft_DoubleRight_SingleDown": {
+	"DL_DR_SD": {
 		"Retro": "#",
 		"Modern": "╤"
 	},
-	"DoubleUp_DoubleDown": {
+	"DU_DD": {
 		"Retro": "║",
 		"Modern": "║"
 	},
-	"DoubleUp_DoubleRight_DoubleDown": {
+	"DU_DR_DD": {
 		"Retro": "#",
 		"Modern": "╠"
 	},
-	"DoubleUp_DoubleLeft_DoubleRight_DoubleDown": {
+	"DU_DL_DR_DD": {
 		"Retro": "#",
 		"Modern": "╬"
 	},
-	"SingleUp_DoubleLeft_DoubleRight_SingleDown": {
+	"SU_DL_DR_SD": {
 		"Retro": "#",
 		"Modern": "╪"
 	},
-	"SingleUp_DoubleLeft_SingleDown": {
+	"SU_DL_SD": {
 		"Retro": "#",
 		"Modern": "╡"
 	},
-	"DoubleUp_SingleRight_DoubleDown": {
+	"DU_SR_DD": {
 		"Retro": "#",
 		"Modern": "╟"
 	},
-	"DoubleUp_SingleLeft_SingleRight_DoubleDown": {
+	"DU_SL_SR_DD": {
 		"Retro": "#",
 		"Modern": "╫"
 	},
-	"SingleUp_SingleLeft_SingleRight_SingleDown": {
+	"SU_SL_SR_SD": {
 		"Retro": "+",
 		"Modern": "┼"
 	},
-	"SingleUp_SingleLeft_SingleDown": {
+	"SU_SL_SD": {
 		"Retro": "+",
 		"Modern": "┤"
 	},
-	"DoubleUp_SingleRight": {
+	"DU_SR": {
 		"Retro": "#",
 		"Modern": "╙"
 	},
-	"DoubleUp_SingleLeft_SingleRight": {
+	"DU_SL_SR": {
 		"Retro": "#",
 		"Modern": "╨"
 	},
-	"SingleUp_SingleLeft_SingleRight": {
+	"SU_SL_SR": {
 		"Retro": "+",
 		"Modern": "┴"
 	}

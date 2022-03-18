@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
+using SimpleTableManager.Extensions;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -11,6 +13,20 @@ namespace SimpleTableManager.Models
 		public Size Size { get; set; }
 
 		public List<Cell> Cells { get; set; } = new List<Cell>();
+
+		public List<Cell> this[int index, SelectType selectType]
+		{
+			get
+			{
+				return selectType switch
+				{
+					SelectType.Row => this[0, index, Size.Width - 1, index],
+					SelectType.Column => this[index, 0, index, Size.Height - 1],
+
+					_ => throw new System.NotImplementedException()
+				};
+			}
+		}
 
 		public Cell this[int x, int y]
 		{
@@ -46,9 +62,19 @@ namespace SimpleTableManager.Models
 			{
 				for (int x = 0; x < columnCount; x++)
 				{
-					Cells.Add(new Cell() { Position = new Position(x, y), Content = $"x:{x},y:{y}" });
+					Cells.Add(new Cell($"x:{x},y:{y}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
 				}
 			}
+		}
+
+		public int GetRowHeight(int index)
+		{
+			return this[0, index, Size.Width - 1, index].Max(c => c.Size.Height);
+		}
+
+		public int GetColumnWidth(int index)
+		{
+			return this[index, 0, index, Size.Height - 1].Max(c => c.Size.Width);
 		}
 
 		[CommandReference]
@@ -58,7 +84,7 @@ namespace SimpleTableManager.Models
 
 			for (int x = 0; x < Size.Width; x++)
 			{
-				Cells.Insert(index * Size.Width + x, new Cell() { Position = new Position(x, index), Content = $"x:{x},NEW" });
+				Cells.Insert(index * Size.Width + x, new Cell($"N:{x},{index}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
 			}
 
 			Size.Height++;
@@ -91,7 +117,7 @@ namespace SimpleTableManager.Models
 
 			for (int y = 0; y < Size.Height; y++)
 			{
-				Cells.Insert(Size.Width * y + y + index, new Cell() { Position = new Position(index, y), Content = $"NEW,y:{y}" });
+				Cells.Insert(Size.Width * y + y + index, new Cell($"NEW,y:{y}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
 			}
 
 			Size.Width++;
@@ -116,5 +142,48 @@ namespace SimpleTableManager.Models
 		{
 			AddColumnAt(Size.Width);
 		}
+
+		[CommandReference]
+		public void SetColumnWidth(int index, int width)
+		{
+			this[index, 0, index, Size.Width - 1].ForEach(c => c.GivenSize = new Size(width, c.GivenSize.Height));
+		}
+
+		[CommandReference]
+		public void SelectCell(int x, int y)
+		{
+			this[x, y].IsSelected = true;
+		}
+
+		[CommandReference]
+		public void DeselectCell(int x, int y)
+		{
+			this[x, y].IsSelected = false;
+		}
+
+		[CommandReference]
+		public void SelectCells(int x1, int y1, int x2, int y2)
+		{
+			this[x1, y1, x2, y2].ForEach(c => c.IsSelected = true);
+		}
+
+		[CommandReference]
+		public void DeselectCells(int x1, int y1, int x2, int y2)
+		{
+			this[x1, y1, x2, y2].ForEach(c => c.IsSelected = false);
+
+		}
+
+		[CommandReference]
+		public void SetCellContent(string content)
+		{
+			Cells.Where(c => c.IsSelected).ForEach(c => c.Content = content);
+		}
+	}
+
+	public enum SelectType
+	{
+		Row,
+		Column
 	}
 }

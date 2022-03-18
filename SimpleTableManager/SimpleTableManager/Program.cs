@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 using SimpleTableManager.Models;
 using SimpleTableManager.Services;
@@ -7,29 +8,34 @@ namespace SimpleTableManager
 {
 	internal class Program
 	{
+		public static string lastHelp = "Enter command to execute";
+		//public static string prevCommand = "";
+
 		private static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			//Console.WriteLine("Hello World!");
 
 			TableBorderCharacters.FromJson($@".\Configs\tableBorderCharacters.json");
 			CommandTree.FromJson($@".\Configs\commands.json");
 
-			Settings.ModernTableBorder = false;
+			ViewOptions viewOptions = null;// new ViewOptions(1, 1, 2, 3);
 
-			ViewOptions viewOptions = null; // new ViewOptions(2, 1, 4, 4);
+			var table = new Table("", 3, 3);
 
-			var table = new Table("", 9, 9);
+			//foreach (var cell in table.Cells)
+			//{
+				//if (cell.Position.X % 3 == 0)
+				//{
+				//cell.ForegroundColor = ConsoleColor.Black;
+				//cell.BackgroundColor = ConsoleColor.White;
+				//}
+			//}
 
-			string lastHelp = null;
 
-			foreach (var cell in table.Cells)
-			{
-				if (cell.Position.X % 3 == 0)
-				{
-					cell.ForegroundColor = ConsoleColor.Black;
-					cell.BackgroundColor = ConsoleColor.White;
-				}
-			}
+			table[1, 0].Content = "A";
+			table[2, 0].Content = "AAAAAAAAAAA";
+			//table.SetColumnWidth(1, 0);
+			//table[0, 0].GivenSize = new Size(25, 1);
 
 			//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
 
@@ -37,16 +43,9 @@ namespace SimpleTableManager
 			{
 				try
 				{
-					TableRenderer.Render(table, viewOptions);
+					Draw(table, viewOptions);
 
-					if (lastHelp is { })
-					{
-						Console.WriteLine($"Help: {lastHelp}");
-					}
-
-					Console.Write("> ");
-
-					var rawCommand = Console.ReadLine();
+					var rawCommand = Console.ReadLine().Trim();//ReadInput();
 
 					if (rawCommand == "exit")
 					{
@@ -54,29 +53,31 @@ namespace SimpleTableManager
 					}
 					else if (rawCommand.Contains("-help"))
 					{
-						var command = Command.FromString(rawCommand);
-
-						if (command.AvailableKeys is { })
-						{
-							lastHelp = $"Available keys: '{string.Join(", ", command.AvailableKeys)}' in '{rawCommand.Replace("-help", "").TrimEnd()}'";
-						}
-						else if (command.Reference is { })
-						{
-							var parameters = command.GetParameters(command.GetMethod(table));
-
-							lastHelp = $"Parameters: '{string.Join(", ", parameters)}' of '{rawCommand.Replace("-help", "").TrimEnd()}'";
-						}
+						GetHelp(table, rawCommand);
 					}
 					else if (rawCommand == "refresh")
 					{
-						continue;
+						rawCommand = "";
+						Console.Clear();
 					}
 					else
 					{
-						var command = Command.FromString(rawCommand);
-						//var command = Command.FromString("table row add after 5");
+						try
+						{
+							var command = Command.FromString(rawCommand);
 
-						command.Execute(table);
+							command.Execute(table);
+
+							lastHelp = "Enter command to execute";
+						}
+						catch (IncompleteCommandException)
+						{
+							GetHelp(table, $"{rawCommand} -help", "Incomplete command");
+						}
+						catch (TargetParameterCountException)
+						{
+							GetHelp(table, $"{rawCommand} -help", "Parameters needed");
+						}
 					}
 				}
 				catch (Exception ex)
@@ -94,5 +95,100 @@ namespace SimpleTableManager
 
 			Console.ReadKey();
 		}
+
+		public static void GetHelp(Table table, string rawCommand, string error = null)
+		{
+			var command = Command.FromString(rawCommand);
+
+			if (command.AvailableKeys is { })
+			{
+				lastHelp = $"{error} Available keys: '{string.Join(", ", command.AvailableKeys)}' in '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
+			}
+			else if (command.Reference is { })
+			{
+				var parameters = command.GetParameters(command.GetMethod(table));
+
+				lastHelp = $"{error} Parameters: '{string.Join(", ", parameters)}' of '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
+			}
+		}
+
+		public static void Draw(Table table, ViewOptions viewOptions)
+		{
+			Console.WriteLine("Table 1\n");
+
+			TableRenderer.Render(table, viewOptions);
+
+			if (lastHelp is { })
+			{
+				Console.WriteLine($"Help: {lastHelp}\n");
+			}
+
+			Console.Write("> ");
+		}
+
+		//public static string ReadInput()
+		//{
+		//	var buffer = "";
+
+		//	while (Console.ReadKey(false) is var k)
+		//	{
+		//		if (k.Key == ConsoleKey.Enter)
+		//		{
+		//			break;
+		//		}
+		//		else if (k.Key == ConsoleKey.Tab)
+		//		{
+		//			//lastHelp = "WEEE";
+		//			//Console.Clear();
+		//			//TableRenderer.Render(table, viewOptions);
+
+		//			//if (lastHelp is { })
+		//			//{
+		//			//	Console.WriteLine($"Help: {lastHelp}");
+		//			//}
+		//			//Console.Write("> ");
+
+		//			//break;
+
+		//			Console.SetCursorPosition(Console.CursorLeft - 8, Console.CursorTop);
+
+		//		}
+		//		else if (k.Key == ConsoleKey.Backspace)
+		//		{
+		//			if (buffer.Length > 0)
+		//			{
+		//				buffer = buffer[0..^1];
+		//				Console.Write(" ");
+		//				Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+		//			}
+		//			else
+		//			{
+		//				Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+		//			}
+		//		}
+		//		else if (k.Key == ConsoleKey.UpArrow)
+		//		{
+		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
+		//			Console.Write(new string(' ', buffer.Length));
+		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
+		//			Console.Write(prevCommand);
+		//			buffer = prevCommand;
+		//		}
+		//		else if (k.Key == ConsoleKey.DownArrow)
+		//		{
+		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
+		//			Console.Write(new string(' ', buffer.Length));
+		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
+		//			buffer = "";
+		//		}
+		//		else
+		//		{
+		//			buffer += k.KeyChar;
+		//		}
+		//	}
+
+		//	prevCommand = buffer;
+		//	return buffer.Trim();
+		//}
 	}
 }

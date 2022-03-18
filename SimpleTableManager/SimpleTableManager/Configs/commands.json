@@ -1,18 +1,32 @@
 {
-	"table": {
-		"add": {
-			"row": {
-				"at": "AddRowAt",
-				"after": "addRowAfter",
-				"first": "addRowFirst",
-				"last": "addRowLast"
-			},
-			"column": {
-				"at": "addColumnAt",
-				"after": "addColumnAfter",
-				"first": "addColumnFirst",
-				"last": "addColumnLast"
-			}
+	"add": {
+		"row": {
+			"at": "AddRowAt",
+			"after": "addRowAfter",
+			"first": "addRowFirst",
+			"last": "addRowLast"
+		},
+		"column": {
+			"at": "addColumnAt",
+			"after": "addColumnAfter",
+			"first": "addColumnFirst",
+			"last": "addColumnLast"
 		}
+	},
+	"set": {
+		"column": {
+			"width": "setColumnWidth"
+		},
+		"cell": {
+			"content": "setCellContent"
+		}
+	},
+	"select": {
+		"cell": "selectCell",
+		"cells": "selectCells"
+	},
+	"deselect": {
+		"cell": "deselectCell",
+		"cells": "deselectCells"
 	}
 }

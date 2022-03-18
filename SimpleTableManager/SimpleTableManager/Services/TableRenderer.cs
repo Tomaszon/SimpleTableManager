@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using Newtonsoft.Json;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
@@ -8,146 +11,101 @@ namespace SimpleTableManager.Services
 {
 	public static class TableRenderer
 	{
+		private static List<int> _COLUMN_WIDTHS;
+
 		public static void Render(Table table, ViewOptions viewOptions = null)
 		{
-			Size cellSize = new Size(7, 1);
-
 			viewOptions ??= new ViewOptions(0, 0, table.Size.Width, table.Size.Height);
 
-			DrawHeaderRow(viewOptions, cellSize);
+			var viewTable = CreateViewTable(table, viewOptions);
 
-			for (int y = viewOptions.Position.Y; y < viewOptions.Position.Y + viewOptions.Size.Height - 1; y++)
+			_COLUMN_WIDTHS = new List<int>();
+			for (int i = 0; i < viewTable.Size.Width; i++)
 			{
-				DrawInnerRow(y, cellSize, table[viewOptions.Position.X, y, viewOptions.Position.X + viewOptions.Size.Width - 1, y]);
+				_COLUMN_WIDTHS.Add(viewTable.GetColumnWidth(i));
 			}
 
-			int lastRowIndex = viewOptions.Position.Y + viewOptions.Size.Height - 1;
+			DrawHeaderRow(viewTable);
 
-			DrawLastRow(lastRowIndex, cellSize, table[viewOptions.Position.X, lastRowIndex, viewOptions.Position.X + viewOptions.Size.Width - 1, lastRowIndex]);
-		}
-
-		private static void DrawHeaderRow(ViewOptions viewOptions, Size cellSize)
-		{
-			DrawFirstHorizontalBorder(cellSize, viewOptions);
-
-			DrawHeaderContentLine(cellSize, viewOptions);
-
-			DrawHeaderSeparatorBorder(cellSize, viewOptions);
-		}
-
-		private static void DrawInnerRow(int row, Size cellSize, List<Cell> cells)
-		{
-			DrawContentLine(row, cellSize, cells);
-
-			DrawInnerHorizontalBorder(cellSize, cells);
-		}
-
-		private static void DrawLastRow(int row, Size cellSize, List<Cell> cells)
-		{
-			DrawContentLine(row, cellSize, cells);
-
-			DrawLastHorizontalBorder(cellSize, cells);
-		}
-
-		private static void DrawFirstHorizontalBorder(Size cellSize, ViewOptions viewOptions)
-		{
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleRight_DoubleDown), DrawColorSet.Border);
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight_DoubleDown), DrawColorSet.Border);
-			for (int i = 0; i < viewOptions.Size.Width - 1; i++)
+			for (int y = 1; y < viewTable.Size.Height; y++)
 			{
-				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
-				Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight_SingleDown), DrawColorSet.Border);
+				DrawContentRow(viewTable, y);
 			}
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_SingleDown), DrawColorSet.Border);
-			Console.WriteLine();
-		}
-
-		private static void DrawHeaderContentLine(Size cellSize, ViewOptions viewOptions)
-		{
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
-			Draw(@"y \ x".PadLeftRight(cellSize.Width), DrawColorSet.Default);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
-			for (int i = viewOptions.Position.X; i < viewOptions.Position.X + viewOptions.Size.Width; i++)
-			{
-				Draw($"{i}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
-				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleDown), DrawColorSet.Border);
-			}
-			Console.WriteLine();
-		}
-
-		private static void DrawHeaderSeparatorBorder(Size cellSize, ViewOptions viewOptions)
-		{
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleRight_DoubleDown), DrawColorSet.Border);
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleLeft_DoubleRight_DoubleDown), DrawColorSet.Border);
-			for (int i = 0; i < viewOptions.Size.Width - 1; i++)
-			{
-				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
-				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_DoubleLeft_DoubleRight_SingleDown), DrawColorSet.Border);
-			}
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.DoubleLeft_DoubleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_DoubleLeft_SingleDown), DrawColorSet.Border);
-			Console.WriteLine();
-		}
-
-		private static void DrawContentLine(int row, Size cellSize, List<Cell> cells)
-		{
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
-			Draw($"{row}".PadLeftRight(cellSize.Width), DrawColorSet.Default);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_DoubleDown), DrawColorSet.Border);
-			foreach (var cell in cells)
-			{
-				Draw(cell);
-				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleDown), DrawColorSet.Border);
-			}
-			Console.WriteLine();
-		}
-
-		private static void DrawInnerHorizontalBorder(Size cellSize, List<Cell> cells)
-		{
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleRight_DoubleDown), DrawColorSet.Border);
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleLeft_SingleRight_DoubleDown), DrawColorSet.Border);
-			for (int i = 0; i < cells.Count - 1; i++)
-			{
-				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
-				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft_SingleRight_SingleDown), DrawColorSet.Border);
-			}
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft_SingleDown), DrawColorSet.Border);
-			Console.WriteLine();
-		}
-
-		private static void DrawLastHorizontalBorder(Size cellSize, List<Cell> cells)
-		{
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleRight), DrawColorSet.Border);
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.DoubleUp_SingleLeft_SingleRight), DrawColorSet.Border);
-			for (int i = 0; i < cells.Count - 1; i++)
-			{
-				Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
-				Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft_SingleRight), DrawColorSet.Border);
-			}
-			Draw(new string(TableBorderCharacters.Get(TableBorderCharacter.SingleLeft_SingleRight), cellSize.Width), DrawColorSet.Border);
-			Draw(TableBorderCharacters.Get(TableBorderCharacter.SingleUp_SingleLeft), DrawColorSet.Border);
-			Console.WriteLine();
 
 			ChangeToDefaultColors();
 		}
 
-		private static void Draw(Cell cell)
+		private static void DrawHeaderRow(Table viewTable)
 		{
-			Console.BackgroundColor = cell.BackgroundColor;
-			Console.ForegroundColor = cell.ForegroundColor;
+			DrawSeparatorLine(TableBorderCharacter.DR_DD, TableBorderCharacter.DL_DR_DD, TableBorderCharacter.DL_DR_SD, TableBorderCharacter.DL_SD, TableBorderCharacter.DL_DR, viewTable.Size.Width);
 
-			Console.Write(cell.Content.ToString().PadLeftRight(cell.Size.Width));
+			DrawContentLine(viewTable[0, 0, viewTable.Size.Width - 1, 0]);
+
+			DrawSeparatorLine(TableBorderCharacter.DU_DR_DD, TableBorderCharacter.DU_DL_DR_DD, TableBorderCharacter.SU_DL_DR_SD, TableBorderCharacter.SU_DL_SD, TableBorderCharacter.DL_DR, viewTable.Size.Width);
+		}
+
+		private static void DrawContentRow(Table viewTable, int index)
+		{
+			DrawContentLine(viewTable[0, index, viewTable.Size.Width - 1, index]);
+
+			if (index == viewTable.Size.Height - 1)
+			{
+				DrawSeparatorLine(TableBorderCharacter.DU_SR, TableBorderCharacter.DU_SL_SR, TableBorderCharacter.SU_SL_SR, TableBorderCharacter.SU_SL, TableBorderCharacter.SL_SR, viewTable.Size.Width);
+			}
+			else
+			{
+				DrawSeparatorLine(TableBorderCharacter.DU_SR_DD, TableBorderCharacter.DU_SL_SR_DD, TableBorderCharacter.SU_SL_SR_SD, TableBorderCharacter.SU_SL_SD, TableBorderCharacter.SL_SR, viewTable.Size.Width);
+			}
+		}
+
+		private static void DrawSeparatorLine(TableBorderCharacter node1, TableBorderCharacter node2, TableBorderCharacter node3, TableBorderCharacter node4, TableBorderCharacter normal, int columnCount)
+		{
+			Draw(TableBorderCharacters.Get(node1), DrawColorSet.Border);
+			Draw(new string(TableBorderCharacters.Get(normal), _COLUMN_WIDTHS[0]), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(node2), DrawColorSet.Border);
+
+			for (int i = 1; i < columnCount - 1; i++)
+			{
+				Draw(new string(TableBorderCharacters.Get(normal), _COLUMN_WIDTHS[i]), DrawColorSet.Border);
+				Draw(TableBorderCharacters.Get(node3), DrawColorSet.Border);
+			}
+
+			Draw(new string(TableBorderCharacters.Get(normal), _COLUMN_WIDTHS.Last()), DrawColorSet.Border);
+			Draw(TableBorderCharacters.Get(node4), DrawColorSet.Border);
+			Console.WriteLine();
+		}
+
+		private static void DrawContentLine(List<Cell> cells)
+		{
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DU_DD), DrawColorSet.Border);
+			Draw(cells[0], _COLUMN_WIDTHS[0]);
+			Draw(TableBorderCharacters.Get(TableBorderCharacter.DU_DD), DrawColorSet.Border);
+
+			for (int i = 1; i < cells.Count; i++)
+			{
+				Draw(cells[i], _COLUMN_WIDTHS[i]);
+				Draw(TableBorderCharacters.Get(TableBorderCharacter.SU_SD), DrawColorSet.Border);
+			}
+			Console.WriteLine();
+		}
+
+		private static void Draw(Cell cell, int width)
+		{
+			if (cell.IsSelected)
+			{
+				ChangeToSelectedColor();
+			}
+			else
+			{
+				ChangeToDefaultColors();
+			}
+
+			Console.Write(cell.Content.ToString().PadLeftRight(width));
 
 			ChangeToDefaultColors();
 		}
 
-		private static void Draw(object content, DrawColorSet colorSet)
+		private static void Draw(object content, int width = 1, DrawColorSet colorSet = DrawColorSet.Default)
 		{
 			switch (colorSet)
 			{
@@ -158,9 +116,17 @@ namespace SimpleTableManager.Services
 				case DrawColorSet.Border:
 					ChangeToBorderColors();
 					break;
+				case DrawColorSet.SelectedBorder:
+					ChangeToSelectedColor();
+					break;
 			}
 
-			Console.Write(content);
+			Console.Write(content.ToString().PadLeftRight(width));
+		}
+
+		private static void Draw(object content, DrawColorSet colorSet = DrawColorSet.Default, int width = 1)
+		{
+			Draw(content, width, colorSet);
 		}
 
 		private static void ChangeToDefaultColors()
@@ -175,10 +141,45 @@ namespace SimpleTableManager.Services
 			Console.BackgroundColor = Settings.DefaultBackgroundColor;
 		}
 
+		private static void ChangeToSelectedColor()
+		{
+			Console.ForegroundColor = Settings.SelectedForegroundColor;
+			Console.BackgroundColor = Settings.DefaultBackgroundColor;
+		}
+
+		private static Table CreateViewTable(Table table, ViewOptions viewOptions)
+		{
+			var viewTable = JsonConvert.DeserializeObject<Table>(JsonConvert.SerializeObject(table));
+			viewTable.Cells = viewTable[viewOptions.Position.X, viewOptions.Position.Y, viewOptions.Position.X + viewOptions.Size.Width - 1, viewOptions.Position.Y + viewOptions.Size.Height - 1];
+			viewTable.Size = new Size(viewOptions.Size.Width, viewOptions.Size.Height);
+
+			viewTable.AddRowAt(0);
+
+			for (int x = 0; x < viewTable.Size.Width; x++)
+			{
+				viewTable[x, 0].Content = viewOptions.Position.X + x;
+				viewTable[x, 0].IsSelected = viewTable[x, SelectType.Column].Any(c => c.IsSelected);
+			}
+
+			viewTable.AddColumnAt(0);
+
+			viewTable[0, 0].Content = @"y \ x";
+
+			for (int y = 1; y < viewTable.Size.Height; y++)
+			{
+				viewTable[0, y].Content = viewOptions.Position.Y + y - 1;
+				viewTable[0, y].IsSelected = viewTable[y, SelectType.Row].Any(c => c.IsSelected);
+
+			}
+
+			return viewTable;
+		}
+
 		private enum DrawColorSet
 		{
 			Default,
-			Border
+			Border,
+			SelectedBorder
 		}
 	}
 }

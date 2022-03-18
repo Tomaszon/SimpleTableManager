@@ -12,7 +12,6 @@ namespace SimpleTableManager.Models
 
 		public override string ToString()
 		{
-			//return $"{{ Type: {Type.Name}, Name: {Name}, Optional: {Optional} }}";
 			return $"{{{Name}:{Type.Name}{(Optional ? ":optional" : "")}}}";
 		}
 	}
