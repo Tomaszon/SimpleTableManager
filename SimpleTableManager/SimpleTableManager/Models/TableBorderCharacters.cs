@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -12,26 +11,28 @@ namespace SimpleTableManager.Models
 		public char Retro { get; set; }
 
 		public char Modern { get; set; }
+
+		public TableBorderCharacterMode Mode { get; set; }
 	}
 
 	public static class TableBorderCharacters
 	{
-		private static Dictionary<TableBorderCharacter, BorderCharacter> Characters = new Dictionary<TableBorderCharacter, BorderCharacter>();
+		private static List<BorderCharacter> Characters = new List<BorderCharacter>();
 
 		public static void FromJson(string path)
 		{
-			Characters = JsonConvert.DeserializeObject<Dictionary<TableBorderCharacter, BorderCharacter>>(File.ReadAllText(path));
+			Characters = JsonConvert.DeserializeObject<List<BorderCharacter>>(File.ReadAllText(path));
 		}
 
-		public static char Get(TableBorderCharacter tableBorderCharacter)
+		public static char Get(TableBorderCharacterMode mode)
 		{
-			if (Characters.TryGetValue(tableBorderCharacter, out var character))
+			if (Characters.SingleOrDefault(c => c.Mode == mode) is var res && res is { })
 			{
-				return Settings.ModernTableBorder ? character.Modern : character.Retro;
+				return Settings.ModernTableBorder ? res.Modern : res.Retro;
 			}
 			else
 			{
-				return ' ';
+				return 'X';
 			}
 		}
 	}

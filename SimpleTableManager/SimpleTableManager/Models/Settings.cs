@@ -12,6 +12,6 @@ namespace SimpleTableManager.Models
 
 		public static ConsoleColor SelectedForegroundColor { get; set; } = ConsoleColor.Green;
 
-		public static bool ModernTableBorder { get; set; } = false;
+		public static bool ModernTableBorder { get; set; } = true;
 	}
 }

@@ -2,6 +2,7 @@
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
 
@@ -38,7 +39,7 @@ namespace SimpleTableManager.Models
 				}
 				else
 				{
-					var v = o.FirstOrDefault(e => e.Key == keys.FirstOrDefault()).Value;
+					var v = o.FirstOrDefault(e => Regex.IsMatch(keys.FirstOrDefault(), $"^{e.Key}$")).Value;
 
 					if (v is null)
 					{

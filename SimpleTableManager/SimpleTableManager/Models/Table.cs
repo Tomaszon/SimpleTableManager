@@ -77,6 +77,7 @@ namespace SimpleTableManager.Models
 			return this[index, 0, index, Size.Height - 1].Max(c => c.Size.Width);
 		}
 
+		#region Add
 		[CommandReference]
 		public void AddRowAt(int index)
 		{
@@ -142,7 +143,59 @@ namespace SimpleTableManager.Models
 		{
 			AddColumnAt(Size.Width);
 		}
+		#endregion
 
+		#region Remove|Delete
+		[CommandReference]
+		public void RemoveRowAt(int index)
+		{
+			Shared.Validate(() => index >= 0 && index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+
+			Cells.RemoveRange(index * Size.Width, Size.Width);
+
+			Size.Height--;
+		}
+
+		[CommandReference]
+		public void RemoveFirstRow()
+		{
+			RemoveRowAt(0);
+		}
+
+		[CommandReference]
+		public void RemoveLastRow()
+		{
+			RemoveRowAt(Size.Height - 1);
+		}
+
+		[CommandReference]
+		public void RemoveColumnAt(int index)
+		{
+			Shared.Validate(() => index >= 0 && index <= Size.Width - 1, $"Index is not in the needed range: [0, {Size.Width - 1}]");
+
+			for (int y = 0; y < Size.Height; y++)
+			{
+				Cells.RemoveAt(Size.Width * y - y + index);
+			}
+
+			Size.Width--;
+		}
+
+		[CommandReference]
+		public void RemoveFirstColumn()
+		{
+			RemoveColumnAt(0);
+		}
+
+		[CommandReference]
+		public void RemoveLastColumn()
+		{
+			RemoveColumnAt(Size.Width - 1);
+		}
+
+		#endregion
+
+		#region Set
 		[CommandReference]
 		public void SetColumnWidth(int index, int width)
 		{
@@ -150,21 +203,31 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void SetCellContent(string content)
+		{
+			Cells.Where(c => c.IsSelected).ForEach(c => c.Content = content);
+		}
+		#endregion
+
+		#region Select
+		[CommandReference]
 		public void SelectCell(int x, int y)
 		{
 			this[x, y].IsSelected = true;
 		}
 
 		[CommandReference]
-		public void DeselectCell(int x, int y)
-		{
-			this[x, y].IsSelected = false;
-		}
-
-		[CommandReference]
 		public void SelectCells(int x1, int y1, int x2, int y2)
 		{
 			this[x1, y1, x2, y2].ForEach(c => c.IsSelected = true);
+		}
+		#endregion
+
+		#region Deselect
+		[CommandReference]
+		public void DeselectCell(int x, int y)
+		{
+			this[x, y].IsSelected = false;
 		}
 
 		[CommandReference]
@@ -173,12 +236,7 @@ namespace SimpleTableManager.Models
 			this[x1, y1, x2, y2].ForEach(c => c.IsSelected = false);
 
 		}
-
-		[CommandReference]
-		public void SetCellContent(string content)
-		{
-			Cells.Where(c => c.IsSelected).ForEach(c => c.Content = content);
-		}
+		#endregion
 	}
 
 	public enum SelectType

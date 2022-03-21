@@ -1,82 +1,142 @@
-{
-	"SU_SD": {
+[
+	{
 		"Retro": "│",
-		"Modern": "│"
+		"Modern": "│",
+		"Mode": "Up, Down"
 	},
-	"SU_SL": {
+	{
 		"Retro": "+",
-		"Modern": "┘"
+		"Modern": "┘",
+		"Mode": "Up, Left"
 	},
-	"SL_SR": {
+	{
 		"Retro": "-",
-		"Modern": "─"
+		"Modern": "─",
+		"Mode": "Left, Right"
 	},
-	"DL_SD": {
+	{
 		"Retro": "#",
-		"Modern": "╕"
+		"Modern": "╕",
+		"Mode": "LeftDouble, Down"
 	},
-	"DR_DD": {
+	{
 		"Retro": "#",
-		"Modern": "╔"
+		"Modern": "╔",
+		"Mode": "RightDouble, DownDouble"
 	},
-	"DL_DR": {
+	{
 		"Retro": "=",
-		"Modern": "═"
+		"Modern": "═",
+		"Mode": "LeftDouble, RightDouble"
 	},
-	"DL_DR_DD": {
+	{
 		"Retro": "#",
-		"Modern": "╦"
+		"Modern": "╦",
+		"Mode": "LeftDouble, RightDouble, DownDouble"
 	},
-	"DL_DR_SD": {
+	{
 		"Retro": "#",
-		"Modern": "╤"
+		"Modern": "╤",
+		"Mode":"LeftDouble, RightDouble, Down"
 	},
-	"DU_DD": {
+	{
 		"Retro": "║",
-		"Modern": "║"
+		"Modern": "║",
+		"Mode": "UpDouble, DownDouble"
 	},
-	"DU_DR_DD": {
+	{
 		"Retro": "#",
-		"Modern": "╠"
+		"Modern": "╠",
+		"Mode": "UpDouble, RightDouble, DownDouble"
 	},
-	"DU_DL_DR_DD": {
+	{
 		"Retro": "#",
-		"Modern": "╬"
+		"Modern": "╬",
+		"Mode": "UpDouble, LeftDouble, RightDouble, DownDouble"
 	},
-	"SU_DL_DR_SD": {
+	{
 		"Retro": "#",
-		"Modern": "╪"
+		"Modern": "╪",
+		"Mode": "Up, LeftDouble, RightDouble, Down"
 	},
-	"SU_DL_SD": {
+	{
 		"Retro": "#",
-		"Modern": "╡"
+		"Modern": "╡",
+		"Mode": "Up, LeftDouble, Down"
 	},
-	"DU_SR_DD": {
+	{
 		"Retro": "#",
-		"Modern": "╟"
+		"Modern": "╟",
+		"Mode": "UpDouble, Right, DownDouble"
 	},
-	"DU_SL_SR_DD": {
+	{
 		"Retro": "#",
-		"Modern": "╫"
+		"Modern": "╫",
+		"Mode": "UpDouble, Left, Right, DownDouble"
 	},
-	"SU_SL_SR_SD": {
+	{
 		"Retro": "+",
-		"Modern": "┼"
+		"Modern": "┼",
+		"Mode": "Up, Left, Right, Down"
 	},
-	"SU_SL_SD": {
+	{
 		"Retro": "+",
-		"Modern": "┤"
+		"Modern": "┤",
+		"Mode": "Up, Left, Down"
 	},
-	"DU_SR": {
+	{
 		"Retro": "#",
-		"Modern": "╙"
+		"Modern": "╙",
+		"Mode": "UpDouble, Right"
 	},
-	"DU_SL_SR": {
+	{
 		"Retro": "#",
-		"Modern": "╨"
+		"Modern": "╨",
+		"Mode": "UpDouble, Left, Right"
 	},
-	"SU_SL_SR": {
+	{
 		"Retro": "+",
-		"Modern": "┴"
+		"Modern": "┴",
+		"Mode": "Up, Left, Right"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╗",
+		"Mode": "LeftDouble, DownDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╣",
+		"Mode": "UpDouble, LeftDouble, DownDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╢",
+		"Mode": "UpDouble, Left, DownDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╜",
+		"Mode": "UpDouble, Left"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╚",
+		"Mode": "UpDouble, RightDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╝",
+		"Mode": "UpDouble, LeftDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╩",
+		"Mode": "UpDouble, LeftDouble, RightDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╛",
+		"Mode": "Up, LeftDouble"
 	}
-}
+]

@@ -32,8 +32,8 @@ namespace SimpleTableManager
 			//}
 
 
-			table[1, 0].Content = "A";
-			table[2, 0].Content = "AAAAAAAAAAA";
+			//table[1, 0].Content = "A";
+			//table[2, 0].Content = "AAAAAAAAAAA";
 			//table.SetColumnWidth(1, 0);
 			//table[0, 0].GivenSize = new Size(25, 1);
 

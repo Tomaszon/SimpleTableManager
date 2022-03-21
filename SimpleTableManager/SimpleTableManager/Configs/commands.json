@@ -13,6 +13,18 @@
 			"last": "addColumnLast"
 		}
 	},
+	"remove|delete": {
+		"row": {
+			"at": "removeRowAt",
+			"first": "removeFirstRow",
+			"last": "removeLastRow"
+		},
+		"column": {
+			"at": "removeColumnAt",
+			"first": "removeFirstColumn",
+			"last": "removeLastColumn"
+		}
+	},
 	"set": {
 		"column": {
 			"width": "setColumnWidth"
@@ -23,10 +35,14 @@
 	},
 	"select": {
 		"cell": "selectCell",
-		"cells": "selectCells"
+		"cells": "selectCells",
+		"column": "selectColumn",
+		"row": "selectRow"
 	},
 	"deselect": {
 		"cell": "deselectCell",
-		"cells": "deselectCells"
+		"cells": "deselectCells",
+		"column": "deselectColumn",
+		"row": "deselectRow"
 	}
 }
