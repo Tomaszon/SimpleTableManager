@@ -6,27 +6,20 @@ using Newtonsoft.Json;
 
 namespace SimpleTableManager.Models
 {
-	public class BorderCharacter
-	{
-		public char Retro { get; set; }
-
-		public char Modern { get; set; }
-
-		public TableBorderCharacterMode Mode { get; set; }
-	}
 
 	public static class TableBorderCharacters
 	{
-		private static List<BorderCharacter> Characters = new List<BorderCharacter>();
+		private static List<TableBorderCharacter> _CHARACTERS = new List<TableBorderCharacter>();
 
 		public static void FromJson(string path)
 		{
-			Characters = JsonConvert.DeserializeObject<List<BorderCharacter>>(File.ReadAllText(path));
+			_CHARACTERS = JsonConvert.DeserializeObject<List<TableBorderCharacter>>(File.ReadAllText(path));
 		}
 
 		public static char Get(TableBorderCharacterMode mode)
 		{
-			if (Characters.SingleOrDefault(c => c.Mode == mode) is var res && res is { })
+			if (_CHARACTERS.SingleOrDefault(c => 
+				c.Mode == (TableBorderCharacterMode)((int)mode & ~(int)TableBorderCharacterMode.None)) is var res && res is { })
 			{
 				return Settings.ModernTableBorder ? res.Modern : res.Retro;
 			}

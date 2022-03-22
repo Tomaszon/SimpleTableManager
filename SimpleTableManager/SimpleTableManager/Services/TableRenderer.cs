@@ -37,28 +37,28 @@ namespace SimpleTableManager.Services
 
 		private static void DrawHeaderRow(Table viewTable)
 		{
-			DrawSeparatorLine(1, viewTable.Size.Width, viewTable.Size.Height);
+			DrawSeparatorLine(0, viewTable.Size.Width, viewTable.Size.Height);
 
 			DrawContentLine(viewTable[0, 0, viewTable.Size.Width - 1, 0]);
 
-			DrawSeparatorLine(2, viewTable.Size.Width, viewTable.Size.Height);
+			DrawSeparatorLine(1, viewTable.Size.Width, viewTable.Size.Height);
 		}
 
 		private static void DrawContentRow(Table viewTable, int index)
 		{
 			DrawContentLine(viewTable[0, index, viewTable.Size.Width - 1, index]);
 
-			DrawSeparatorLine(index == viewTable.Size.Height - 1 ? 4 : 3, viewTable.Size.Width, viewTable.Size.Height);
+			DrawSeparatorLine(index + 1, viewTable.Size.Width, viewTable.Size.Height);
 		}
 
-		private static void DrawSeparatorLine(int lineNo, int columnCount, int rowCount)
+		private static void DrawSeparatorLine(int borderRowNo, int columnCount, int rowCount)
 		{
-			Draw(GetTableCharacter(lineNo, 1, rowCount, columnCount), DrawColorSet.Border);
+			Draw(GetTableCharacter(borderRowNo, 0, rowCount, columnCount), DrawColorSet.Border);
 
 			for (int i = 0; i < columnCount; i++)
 			{
-				Draw(new string(GetTableCharacter(lineNo, Enumerable.Average(new[] { i + 1, (decimal)i }), rowCount, columnCount), _COLUMN_WIDTHS[i]), DrawColorSet.Border);
-				Draw(GetTableCharacter(lineNo, i + 1, rowCount, columnCount), DrawColorSet.Border);
+				Draw(new string(GetTableCharacter(borderRowNo, Enumerable.Average(new[] { i + 1, (decimal)i }), rowCount, columnCount), _COLUMN_WIDTHS[i]), DrawColorSet.Border);
+				Draw(GetTableCharacter(borderRowNo, i + 1, rowCount, columnCount), DrawColorSet.Border);
 			}
 
 
@@ -189,25 +189,37 @@ namespace SimpleTableManager.Services
 
 			if (!betweenColumns && !betweenRows)
 			{
-				//TODO
-				return 'O';
+				var up = GetChar(borderRowNo > 0, borderColNo < 2, TableBorderCharacterMode.Up);
+				var left = GetChar(borderColNo > 0, borderRowNo < 2, TableBorderCharacterMode.Left);
+				var right = GetChar(borderColNo < columnCount, borderRowNo < 2, TableBorderCharacterMode.Right);
+				var down = GetChar(borderRowNo < rowCount, borderColNo < 2, TableBorderCharacterMode.Down);
+
+				return TableBorderCharacters.Get(up | left | right | down);
 			}
 			else if (betweenColumns)
 			{
-				var isDouble = borderRowNo <= 2;
-
-				return isDouble ? TableBorderCharacters.Get(TableBorderCharacterMode.LeftDouble | TableBorderCharacterMode.RightDouble) :
-					TableBorderCharacters.Get(TableBorderCharacterMode.Left | TableBorderCharacterMode.Right);
+				return TableBorderCharacters.Get(GetChar(true, borderRowNo < 2, TableBorderCharacterMode.Horizontal));
 			}
 			else if (betweenRows)
 			{
-				var isDouble = borderColNo <= 2;
-
-				return isDouble ? TableBorderCharacters.Get(TableBorderCharacterMode.UpDouble | TableBorderCharacterMode.DownDouble) :
-					TableBorderCharacters.Get(TableBorderCharacterMode.Up | TableBorderCharacterMode.Down);
+				return TableBorderCharacters.Get(GetChar(true, borderColNo < 2, TableBorderCharacterMode.Vertical));
 			}
 
 			throw new InvalidOperationException();
+		}
+
+		private static TableBorderCharacterMode GetChar(bool caseSingle, bool caseDouble, TableBorderCharacterMode value)
+		{
+			if (caseSingle && caseDouble)
+			{
+				return (TableBorderCharacterMode)((int)value * 2);
+			}
+			else if (caseSingle)
+			{
+				return value;
+			}
+
+			return TableBorderCharacterMode.None;
 		}
 
 		private enum DrawColorSet

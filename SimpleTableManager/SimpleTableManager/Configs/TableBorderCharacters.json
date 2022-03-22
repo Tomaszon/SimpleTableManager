@@ -138,5 +138,10 @@
 		"Retro": "#",
 		"Modern": "╛",
 		"Mode": "Up, LeftDouble"
+	},
+	{
+		"Retro": "#",
+		"Modern": "╧",
+		"Mode": "Up, LeftDouble, RightDouble"
 	}
 ]
