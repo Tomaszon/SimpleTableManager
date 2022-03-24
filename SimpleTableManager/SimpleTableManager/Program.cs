@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using SimpleTableManager.Models;
@@ -20,19 +22,27 @@ namespace SimpleTableManager
 
 			ViewOptions viewOptions = null;// new ViewOptions(1, 1, 2, 3);
 
-			var table = new Table("", 3, 3);
+			var table = new Table("", 3, 4);
 
 			//foreach (var cell in table.Cells)
 			//{
-				//if (cell.Position.X % 3 == 0)
-				//{
-				//cell.ForegroundColor = ConsoleColor.Black;
-				//cell.BackgroundColor = ConsoleColor.White;
-				//}
+			//if (cell.Position.X % 3 == 0)
+			//{
+			//cell.ForegroundColor = ConsoleColor.Black;
+			//cell.BackgroundColor = ConsoleColor.White;
+			//}
 			//}
 
 
-			//table[1, 0].Content = "A";
+			table[1, 0].SetContent("T");
+			table[1, 0].VertialAlignment = VertialAlignment.Top;
+			table[1, 1].SetContent("C");
+			table[1, 1].VertialAlignment = VertialAlignment.Center;
+			table[1, 2].SetContent("C");
+			table[1, 2].VertialAlignment = VertialAlignment.Center;
+			table[1, 3].SetContent("B");
+			table[1, 3].VertialAlignment = VertialAlignment.Bottom;
+			//table[1, 0].HorizontalAlignment = HorizontalAlignment.Right;
 			//table[2, 0].Content = "AAAAAAAAAAA";
 			//table.SetColumnWidth(1, 0);
 			//table[0, 0].GivenSize = new Size(25, 1);

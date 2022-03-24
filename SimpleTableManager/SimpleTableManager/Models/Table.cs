@@ -143,6 +143,12 @@ namespace SimpleTableManager.Models
 		{
 			AddColumnAt(Size.Width);
 		}
+
+		[CommandReference]
+		public void AddCellContent(string content)
+		{
+			Cells.Where(c => c.IsSelected).ForEach(c => c.AddContent(content));
+		}
 		#endregion
 
 		#region Remove|Delete
@@ -193,6 +199,12 @@ namespace SimpleTableManager.Models
 			RemoveColumnAt(Size.Width - 1);
 		}
 
+		[CommandReference]
+		public void RemoveCellContent()
+		{
+			Cells.Where(c => c.IsSelected).ForEach(c => c.RemoveContent());
+		}
+
 		#endregion
 
 		#region Set
@@ -205,9 +217,11 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetCellContent(string content)
 		{
-			Cells.Where(c => c.IsSelected).ForEach(c => c.Content = content);
+			Cells.Where(c => c.IsSelected).ForEach(c => c.SetContent(content));
 		}
 		#endregion
+
+
 
 		#region Select
 		[CommandReference]
