@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -13,6 +14,7 @@ namespace SimpleTableManager.Services
 	{
 		private static List<int> _COLUMN_WIDTHS;
 		private static List<int> _ROW_HEIGHTS;
+		private static int _TABLE_HORIZONTAL_OFFSET = 0;
 
 		public static void Render(Table table, ViewOptions viewOptions = null)
 		{
@@ -29,8 +31,10 @@ namespace SimpleTableManager.Services
 			_ROW_HEIGHTS = new List<int> { 1 };
 			for (int i = 0; i < viewTable.Size.Height - 1; i++)
 			{
-				_ROW_HEIGHTS.Add(i % 2 == 0 ? 3 : 4);
+				_ROW_HEIGHTS.Add(i % 2 == 0 ? 7 : 8);
 			}
+
+			_TABLE_HORIZONTAL_OFFSET = GetTableOffset();
 
 			DrawSeparatorLine(0, viewTable.Size.Width, viewTable.Size.Height);
 
@@ -42,18 +46,29 @@ namespace SimpleTableManager.Services
 			ChangeToDefaultColors();
 		}
 
-		private static void DrawContentRow(Table viewTable, int index)
+		private static int GetTableOffset()
 		{
-			for (int i = 0; i < _ROW_HEIGHTS[index]; i++)
+			var fullContentWidth = _COLUMN_WIDTHS.Sum() + _COLUMN_WIDTHS.Count + 1;
+
+			return (Console.WindowWidth - fullContentWidth) / 2;
+		}
+
+		private static void DrawContentRow(Table viewTable, int rowIndex)
+		{
+			for (int i = 0; i < _ROW_HEIGHTS[rowIndex]; i++)
 			{
-				DrawContentLine(i, viewTable[0, index, viewTable.Size.Width - 1, index], index, viewTable.Size.Height, viewTable.Size.Width);
+				DrawContentLine(i, viewTable[0, rowIndex, viewTable.Size.Width - 1, rowIndex], rowIndex, viewTable.Size.Height, viewTable.Size.Width);
 			}
 
-			DrawSeparatorLine(index + 1, viewTable.Size.Width, viewTable.Size.Height);
+			DrawSeparatorLine(rowIndex + 1, viewTable.Size.Width, viewTable.Size.Height);
+
+			Task.Delay(Settings.RenderDelay).Wait();
 		}
 
 		private static void DrawSeparatorLine(int borderRowNo, int columnCount, int rowCount)
 		{
+			Console.SetCursorPosition(_TABLE_HORIZONTAL_OFFSET, Console.CursorTop);
+
 			Draw(GetTableCharacter(borderRowNo, 0, rowCount, columnCount), DrawColorSet.Border);
 
 			for (int i = 0; i < columnCount; i++)
@@ -65,59 +80,71 @@ namespace SimpleTableManager.Services
 			Console.WriteLine();
 		}
 
-		private static void DrawContentLine(int index, List<Cell> cells, int borderRowNo, int rowCount, int columnCount)
+		private static void DrawContentLine(int lineIndex, List<Cell> cells, int rowIndex, int rowCount, int columnCount)
 		{
-			Draw(GetTableCharacter(borderRowNo + 0.5m, 0, rowCount, columnCount), DrawColorSet.Border);
+			Console.SetCursorPosition(_TABLE_HORIZONTAL_OFFSET, Console.CursorTop);
+
+			Draw(GetTableCharacter(rowIndex + 0.5m, 0, rowCount, columnCount), DrawColorSet.Border);
 
 			for (int i = 0; i < cells.Count; i++)
 			{
-				//TODO draws only one row for the cell, broken
-				if (cells[i].VertialAlignment == VertialAlignment.Top && index == 0 ||
-					cells[i].VertialAlignment == VertialAlignment.Bottom && index == _ROW_HEIGHTS[borderRowNo] - 1 ||
-					cells[i].VertialAlignment == VertialAlignment.Center && index == (_ROW_HEIGHTS[borderRowNo] - 1) / 2)
+				if (IsCellCondentDrawNeeded(cells[i], lineIndex, rowIndex, out var contentIndex))
 				{
-					Draw(cells[i], index, _COLUMN_WIDTHS[i]);
+					Draw(cells[i], contentIndex, _COLUMN_WIDTHS[i]);
 				}
 				else
 				{
 					Draw("", _COLUMN_WIDTHS[i]);
 				}
 
-				Draw(GetTableCharacter(borderRowNo + 0.5m, i + 1, rowCount, columnCount), DrawColorSet.Border);
+				Draw(GetTableCharacter(rowIndex + 0.5m, i + 1, rowCount, columnCount), DrawColorSet.Border);
 			}
 
 			Console.WriteLine();
 		}
 
-		private static void Draw(Cell cell, int index, int width)
+		private static bool IsCellCondentDrawNeeded(Cell cell, int lineIndex, int rowIndex, out int contentIndex)
 		{
-			if (cell.Content.Count > index)
+			if (cell.VertialAlignment == VertialAlignment.Center)
 			{
-				if (cell.IsSelected)
-				{
-					ChangeToSelectedColor();
-				}
-				else
-				{
-					ChangeToDefaultColors();
-				}
+				var ch = cell.Content.Count;
 
-				var content = cell.Content[index].ToString();
+				var rh = _ROW_HEIGHTS[rowIndex];
+
+				var startLineIndex = (rh - ch) / 2;
+
+				var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
+
+				contentIndex = isDrawNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
+
+				return isDrawNeeded;
+			}
+
+			//TODO other cases
+			contentIndex = default;
+			return false;
+		}
+
+		private static void Draw(Cell cell, int contentIndex, int width)
+		{
+			if (cell.Content.Count > contentIndex)
+			{
+				var content = cell.Content[contentIndex].ToString();
 
 				switch (cell.HorizontalAlignment)
 				{
 					case HorizontalAlignment.Left:
-						Console.Write(content.PadRight(width));
+						content = content.PadRight(width);
 						break;
 					case HorizontalAlignment.Center:
-						Console.Write(content.PadLeftRight(width));
+						content = content.PadLeftRight(width);
 						break;
 					case HorizontalAlignment.Right:
-						Console.Write(content.PadLeft(width));
+						content = content.PadLeft(width);
 						break;
 				}
 
-				ChangeToDefaultColors();
+				Draw(content, 0, cell.IsSelected ? DrawColorSet.SelectedBorder : DrawColorSet.Default);
 			}
 		}
 

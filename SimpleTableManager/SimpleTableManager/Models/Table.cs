@@ -62,7 +62,7 @@ namespace SimpleTableManager.Models
 			{
 				for (int x = 0; x < columnCount; x++)
 				{
-					Cells.Add(new Cell($"x:{x},y:{y}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
+					Cells.Add(new Cell("T", $"x:{x}", $"y:{y}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
 				}
 			}
 		}
@@ -215,7 +215,7 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void SetCellContent(string content)
+		public void SetCellContent(string[] content)
 		{
 			Cells.Where(c => c.IsSelected).ForEach(c => c.SetContent(content));
 		}

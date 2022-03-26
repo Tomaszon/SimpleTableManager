@@ -34,14 +34,14 @@ namespace SimpleTableManager
 			//}
 
 
-			table[1, 0].SetContent("T");
-			table[1, 0].VertialAlignment = VertialAlignment.Top;
-			table[1, 1].SetContent("C");
-			table[1, 1].VertialAlignment = VertialAlignment.Center;
-			table[1, 2].SetContent("C");
-			table[1, 2].VertialAlignment = VertialAlignment.Center;
-			table[1, 3].SetContent("B");
-			table[1, 3].VertialAlignment = VertialAlignment.Bottom;
+			//table[1, 0].SetContent("T");
+			//table[1, 0].VertialAlignment = VertialAlignment.Top;
+			//table[1, 1].SetContent("C");
+			//table[1, 1].VertialAlignment = VertialAlignment.Center;
+			//table[1, 2].SetContent("C");
+			//table[1, 2].VertialAlignment = VertialAlignment.Center;
+			//table[1, 3].SetContent("B");
+			//table[1, 3].VertialAlignment = VertialAlignment.Bottom;
 			//table[1, 0].HorizontalAlignment = HorizontalAlignment.Right;
 			//table[2, 0].Content = "AAAAAAAAAAA";
 			//table.SetColumnWidth(1, 0);

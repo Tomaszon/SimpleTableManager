@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using SimpleTableManager.Services;
+
 namespace SimpleTableManager.Models
 {
 	public class Command
 	{
 		public string Reference { get; set; }
 
-		public List<string> Parameters { get; set; }
+		public List<string> Arguments { get; set; }
 
 		public List<string> AvailableKeys { get; set; }
 
 		public static Command FromString(string value)
 		{
-			var reference = CommandTree.GetCommandReference(value, out var parameters, out var availableKeys);
+			var reference = CommandTree.GetCommandReference(value, out var arguments, out var availableKeys);
 
 			return new Command
 			{
 				Reference = reference,
-				Parameters = parameters,
+				Arguments = arguments,
 				AvailableKeys = availableKeys
 			};
 		}
@@ -28,14 +30,37 @@ namespace SimpleTableManager.Models
 		public void Execute(object instance)
 		{
 			var method = GetMethod(instance);
+			var methodParameters = GetParameters(method);
 
-			var kvs = GetParameters(method).Zip(Parameters).ToDictionary(x => x.First, x => x.Second);
+			List<object> parsedArguments = new List<object>();
 
-			var parsedParameters = kvs.Select(p => Services.Shared.ParseStringValue(p.Key.Type.Name, p.Value)).ToArray();
+			for (var i = 0; i < methodParameters.Count; i++)
+			{
+				var paramType = methodParameters[i].Type;
+
+				if (paramType.IsArray)
+				{
+					var rest = Arguments.GetRange(i, Arguments.Count - i);
+
+					var type = Shared.GetTypeByName(paramType.Name.TrimEnd('[', ']'));
+
+					var typedArray = Array.CreateInstance(type, rest.Count);
+
+					Array.Copy(rest.Select(a => Shared.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
+
+					parsedArguments.Add(typedArray);
+
+					break;
+				}
+				else
+				{
+					parsedArguments.Add(Shared.ParseStringValue(paramType, Arguments[i]));
+				}
+			}
 
 			try
 			{
-				method.Invoke(instance, parsedParameters);
+				method.Invoke(instance, parsedArguments.ToArray());
 			}
 			catch (TargetParameterCountException)
 			{

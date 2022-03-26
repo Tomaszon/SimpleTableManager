@@ -1,6 +1,6 @@
 [
 	{
-		"Retro": "│",
+		"Retro": "|",
 		"Modern": "│",
 		"Mode": "Up, Down"
 	},
@@ -40,7 +40,7 @@
 		"Mode":"LeftDouble, RightDouble, Down"
 	},
 	{
-		"Retro": "║",
+		"Retro": "]",
 		"Modern": "║",
 		"Mode": "UpDouble, DownDouble"
 	},

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace SimpleTableManager.Services
 {
@@ -26,7 +27,7 @@ namespace SimpleTableManager.Services
 				return value;
 			}
 
-			var method = dataType.GetMethods().Where(m => m.Name == "Parse" && m.GetParameters().Length == 1).SingleOrDefault();
+			var method = GetParseMethod(dataType);
 
 			if (method is null)
 			{
@@ -41,6 +42,11 @@ namespace SimpleTableManager.Services
 			{
 				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'");
 			}
+		}
+
+		private static MethodInfo GetParseMethod(Type dataType)
+		{
+			return dataType.GetMethods().Where(m => m.Name == "Parse" && m.GetParameters().Length == 1).SingleOrDefault();
 		}
 
 		public static object ParseStringValue(string dataTypeName, string value)

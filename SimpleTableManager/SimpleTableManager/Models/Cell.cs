@@ -51,14 +51,14 @@ namespace SimpleTableManager.Models
 
 		}
 
-		public Cell(object content)
+		public Cell(params object[] contents)
 		{
-			SetContent(content);
+			SetContent(contents);
 		}
 
-		public void SetContent(object content)
+		public void SetContent(params object[] contents)
 		{
-			Content = new List<object>() { content };
+			Content = new List<object>(contents);
 		}
 
 		public void ClearContent()
