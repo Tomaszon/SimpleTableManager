@@ -10,21 +10,28 @@ namespace SimpleTableManager.Models
 {
 	public static class CommandTree
 	{
-		public static ExpandoObject Commands { get; set; }
+		public static IDictionary<string, object> Commands { get; } = new ExpandoObject();
 
-		public static void FromJson(string path)
+		public static void FromJsonFolder(string folderPath)
 		{
-			Commands = JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(path));
+			foreach (var f in Directory.GetFiles(folderPath))
+			{
+				Commands.Add(Path.GetFileNameWithoutExtension(f), JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(f)));
+			}
 		}
 
-		public static string GetCommandReference(string value, out List<string> parameters, out List<string> availableKeys)
+		public static CommandReference GetCommandReference(string value, out List<string> parameters, out List<string> availableKeys)
 		{
 			var keys = value.Split(' ').ToList();
 
-			return GetReferenceRecursive(Commands, keys, value, out parameters, out availableKeys);
+			return new CommandReference()
+			{
+				ClassName = keys.FirstOrDefault(),
+				MethodName = GetReferenceMethodNameRecursive(Commands, keys, value, out parameters, out availableKeys)
+			};
 		}
 
-		private static string GetReferenceRecursive(object obj, List<string> keys, string fullValue, out List<string> parameters, out List<string> availableKeys)
+		private static string GetReferenceMethodNameRecursive(object obj, List<string> keys, string fullValue, out List<string> parameters, out List<string> availableKeys)
 		{
 			if (obj is ExpandoObject o)
 			{
@@ -51,7 +58,7 @@ namespace SimpleTableManager.Models
 						throw new IncompleteCommandException(fullValue);
 					}
 
-					return GetReferenceRecursive(v, keys.GetRange(1, keys.Count - 1), fullValue, out parameters, out availableKeys);
+					return GetReferenceMethodNameRecursive(v, keys.GetRange(1, keys.Count - 1), fullValue, out parameters, out availableKeys);
 				}
 			}
 			else

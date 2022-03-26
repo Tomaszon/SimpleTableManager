@@ -1,0 +1,7 @@
+{
+	"set": {
+		"content": "setContent",
+		"vertical-alignment|va": "setVerticalAlignment",
+		"horizontal-alignment|ha" : "setHorizontalAlignment"
+	}
+}

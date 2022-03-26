@@ -8,21 +8,53 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager
 {
+	public class InstanceMap
+	{
+		Dictionary<string, Func<IEnumerable<object>>> ArrayMap { get; set; } = new Dictionary<string, Func<IEnumerable<object>>>();
+
+		public void Add<T>(Func<IEnumerable<T>> func)
+		{
+			ArrayMap.Add(typeof(T).Name.ToLower(), () => func.Invoke().Select(e => (object)e));
+		}
+
+		public void Add<T>(Func<T> func)
+		{
+			ArrayMap.Add(typeof(T).Name.ToLower(), () => new[] { func.Invoke() }.Select(e => (object)e));
+		}
+
+		public IEnumerable<object> GetInstances(string typeName)
+		{
+			return ArrayMap[typeName].Invoke();
+		}
+
+		public IEnumerable<object> GetInstances<T>()
+		{
+			return GetInstances(typeof(T).Name.ToLower());
+		}
+	}
+
 	internal class Program
 	{
 		public static string lastHelp = "Enter command to execute";
 		//public static string prevCommand = "";
+
+		static InstanceMap InstanceMap = new InstanceMap();
+
 
 		private static void Main(string[] args)
 		{
 			//Console.WriteLine("Hello World!");
 
 			TableBorderCharacters.FromJson($@".\Configs\tableBorderCharacters.json");
-			CommandTree.FromJson($@".\Configs\commands.json");
+			CommandTree.FromJsonFolder($@".\Configs\Commands");
 
 			ViewOptions viewOptions = null;// new ViewOptions(1, 1, 2, 3);
 
-			var table = new Table("", 3, 4);
+			var document = new Document();
+
+			InstanceMap.Add(() => document);
+			InstanceMap.Add(() => document.GetActiveTable());
+			InstanceMap.Add(() => document.GetActiveTable().GetSelectedCells());
 
 			//foreach (var cell in table.Cells)
 			//{
@@ -34,8 +66,10 @@ namespace SimpleTableManager
 			//}
 
 
-			//table[1, 0].SetContent("T");
-			//table[1, 0].VertialAlignment = VertialAlignment.Top;
+			document.GetActiveTable()[1, 0].SetContent("T");
+			document.GetActiveTable()[1, 0].VertialAlignment = VertialAlignment.Top;
+			document.GetActiveTable()[1, 1].SetContent("B");
+			document.GetActiveTable()[1, 1].VertialAlignment = VertialAlignment.Bottom;
 			//table[1, 1].SetContent("C");
 			//table[1, 1].VertialAlignment = VertialAlignment.Center;
 			//table[1, 2].SetContent("C");
@@ -53,7 +87,7 @@ namespace SimpleTableManager
 			{
 				try
 				{
-					Draw(table, viewOptions);
+					Draw(document.GetActiveTable(), viewOptions);
 
 					var rawCommand = Console.ReadLine().Trim();//ReadInput();
 
@@ -63,7 +97,7 @@ namespace SimpleTableManager
 					}
 					else if (rawCommand.Contains("-help"))
 					{
-						GetHelp(table, rawCommand);
+						GetHelp(rawCommand);
 					}
 					else if (rawCommand == "refresh")
 					{
@@ -76,17 +110,17 @@ namespace SimpleTableManager
 						{
 							var command = Command.FromString(rawCommand);
 
-							command.Execute(table);
+							command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
 
 							lastHelp = "Enter command to execute";
 						}
 						catch (IncompleteCommandException)
 						{
-							GetHelp(table, $"{rawCommand} -help", "Incomplete command");
+							GetHelp($"{rawCommand} -help", "Incomplete command");
 						}
 						catch (TargetParameterCountException)
 						{
-							GetHelp(table, $"{rawCommand} -help", "Parameters needed");
+							GetHelp($"{rawCommand} -help", "Arguments needed");
 						}
 					}
 				}
@@ -106,9 +140,11 @@ namespace SimpleTableManager
 			Console.ReadKey();
 		}
 
-		public static void GetHelp(Table table, string rawCommand, string error = null)
+		public static void GetHelp(string rawCommand, string error = null)
 		{
 			var command = Command.FromString(rawCommand);
+
+			var instances = InstanceMap.GetInstances(command.Reference.ClassName);
 
 			if (command.AvailableKeys is { })
 			{
@@ -116,7 +152,7 @@ namespace SimpleTableManager
 			}
 			else if (command.Reference is { })
 			{
-				var parameters = command.GetParameters(command.GetMethod(table));
+				var parameters = command.GetParameters(command.GetMethod(instances.First()));
 
 				lastHelp = $"{error} Parameters: '{string.Join(", ", parameters)}' of '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
 			}

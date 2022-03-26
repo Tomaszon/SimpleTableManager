@@ -8,7 +8,7 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {
-	public class Cell
+	public partial class Cell
 	{
 		public Size ContentSize => Content is { } && Content.Count > 0 ?
 			new Size(Content.Max(e => e.ToString().Length + 2), Content.Count) : new Size(0, 0);
@@ -20,7 +20,7 @@ namespace SimpleTableManager.Models
 
 		public Type ContentType { get; set; } = typeof(string);
 
-		private List<object> _content = new List<object>();
+		private List<object> _content = new();
 		public List<object> Content
 		{
 			get => _content;
@@ -56,10 +56,7 @@ namespace SimpleTableManager.Models
 			SetContent(contents);
 		}
 
-		public void SetContent(params object[] contents)
-		{
-			Content = new List<object>(contents);
-		}
+		
 
 		public void ClearContent()
 		{

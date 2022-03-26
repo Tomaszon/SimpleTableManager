@@ -1,0 +1,11 @@
+{
+	"add": {
+		"table": "addTable"
+	},
+	"remove": {
+		"table": "removeTable"
+	},
+	"change": {
+		"table": "changeActiveTable"
+	}
+}

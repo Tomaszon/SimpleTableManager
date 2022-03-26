@@ -14,6 +14,6 @@ namespace SimpleTableManager.Models
 
 		public static bool ModernTableBorder { get; set; } = false;
 
-		public static int RenderDelay { get; set; } = 100;
+		public static int RenderDelay { get; set; } = 0;
 	}
 }

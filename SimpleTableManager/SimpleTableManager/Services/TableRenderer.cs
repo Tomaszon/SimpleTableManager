@@ -15,6 +15,7 @@ namespace SimpleTableManager.Services
 		private static List<int> _COLUMN_WIDTHS;
 		private static List<int> _ROW_HEIGHTS;
 		private static int _TABLE_HORIZONTAL_OFFSET = 0;
+		private static Size _TABLE_SIZE;
 
 		public static void Render(Table table, ViewOptions viewOptions = null)
 		{
@@ -22,19 +23,13 @@ namespace SimpleTableManager.Services
 
 			var viewTable = CreateViewTable(table, viewOptions);
 
-			_COLUMN_WIDTHS = new List<int>();
-			for (int i = 0; i < viewTable.Size.Width; i++)
-			{
-				_COLUMN_WIDTHS.Add(viewTable.GetColumnWidth(i));
-			}
+			_COLUMN_WIDTHS = viewTable.GetColumnWidths();
 
-			_ROW_HEIGHTS = new List<int> { 1 };
-			for (int i = 0; i < viewTable.Size.Height - 1; i++)
-			{
-				_ROW_HEIGHTS.Add(i % 2 == 0 ? 7 : 8);
-			}
+			_ROW_HEIGHTS = viewTable.GetRowHeights();
 
-			_TABLE_HORIZONTAL_OFFSET = GetTableOffset();
+			_TABLE_SIZE = new Size(_COLUMN_WIDTHS.Sum() + _COLUMN_WIDTHS.Count + 1, _ROW_HEIGHTS.Sum() + _ROW_HEIGHTS.Count + 1);
+
+			_TABLE_HORIZONTAL_OFFSET = GetTableDisplayOffset();
 
 			DrawSeparatorLine(0, viewTable.Size.Width, viewTable.Size.Height);
 
@@ -46,11 +41,9 @@ namespace SimpleTableManager.Services
 			ChangeToDefaultColors();
 		}
 
-		private static int GetTableOffset()
+		private static int GetTableDisplayOffset()
 		{
-			var fullContentWidth = _COLUMN_WIDTHS.Sum() + _COLUMN_WIDTHS.Count + 1;
-
-			return (Console.WindowWidth - fullContentWidth) / 2;
+			return (Console.WindowWidth - _TABLE_SIZE.Width) / 2;
 		}
 
 		private static void DrawContentRow(Table viewTable, int rowIndex)
@@ -88,7 +81,7 @@ namespace SimpleTableManager.Services
 
 			for (int i = 0; i < cells.Count; i++)
 			{
-				if (IsCellCondentDrawNeeded(cells[i], lineIndex, rowIndex, out var contentIndex))
+				if (IsCellContentDrawNeeded(cells[i], lineIndex, rowIndex, out var contentIndex))
 				{
 					Draw(cells[i], contentIndex, _COLUMN_WIDTHS[i]);
 				}
@@ -103,26 +96,24 @@ namespace SimpleTableManager.Services
 			Console.WriteLine();
 		}
 
-		private static bool IsCellCondentDrawNeeded(Cell cell, int lineIndex, int rowIndex, out int contentIndex)
+		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int rowIndex, out int contentIndex)
 		{
-			if (cell.VertialAlignment == VertialAlignment.Center)
+			var ch = cell.Content.Count;
+
+			var rh = _ROW_HEIGHTS[rowIndex];
+
+			var startLineIndex = cell.VertialAlignment switch
 			{
-				var ch = cell.Content.Count;
+				VertialAlignment.Top => 0,
+				VertialAlignment.Bottom => rh - ch,
+				_ => (rh - ch) / 2
+			};
 
-				var rh = _ROW_HEIGHTS[rowIndex];
+			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
 
-				var startLineIndex = (rh - ch) / 2;
+			contentIndex = isDrawNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
 
-				var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
-
-				contentIndex = isDrawNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
-
-				return isDrawNeeded;
-			}
-
-			//TODO other cases
-			contentIndex = default;
-			return false;
+			return isDrawNeeded;
 		}
 
 		private static void Draw(Cell cell, int contentIndex, int width)
@@ -203,7 +194,7 @@ namespace SimpleTableManager.Services
 			{
 				viewTable[x, 0].ContentType = typeof(int);
 				viewTable[x, 0].SetContent(viewOptions.Position.X + x);
-				viewTable[x, 0].IsSelected = viewTable[x, SelectType.Column].Any(c => c.IsSelected);
+				viewTable[x, 0].IsSelected = viewTable.GetColumn(x).Any(c => c.IsSelected);
 			}
 
 			viewTable.AddColumnAt(0);
@@ -214,7 +205,7 @@ namespace SimpleTableManager.Services
 			{
 				viewTable[0, y].ContentType = typeof(int);
 				viewTable[0, y].SetContent(viewOptions.Position.Y + y - 1);
-				viewTable[0, y].IsSelected = viewTable[y, SelectType.Row].Any(c => c.IsSelected);
+				viewTable[0, y].IsSelected = viewTable.GetRow(y).Any(c => c.IsSelected);
 			}
 
 			return viewTable;

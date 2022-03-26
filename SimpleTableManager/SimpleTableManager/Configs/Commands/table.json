@@ -37,12 +37,14 @@
 		"cell": "selectCell",
 		"cells": "selectCells",
 		"column": "selectColumn",
-		"row": "selectRow"
+		"row": "selectRow",
+		"all": "selectAll"
 	},
 	"deselect": {
 		"cell": "deselectCell",
 		"cells": "deselectCells",
 		"column": "deselectColumn",
-		"row": "deselectRow"
+		"row": "deselectRow",
+		"all": "deselectAll"
 	}
 }

@@ -9,7 +9,7 @@ namespace SimpleTableManager.Models
 {
 	public class Command
 	{
-		public string Reference { get; set; }
+		public CommandReference Reference { get; set; }
 
 		public List<string> Arguments { get; set; }
 
@@ -27,50 +27,53 @@ namespace SimpleTableManager.Models
 			};
 		}
 
-		public void Execute(object instance)
+		public void Execute(IEnumerable<object> instances)
 		{
-			var method = GetMethod(instance);
-			var methodParameters = GetParameters(method);
-
-			List<object> parsedArguments = new List<object>();
-
-			for (var i = 0; i < methodParameters.Count; i++)
+			foreach (var instance in instances)
 			{
-				var paramType = methodParameters[i].Type;
+				var method = GetMethod(instance);
+				var methodParameters = GetParameters(method);
 
-				if (paramType.IsArray)
+				List<object> parsedArguments = new List<object>();
+
+				for (var i = 0; i < methodParameters.Count; i++)
 				{
-					var rest = Arguments.GetRange(i, Arguments.Count - i);
+					var paramType = methodParameters[i].Type;
 
-					var type = Shared.GetTypeByName(paramType.Name.TrimEnd('[', ']'));
+					if (paramType.IsArray)
+					{
+						var rest = Arguments.GetRange(i, Arguments.Count - i);
 
-					var typedArray = Array.CreateInstance(type, rest.Count);
+						var type = Shared.GetTypeByName(paramType.Name.TrimEnd('[', ']'));
 
-					Array.Copy(rest.Select(a => Shared.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
+						var typedArray = Array.CreateInstance(type, rest.Count);
 
-					parsedArguments.Add(typedArray);
+						Array.Copy(rest.Select(a => Shared.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
 
-					break;
+						parsedArguments.Add(typedArray);
+
+						break;
+					}
+					else
+					{
+						parsedArguments.Add(Shared.ParseStringValue(paramType, Arguments[i]));
+					}
 				}
-				else
+
+				try
 				{
-					parsedArguments.Add(Shared.ParseStringValue(paramType, Arguments[i]));
+					method.Invoke(instance, parsedArguments.ToArray());
 				}
-			}
+				catch (TargetParameterCountException)
+				{
+					var parameters = GetParameters(method);
 
-			try
-			{
-				method.Invoke(instance, parsedArguments.ToArray());
-			}
-			catch (TargetParameterCountException)
-			{
-				var parameters = GetParameters(method);
-
-				throw new TargetParameterCountException($"Command parameters needed: '{string.Join(", ", parameters)}'");
-			}
-			catch (Exception ex)
-			{
-				throw ex.InnerException ?? ex;
+					throw new TargetParameterCountException($"Command parameters needed: '{string.Join(", ", parameters)}'");
+				}
+				catch (Exception ex)
+				{
+					throw ex.InnerException ?? ex;
+				}
 			}
 		}
 
@@ -83,7 +86,8 @@ namespace SimpleTableManager.Models
 				var attribute = m.GetCustomAttributes(typeof(CommandReferenceAttribute), false).FirstOrDefault() as CommandReferenceAttribute;
 
 				return attribute is { } &&
-					(attribute.Reference?.ToLower() == Reference.ToLower() || m.Name.ToLower() == Reference.ToLower());
+					(attribute.MethodReference?.ToLower() == Reference.MethodName.ToLower() ||
+					m.Name.ToLower() == Reference.MethodName.ToLower());
 			});
 
 			if (method is null)
