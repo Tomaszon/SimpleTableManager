@@ -17,11 +17,9 @@ namespace SimpleTableManager.Services
 		private static int _TABLE_HORIZONTAL_OFFSET = 0;
 		private static Size _TABLE_SIZE;
 
-		public static void Render(Table table, ViewOptions viewOptions = null)
+		public static void Render(Table table)
 		{
-			viewOptions ??= new ViewOptions(0, 0, table.Size.Width, table.Size.Height);
-
-			var viewTable = CreateViewTable(table, viewOptions);
+			var viewTable = CreateViewTable(table);
 
 			_COLUMN_WIDTHS = viewTable.GetColumnWidths();
 
@@ -30,6 +28,8 @@ namespace SimpleTableManager.Services
 			_TABLE_SIZE = new Size(_COLUMN_WIDTHS.Sum() + _COLUMN_WIDTHS.Count + 1, _ROW_HEIGHTS.Sum() + _ROW_HEIGHTS.Count + 1);
 
 			_TABLE_HORIZONTAL_OFFSET = GetTableDisplayOffset();
+
+			Console.WriteLine($"{viewTable.Name}\n");
 
 			DrawSeparatorLine(0, viewTable.Size.Width, viewTable.Size.Height);
 
@@ -125,13 +125,13 @@ namespace SimpleTableManager.Services
 				switch (cell.HorizontalAlignment)
 				{
 					case HorizontalAlignment.Left:
-						content = content.PadRight(width);
+						content = content.PadRight(width - 1).PadLeft(width);
 						break;
 					case HorizontalAlignment.Center:
 						content = content.PadLeftRight(width);
 						break;
 					case HorizontalAlignment.Right:
-						content = content.PadLeft(width);
+						content = content.PadLeft(width - 1).PadRight(width);
 						break;
 				}
 
@@ -181,19 +181,38 @@ namespace SimpleTableManager.Services
 			Console.BackgroundColor = Settings.DefaultBackgroundColor;
 		}
 
-		private static Table CreateViewTable(Table table, ViewOptions viewOptions)
+		private static Table CreateViewTable(Table table)
 		{
 			var content = JsonConvert.SerializeObject(table, Formatting.Indented);
 			var viewTable = JsonConvert.DeserializeObject<Table>(content);
-			viewTable.Cells = viewTable[viewOptions.Position.X, viewOptions.Position.Y, viewOptions.Position.X + viewOptions.Size.Width - 1, viewOptions.Position.Y + viewOptions.Size.Height - 1];
-			viewTable.Size = new Size(viewOptions.Size.Width, viewOptions.Size.Height);
+			var voStartPosition = viewTable.ViewOptions.StartPosition;
+			var voEndPosition = viewTable.ViewOptions.EndPosition;
+			var voWidth = voEndPosition.X - voStartPosition.X + 1;
+			var voHeight = voEndPosition.Y - voStartPosition.Y + 1;
+
+			var leftEllipsis = voStartPosition.X > 0;
+			var topEllipsis = voStartPosition.Y > 0;
+			var rightEllipsis = voEndPosition.X < viewTable.Size.Width - 1;
+			var bottomEllipsis = voEndPosition.Y < viewTable.Size.Height - 1;
+
+			viewTable.Cells = viewTable[voStartPosition.X, voStartPosition.Y, voEndPosition.X, voEndPosition.Y];
+			viewTable.Size = new Size(voWidth, voHeight);
 
 			viewTable.AddRowAt(0);
 
 			for (int x = 0; x < viewTable.Size.Width; x++)
 			{
-				viewTable[x, 0].ContentType = typeof(int);
-				viewTable[x, 0].SetContent(viewOptions.Position.X + x);
+				var colIndex = viewTable.ViewOptions.StartPosition.X + x;
+
+				viewTable[x, 0].ContentType = typeof(string);
+
+				viewTable[x, 0].SetContent();
+				if (topEllipsis)
+				{
+					viewTable[x, 0].AddContents($"▲{(leftEllipsis ? "   " : "")}", "");
+				}
+				viewTable[x, 0].AddContents($"{colIndex}{(rightEllipsis ? "  ▶" : "")}");
+
 				viewTable[x, 0].IsSelected = viewTable.GetColumn(x).Any(c => c.IsSelected);
 			}
 
@@ -203,8 +222,19 @@ namespace SimpleTableManager.Services
 
 			for (int y = 1; y < viewTable.Size.Height; y++)
 			{
-				viewTable[0, y].ContentType = typeof(int);
-				viewTable[0, y].SetContent(viewOptions.Position.Y + y - 1);
+				var rowIndex = viewTable.ViewOptions.StartPosition.Y + y - 1;
+
+				//viewTable[0, y].HorizontalAlignment = HorizontalAlignment.Right;
+
+				viewTable[0, y].ContentType = typeof(string);
+
+				viewTable[0, y].SetContent();
+				viewTable[0, y].AddContents($"{(leftEllipsis ? "◀  " : "")}{rowIndex}");
+				if (bottomEllipsis)
+				{
+					viewTable[0, y].AddContents("", $"{(leftEllipsis ? "   " : "")}▼");
+				}
+
 				viewTable[0, y].IsSelected = viewTable.GetRow(y).Any(c => c.IsSelected);
 			}
 

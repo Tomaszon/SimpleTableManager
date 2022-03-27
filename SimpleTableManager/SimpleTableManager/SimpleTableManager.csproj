@@ -29,4 +29,16 @@
 	  <Folder Include="Properties\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="Configs\Commands\cell.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="Configs\Commands\document.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="Configs\Commands\table.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
 </Project>

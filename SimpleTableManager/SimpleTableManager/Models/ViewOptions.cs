@@ -2,14 +2,14 @@
 {
 	public class ViewOptions
 	{
-		public Size Size { get; set; }
+		public Position StartPosition { get; set; }
 
-		public Position Position { get; set; }
+		public Position EndPosition { get; set; }
 
-		public ViewOptions(int x, int y, int w, int h)
+		public ViewOptions(int x1, int y1, int x2, int y2)
 		{
-			Position = new Position(x, y);
-			Size = new Size(w, h);
+			StartPosition = new Position(x1, y1);
+			EndPosition = new Position(x2, y2);
 		}
 	}
 }

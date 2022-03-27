@@ -10,9 +10,11 @@ namespace SimpleTableManager.Models
 
 		public bool Optional { get; set; }
 
+		public object DefaultValue { get; set; }
+
 		public override string ToString()
 		{
-			return $"{{{Name}:{Type.Name}{(Optional ? ":optional" : "")}}}";
+			return $"{{{Name}:{Type.Name}{(Optional ? $":default={DefaultValue}" : "")}}}";
 		}
 	}
 }

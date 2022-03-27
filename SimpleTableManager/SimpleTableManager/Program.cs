@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -8,47 +7,23 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager
 {
-	public class InstanceMap
-	{
-		Dictionary<string, Func<IEnumerable<object>>> ArrayMap { get; set; } = new Dictionary<string, Func<IEnumerable<object>>>();
-
-		public void Add<T>(Func<IEnumerable<T>> func)
-		{
-			ArrayMap.Add(typeof(T).Name.ToLower(), () => func.Invoke().Select(e => (object)e));
-		}
-
-		public void Add<T>(Func<T> func)
-		{
-			ArrayMap.Add(typeof(T).Name.ToLower(), () => new[] { func.Invoke() }.Select(e => (object)e));
-		}
-
-		public IEnumerable<object> GetInstances(string typeName)
-		{
-			return ArrayMap[typeName].Invoke();
-		}
-
-		public IEnumerable<object> GetInstances<T>()
-		{
-			return GetInstances(typeof(T).Name.ToLower());
-		}
-	}
-
 	internal class Program
 	{
 		public static string lastHelp = "Enter command to execute";
 		//public static string prevCommand = "";
 
-		static InstanceMap InstanceMap = new InstanceMap();
+		static InstanceMap InstanceMap { get; set; } = new InstanceMap();
 
 
 		private static void Main(string[] args)
 		{
 			//Console.WriteLine("Hello World!");
+			Console.OutputEncoding = System.Text.Encoding.Unicode;
+			Console.InputEncoding = System.Text.Encoding.Unicode;
 
 			TableBorderCharacters.FromJson($@".\Configs\tableBorderCharacters.json");
 			CommandTree.FromJsonFolder($@".\Configs\Commands");
 
-			ViewOptions viewOptions = null;// new ViewOptions(1, 1, 2, 3);
 
 			var document = new Document();
 
@@ -87,7 +62,8 @@ namespace SimpleTableManager
 			{
 				try
 				{
-					Draw(document.GetActiveTable(), viewOptions);
+					Draw(document.GetActiveTable());
+
 
 					var rawCommand = Console.ReadLine().Trim();//ReadInput();
 
@@ -144,25 +120,23 @@ namespace SimpleTableManager
 		{
 			var command = Command.FromString(rawCommand);
 
-			var instances = InstanceMap.GetInstances(command.Reference.ClassName);
-
 			if (command.AvailableKeys is { })
 			{
 				lastHelp = $"{error} Available keys: '{string.Join(", ", command.AvailableKeys)}' in '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
 			}
 			else if (command.Reference is { })
 			{
+				var instances = InstanceMap.GetInstances(command.Reference.ClassName);
+
 				var parameters = command.GetParameters(command.GetMethod(instances.First()));
 
 				lastHelp = $"{error} Parameters: '{string.Join(", ", parameters)}' of '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
 			}
 		}
 
-		public static void Draw(Table table, ViewOptions viewOptions)
+		public static void Draw(Table table)
 		{
-			Console.WriteLine("Table 1\n");
-
-			TableRenderer.Render(table, viewOptions);
+			TableRenderer.Render(table);
 
 			if (lastHelp is { })
 			{

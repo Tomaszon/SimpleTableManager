@@ -31,7 +31,8 @@
 		},
 		"cell": {
 			"content": "setCellContent"
-		}
+		},
+		"view": "setViewOptions"
 	},
 	"select": {
 		"cell": "selectCell",
@@ -46,5 +47,8 @@
 		"column": "deselectColumn",
 		"row": "deselectRow",
 		"all": "deselectAll"
+	},
+	"reset": {
+		"view": "resetViewOptions"
 	}
 }

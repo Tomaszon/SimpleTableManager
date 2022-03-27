@@ -32,13 +32,18 @@ namespace SimpleTableManager.Models
 			foreach (var instance in instances)
 			{
 				var method = GetMethod(instance);
-				var methodParameters = GetParameters(method);
+				var parameters = GetParameters(method);
+
+				if (parameters.Count(p => !p.Optional) > Arguments.Count)
+				{
+					throw new TargetParameterCountException();
+				}
 
 				List<object> parsedArguments = new List<object>();
 
-				for (var i = 0; i < methodParameters.Count; i++)
+				for (var i = 0; i < parameters.Count; i++)
 				{
-					var paramType = methodParameters[i].Type;
+					var paramType = parameters[i].Type;
 
 					if (paramType.IsArray)
 					{
@@ -56,19 +61,16 @@ namespace SimpleTableManager.Models
 					}
 					else
 					{
-						parsedArguments.Add(Shared.ParseStringValue(paramType, Arguments[i]));
+						var value = i < Arguments.Count ? 
+							Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
+
+						parsedArguments.Add(value);
 					}
 				}
 
 				try
 				{
 					method.Invoke(instance, parsedArguments.ToArray());
-				}
-				catch (TargetParameterCountException)
-				{
-					var parameters = GetParameters(method);
-
-					throw new TargetParameterCountException($"Command parameters needed: '{string.Join(", ", parameters)}'");
 				}
 				catch (Exception ex)
 				{
@@ -105,7 +107,8 @@ namespace SimpleTableManager.Models
 				{
 					Type = p.ParameterType,
 					Name = p.Name,
-					Optional = p.IsOptional
+					Optional = p.IsOptional,
+					DefaultValue = p.DefaultValue
 				}).ToList();
 		}
 	}

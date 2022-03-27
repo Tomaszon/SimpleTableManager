@@ -95,5 +95,10 @@ namespace SimpleTableManager.Services
 
 			return result;
 		}
+
+		public static object GetDefaultValue(Type type)
+		{
+			return type.IsValueType ? Activator.CreateInstance(type) : null;
+		}
 	}
 }

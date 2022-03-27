@@ -5,7 +5,10 @@
 	"remove": {
 		"table": "removeTable"
 	},
-	"change": {
-		"table": "changeActiveTable"
+	"activate": {
+		"table": {
+			"named": "activateTable",
+			"at": "activateTableAt"
+		}
 	}
 }

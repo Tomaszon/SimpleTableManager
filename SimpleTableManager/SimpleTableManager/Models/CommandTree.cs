@@ -46,7 +46,7 @@ namespace SimpleTableManager.Models
 				}
 				else
 				{
-					var v = o.FirstOrDefault(e => Regex.IsMatch(keys.FirstOrDefault(), $"^{e.Key}$")).Value;
+					var v = o.FirstOrDefault(e => Regex.IsMatch(keys.FirstOrDefault(), $"^{e.Key}$", RegexOptions.IgnoreCase)).Value;
 
 					if (v is null)
 					{
