@@ -1,0 +1,11 @@
+{
+	"TextForegroundColor": "Green",
+	"TextBackgroundColor": "Black",
+	//"DefaultCellForegroundColor": "Black",
+	//"DefaultCellBackgroundColor": "Yellow",
+	//"BorderForegroundColor": "Magenta",
+	//"BorderBackgroundColor": "White",
+	"SelectedCellForegroundColor": "Yellow",
+	"SelectedCellBackgroundColor": "Black",
+	"ModernTableBorder": false
+}

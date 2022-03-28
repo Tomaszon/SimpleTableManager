@@ -63,7 +63,7 @@ namespace SimpleTableManager.Models
 			{
 				for (int x = 0; x < columnCount; x++)
 				{
-					Cells.Add(new Cell() { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
+					Cells.Add(new Cell("T", "x: " + x, "y: " + y) { BackgroundColor = Settings.Current.DefaultCellBackgroundColor, ForegroundColor = Settings.Current.DefaultCellForegroundColor });
 				}
 			}
 		}
@@ -110,11 +110,22 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void SetViewOptionsColumns(int x1, int x2)
+		{
+			SetViewOptions(x1, ViewOptions.StartPosition.Y, x2, ViewOptions.EndPosition.Y);
+		}
+
+		[CommandReference]
+		public void SetViewOptionsRows(int y1, int y2)
+		{
+			SetViewOptions(ViewOptions.StartPosition.X, y1, ViewOptions.EndPosition.X, y2);
+		}
+
+		[CommandReference]
 		public void ResetViewOptions()
 		{
 			ViewOptions = new ViewOptions(0, 0, Size.Width - 1, Size.Height - 1);
 		}
-
 		#endregion
 
 		public IEnumerable<Cell> GetSelectedCells()

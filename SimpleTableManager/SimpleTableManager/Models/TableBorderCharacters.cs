@@ -21,7 +21,7 @@ namespace SimpleTableManager.Models
 			if (_CHARACTERS.SingleOrDefault(c => 
 				c.Mode == (TableBorderCharacterMode)((int)mode & ~(int)TableBorderCharacterMode.None)) is var res && res is { })
 			{
-				return Settings.ModernTableBorder ? res.Modern : res.Retro;
+				return Settings.Current.ModernTableBorder ? res.Modern : res.Retro;
 			}
 			else
 			{

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 using SimpleTableManager.Models;
 using SimpleTableManager.Services;
@@ -21,9 +22,9 @@ namespace SimpleTableManager
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
 			Console.InputEncoding = System.Text.Encoding.Unicode;
 
-			TableBorderCharacters.FromJson($@".\Configs\tableBorderCharacters.json");
-			CommandTree.FromJsonFolder($@".\Configs\Commands");
-
+			TableBorderCharacters.FromJson(@".\Configs\tableBorderCharacters.json");
+			CommandTree.FromJsonFolder(@".\Configs\Commands");
+			Settings.FromJson(@".\Configs\settings.json");
 
 			var document = new Document();
 
@@ -77,6 +78,7 @@ namespace SimpleTableManager
 					}
 					else if (rawCommand == "refresh")
 					{
+						Console.ResetColor();
 						rawCommand = "";
 						Console.Clear();
 					}
@@ -122,7 +124,7 @@ namespace SimpleTableManager
 
 			if (command.AvailableKeys is { })
 			{
-				lastHelp = $"{error} Available keys: '{string.Join(", ", command.AvailableKeys)}' in '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
+				lastHelp = $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
 			}
 			else if (command.Reference is { })
 			{
@@ -130,7 +132,7 @@ namespace SimpleTableManager
 
 				var parameters = command.GetParameters(command.GetMethod(instances.First()));
 
-				lastHelp = $"{error} Parameters: '{string.Join(", ", parameters)}' of '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
+				lastHelp = $"{error}\n    Parameters:\n        {string.Join("\n        ", parameters)}\n    of '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
 			}
 		}
 
@@ -140,7 +142,16 @@ namespace SimpleTableManager
 
 			if (lastHelp is { })
 			{
-				Console.WriteLine($"Help: {lastHelp}\n");
+				Console.Write("Help:\n");
+
+				foreach (var c in lastHelp)
+				{
+					Console.Write(c);
+
+					Task.Delay(10).Wait();
+				}
+
+				Console.WriteLine("\n");
 			}
 
 			Console.Write("> ");

@@ -32,7 +32,9 @@
 		"cell": {
 			"content": "setCellContent"
 		},
-		"view": "setViewOptions"
+		"view": "setViewOptions",
+		"view-columns": "setViewOptionsColumns",
+		"view-rows": "setViewOptionsRows"
 	},
 	"select": {
 		"cell": "selectCell",

@@ -1,19 +1,33 @@
 ﻿using System;
+using System.IO;
 
 namespace SimpleTableManager.Models
 {
-	public static class Settings
+	public class Settings
 	{
-		public static ConsoleColor DefaultForegroundColor { get; set; } = ConsoleColor.DarkGreen;
+		public ConsoleColor TextForegroundColor { get; set; } = ConsoleColor.Gray;
 
-		public static ConsoleColor DefaultBackgroundColor { get; set; } = ConsoleColor.Black;
+		public ConsoleColor TextBackgroundColor { get; set; } = ConsoleColor.Black;
 
-		public static ConsoleColor BorderColor { get; set; } = ConsoleColor.DarkGreen;
+		public ConsoleColor DefaultCellForegroundColor { get; set; } = ConsoleColor.Gray;
 
-		public static ConsoleColor SelectedForegroundColor { get; set; } = ConsoleColor.Yellow;
+		public ConsoleColor DefaultCellBackgroundColor { get; set; } = ConsoleColor.Black;
 
-		public static bool ModernTableBorder { get; set; } = false;
+		public ConsoleColor BorderForegroundColor { get; set; } = ConsoleColor.Gray;
 
-		public static int RenderDelay { get; set; } = 0;
+		public ConsoleColor BorderBackgroundColor { get; set; } = ConsoleColor.Black;
+
+		public ConsoleColor SelectedCellForegroundColor { get; set; } = ConsoleColor.Yellow;
+
+		public ConsoleColor SelectedCellBackgroundColor { get; set; } = ConsoleColor.Black;
+
+		public bool ModernTableBorder { get; set; } = false;
+
+		public static void FromJson(string path)
+		{
+			Current = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path));
+		}
+
+		public static Settings Current { get; private set; }
 	}
 }

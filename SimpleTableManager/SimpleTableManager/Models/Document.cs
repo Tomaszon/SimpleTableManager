@@ -14,7 +14,7 @@ namespace SimpleTableManager.Models
 		public Document()
 		{
 			Metadata = new Metadata("", 0, "");
-			Tables.Add(new Table("Table1", 3, 4));
+			Tables.Add(new Table("Table1", 20, 25));
 
 			ActivateTable(0);
 		}

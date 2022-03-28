@@ -11,7 +11,12 @@ namespace SimpleTableManager.Models
 
 			for (int x = 0; x < Size.Width; x++)
 			{
-				Cells.Insert(index * Size.Width + x, new Cell($"N:{x},{index}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
+				Cells.Insert(index * Size.Width + x, new Cell($"N:{x},{index}") { BackgroundColor = Settings.Current.DefaultCellBackgroundColor, ForegroundColor = Settings.Current.DefaultCellForegroundColor });
+			}
+
+			if (ViewOptions.EndPosition.Y == Size.Height - 1)
+			{
+				ViewOptions.IncreaseHeight();
 			}
 
 			Size.Height++;
@@ -44,7 +49,12 @@ namespace SimpleTableManager.Models
 
 			for (int y = 0; y < Size.Height; y++)
 			{
-				Cells.Insert(Size.Width * y + y + index, new Cell($"NEW,y:{y}") { BackgroundColor = Settings.DefaultBackgroundColor, ForegroundColor = Settings.DefaultForegroundColor });
+				Cells.Insert(Size.Width * y + y + index, new Cell($"NEW,y:{y}") { BackgroundColor = Settings.Current.DefaultCellBackgroundColor, ForegroundColor = Settings.Current.DefaultCellForegroundColor });
+			}
+
+			if (ViewOptions.EndPosition.X == Size.Width - 1)
+			{
+				ViewOptions.IncreaseWidth();
 			}
 
 			Size.Width++;

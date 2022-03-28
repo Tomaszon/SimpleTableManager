@@ -57,8 +57,6 @@ namespace SimpleTableManager.Models
 			SetContent(contents);
 		}
 
-
-
 		public void ClearContent()
 		{
 			Content.Clear();

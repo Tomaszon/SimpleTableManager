@@ -20,18 +20,18 @@ namespace SimpleTableManager.Models
 			}
 		}
 
-		public static CommandReference GetCommandReference(string value, out List<string> parameters, out List<string> availableKeys)
+		public static CommandReference GetCommandReference(string value, out List<string> arguments, out List<string> availableKeys)
 		{
-			var keys = value.Split(' ').ToList();
+			var keys = value.Split(' ', System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries).Select(k => k.Replace("\\s", " ").Replace("\\t", " ")).ToList();
 
 			return new CommandReference()
 			{
 				ClassName = keys.FirstOrDefault(),
-				MethodName = GetReferenceMethodNameRecursive(Commands, keys, value, out parameters, out availableKeys)
+				MethodName = GetReferenceMethodNameRecursive(Commands, keys, value, out arguments, out availableKeys)
 			};
 		}
 
-		private static string GetReferenceMethodNameRecursive(object obj, List<string> keys, string fullValue, out List<string> parameters, out List<string> availableKeys)
+		private static string GetReferenceMethodNameRecursive(object obj, List<string> keys, string fullValue, out List<string> arguments, out List<string> availableKeys)
 		{
 			if (obj is ExpandoObject o)
 			{
@@ -39,7 +39,7 @@ namespace SimpleTableManager.Models
 				{
 					var l = o.Select(e => e.Key).ToList();
 
-					parameters = null;
+					arguments = null;
 					availableKeys = l;
 
 					return null;
@@ -58,21 +58,21 @@ namespace SimpleTableManager.Models
 						throw new IncompleteCommandException(fullValue);
 					}
 
-					return GetReferenceMethodNameRecursive(v, keys.GetRange(1, keys.Count - 1), fullValue, out parameters, out availableKeys);
+					return GetReferenceMethodNameRecursive(v, keys.GetRange(1, keys.Count - 1), fullValue, out arguments, out availableKeys);
 				}
 			}
 			else
 			{
 				if (keys.FirstOrDefault() == "-help")
 				{
-					parameters = null;
+					arguments = null;
 					availableKeys = null;
 
 					return (string)obj;
 				}
 				else
 				{
-					parameters = keys;
+					arguments = keys;
 					availableKeys = null;
 
 					return (string)obj;

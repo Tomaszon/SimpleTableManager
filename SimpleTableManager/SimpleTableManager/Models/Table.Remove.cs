@@ -14,6 +14,11 @@ namespace SimpleTableManager.Models
 
 			Cells.RemoveRange(index * Size.Width, Size.Width);
 
+			if (ViewOptions.EndPosition.Y == Size.Height - 1)
+			{
+				ViewOptions.DecreaseHeight();
+			}
+
 			Size.Height--;
 		}
 
@@ -37,6 +42,11 @@ namespace SimpleTableManager.Models
 			for (int y = 0; y < Size.Height; y++)
 			{
 				Cells.RemoveAt(Size.Width * y - y + index);
+			}
+
+			if (ViewOptions.EndPosition.X == Size.Width - 1)
+			{
+				ViewOptions.DecreaseWidth();
 			}
 
 			Size.Width--;
