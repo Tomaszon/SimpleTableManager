@@ -38,9 +38,9 @@ namespace SimpleTableManager.Models
 
 		public bool IsSelected { get; set; }
 
-		public ConsoleColor ForegroundColor { get; set; } = ConsoleColor.White;
+		public ConsoleColor ForegroundColor { get; set; } = Settings.Current.DefaultCellForegroundColor;
 
-		public ConsoleColor BackgroundColor { get; set; } = ConsoleColor.Black;
+		public ConsoleColor BackgroundColor { get; set; } = Settings.Current.DefaultCellBackgroundColor;
 
 		public VertialAlignment VertialAlignment { get; set; } = VertialAlignment.Center;
 

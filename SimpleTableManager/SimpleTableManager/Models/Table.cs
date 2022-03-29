@@ -17,6 +17,16 @@ namespace SimpleTableManager.Models
 
 		public List<Cell> Cells { get; set; } = new List<Cell>();
 
+		public Dictionary<int, List<Cell>> Columns
+		{
+			get => Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);
+		}
+
+		public Dictionary<int, List<Cell>> Rows
+		{
+			get => Shared.IndexArray(Size.Height).ToDictionary(y => y, y => this[0, y, Size.Width - 1, y]);
+		}
+
 		public Cell this[int x, int y]
 		{
 			get
@@ -29,28 +39,9 @@ namespace SimpleTableManager.Models
 		{
 			get
 			{
-				List<Cell> result = new List<Cell>();
-
-				for (int y = y1; y <= y2; y++)
-				{
-					for (int x = x1; x <= x2; x++)
-					{
-						result.Add(this[x, y]);
-					}
-				}
-
-				return result;
+				return Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
+					Shared.IndexArray(x2 - x1 + 1, x1).Select(x => this[x, y])).ToList();
 			}
-		}
-
-		public List<Cell> GetColumn(int x)
-		{
-			return this[x, 0, x, Size.Height - 1];
-		}
-
-		public List<Cell> GetRow(int y)
-		{
-			return this[0, y, Size.Width - 1, y];
 		}
 
 		public Table(string name, int columnCount, int rowCount)
@@ -88,6 +79,15 @@ namespace SimpleTableManager.Models
 			return this[index, 0, index, Size.Height - 1].Max(c => c.Size.Width);
 		}
 
+		public bool IsColumnSelected(int index)
+		{
+			return index >= 0 && index < Size.Width && Columns[index].Any(c => c.IsSelected);
+		}
+
+		public bool IsRowSelected(int index)
+		{
+			return index >= 0 && index < Size.Height && Rows[index].Any(c => c.IsSelected);
+		}
 
 		#region Set
 		[CommandReference]

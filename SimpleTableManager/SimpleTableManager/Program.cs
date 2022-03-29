@@ -42,10 +42,10 @@ namespace SimpleTableManager
 			//}
 
 
-			document.GetActiveTable()[1, 0].SetContent("T");
-			document.GetActiveTable()[1, 0].VertialAlignment = VertialAlignment.Top;
-			document.GetActiveTable()[1, 1].SetContent("B");
-			document.GetActiveTable()[1, 1].VertialAlignment = VertialAlignment.Bottom;
+			//document.GetActiveTable()[1, 0].SetContent("T");
+			//document.GetActiveTable()[1, 0].VertialAlignment = VertialAlignment.Top;
+			//document.GetActiveTable()[1, 1].SetContent("B");
+			//document.GetActiveTable()[1, 1].VertialAlignment = VertialAlignment.Bottom;
 			//table[1, 1].SetContent("C");
 			//table[1, 1].VertialAlignment = VertialAlignment.Center;
 			//table[1, 2].SetContent("C");
@@ -104,7 +104,7 @@ namespace SimpleTableManager
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message);
+					Console.WriteLine($"{ex.Message} -> {ex}");
 					Console.Write("Press any key to continue");
 					Console.ReadKey();
 				}

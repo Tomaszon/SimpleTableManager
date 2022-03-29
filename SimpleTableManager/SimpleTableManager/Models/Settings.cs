@@ -21,6 +21,10 @@ namespace SimpleTableManager.Models
 
 		public ConsoleColor SelectedCellBackgroundColor { get; set; } = ConsoleColor.Black;
 
+		public ConsoleColor SelectedBorderForegroundColor { get; set; } = ConsoleColor.Yellow;
+
+		public ConsoleColor SelectedBorderBackgroundColor { get; set; } = ConsoleColor.Black;
+
 		public bool ModernTableBorder { get; set; } = false;
 
 		public static void FromJson(string path)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -20,7 +19,7 @@ namespace SimpleTableManager.Services
 
 		public static void Render(Table table)
 		{
-			ChangeToDefaultCellColors();
+			ChangeToTextColors();
 
 			Console.WriteLine($"{table.Name}\n");
 
@@ -95,7 +94,12 @@ namespace SimpleTableManager.Services
 
 			for (int y = 0; y < _VIEW_TABLE.Size.Height; y++)
 			{
-				DrawContentRow(y);
+				for (int i = 0; i < _ROW_HEIGHTS[y]; i++)
+				{
+					DrawContentLine(i, _VIEW_TABLE[0, y, _VIEW_TABLE.Size.Width - 1, y], y, _VIEW_TABLE.Size.Height, _VIEW_TABLE.Size.Width);
+				}
+
+				DrawSeparatorLine(y + 1, _VIEW_TABLE.Size.Width, _VIEW_TABLE.Size.Height);
 			}
 
 			ChangeToTextColors();
@@ -121,31 +125,27 @@ namespace SimpleTableManager.Services
 			return false;
 		}
 
-		private static void DrawContentRow(int rowIndex)
-		{
-			for (int i = 0; i < _ROW_HEIGHTS[rowIndex]; i++)
-			{
-				DrawContentLine(i, _VIEW_TABLE[0, rowIndex, _VIEW_TABLE.Size.Width - 1, rowIndex], rowIndex, _VIEW_TABLE.Size.Height, _VIEW_TABLE.Size.Width);
-			}
-
-			DrawSeparatorLine(rowIndex + 1, _VIEW_TABLE.Size.Width, _VIEW_TABLE.Size.Height);
-
-			//if (i % 10 == 0)
-			{
-				Task.Delay(50 / _VIEW_TABLE.Size.Width).Wait();
-			}
-		}
-
 		private static void DrawSeparatorLine(int borderRowNo, int columnCount, int rowCount)
 		{
+			//TODO fix coloring
 			Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
 
-			Draw(GetTableCharacter(borderRowNo, 0, rowCount, columnCount), DrawColorSet.Border);
+			ChangeToBorderColors(false);
+
+			Draw(GetTableCharacter(borderRowNo, 0, rowCount, columnCount));
 
 			for (int i = 0; i < columnCount; i++)
 			{
-				Draw(new string(GetTableCharacter(borderRowNo, i + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[i]), DrawColorSet.Border);
-				Draw(GetTableCharacter(borderRowNo, i + 1, rowCount, columnCount), DrawColorSet.Border);
+				ChangeToBorderColors(IsHorizontalBorderSegmentSelected(i, borderRowNo));
+
+				Draw(new string(GetTableCharacter(borderRowNo, i + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[i]));
+
+				var isSelected = _VIEW_TABLE.IsColumnSelected(i + 1) &&
+					(_VIEW_TABLE.IsRowSelected(borderRowNo) || _VIEW_TABLE.IsRowSelected(borderRowNo - 1));
+
+				ChangeToBorderColors(isSelected);
+
+				Draw(GetTableCharacter(borderRowNo, i + 1, rowCount, columnCount));
 			}
 
 			Console.WriteLine();
@@ -155,23 +155,26 @@ namespace SimpleTableManager.Services
 		{
 			Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
 
-			Draw(GetTableCharacter(rowIndex + 0.5m, 0, rowCount, columnCount), DrawColorSet.Border);
+			ChangeToBorderColors(false);
+
+			Draw(GetTableCharacter(rowIndex + 0.5m, 0, rowCount, columnCount));
 
 			for (int i = 0; i < cells.Count; i++)
 			{
-				if (IsCellContentDrawNeeded(cells[i], lineIndex, rowIndex, out var contentIndex))
-				{
-					Draw(cells[i], contentIndex, _COLUMN_WIDTHS[i]);
-				}
-				else
-				{
-					Draw("", _COLUMN_WIDTHS[i]);
-				}
+				Draw(cells[i], lineIndex, rowIndex, _COLUMN_WIDTHS[i]);
 
-				Draw(GetTableCharacter(rowIndex + 0.5m, i + 1, rowCount, columnCount), DrawColorSet.Border);
+				ChangeToBorderColors(cells[i].IsSelected || i + 1 < cells.Count && cells[i + 1].IsSelected);
+
+				Draw(GetTableCharacter(rowIndex + 0.5m, i + 1, rowCount, columnCount));
 			}
 
 			Console.WriteLine();
+		}
+
+		private static bool IsHorizontalBorderSegmentSelected(int columnIndex, int rowIndex)
+		{
+			return _VIEW_TABLE.IsColumnSelected(columnIndex) &&
+				(_VIEW_TABLE.IsRowSelected(rowIndex) || _VIEW_TABLE.IsRowSelected(rowIndex - 1));
 		}
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int rowIndex, out int contentIndex)
@@ -194,78 +197,56 @@ namespace SimpleTableManager.Services
 			return isDrawNeeded;
 		}
 
-		private static void Draw(Cell cell, int contentIndex, int width)
+		private static void Draw(Cell cell, int lineIndex, int rowIndex, int width)
 		{
-			if (cell.Content.Count > contentIndex)
+			var content = new string(' ', width);
+
+			if (IsCellContentDrawNeeded(cell, lineIndex, rowIndex, out var contentIndex) && cell.Content.Count > contentIndex)
 			{
-				var content = cell.Content[contentIndex].ToString();
+				content = cell.Content[contentIndex].ToString();
 
 				switch (cell.HorizontalAlignment)
 				{
 					case HorizontalAlignment.Left:
 						content = content.PadRight(width - 1).PadLeft(width);
 						break;
+
 					case HorizontalAlignment.Center:
 						content = content.PadLeftRight(width);
 						break;
+
 					case HorizontalAlignment.Right:
 						content = content.PadLeft(width - 1).PadRight(width);
 						break;
 				}
-
-				Draw(content, 0, cell.IsSelected ? DrawColorSet.SelectedBorder : DrawColorSet.Default);
 			}
+
+			ChangeToCellColors(cell);
+
+			Draw(content);
 		}
 
-		private static void Draw(object content, int width = 1, DrawColorSet colorSet = DrawColorSet.Default)
+		private static void Draw(object content)
 		{
-			switch (colorSet)
-			{
-				case DrawColorSet.Default:
-					ChangeToDefaultCellColors();
-					break;
-
-				case DrawColorSet.Border:
-					ChangeToBorderColors();
-					break;
-
-				case DrawColorSet.SelectedBorder:
-					ChangeToSelectedCellColors();
-					break;
-			}
-
-			var formattedContent = content.ToString().PadLeftRight(width);
-
-			//foreach (var c in formattedContent)
-			//{
-			//	Console.Write(c);
-			//	Task.Delay(10).Wait();
-			//}
+			var formattedContent = content.ToString();
 
 			Console.Write(formattedContent);
 		}
 
-		private static void Draw(object content, DrawColorSet colorSet = DrawColorSet.Default, int width = 1)
+		private static void ChangeToCellColors(Cell cell)
 		{
-			Draw(content, width, colorSet);
+			Console.ForegroundColor = cell.IsSelected ?
+				Settings.Current.SelectedCellForegroundColor : cell.ForegroundColor;
+			Console.BackgroundColor = cell.IsSelected ?
+				Settings.Current.SelectedCellBackgroundColor : cell.BackgroundColor;
 		}
 
-		private static void ChangeToDefaultCellColors()
+		private static void ChangeToBorderColors(bool selected)
 		{
-			Console.ForegroundColor = Settings.Current.DefaultCellForegroundColor;
-			Console.BackgroundColor = Settings.Current.DefaultCellBackgroundColor;
-		}
-
-		private static void ChangeToBorderColors()
-		{
-			Console.ForegroundColor = Settings.Current.BorderForegroundColor;
-			Console.BackgroundColor = Settings.Current.BorderBackgroundColor;
-		}
-
-		private static void ChangeToSelectedCellColors()
-		{
-			Console.ForegroundColor = Settings.Current.SelectedCellForegroundColor;
-			Console.BackgroundColor = Settings.Current.SelectedCellBackgroundColor;
+			Console.ForegroundColor = selected ?
+				Settings.Current.SelectedBorderForegroundColor : Settings.Current.BorderForegroundColor;
+			Console.BackgroundColor = selected ?
+				Settings.Current.SelectedBorderBackgroundColor : Settings.Current.BorderBackgroundColor;
 		}
 
 		private static void ChangeToTextColors()
@@ -302,7 +283,10 @@ namespace SimpleTableManager.Services
 
 				_VIEW_TABLE[x, 0].SetContent($"{left}{colIndex}{right}");
 
-				_VIEW_TABLE[x, 0].IsSelected = _VIEW_TABLE.GetColumn(x).Any(c => c.IsSelected);
+				if (_VIEW_TABLE.IsColumnSelected(x))
+				{
+					_VIEW_TABLE[x, 0].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
+				}
 			}
 
 			_VIEW_TABLE.AddColumnAt(0);
@@ -320,7 +304,10 @@ namespace SimpleTableManager.Services
 
 				_VIEW_TABLE[0, y].SetContent($"{left}{rowIndex}{rigth}");
 
-				_VIEW_TABLE[0, y].IsSelected = _VIEW_TABLE.GetRow(y).Any(c => c.IsSelected);
+				if (_VIEW_TABLE.IsRowSelected(y))
+				{
+					_VIEW_TABLE[0, y].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
+				}
 			}
 		}
 
@@ -364,11 +351,11 @@ namespace SimpleTableManager.Services
 			return TableBorderCharacterMode.None;
 		}
 
-		private enum DrawColorSet
-		{
-			Default,
-			Border,
-			SelectedBorder
-		}
+		//private enum DrawColorSet
+		//{
+		//	Default,
+		//	Border,
+		//	SelectedBorder
+		//}
 	}
 }

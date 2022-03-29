@@ -17,13 +17,13 @@
 		[CommandReference]
 		public void DeselectColumn(int x)
 		{
-			GetColumn(x).ForEach(c => c.IsSelected = false);
+			Columns[x].ForEach(c => c.IsSelected = false);
 		}
 
 		[CommandReference]
 		public void DeselectRow(int y)
 		{
-			GetRow(y).ForEach(c => c.IsSelected = false);
+			Rows[y].ForEach(c => c.IsSelected = false);
 		}
 
 		[CommandReference]

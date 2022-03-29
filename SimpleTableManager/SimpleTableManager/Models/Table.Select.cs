@@ -17,13 +17,13 @@
 		[CommandReference]
 		public void SelectColumn(int x)
 		{
-			GetColumn(x).ForEach(c => c.IsSelected = true);
+			Columns[x].ForEach(c => c.IsSelected = true);
 		}
 
 		[CommandReference]
 		public void SelectRow(int y)
 		{
-			GetRow(y).ForEach(c => c.IsSelected = true);
+			Rows[y].ForEach(c => c.IsSelected = true);
 		}
 
 		[CommandReference]

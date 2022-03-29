@@ -86,14 +86,7 @@ namespace SimpleTableManager.Services
 
 		public static List<int> IndexArray(int size, int from = 0, int step = 1)
 		{
-			var result = new List<int>();
-
-			for (int i = from; i < from + size; i += step)
-			{
-				result.Add(i);
-			}
-
-			return result;
+			return Enumerable.Repeat(from, size).Select((value, index) => value + index * step).ToList();
 		}
 
 		public static object GetDefaultValue(Type type)
