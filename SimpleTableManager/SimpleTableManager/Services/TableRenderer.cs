@@ -41,51 +41,52 @@ namespace SimpleTableManager.Services
 
 			//TODO resolve this mess
 			//--------------
-			Random rand = new Random();
+			#region mess
+			//Random rand = new Random();
 
 
-			int fadeSize = 5;
-			var lorem = "";
+			//int fadeSize = 5;
+			//var lorem = "";
 
-			for (int y = 0; y < _VIEW_TABLE_GRAPHICAL_SIZE.Height; y++)
-			{
-				lorem += new string(' ', _TABLE_OFFSET.X);
-				for (int x = 0; x < _VIEW_TABLE_GRAPHICAL_SIZE.Width; x++)
-				{
-					if (x < fadeSize || y < fadeSize)
-					{
-						if (rand.Next(0, Math.Min(x + 1, y + 1) + 1) == 0)
-						{
-							lorem += ' ';
-						}
-						else
-						{
-							lorem += (char)rand.Next(' ' + 1, 'Z');
-						}
-					}
-					else if (x > _VIEW_TABLE_GRAPHICAL_SIZE.Width - fadeSize - 1 || y > _VIEW_TABLE_GRAPHICAL_SIZE.Height - fadeSize - 1)
-					{
-						if (rand.Next(0, Math.Min(_VIEW_TABLE_GRAPHICAL_SIZE.Width - x + 1, _VIEW_TABLE_GRAPHICAL_SIZE.Height - y + 1) + 1) == 0)
-						{
-							lorem += ' ';
-						}
-						else
-						{
-							lorem += (char)rand.Next(' ' + 1, 'Z');
-						}
-					}
-					else
-					{
-						lorem += (char)rand.Next(' ' + 1, 'Z');
-					}
-				}
-				lorem += ('\n');
-			}
+			//for (int y = 0; y < _VIEW_TABLE_GRAPHICAL_SIZE.Height; y++)
+			//{
+			//	lorem += new string(' ', _TABLE_OFFSET.X);
+			//	for (int x = 0; x < _VIEW_TABLE_GRAPHICAL_SIZE.Width; x++)
+			//	{
+			//		if (x < fadeSize || y < fadeSize)
+			//		{
+			//			if (rand.Next(0, Math.Min(x + 1, y + 1) + 1) == 0)
+			//			{
+			//				lorem += ' ';
+			//			}
+			//			else
+			//			{
+			//				lorem += (char)rand.Next(' ' + 1, 'Z');
+			//			}
+			//		}
+			//		else if (x > _VIEW_TABLE_GRAPHICAL_SIZE.Width - fadeSize - 1 || y > _VIEW_TABLE_GRAPHICAL_SIZE.Height - fadeSize - 1)
+			//		{
+			//			if (rand.Next(0, Math.Min(_VIEW_TABLE_GRAPHICAL_SIZE.Width - x + 1, _VIEW_TABLE_GRAPHICAL_SIZE.Height - y + 1) + 1) == 0)
+			//			{
+			//				lorem += ' ';
+			//			}
+			//			else
+			//			{
+			//				lorem += (char)rand.Next(' ' + 1, 'Z');
+			//			}
+			//		}
+			//		else
+			//		{
+			//			lorem += (char)rand.Next(' ' + 1, 'Z');
+			//		}
+			//	}
+			//	lorem += ('\n');
+			//}
 
-			Console.Write(lorem);
+			//Console.Write(lorem);
 
 
-
+			#endregion
 			//--------------
 
 			Console.SetCursorPosition(_TABLE_OFFSET.X, _TABLE_OFFSET.Y);
@@ -125,27 +126,27 @@ namespace SimpleTableManager.Services
 			return false;
 		}
 
-		private static void DrawSeparatorLine(int borderRowNo, int columnCount, int rowCount)
+		private static void DrawSeparatorLine(int rowIndex, int columnCount, int rowCount)
 		{
 			//TODO fix coloring
 			Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
 
 			ChangeToBorderColors(false);
 
-			Draw(GetTableCharacter(borderRowNo, 0, rowCount, columnCount));
+			Draw(GetTableCharacter(rowIndex, 0, rowCount, columnCount));
 
-			for (int i = 0; i < columnCount; i++)
+			for (int x = 0; x < columnCount; x++)
 			{
-				ChangeToBorderColors(IsHorizontalBorderSegmentSelected(i, borderRowNo));
+				ChangeToBorderColors(IsHorizontalBorderSegmentSelected(x, rowIndex));
 
-				Draw(new string(GetTableCharacter(borderRowNo, i + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[i]));
+				Draw(new string(GetTableCharacter(rowIndex, x + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[x]));
 
-				var isSelected = _VIEW_TABLE.IsColumnSelected(i + 1) &&
-					(_VIEW_TABLE.IsRowSelected(borderRowNo) || _VIEW_TABLE.IsRowSelected(borderRowNo - 1));
+				//var isSelected = _VIEW_TABLE.IsColumnSelected(x + 1) &&
+				//	(_VIEW_TABLE.IsRowSelected(rowIndex) || _VIEW_TABLE.IsRowSelected(rowIndex - 1));
 
-				ChangeToBorderColors(isSelected);
+				ChangeToBorderColors(IsCornerBorderSegmentSelected(x, rowIndex));
 
-				Draw(GetTableCharacter(borderRowNo, i + 1, rowCount, columnCount));
+				Draw(GetTableCharacter(rowIndex, x + 1, rowCount, columnCount));
 			}
 
 			Console.WriteLine();
@@ -173,8 +174,13 @@ namespace SimpleTableManager.Services
 
 		private static bool IsHorizontalBorderSegmentSelected(int columnIndex, int rowIndex)
 		{
-			return _VIEW_TABLE.IsColumnSelected(columnIndex) &&
-				(_VIEW_TABLE.IsRowSelected(rowIndex) || _VIEW_TABLE.IsRowSelected(rowIndex - 1));
+			return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1);
+		}
+
+		private static bool IsCornerBorderSegmentSelected(int columnIndex, int rowIndex)
+		{
+			return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1) ||
+				_VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex - 1);
 		}
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int rowIndex, out int contentIndex)
@@ -257,58 +263,59 @@ namespace SimpleTableManager.Services
 
 		private static void CreateViewTable(Table table)
 		{
-			var content = JsonConvert.SerializeObject(table, Formatting.Indented);
-			_VIEW_TABLE = JsonConvert.DeserializeObject<Table>(content);
-			var voStartPosition = _VIEW_TABLE.ViewOptions.StartPosition;
-			var voEndPosition = _VIEW_TABLE.ViewOptions.EndPosition;
+			//var content = JsonConvert.SerializeObject(table, Formatting.Indented);
+			//_VIEW_TABLE = JsonConvert.DeserializeObject<Table>(content);
 
-			var leftEllipsis = voStartPosition.X > 0;
-			var upEllipsis = voStartPosition.Y > 0;
-			var rightEllipsis = voEndPosition.X < table.Size.Width - 1;
-			var downEllipsis = voEndPosition.Y < table.Size.Height - 1;
+			//var voStartPosition = _VIEW_TABLE.ViewOptions.StartPosition;
+			//var voEndPosition = _VIEW_TABLE.ViewOptions.EndPosition;
 
-			_VIEW_TABLE.Cells = _VIEW_TABLE[voStartPosition.X, voStartPosition.Y, voEndPosition.X, voEndPosition.Y];
-			_VIEW_TABLE.Size = _VIEW_TABLE.ViewOptions.Size;
+			//var leftEllipsis = voStartPosition.X > 0;
+			//var upEllipsis = voStartPosition.Y > 0;
+			//var rightEllipsis = voEndPosition.X < table.Size.Width - 1;
+			//var downEllipsis = voEndPosition.Y < table.Size.Height - 1;
 
-			_VIEW_TABLE.AddRowAt(0);
+			//_VIEW_TABLE.Cells = _VIEW_TABLE[voStartPosition.X, voStartPosition.Y, voEndPosition.X, voEndPosition.Y];
+			//_VIEW_TABLE.Size = _VIEW_TABLE.ViewOptions.Size;
 
-			for (int x = 0; x < _VIEW_TABLE.Size.Width; x++)
-			{
-				var colIndex = _VIEW_TABLE.ViewOptions.StartPosition.X + x;
+			//_VIEW_TABLE.AddRowAt(0);
 
-				_VIEW_TABLE[x, 0].ContentType = typeof(string);
+			//for (int x = 0; x < _VIEW_TABLE.Size.Width; x++)
+			//{
+			//	var colIndex = _VIEW_TABLE.ViewOptions.StartPosition.X + x;
 
-				var left = leftEllipsis && x == 0 ? "0 ◀ " : "";
-				var right = rightEllipsis && x == _VIEW_TABLE.Size.Width - 1 ? $" ▶ {table.Size.Width - 1}" : "";
+			//	_VIEW_TABLE[x, 0].ContentType = typeof(string);
 
-				_VIEW_TABLE[x, 0].SetContent($"{left}{colIndex}{right}");
+			//	var left = leftEllipsis && x == 0 ? "0 ◀ " : "";
+			//	var right = rightEllipsis && x == _VIEW_TABLE.Size.Width - 1 ? $" ▶ {table.Size.Width - 1}" : "";
 
-				if (_VIEW_TABLE.IsColumnSelected(x))
-				{
-					_VIEW_TABLE[x, 0].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
-				}
-			}
+			//	_VIEW_TABLE[x, 0].SetContent($"{left}{colIndex}{right}");
 
-			_VIEW_TABLE.AddColumnAt(0);
+			//	if (table.IsColumnSelected(x + voStartPosition.X))
+			//	{
+			//		_VIEW_TABLE[x, 0].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
+			//	}
+			//}
 
-			_VIEW_TABLE[0, 0].SetContent(@"y \ x");
+			//_VIEW_TABLE.AddColumnAt(0);
 
-			for (int y = 1; y < _VIEW_TABLE.Size.Height; y++)
-			{
-				var rowIndex = _VIEW_TABLE.ViewOptions.StartPosition.Y + y - 1;
+			//_VIEW_TABLE[0, 0].SetContent(@"y \ x");
 
-				_VIEW_TABLE[0, y].ContentType = typeof(string);
+			//for (int y = 1; y < _VIEW_TABLE.Size.Height; y++)
+			//{
+			//	var rowIndex = _VIEW_TABLE.ViewOptions.StartPosition.Y + y - 1;
 
-				var left = upEllipsis && y == 1 ? "0 ▲ " : "";
-				var rigth = downEllipsis && y == _VIEW_TABLE.Size.Height - 1 ? $" ▼ {table.Size.Height - 1}" : "";
+			//	_VIEW_TABLE[0, y].ContentType = typeof(string);
 
-				_VIEW_TABLE[0, y].SetContent($"{left}{rowIndex}{rigth}");
+			//	var left = upEllipsis && y == 1 ? "0 ▲ " : "";
+			//	var rigth = downEllipsis && y == _VIEW_TABLE.Size.Height - 1 ? $" ▼ {table.Size.Height - 1}" : "";
 
-				if (_VIEW_TABLE.IsRowSelected(y))
-				{
-					_VIEW_TABLE[0, y].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
-				}
-			}
+			//	_VIEW_TABLE[0, y].SetContent($"{left}{rowIndex}{rigth}");
+
+			//	if (table.IsRowSelected(y - 1 + voStartPosition.Y))
+			//	{
+			//		_VIEW_TABLE[0, y].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
+			//	}
+			//}
 		}
 
 		private static char GetTableCharacter(decimal borderRowNo, decimal borderColNo, int rowCount, int columnCount)

@@ -89,6 +89,11 @@ namespace SimpleTableManager.Models
 			return index >= 0 && index < Size.Height && Rows[index].Any(c => c.IsSelected);
 		}
 
+		public bool IsCellSelected(int x, int y)
+		{
+			return x > 0 && x < Size.Width && y > 0 && y < Size.Height && this[x, y].IsSelected;
+		}
+
 		#region Set
 		[CommandReference]
 		public void SetColumnWidth(int index, int width)
