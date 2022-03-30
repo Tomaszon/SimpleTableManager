@@ -11,13 +11,25 @@ namespace SimpleTableManager.Models
 {
 	public partial class Cell
 	{
-		public Size ContentSize => Content is { } && Content.Count > 0 ?
-			new Size(Content.Max(e => e.ToString().Length + 2), Content.Count) : new Size(0, 0);
-
+		/// <summary>
+		/// Manually set size including the borders
+		/// </summary>
 		public Size GivenSize { get; set; } = new Size(0, 0);
 
-		public Size Size =>
-			new Size(Math.Max(ContentSize.Width, GivenSize.Width), Math.Max(ContentSize.Height, GivenSize.Height));
+		/// <summary>
+		/// Size not including the borders
+		/// </summary>
+		public Size ContentSize => Content is { } && Content.Count > 0 ?
+			new Size(Content.Max(e => e.ToString().Length), Content.Count) : new Size(1, 1);
+
+		/// <summary>
+		/// Max of <see cref="ContentSize"/> and <see cref="GivenSize"/>
+		/// </summary>
+		public Size Size => new Size
+			(
+				Shared.Max(ContentSize.Width, GivenSize.Width),
+				Shared.Max(ContentSize.Height, GivenSize.Height)
+			);
 
 		public Type ContentType { get; set; } = typeof(string);
 
@@ -38,13 +50,21 @@ namespace SimpleTableManager.Models
 
 		public bool IsSelected { get; set; }
 
+		public bool IsHidden { get; set; }
+
+		public ContentPadding Padding { get; set; } = new ContentPadding();
+
+		public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+
+		public VertialAlignment VertialAlignment { get; set; } = VertialAlignment.Center;
+
 		public ConsoleColor ForegroundColor { get; set; } = Settings.Current.DefaultCellForegroundColor;
 
 		public ConsoleColor BackgroundColor { get; set; } = Settings.Current.DefaultCellBackgroundColor;
 
-		public VertialAlignment VertialAlignment { get; set; } = VertialAlignment.Center;
+		public ConsoleColor BorderForegroundColor { get; set; } = Settings.Current.DefaultBorderForegroundColor;
 
-		public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+		public ConsoleColor BorderBackgroundColor { get; set; } = Settings.Current.DefaultBorderBackgroundColor;
 
 		[JsonConstructor]
 		private Cell()

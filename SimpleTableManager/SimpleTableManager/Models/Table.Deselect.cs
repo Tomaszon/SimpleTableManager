@@ -29,7 +29,7 @@
 		[CommandReference]
 		public void DeselectAll()
 		{
-			Cells.ForEach(c => c.IsSelected = false);
+			Content.ForEach(c => c.IsSelected = false);
 		}
 	}
 }

@@ -13,9 +13,9 @@ namespace SimpleTableManager.Models
 
 		public ConsoleColor DefaultCellBackgroundColor { get; set; } = ConsoleColor.Black;
 
-		public ConsoleColor BorderForegroundColor { get; set; } = ConsoleColor.Gray;
+		public ConsoleColor DefaultBorderForegroundColor { get; set; } = ConsoleColor.Gray;
 
-		public ConsoleColor BorderBackgroundColor { get; set; } = ConsoleColor.Black;
+		public ConsoleColor DefaultBorderBackgroundColor { get; set; } = ConsoleColor.Black;
 
 		public ConsoleColor SelectedCellForegroundColor { get; set; } = ConsoleColor.Yellow;
 

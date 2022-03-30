@@ -12,7 +12,7 @@ namespace SimpleTableManager.Models
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
 
-			Cells.RemoveRange(index * Size.Width, Size.Width);
+			Content.RemoveRange(index * Size.Width, Size.Width);
 
 			if (ViewOptions.EndPosition.Y == Size.Height - 1)
 			{
@@ -41,7 +41,7 @@ namespace SimpleTableManager.Models
 
 			for (int y = 0; y < Size.Height; y++)
 			{
-				Cells.RemoveAt(Size.Width * y - y + index);
+				Content.RemoveAt(Size.Width * y - y + index);
 			}
 
 			if (ViewOptions.EndPosition.X == Size.Width - 1)
@@ -67,7 +67,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void RemoveCellContent()
 		{
-			Cells.Where(c => c.IsSelected).ForEach(c => c.RemoveContent());
+			Content.Where(c => c.IsSelected).ForEach(c => c.RemoveContent());
 		}
 	}
 }

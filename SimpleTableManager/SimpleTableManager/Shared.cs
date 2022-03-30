@@ -93,5 +93,10 @@ namespace SimpleTableManager.Services
 		{
 			return type.IsValueType ? Activator.CreateInstance(type) : null;
 		}
+
+		public static int Max(params int[] values)
+		{
+			return Enumerable.Max(values);
+		}
 	}
 }

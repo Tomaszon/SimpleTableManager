@@ -29,7 +29,7 @@
 		[CommandReference]
 		public void SelectAll()
 		{
-			Cells.ForEach(c => c.IsSelected = true);
+			Content.ForEach(c => c.IsSelected = true);
 		}
 	}
 }
