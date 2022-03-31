@@ -14,7 +14,7 @@ namespace SimpleTableManager.Models
 		/// <summary>
 		/// Manually set size including the borders
 		/// </summary>
-		public Size GivenSize { get; set; } = new Size(0, 0);
+		public Size GivenSize { get; set; } = new Size(3, 3);
 
 		/// <summary>
 		/// Size not including the borders
@@ -27,8 +27,8 @@ namespace SimpleTableManager.Models
 		/// </summary>
 		public Size Size => new Size
 			(
-				Shared.Max(ContentSize.Width, GivenSize.Width),
-				Shared.Max(ContentSize.Height, GivenSize.Height)
+				Shared.Max(ContentSize.Width + 2, GivenSize.Width),
+				Shared.Max(ContentSize.Height + 2, GivenSize.Height)
 			);
 
 		public Type ContentType { get; set; } = typeof(string);

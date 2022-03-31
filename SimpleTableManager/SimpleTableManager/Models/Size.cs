@@ -11,5 +11,10 @@
 			Width = width;
 			Height = height;
 		}
+
+		public override string ToString()
+		{
+			return $"W: {Width}, H: {Height}";
+		}
 	}
 }

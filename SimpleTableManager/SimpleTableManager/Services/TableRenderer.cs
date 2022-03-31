@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
@@ -105,69 +104,100 @@ namespace SimpleTableManager.Services
 
 			var tSize = table.GetTableSize();
 
-			Console.WriteLine($"{tSize.Width},{tSize.Height}");
-
+			Console.WriteLine(tSize);
 
 			var tableOffset = new Size((Console.WindowWidth - tSize.Width) / 2, 10);
 
-
-			var cSize = table.GetCornerCellSize();
-
-			Console.SetCursorPosition(tableOffset.Width, tableOffset.Height);
-			Console.Write($"c {table.CornerCell.Content.FirstOrDefault()}");
-			Console.SetCursorPosition(tableOffset.Width + cSize.Width - 1, tableOffset.Height + cSize.Height - 1);
-			Console.Write($"x");
-
+			DrawCell(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
 
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
 				{
-					if (!table.Header[x].IsHidden)
+					var cell = table.Header[x];
+
+					if (!cell.IsHidden && table.IsCellInView(x: x))
 					{
 						var position = table.GetHeaderCellPosition(tableOffset, x);
 
 						var size = table.GetHeaderCellSize(x);
 
-						Console.SetCursorPosition(position.X, position.Y);
-						Console.Write($"h {table.Header[x].Content.FirstOrDefault()}");
-						Console.SetCursorPosition(position.X + size.Width - 1, position.Y + size.Height - 1);
-						Console.Write($"x");
+						DrawCell(cell, position, size);
 					}
 				});
 
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 			{
-				if (!table.Sider[y].IsHidden)
+				var cell = table.Sider[y];
+				if (!cell.IsHidden && table.IsCellInView(y: y))
 				{
 					var position = table.GetSiderCellPosition(tableOffset, y);
 
 					var size = table.GetSiderCellSize(y);
 
-					Console.SetCursorPosition(position.X, position.Y);
-					Console.Write($"s {table.Sider[y].Content.FirstOrDefault()}");
-					Console.SetCursorPosition(position.X + size.Width - 1, position.Y + size.Height - 1);
-					Console.Write($"x");
+					DrawCell(cell, position, size);
 				}
 			});
 
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 				Shared.IndexArray(table.Size.Width).ForEach(x =>
 					{
-						if (!table[x, y].IsHidden)
+						var cell = table[x, y];
+
+						if (!cell.IsHidden && table.IsCellInView(x, y))
 						{
 							var position = table.GetContentCellPosition(tableOffset, x, y);
 
 							var size = table.GetContentCellSize(x, y);
 
-							Console.SetCursorPosition(position.X, position.Y);
-							Console.Write($"u");
-							Console.SetCursorPosition(position.X + size.Width - 1, position.Y + size.Height - 1);
-							Console.Write($"x");
+							DrawCell(cell, position, size);
 						}
 					}));
 
 			Console.WriteLine();
 
 			ChangeToTextColors();
+		}
+
+
+		private static void DrawCell(Cell cell, Position position, Size size)
+		{
+			Console.SetCursorPosition(position.X, position.Y);
+			Console.Write($"+{new string('-', size.Width - 2)}+");
+
+			var contentWidth = size.Width - 2;
+
+			Shared.IndexArray(size.Height - 2).ForEach(i =>
+			{
+				Console.SetCursorPosition(position.X, position.Y + i + 1);
+
+				if (IsCellContentDrawNeeded(cell, i, size.Height - 2, out var contentIndex) && cell.Content.Count > contentIndex)
+				{
+					var content = cell.Content[contentIndex].ToString();
+
+					switch (cell.HorizontalAlignment)
+					{
+						case HorizontalAlignment.Left:
+							content = content.PadRight(contentWidth - 1).PadLeft(contentWidth);
+							break;
+
+						case HorizontalAlignment.Center:
+							content = content.PadLeftRight(contentWidth);
+							break;
+
+						case HorizontalAlignment.Right:
+							content = content.PadLeft(contentWidth - 1).PadRight(contentWidth);
+							break;
+					}
+
+					Console.Write($"|{content}|");
+				}
+				else
+				{
+					Console.Write($"|{new string(' ', size.Width - 2)}|");
+				}
+			});
+
+			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
+			Console.Write($"+{new string('-', size.Width - 2)}+");
 		}
 
 		private static bool IsViewTableShrinkNeeded(Table table)
@@ -190,51 +220,51 @@ namespace SimpleTableManager.Services
 			return false;
 		}
 
-		private static void DrawSeparatorLine(int rowIndex, int columnCount, int rowCount)
-		{
-			//TODO fix coloring
-			Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
+		//private static void DrawSeparatorLine(int rowIndex, int columnCount, int rowCount)
+		//{
+		//	//TODO fix coloring
+		//	Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
 
-			ChangeToBorderColors(false);
+		//	ChangeToBorderColors(false);
 
-			Draw(GetTableCharacter(rowIndex, 0, rowCount, columnCount));
+		//	Draw(GetTableCharacter(rowIndex, 0, rowCount, columnCount));
 
-			for (int x = 0; x < columnCount; x++)
-			{
-				ChangeToBorderColors(IsHorizontalBorderSegmentSelected(x, rowIndex));
+		//	for (int x = 0; x < columnCount; x++)
+		//	{
+		//		ChangeToBorderColors(IsHorizontalBorderSegmentSelected(x, rowIndex));
 
-				Draw(new string(GetTableCharacter(rowIndex, x + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[x]));
+		//		Draw(new string(GetTableCharacter(rowIndex, x + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[x]));
 
-				//var isSelected = _VIEW_TABLE.IsColumnSelected(x + 1) &&
-				//	(_VIEW_TABLE.IsRowSelected(rowIndex) || _VIEW_TABLE.IsRowSelected(rowIndex - 1));
+		//		//var isSelected = _VIEW_TABLE.IsColumnSelected(x + 1) &&
+		//		//	(_VIEW_TABLE.IsRowSelected(rowIndex) || _VIEW_TABLE.IsRowSelected(rowIndex - 1));
 
-				ChangeToBorderColors(IsCornerBorderSegmentSelected(x, rowIndex));
+		//		ChangeToBorderColors(IsCornerBorderSegmentSelected(x, rowIndex));
 
-				Draw(GetTableCharacter(rowIndex, x + 1, rowCount, columnCount));
-			}
+		//		Draw(GetTableCharacter(rowIndex, x + 1, rowCount, columnCount));
+		//	}
 
-			Console.WriteLine();
-		}
+		//	Console.WriteLine();
+		//}
 
-		private static void DrawContentLine(int lineIndex, List<Cell> cells, int rowIndex, int rowCount)
-		{
-			Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
+		//private static void DrawContentLine(int lineIndex, List<Cell> cells, int rowIndex, int rowCount)
+		//{
+		//	Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
 
-			ChangeToBorderColors(false);
+		//	ChangeToBorderColors(false);
 
-			Draw(GetTableCharacter(rowIndex + 0.5m, 0, rowCount, cells.Count));
+		//	Draw(GetTableCharacter(rowIndex + 0.5m, 0, rowCount, cells.Count));
 
-			for (int i = 0; i < cells.Count; i++)
-			{
-				Draw(cells[i], lineIndex, rowIndex, _COLUMN_WIDTHS[i]);
+		//	for (int i = 0; i < cells.Count; i++)
+		//	{
+		//		Draw(cells[i], lineIndex, rowIndex, _COLUMN_WIDTHS[i]);
 
-				ChangeToBorderColors(cells[i].IsSelected || i + 1 < cells.Count && cells[i + 1].IsSelected);
+		//		ChangeToBorderColors(cells[i].IsSelected || i + 1 < cells.Count && cells[i + 1].IsSelected);
 
-				Draw(GetTableCharacter(rowIndex + 0.5m, i + 1, rowCount, cells.Count));
-			}
+		//		Draw(GetTableCharacter(rowIndex + 0.5m, i + 1, rowCount, cells.Count));
+		//	}
 
-			Console.WriteLine();
-		}
+		//	Console.WriteLine();
+		//}
 
 		private static bool IsHorizontalBorderSegmentSelected(int columnIndex, int rowIndex)
 		{
@@ -247,17 +277,15 @@ namespace SimpleTableManager.Services
 				_VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex - 1);
 		}
 
-		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int rowIndex, out int contentIndex)
+		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
 		{
 			var ch = cell.Content.Count;
-
-			var rh = _ROW_HEIGHTS[rowIndex];
 
 			var startLineIndex = cell.VertialAlignment switch
 			{
 				VertialAlignment.Top => 0,
-				VertialAlignment.Bottom => rh - ch,
-				_ => (rh - ch) / 2
+				VertialAlignment.Bottom => height - ch,
+				_ => (height - ch) / 2
 			};
 
 			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
@@ -267,41 +295,41 @@ namespace SimpleTableManager.Services
 			return isDrawNeeded;
 		}
 
-		private static void Draw(Cell cell, int lineIndex, int rowIndex, int width)
-		{
-			var content = new string(' ', width);
+		//private static void Draw(Cell cell, int lineIndex, int rowIndex, int width)
+		//{
+		//	var content = new string(' ', width);
 
-			if (IsCellContentDrawNeeded(cell, lineIndex, rowIndex, out var contentIndex) && cell.Content.Count > contentIndex)
-			{
-				content = cell.Content[contentIndex].ToString();
+		//	if (IsCellContentDrawNeeded(cell, lineIndex, rowIndex, out var contentIndex) && cell.Content.Count > contentIndex)
+		//	{
+		//		content = cell.Content[contentIndex].ToString();
 
-				switch (cell.HorizontalAlignment)
-				{
-					case HorizontalAlignment.Left:
-						content = content.PadRight(width - 1).PadLeft(width);
-						break;
+		//		switch (cell.HorizontalAlignment)
+		//		{
+		//			case HorizontalAlignment.Left:
+		//				content = content.PadRight(width - 1).PadLeft(width);
+		//				break;
 
-					case HorizontalAlignment.Center:
-						content = content.PadLeftRight(width);
-						break;
+		//			case HorizontalAlignment.Center:
+		//				content = content.PadLeftRight(width);
+		//				break;
 
-					case HorizontalAlignment.Right:
-						content = content.PadLeft(width - 1).PadRight(width);
-						break;
-				}
-			}
+		//			case HorizontalAlignment.Right:
+		//				content = content.PadLeft(width - 1).PadRight(width);
+		//				break;
+		//		}
+		//	}
 
-			ChangeToCellColors(cell);
+		//	ChangeToCellColors(cell);
 
-			Draw(content);
-		}
+		//	Draw(content);
+		//}
 
-		private static void Draw(object content)
-		{
-			var formattedContent = content.ToString();
+		//private static void Draw(object content)
+		//{
+		//	var formattedContent = content.ToString();
 
-			Console.Write(formattedContent);
-		}
+		//	Console.Write(formattedContent);
+		//}
 
 		private static void ChangeToCellColors(Cell cell)
 		{

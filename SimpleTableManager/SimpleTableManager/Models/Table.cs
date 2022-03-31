@@ -54,16 +54,16 @@ namespace SimpleTableManager.Models
 		{
 			Name = name;
 			Size = new Size(columnCount, rowCount);
-			//ResetViewOptions();
+			ResetViewOptions();
 
 			Shared.IndexArray(rowCount).ForEach(y =>
-				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell("T", "x: " + x, "y: " + y))));
+				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell("T", new Position(x, y), ":)"))));
 
 			Shared.IndexArray(columnCount).ForEach(x => Header.Add(new Cell(x) { ContentType = typeof(int) }));
 
 			Shared.IndexArray(rowCount).ForEach(y => Sider.Add(new Cell(y) { ContentType = typeof(int) }));
 
-			HideColumn(3);
+			//HideColumn(3);
 		}
 
 		//public List<int> GetColumnWidths()
@@ -98,8 +98,8 @@ namespace SimpleTableManager.Models
 
 		public Size GetTableSize()
 		{
-			var sumWidth = Shared.IndexArray(Size.Width).Where(x => !IsColumnHidden(x)).Sum(x => GetColumnWidth(x) - 1);
-			var sumHeight = Shared.IndexArray(Size.Height).Where(y => !IsRowHidden(y)).Sum(y => GetRowHeight(y) - 1);
+			var sumWidth = Shared.IndexArray(Size.Width).Where(x => !IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1);
+			var sumHeight = Shared.IndexArray(Size.Height).Where(y => !IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1);
 
 			return new Size(GetSiderWidth() + sumWidth, GetHeaderHeight() + sumHeight);
 		}
@@ -126,23 +126,23 @@ namespace SimpleTableManager.Models
 
 		public Position GetHeaderCellPosition(Size tableOffset, int x)
 		{
-			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => !IsColumnHidden(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
+			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => !IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
 
 			return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height);
 		}
 
 		public Position GetSiderCellPosition(Size tableOffset, int y)
 		{
-			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => !IsRowHidden(y)).Sum(y => GetRowHeight(y) - 1) : 0;
+			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => !IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
 			return new Position(tableOffset.Width, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);
 		}
 
 		public Position GetContentCellPosition(Size tableOffset, int x, int y)
 		{
-			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => !IsColumnHidden(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
+			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => !IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
 
-			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => !IsRowHidden(y)).Sum(y => GetRowHeight(y) - 1) : 0;
+			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => !IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
 			return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);
 		}
@@ -179,18 +179,27 @@ namespace SimpleTableManager.Models
 		//	Columns[index].ForEach(c => c.GivenSize = new Size(width, c.GivenSize.Height));
 		//}
 
-		//[CommandReference]
-		//public void SetViewOptions(int x1, int y1, int x2, int y2)
-		//{
-		//	Shared.Validate(() => x1 >= 0 && x1 <= x2, $"Index x1 is not in the needed range: [0, {x2}]");
-		//	Shared.Validate(() => x2 < Size.Width, $"Index x2 is not in the needed range: [{x1}, {Size.Width - 1}]");
+		[CommandReference]
+		public void SetViewOptions(int x1, int y1, int x2, int y2)
+		{
+			Shared.Validate(() => x1 >= 0 && x1 <= x2, $"Index x1 is not in the needed range: [0, {x2}]");
+			Shared.Validate(() => x2 < Size.Width, $"Index x2 is not in the needed range: [{x1}, {Size.Width - 1}]");
 
-		//	Shared.Validate(() => y1 >= 0 && y1 <= y2, $"Index y1 is not in the needed range: [0, {y2}]");
-		//	Shared.Validate(() => y2 < Size.Height, $"Index y2 is not in the needed range: [{y1}, {Size.Height - 1}]");
+			Shared.Validate(() => y1 >= 0 && y1 <= y2, $"Index y1 is not in the needed range: [0, {y2}]");
+			Shared.Validate(() => y2 < Size.Height, $"Index y2 is not in the needed range: [{y1}, {Size.Height - 1}]");
 
-		//	ViewOptions.StartPosition = new Position(x1, y1);
-		//	ViewOptions.EndPosition = new Position(x2, y2);
-		//}
+			ViewOptions.StartPosition = new Position(x1, y1);
+			ViewOptions.EndPosition = new Position(x2, y2);
+
+			//Shared.IndexArray(Size.Width).ForEach(x => ShowColumn(x));
+			//Shared.IndexArray(Size.Height).ForEach(y => ShowRow(y));
+
+			//Shared.IndexArray(x1).ForEach(x => HideColumn(x));
+			//Shared.IndexArray(Size.Width - x2 - 1, x2 + 1).ForEach(x => HideColumn(x));
+
+			//Shared.IndexArray(y1).ForEach(y => HideRow(y));
+			//Shared.IndexArray(Size.Height - y2 - 1, y2 + 1).ForEach(y => HideRow(y));
+		}
 
 		//[CommandReference]
 		//public void SetViewOptionsColumns(int x1, int x2)
@@ -204,16 +213,44 @@ namespace SimpleTableManager.Models
 		//	SetViewOptions(ViewOptions.StartPosition.X, y1, ViewOptions.EndPosition.X, y2);
 		//}
 
-		//[CommandReference]
-		//public void ResetViewOptions()
-		//{
-		//	ViewOptions = new ViewOptions(0, 0, Size.Width - 1, Size.Height - 1);
-		//}
+		[CommandReference]
+		public void ResetViewOptions()
+		{
+			ViewOptions = new ViewOptions(0, 0, Size.Width - 1, Size.Height - 1);
+		}
 		//#endregion
 
 		public IEnumerable<Cell> GetSelectedCells()
 		{
 			return Content.Where(c => c.IsSelected);
+		}
+
+		public bool IsCellInView(int x = -1, int y = -1)
+		{
+			x = x == -1 ? ViewOptions.StartPosition.X : x;
+			y = y == -1 ? ViewOptions.StartPosition.Y : y;
+
+			return IsColumnInView(x) && IsRowInView(y);
+
+
+
+
+
+			//var visibleHeader = Header.GetRange(ViewOptions.StartPosition.X, ViewOptions.Size.Width);
+			//var visibleSider = Sider.GetRange(ViewOptions.StartPosition.Y, ViewOptions.Size.Height);
+			//var visibleContent = this[ViewOptions.StartPosition.X, ViewOptions.StartPosition.Y, ViewOptions.EndPosition.X, ViewOptions.EndPosition.Y];
+
+			//return visibleHeader.Union(visibleSider).Union(visibleContent).Contains(cell);
+		}
+
+		public bool IsColumnInView(int x)
+		{
+			return x >= ViewOptions.StartPosition.X && x <= ViewOptions.EndPosition.X;
+		}
+
+		public bool IsRowInView(int y)
+		{
+			return y >= ViewOptions.StartPosition.Y && y <= ViewOptions.EndPosition.Y;
 		}
 
 		//public List<Cell> GetCellsInView(int y)
@@ -229,6 +266,24 @@ namespace SimpleTableManager.Models
 		{
 			Header[x].IsHidden = true;
 			Columns[x].ForEach(c => c.IsHidden = true);
+		}
+
+		public void HideRow(int y)
+		{
+			Sider[y].IsHidden = true;
+			Rows[y].ForEach(c => c.IsHidden = true);
+		}
+
+		public void ShowColumn(int x)
+		{
+			Header[x].IsHidden = false;
+			Columns[x].ForEach(c => c.IsHidden = false);
+		}
+
+		public void ShowRow(int y)
+		{
+			Sider[y].IsHidden = false;
+			Rows[y].ForEach(c => c.IsHidden = false);
 		}
 	}
 }
