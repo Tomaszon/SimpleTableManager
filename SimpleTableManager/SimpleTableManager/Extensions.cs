@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SimpleTableManager.Extensions
 {
@@ -22,6 +21,20 @@ namespace SimpleTableManager.Extensions
 			{
 				action(item);
 			}
+		}
+
+		public static string AppendLeft(this string value, char c, int count)
+		{
+			return new string(c, count) + value;
+		}
+		public static string AppendRight(this string value, char c, int count)
+		{
+			return value + new string(c, count);
+		}
+
+		public static string AppendLeftRight(this string value, char c, int countToLeft, int countToRight)
+		{
+			return value.AppendLeft(c, countToLeft).AppendRight(c, countToRight);
 		}
 	}
 }

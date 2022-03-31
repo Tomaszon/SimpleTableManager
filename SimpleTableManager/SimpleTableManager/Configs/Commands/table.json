@@ -29,6 +29,9 @@
 		"column": {
 			"width": "setColumnWidth"
 		},
+		"row": {
+			"height": "setRowHeight"
+		},
 		"cell": {
 			"content": "setCellContent"
 		},

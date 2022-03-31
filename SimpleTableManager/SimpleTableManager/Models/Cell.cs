@@ -12,9 +12,9 @@ namespace SimpleTableManager.Models
 	public partial class Cell
 	{
 		/// <summary>
-		/// Manually set size including the borders
+		/// Manually set size not including the borders
 		/// </summary>
-		public Size GivenSize { get; set; } = new Size(3, 3);
+		public Size GivenSize { get; set; } = new Size(1, 1);
 
 		/// <summary>
 		/// Size not including the borders
@@ -27,8 +27,8 @@ namespace SimpleTableManager.Models
 		/// </summary>
 		public Size Size => new Size
 			(
-				Shared.Max(ContentSize.Width + 2, GivenSize.Width),
-				Shared.Max(ContentSize.Height + 2, GivenSize.Height)
+				Shared.Max(ContentSize.Width + 2 + Padding.Left + Padding.Right, GivenSize.Width + 2),
+				Shared.Max(ContentSize.Height + 2 + Padding.Top + Padding.Bottom, GivenSize.Height + 2)
 			);
 
 		public Type ContentType { get; set; } = typeof(string);

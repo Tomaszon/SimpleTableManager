@@ -1,7 +1,10 @@
 {
 	"set": {
-		"content": "setContent",
+		"content|c": "setContent",
 		"vertical-alignment|va": "setVerticalAlignment",
-		"horizontal-alignment|ha" : "setHorizontalAlignment"
+		"horizontal-alignment|ha": "setHorizontalAlignment",
+		"padding|p": "setPadding",
+		"horizontal-padding|hp": "setHorizontalPadding",
+		"vertical-padding|vp": "setVerticalPadding"
 	}
 }

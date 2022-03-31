@@ -46,6 +46,7 @@ namespace SimpleTableManager.Models
 				}
 				else
 				{
+					//TODO given command 'hp' maps to configured command 'padding|p'
 					var v = o.FirstOrDefault(e => Regex.IsMatch(keys.FirstOrDefault(), $"^{e.Key}$", RegexOptions.IgnoreCase)).Value;
 
 					if (v is null)

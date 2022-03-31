@@ -173,11 +173,17 @@ namespace SimpleTableManager.Models
 		}
 
 		//#region Set
-		//[CommandReference]
-		//public void SetColumnWidth(int index, int width)
-		//{
-		//	Columns[index].ForEach(c => c.GivenSize = new Size(width, c.GivenSize.Height));
-		//}
+		[CommandReference]
+		public void SetColumnWidth(int index, int width)
+		{
+			Columns[index].ForEach(c => c.GivenSize = new Size(width, c.GivenSize.Height));
+		}
+
+		[CommandReference]
+		public void SetRowHeight(int index, int height)
+		{
+			Rows[index].ForEach(c => c.GivenSize = new Size(c.GivenSize.Width, height));
+		}
 
 		[CommandReference]
 		public void SetViewOptions(int x1, int y1, int x2, int y2)
@@ -190,15 +196,6 @@ namespace SimpleTableManager.Models
 
 			ViewOptions.StartPosition = new Position(x1, y1);
 			ViewOptions.EndPosition = new Position(x2, y2);
-
-			//Shared.IndexArray(Size.Width).ForEach(x => ShowColumn(x));
-			//Shared.IndexArray(Size.Height).ForEach(y => ShowRow(y));
-
-			//Shared.IndexArray(x1).ForEach(x => HideColumn(x));
-			//Shared.IndexArray(Size.Width - x2 - 1, x2 + 1).ForEach(x => HideColumn(x));
-
-			//Shared.IndexArray(y1).ForEach(y => HideRow(y));
-			//Shared.IndexArray(Size.Height - y2 - 1, y2 + 1).ForEach(y => HideRow(y));
 		}
 
 		//[CommandReference]

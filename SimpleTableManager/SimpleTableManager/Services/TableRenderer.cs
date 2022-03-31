@@ -163,37 +163,38 @@ namespace SimpleTableManager.Services
 			Console.SetCursorPosition(position.X, position.Y);
 			Console.Write($"+{new string('-', size.Width - 2)}+");
 
-			var contentWidth = size.Width - 2;
+			var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
 
-			Shared.IndexArray(size.Height - 2).ForEach(i =>
+			Shared.IndexArray(sizeWithoutBorders.Height).ForEach(i =>
 			{
 				Console.SetCursorPosition(position.X, position.Y + i + 1);
 
-				if (IsCellContentDrawNeeded(cell, i, size.Height - 2, out var contentIndex) && cell.Content.Count > contentIndex)
+				var content = new string(' ', sizeWithoutBorders.Width);
+
+				if (IsCellContentDrawNeeded(cell, i, sizeWithoutBorders.Height, out var contentIndex) && cell.Content.Count > contentIndex)
 				{
-					var content = cell.Content[contentIndex].ToString();
+					content = cell.Content[contentIndex].ToString();
+
+					content = content.AppendLeftRight(' ', cell.Padding.Left, cell.Padding.Right);
 
 					switch (cell.HorizontalAlignment)
 					{
 						case HorizontalAlignment.Left:
-							content = content.PadRight(contentWidth - 1).PadLeft(contentWidth);
+							content = content.PadRight(sizeWithoutBorders.Width);
 							break;
 
+							//TODO broken
 						case HorizontalAlignment.Center:
-							content = content.PadLeftRight(contentWidth);
+							content = content.PadLeftRight(sizeWithoutBorders.Width);
 							break;
 
 						case HorizontalAlignment.Right:
-							content = content.PadLeft(contentWidth - 1).PadRight(contentWidth);
+							content = content.PadLeft(sizeWithoutBorders.Width);
 							break;
 					}
+				}
 
-					Console.Write($"|{content}|");
-				}
-				else
-				{
-					Console.Write($"|{new string(' ', size.Width - 2)}|");
-				}
+				Console.Write($"|{content}|");
 			});
 
 			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
