@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
@@ -161,6 +162,7 @@ namespace SimpleTableManager.Services
 		private static void DrawCell(Cell cell, Position position, Size size)
 		{
 			Console.SetCursorPosition(position.X, position.Y);
+			ChangeToCellBorderColors(cell);
 			Console.Write($"+{new string('-', size.Width - 2)}+");
 
 			var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
@@ -175,51 +177,74 @@ namespace SimpleTableManager.Services
 				{
 					content = cell.Content[contentIndex].ToString();
 
-					content = content.AppendLeftRight(' ', cell.Padding.Left, cell.Padding.Right);
-
-					switch (cell.HorizontalAlignment)
+					if (!string.IsNullOrWhiteSpace(content))
 					{
-						case HorizontalAlignment.Left:
-							content = content.PadRight(sizeWithoutBorders.Width);
-							break;
+						switch (cell.HorizontalAlignment)
+						{
+							case HorizontalAlignment.Left:
+								{
+									content = content.AppendLeft(' ', cell.Padding.Left);
+									content = content.PadRight(sizeWithoutBorders.Width);
+								}
+								break;
 
-							//TODO broken
-						case HorizontalAlignment.Center:
-							content = content.PadLeftRight(sizeWithoutBorders.Width);
-							break;
+							case HorizontalAlignment.Center:
+								{
+									content = content.PadLeftRight(sizeWithoutBorders.Width);
 
-						case HorizontalAlignment.Right:
-							content = content.PadLeft(sizeWithoutBorders.Width);
-							break;
+									var frontCount = content.TakeWhile(Char.IsWhiteSpace).Count();
+									var endCount = content.Reverse().TakeWhile(Char.IsWhiteSpace).Count();
+
+									content = frontCount < cell.Padding.Left ?
+										content.AppendLeft(' ', cell.Padding.Left - frontCount) : content;
+
+									content = endCount < cell.Padding.Right ?
+										content.AppendRight(' ', cell.Padding.Right - endCount) : content;
+								}
+								break;
+
+							case HorizontalAlignment.Right:
+								{
+									content = content.AppendRight(' ', cell.Padding.Right);
+									content = content.PadLeft(sizeWithoutBorders.Width);
+								}
+								break;
+						}
 					}
 				}
 
-				Console.Write($"|{content}|");
+				ChangeToCellBorderColors(cell);
+				Console.Write('|');
+				ChangeToCellContentColors(cell);
+				Console.Write(content);
+				ChangeToCellBorderColors(cell);
+				Console.Write('|');
 			});
 
 			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
+			ChangeToCellBorderColors(cell);
 			Console.Write($"+{new string('-', size.Width - 2)}+");
 		}
 
-		private static bool IsViewTableShrinkNeeded(Table table)
-		{
-			//int freeLinesForInput = 16;
+		//private static bool IsViewTableShrinkNeeded(Table table)
+		//{
+		//int freeLinesForInput = 16;
 
-			//if (Console.WindowWidth - _VIEW_TABLE_GRAPHICAL_SIZE.Width < 0)
-			//{
-			//	table.ViewOptions.DecreaseWidth();
+		//if (Console.WindowWidth - _VIEW_TABLE_GRAPHICAL_SIZE.Width < 0)
+		//{
+		//	table.ViewOptions.DecreaseWidth();
 
-			//	return true;
-			//}
-			//else if (Console.WindowHeight - freeLinesForInput - _VIEW_TABLE_GRAPHICAL_SIZE.Height < 0)
-			//{
-			//	table.ViewOptions.DecreaseHeight();
+		//	return true;
+		//}
+		//else if (Console.WindowHeight - freeLinesForInput - _VIEW_TABLE_GRAPHICAL_SIZE.Height < 0)
+		//{
+		//	table.ViewOptions.DecreaseHeight();
 
-			//	return true;
-			//}
+		//	return true;
+		//}
 
-			return false;
-		}
+		//	return false;
+		//}
 
 		//private static void DrawSeparatorLine(int rowIndex, int columnCount, int rowCount)
 		//{
@@ -284,9 +309,9 @@ namespace SimpleTableManager.Services
 
 			var startLineIndex = cell.VertialAlignment switch
 			{
-				VertialAlignment.Top => 0,
-				VertialAlignment.Bottom => height - ch,
-				_ => (height - ch) / 2
+				VertialAlignment.Top => cell.Padding.Top,
+				VertialAlignment.Center => Shared.Max((height - ch) / 2, cell.Padding.Top),
+				_ => height - ch - cell.Padding.Bottom
 			};
 
 			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
@@ -332,7 +357,7 @@ namespace SimpleTableManager.Services
 		//	Console.Write(formattedContent);
 		//}
 
-		private static void ChangeToCellColors(Cell cell)
+		private static void ChangeToCellContentColors(Cell cell)
 		{
 			Console.ForegroundColor = cell.IsSelected ?
 				Settings.Current.SelectedCellForegroundColor : cell.ForegroundColor;
@@ -340,12 +365,12 @@ namespace SimpleTableManager.Services
 				Settings.Current.SelectedCellBackgroundColor : cell.BackgroundColor;
 		}
 
-		private static void ChangeToBorderColors(bool selected)
+		private static void ChangeToCellBorderColors(Cell cell)
 		{
-			Console.ForegroundColor = selected ?
-				Settings.Current.SelectedBorderForegroundColor : Settings.Current.DefaultBorderForegroundColor;
-			Console.BackgroundColor = selected ?
-				Settings.Current.SelectedBorderBackgroundColor : Settings.Current.DefaultBorderBackgroundColor;
+			Console.ForegroundColor = cell.IsSelected ?
+				Settings.Current.SelectedBorderForegroundColor : cell.BorderForegroundColor;
+			Console.BackgroundColor = cell.IsSelected ?
+				Settings.Current.SelectedBorderBackgroundColor : cell.BorderBackgroundColor;
 		}
 
 		private static void ChangeToTextColors()
