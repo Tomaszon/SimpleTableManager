@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using SimpleTableManager.Extensions;
@@ -9,11 +8,11 @@ namespace SimpleTableManager.Services
 {
 	public static class TableRenderer
 	{
-		private static List<int> _COLUMN_WIDTHS;
-		private static List<int> _ROW_HEIGHTS;
-		private static Position _TABLE_OFFSET;
-		private static Size _VIEW_TABLE_GRAPHICAL_SIZE;
-		private static Table _VIEW_TABLE;
+		//private static List<int> _COLUMN_WIDTHS;
+		//private static List<int> _ROW_HEIGHTS;
+		//private static Position _TABLE_OFFSET;
+		//private static Size _VIEW_TABLE_GRAPHICAL_SIZE;
+		//private static Table _VIEW_TABLE;
 
 		public static void Render(Table table)
 		{
@@ -109,7 +108,7 @@ namespace SimpleTableManager.Services
 
 			var tableOffset = new Size((Console.WindowWidth - tSize.Width) / 2, 10);
 
-			DrawCell(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
+			DrawCellContent(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
 
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
 				{
@@ -121,7 +120,7 @@ namespace SimpleTableManager.Services
 
 						var size = table.GetHeaderCellSize(x);
 
-						DrawCell(cell, position, size);
+						DrawCellContent(cell, position, size);
 					}
 				});
 
@@ -134,7 +133,7 @@ namespace SimpleTableManager.Services
 
 					var size = table.GetSiderCellSize(y);
 
-					DrawCell(cell, position, size);
+					DrawCellContent(cell, position, size);
 				}
 			});
 
@@ -149,27 +148,94 @@ namespace SimpleTableManager.Services
 
 							var size = table.GetContentCellSize(x, y);
 
-							DrawCell(cell, position, size);
+							DrawCellContent(cell, position, size);
 						}
 					}));
+
+
+
+
+			DrawCellBorder(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			Console.WriteLine();
 
 			ChangeToTextColors();
 		}
 
-
-		private static void DrawCell(Cell cell, Position position, Size size)
+		private static void DrawCellBorder(Cell cell, Position position, Size size)
 		{
 			Console.SetCursorPosition(position.X, position.Y);
 			ChangeToCellBorderColors(cell);
-			Console.Write($"+{new string('-', size.Width - 2)}+");
+
+			Console.Write(TableBorderCharacters.GetIntersection(right: cell.Border.Top, down: cell.Border.Left));
+
+			Shared.IndexArray(size.Width - 2).ForEach(i => Console.Write(TableBorderCharacters.Get(cell.Border.Top)));
+
+			Console.Write(TableBorderCharacters.GetIntersection(left: cell.Border.Top, down: cell.Border.Right));
+
+			Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
+			{
+				Console.SetCursorPosition(position.X, position.Y + i);
+
+				Console.Write(TableBorderCharacters.Get(cell.Border.Left));
+
+				Console.SetCursorPosition(position.X + size.Width - 1, position.Y + i);
+
+				Console.Write(TableBorderCharacters.Get(cell.Border.Right));
+			});
+
+			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
+
+			Console.Write(TableBorderCharacters.GetIntersection(right: cell.Border.Bottom, up: cell.Border.Left));
+
+			Shared.IndexArray(size.Width - 2).ForEach(i => Console.Write(TableBorderCharacters.Get(cell.Border.Bottom)));
+
+			Console.Write(TableBorderCharacters.GetIntersection(left: cell.Border.Bottom, up: cell.Border.Right));
+		}
+
+		private static void DrawCellContent(Cell cell, Position position, Size size)
+		{
+			//Console.SetCursorPosition(position.X, position.Y);
+			//ChangeToCellBorderColors(cell);
+
+
+
+			//-------
+			//if (y == 0)
+			//{
+			//	Console.Write($"#{new string(TableBorderCharacters.Get(cell.Border.Top), size.Width - 2)}#");
+			//}
+			//else
+			//{
+			//	Console.Write('+');
+			//	Shared.IndexArray((size.Width - 2 + 1) / 2).ForEach(i =>
+			//	{
+			//		Console.Write(TableBorderCharacters.Get(cell.Border.Top));
+			//		Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+			//	});
+			//	Console.Write('+');
+			//}
+			//-------
 
 			var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
 
 			Shared.IndexArray(sizeWithoutBorders.Height).ForEach(i =>
 			{
-				Console.SetCursorPosition(position.X, position.Y + i + 1);
+				Console.SetCursorPosition(position.X + 1, position.Y + 1 + i);
 
 				var content = new string(' ', sizeWithoutBorders.Width);
 
@@ -213,17 +279,33 @@ namespace SimpleTableManager.Services
 					}
 				}
 
-				ChangeToCellBorderColors(cell);
-				Console.Write('|');
+				//ChangeToCellBorderColors(cell);
+				//Console.Write(TableBorderCharacters.Get(cell.Border.Left));
 				ChangeToCellContentColors(cell);
 				Console.Write(content);
-				ChangeToCellBorderColors(cell);
-				Console.Write('|');
+				//ChangeToCellBorderColors(cell);
+				//Console.Write(TableBorderCharacters.Get(cell.Border.Right));
 			});
 
-			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
-			ChangeToCellBorderColors(cell);
-			Console.Write($"+{new string('-', size.Width - 2)}+");
+			//Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
+			//ChangeToCellBorderColors(cell);
+			////-------
+
+			//if (y == h - 1)
+			//{
+			//	Console.Write($"+{new string(TableBorderCharacters.Get(cell.Border.Bottom), size.Width - 2)}+");
+			//}
+			//else
+			//{
+			//	Console.Write('+');
+			//	Shared.IndexArray((size.Width - 2 + 1) / 2).ForEach(i =>
+			//	{
+			//		Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+			//		Console.Write(TableBorderCharacters.Get(cell.Border.Bottom));
+			//	});
+			//	Console.Write('+');
+			//}
+			//-------
 		}
 
 		//private static bool IsViewTableShrinkNeeded(Table table)
@@ -292,16 +374,16 @@ namespace SimpleTableManager.Services
 		//	Console.WriteLine();
 		//}
 
-		private static bool IsHorizontalBorderSegmentSelected(int columnIndex, int rowIndex)
-		{
-			return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1);
-		}
+		//private static bool IsHorizontalBorderSegmentSelected(int columnIndex, int rowIndex)
+		//{
+		//	return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1);
+		//}
 
-		private static bool IsCornerBorderSegmentSelected(int columnIndex, int rowIndex)
-		{
-			return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1) ||
-				_VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex - 1);
-		}
+		//private static bool IsCornerBorderSegmentSelected(int columnIndex, int rowIndex)
+		//{
+		//	return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1) ||
+		//		_VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex - 1);
+		//}
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
 		{
@@ -379,64 +461,64 @@ namespace SimpleTableManager.Services
 			Console.BackgroundColor = Settings.Current.TextBackgroundColor;
 		}
 
-		private static void CreateViewTable(Table table)
-		{
-			_VIEW_TABLE = table;
+		//private static void CreateViewTable(Table table)
+		//{
+		//	_VIEW_TABLE = table;
 
-			//var content = JsonConvert.SerializeObject(table, Formatting.Indented);
-			//_VIEW_TABLE = JsonConvert.DeserializeObject<Table>(content);
+		//var content = JsonConvert.SerializeObject(table, Formatting.Indented);
+		//_VIEW_TABLE = JsonConvert.DeserializeObject<Table>(content);
 
-			//var voStartPosition = _VIEW_TABLE.ViewOptions.StartPosition;
-			//var voEndPosition = _VIEW_TABLE.ViewOptions.EndPosition;
+		//var voStartPosition = _VIEW_TABLE.ViewOptions.StartPosition;
+		//var voEndPosition = _VIEW_TABLE.ViewOptions.EndPosition;
 
-			//var leftEllipsis = voStartPosition.X > 0;
-			//var upEllipsis = voStartPosition.Y > 0;
-			//var rightEllipsis = voEndPosition.X < table.Size.Width - 1;
-			//var downEllipsis = voEndPosition.Y < table.Size.Height - 1;
+		//var leftEllipsis = voStartPosition.X > 0;
+		//var upEllipsis = voStartPosition.Y > 0;
+		//var rightEllipsis = voEndPosition.X < table.Size.Width - 1;
+		//var downEllipsis = voEndPosition.Y < table.Size.Height - 1;
 
-			//_VIEW_TABLE.Cells = _VIEW_TABLE[voStartPosition.X, voStartPosition.Y, voEndPosition.X, voEndPosition.Y];
-			//_VIEW_TABLE.Size = _VIEW_TABLE.ViewOptions.Size;
+		//_VIEW_TABLE.Cells = _VIEW_TABLE[voStartPosition.X, voStartPosition.Y, voEndPosition.X, voEndPosition.Y];
+		//_VIEW_TABLE.Size = _VIEW_TABLE.ViewOptions.Size;
 
-			//_VIEW_TABLE.AddRowAt(0);
+		//_VIEW_TABLE.AddRowAt(0);
 
-			//for (int x = 0; x < _VIEW_TABLE.Size.Width; x++)
-			//{
-			//	var colIndex = _VIEW_TABLE.ViewOptions.StartPosition.X + x;
+		//for (int x = 0; x < _VIEW_TABLE.Size.Width; x++)
+		//{
+		//	var colIndex = _VIEW_TABLE.ViewOptions.StartPosition.X + x;
 
-			//	_VIEW_TABLE[x, 0].ContentType = typeof(string);
+		//	_VIEW_TABLE[x, 0].ContentType = typeof(string);
 
-			//	var left = leftEllipsis && x == 0 ? "0 ◀ " : "";
-			//	var right = rightEllipsis && x == _VIEW_TABLE.Size.Width - 1 ? $" ▶ {table.Size.Width - 1}" : "";
+		//	var left = leftEllipsis && x == 0 ? "0 ◀ " : "";
+		//	var right = rightEllipsis && x == _VIEW_TABLE.Size.Width - 1 ? $" ▶ {table.Size.Width - 1}" : "";
 
-			//	_VIEW_TABLE[x, 0].SetContent($"{left}{colIndex}{right}");
+		//	_VIEW_TABLE[x, 0].SetContent($"{left}{colIndex}{right}");
 
-			//	if (table.IsColumnSelected(x + voStartPosition.X))
-			//	{
-			//		_VIEW_TABLE[x, 0].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
-			//	}
-			//}
+		//	if (table.IsColumnSelected(x + voStartPosition.X))
+		//	{
+		//		_VIEW_TABLE[x, 0].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
+		//	}
+		//}
 
-			//_VIEW_TABLE.AddColumnAt(0);
+		//_VIEW_TABLE.AddColumnAt(0);
 
-			//_VIEW_TABLE[0, 0].SetContent(@"y \ x");
+		//_VIEW_TABLE[0, 0].SetContent(@"y \ x");
 
-			//for (int y = 1; y < _VIEW_TABLE.Size.Height; y++)
-			//{
-			//	var rowIndex = _VIEW_TABLE.ViewOptions.StartPosition.Y + y - 1;
+		//for (int y = 1; y < _VIEW_TABLE.Size.Height; y++)
+		//{
+		//	var rowIndex = _VIEW_TABLE.ViewOptions.StartPosition.Y + y - 1;
 
-			//	_VIEW_TABLE[0, y].ContentType = typeof(string);
+		//	_VIEW_TABLE[0, y].ContentType = typeof(string);
 
-			//	var left = upEllipsis && y == 1 ? "0 ▲ " : "";
-			//	var rigth = downEllipsis && y == _VIEW_TABLE.Size.Height - 1 ? $" ▼ {table.Size.Height - 1}" : "";
+		//	var left = upEllipsis && y == 1 ? "0 ▲ " : "";
+		//	var rigth = downEllipsis && y == _VIEW_TABLE.Size.Height - 1 ? $" ▼ {table.Size.Height - 1}" : "";
 
-			//	_VIEW_TABLE[0, y].SetContent($"{left}{rowIndex}{rigth}");
+		//	_VIEW_TABLE[0, y].SetContent($"{left}{rowIndex}{rigth}");
 
-			//	if (table.IsRowSelected(y - 1 + voStartPosition.Y))
-			//	{
-			//		_VIEW_TABLE[0, y].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
-			//	}
-			//}
-		}
+		//	if (table.IsRowSelected(y - 1 + voStartPosition.Y))
+		//	{
+		//		_VIEW_TABLE[0, y].ForegroundColor = Settings.Current.SelectedCellForegroundColor;
+		//	}
+		//}
+		//}
 
 		private static char GetTableCharacter(decimal borderRowNo, decimal borderColNo, int rowCount, int columnCount)
 		{
@@ -445,37 +527,37 @@ namespace SimpleTableManager.Services
 
 			if (!betweenColumns && !betweenRows)
 			{
-				var up = GetNextTableCharacter(borderRowNo > 0, borderColNo < 2, TableBorderCharacterMode.Up);
-				var left = GetNextTableCharacter(borderColNo > 0, borderRowNo < 2, TableBorderCharacterMode.Left);
-				var right = GetNextTableCharacter(borderColNo < columnCount, borderRowNo < 2, TableBorderCharacterMode.Right);
-				var down = GetNextTableCharacter(borderRowNo < rowCount, borderColNo < 2, TableBorderCharacterMode.Down);
+				var up = GetNextTableCharacter(borderRowNo > 0, borderColNo < 2, BorderType.Up);
+				var left = GetNextTableCharacter(borderColNo > 0, borderRowNo < 2, BorderType.Left);
+				var right = GetNextTableCharacter(borderColNo < columnCount, borderRowNo < 2, BorderType.Right);
+				var down = GetNextTableCharacter(borderRowNo < rowCount, borderColNo < 2, BorderType.Down);
 
 				return TableBorderCharacters.Get(up | left | right | down);
 			}
 			else if (betweenColumns)
 			{
-				return TableBorderCharacters.Get(GetNextTableCharacter(true, borderRowNo < 2, TableBorderCharacterMode.Horizontal));
+				return TableBorderCharacters.Get(GetNextTableCharacter(true, borderRowNo < 2, BorderType.Horizontal));
 			}
 			else if (betweenRows)
 			{
-				return TableBorderCharacters.Get(GetNextTableCharacter(true, borderColNo < 2, TableBorderCharacterMode.Vertical));
+				return TableBorderCharacters.Get(GetNextTableCharacter(true, borderColNo < 2, BorderType.Vertical));
 			}
 
 			throw new InvalidOperationException();
 		}
 
-		private static TableBorderCharacterMode GetNextTableCharacter(bool caseSingle, bool caseDouble, TableBorderCharacterMode value)
+		private static BorderType GetNextTableCharacter(bool caseSingle, bool caseDouble, BorderType value)
 		{
 			if (caseSingle && caseDouble)
 			{
-				return (TableBorderCharacterMode)((int)value * 2);
+				return (BorderType)((int)value * 2);
 			}
 			else if (caseSingle)
 			{
 				return value;
 			}
 
-			return TableBorderCharacterMode.None;
+			return BorderType.None;
 		}
 
 		//private enum DrawColorSet
@@ -484,5 +566,7 @@ namespace SimpleTableManager.Services
 		//	Border,
 		//	SelectedBorder
 		//}
+
+
 	}
 }

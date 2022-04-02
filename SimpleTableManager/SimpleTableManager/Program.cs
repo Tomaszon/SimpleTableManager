@@ -42,11 +42,12 @@ namespace SimpleTableManager
 			//}
 
 
-			document.GetActiveTable()[0, 0].BackgroundColor = ConsoleColor.Cyan;
+			document.GetActiveTable()[0, 0].BorderForegroundColor = ConsoleColor.Yellow;
 			document.GetActiveTable()[1, 0].ForegroundColor = ConsoleColor.Red;
+			document.GetActiveTable()[1, 0].BackgroundColor = ConsoleColor.Cyan;
 			document.GetActiveTable()[0, 1].BorderForegroundColor = ConsoleColor.Yellow;
-			document.GetActiveTable()[1, 1].BorderBackgroundColor = ConsoleColor.White;
-
+			//document.GetActiveTable()[1, 1].BorderBackgroundColor = ConsoleColor.White;
+			document.GetActiveTable()[0, 2].BorderForegroundColor = ConsoleColor.Red;
 			//document.GetActiveTable()[1, 0].SetContent("T");
 			//document.GetActiveTable()[1, 0].VertialAlignment = VertialAlignment.Top;
 			//document.GetActiveTable()[1, 1].SetContent("B");

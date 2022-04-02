@@ -6,7 +6,7 @@ using Newtonsoft.Json.Converters;
 namespace SimpleTableManager.Models
 {
 	[JsonConverter(typeof(StringEnumConverter)), Flags]
-	public enum TableBorderCharacterMode
+	public enum BorderType
 	{
 		None = 0,
 		Up = 1,

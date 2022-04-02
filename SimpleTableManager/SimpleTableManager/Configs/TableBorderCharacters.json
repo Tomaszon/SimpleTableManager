@@ -2,146 +2,146 @@
 	{
 		"Retro": "|",
 		"Modern": "│",
-		"Mode": "Up, Down"
+		"Type": "Vertical"
 	},
 	{
 		"Retro": "+",
 		"Modern": "┘",
-		"Mode": "Up, Left"
+		"Type": "Up, Left"
 	},
 	{
 		"Retro": "-",
 		"Modern": "─",
-		"Mode": "Left, Right"
+		"Type": "Horizontal"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╕",
-		"Mode": "LeftDouble, Down"
+		"Type": "LeftDouble, Down"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╔",
-		"Mode": "RightDouble, DownDouble"
+		"Type": "RightDouble, DownDouble"
 	},
 	{
 		"Retro": "=",
 		"Modern": "═",
-		"Mode": "LeftDouble, RightDouble"
+		"Type": "HorizontalDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╦",
-		"Mode": "LeftDouble, RightDouble, DownDouble"
+		"Type": "HorizontalDouble, DownDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╤",
-		"Mode":"LeftDouble, RightDouble, Down"
+		"Type": "HorizontalDouble, Down"
 	},
 	{
 		"Retro": "⦀",
 		"Modern": "║",
-		"Mode": "UpDouble, DownDouble"
+		"Type": "VerticalDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╠",
-		"Mode": "UpDouble, RightDouble, DownDouble"
+		"Type": "VerticalDouble, RightDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╬",
-		"Mode": "UpDouble, LeftDouble, RightDouble, DownDouble"
+		"Type": "VerticalDouble, HorizontalDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╪",
-		"Mode": "Up, LeftDouble, RightDouble, Down"
+		"Type": "HorizontalDouble, Vertical"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╡",
-		"Mode": "Up, LeftDouble, Down"
+		"Type": "Vertical, LeftDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╟",
-		"Mode": "UpDouble, Right, DownDouble"
+		"Type": "Right, VerticalDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╫",
-		"Mode": "UpDouble, Left, Right, DownDouble"
+		"Type": "VerticalDouble, Horizontal"
 	},
 	{
 		"Retro": "+",
 		"Modern": "┼",
-		"Mode": "Up, Left, Right, Down"
+		"Type": "Horizontal, Vertical"
 	},
 	{
 		"Retro": "+",
 		"Modern": "┤",
-		"Mode": "Up, Left, Down"
+		"Type": "Left, Vertical"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╙",
-		"Mode": "UpDouble, Right"
+		"Type": "UpDouble, Right"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╨",
-		"Mode": "UpDouble, Left, Right"
+		"Type": "UpDouble, Horizontal"
 	},
 	{
 		"Retro": "+",
 		"Modern": "┴",
-		"Mode": "Up, Left, Right"
+		"Type": "Up, Horizontal"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╗",
-		"Mode": "LeftDouble, DownDouble"
+		"Type": "LeftDouble, DownDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╣",
-		"Mode": "UpDouble, LeftDouble, DownDouble"
+		"Type": "VerticalDouble, LeftDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╢",
-		"Mode": "UpDouble, Left, DownDouble"
+		"Type": "Left, VerticalDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╜",
-		"Mode": "UpDouble, Left"
+		"Type": "UpDouble, Left"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╚",
-		"Mode": "UpDouble, RightDouble"
+		"Type": "UpDouble, RightDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╝",
-		"Mode": "UpDouble, LeftDouble"
+		"Type": "UpDouble, LeftDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╩",
-		"Mode": "UpDouble, LeftDouble, RightDouble"
+		"Type": "UpDouble, HorizontalDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╛",
-		"Mode": "Up, LeftDouble"
+		"Type": "Up, LeftDouble"
 	},
 	{
 		"Retro": "#",
 		"Modern": "╧",
-		"Mode": "Up, LeftDouble, RightDouble"
+		"Type": "Up, HorizontalDouble"
 	}
 ]

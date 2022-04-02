@@ -21,7 +21,16 @@ namespace SimpleTableManager.Models
 
 		public List<Cell> Sider { get; set; } = new List<Cell>();
 
-		public Cell CornerCell { get; set; } = new Cell(@"y \ x");
+		public Cell CornerCell { get; set; } = new Cell(@"y \ x")
+		{
+			Border = new CellBorder()
+			{
+				Top = BorderType.HorizontalDouble,
+				Bottom = BorderType.HorizontalDouble,
+				Left = BorderType.VerticalDouble,
+				Right = BorderType.VerticalDouble
+			}
+		};
 
 		public Dictionary<int, List<Cell>> Columns
 		{
@@ -59,9 +68,25 @@ namespace SimpleTableManager.Models
 			Shared.IndexArray(rowCount).ForEach(y =>
 				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell("T", new Position(x, y), ":)"))));
 
-			Shared.IndexArray(columnCount).ForEach(x => Header.Add(new Cell(x) { ContentType = typeof(int) }));
+			Shared.IndexArray(columnCount).ForEach(x => Header.Add(new Cell(x)
+			{
+				ContentType = typeof(int),
+				Border = new CellBorder()
+				{
+					Top = BorderType.HorizontalDouble,
+					Bottom = BorderType.HorizontalDouble
+				}
+			}));
 
-			Shared.IndexArray(rowCount).ForEach(y => Sider.Add(new Cell(y) { ContentType = typeof(int) }));
+			Shared.IndexArray(rowCount).ForEach(y => Sider.Add(new Cell(y)
+			{
+				ContentType = typeof(int),
+				Border = new CellBorder()
+				{
+					Left = BorderType.VerticalDouble,
+					Right = BorderType.VerticalDouble
+				}
+			}));
 
 			//HideColumn(3);
 		}
