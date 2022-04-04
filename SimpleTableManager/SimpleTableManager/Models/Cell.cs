@@ -54,7 +54,7 @@ namespace SimpleTableManager.Models
 
 		public ContentPadding Padding { get; set; } = new ContentPadding();
 
-		public CellBorder Border { get; set; } = new CellBorder();
+		//public CellBorder Border { get; set; } = new CellBorder();
 
 		public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
 

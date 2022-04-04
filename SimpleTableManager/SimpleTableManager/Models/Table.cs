@@ -23,13 +23,10 @@ namespace SimpleTableManager.Models
 
 		public Cell CornerCell { get; set; } = new Cell(@"y \ x")
 		{
-			Border = new CellBorder()
-			{
-				Top = BorderType.HorizontalDouble,
-				Bottom = BorderType.HorizontalDouble,
-				Left = BorderType.VerticalDouble,
-				Right = BorderType.VerticalDouble
-			}
+			//BackgroundColor = System.ConsoleColor.DarkGray,
+			//ForegroundColor = System.ConsoleColor.Black,
+			//BorderBackgroundColor = System.ConsoleColor.DarkGray,
+			//BorderForegroundColor = System.ConsoleColor.Black
 		};
 
 		public Dictionary<int, List<Cell>> Columns
@@ -71,21 +68,19 @@ namespace SimpleTableManager.Models
 			Shared.IndexArray(columnCount).ForEach(x => Header.Add(new Cell(x)
 			{
 				ContentType = typeof(int),
-				Border = new CellBorder()
-				{
-					Top = BorderType.HorizontalDouble,
-					Bottom = BorderType.HorizontalDouble
-				}
+				//BackgroundColor = System.ConsoleColor.DarkGray,
+				//ForegroundColor = System.ConsoleColor.Black,
+				//BorderBackgroundColor = System.ConsoleColor.DarkGray,
+				//BorderForegroundColor = System.ConsoleColor.Black
 			}));
 
 			Shared.IndexArray(rowCount).ForEach(y => Sider.Add(new Cell(y)
 			{
 				ContentType = typeof(int),
-				Border = new CellBorder()
-				{
-					Left = BorderType.VerticalDouble,
-					Right = BorderType.VerticalDouble
-				}
+				//BackgroundColor = System.ConsoleColor.DarkGray,
+				//ForegroundColor = System.ConsoleColor.Black,
+				//BorderBackgroundColor = System.ConsoleColor.DarkGray,
+				//BorderForegroundColor = System.ConsoleColor.Black
 			}));
 
 			//HideColumn(3);

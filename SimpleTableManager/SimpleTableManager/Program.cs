@@ -22,9 +22,10 @@ namespace SimpleTableManager
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
 			Console.InputEncoding = System.Text.Encoding.Unicode;
 
-			TableBorderCharacters.FromJson(@".\Configs\tableBorderCharacters.json");
+			BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
 			CommandTree.FromJsonFolder(@".\Configs\Commands");
 			Settings.FromJson(@".\Configs\settings.json");
+			CellBorders.FromJson(@".\Configs\cellBorders.json");
 
 			var document = new Document();
 

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace SimpleTableManager.Models
 {
 
-	public static class TableBorderCharacters
+	public static class BorderCharacters
 	{
 		private static List<BorderCharacter> _CHARACTERS = new List<BorderCharacter>();
 

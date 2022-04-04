@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SimpleTableManager.Extensions
 {
@@ -20,6 +21,16 @@ namespace SimpleTableManager.Extensions
 			foreach (var item in collection)
 			{
 				action(item);
+			}
+		}
+
+		public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action, int delay)
+		{
+			foreach (var item in collection)
+			{
+				action(item);
+
+				Task.Delay(delay).Wait();
 			}
 		}
 

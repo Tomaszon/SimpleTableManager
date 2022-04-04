@@ -1,0 +1,102 @@
+{
+	"cornerCellClosed": {
+		"TopLeft": "RightDouble, DownDouble",
+		"Top": "HorizontalDouble",
+		"TopRight": "LeftDouble, DownDouble",
+		"Left": "VerticalDouble",
+		"Right": "VerticalDouble",
+		"BottomLeft": "RightDouble, UpDouble",
+		"Bottom": "HorizontalDouble",
+		"BottomRight": "LeftDouble, UpDouble"
+	},
+	"cornerCellHorizontal": {
+		"TopLeft": "RightDouble, DownDouble",
+		"Top": "HorizontalDouble",
+		"TopRight": "DownDouble, HorizontalDouble",
+		"Left": "VerticalDouble",
+		"Right": "VerticalDouble",
+		"BottomLeft": "RightDouble, UpDouble",
+		"Bottom": "HorizontalDouble",
+		"BottomRight": "UpDouble, HorizontalDouble"
+	},
+	"cornerCellVertical": {
+		"TopLeft": "RightDouble, DownDouble",
+		"Top": "HorizontalDouble",
+		"TopRight": "LeftDouble, DownDouble",
+		"Left": "VerticalDouble",
+		"Right": "VerticalDouble",
+		"BottomLeft": "RightDouble, VerticalDouble",
+		"Bottom": "HorizontalDouble",
+		"BottomRight": "LeftDouble, VerticalDouble"
+	},
+	"cornerCellOpen": {
+		"TopLeft": "RightDouble, DownDouble",
+		"Top": "HorizontalDouble",
+		"TopRight": "DownDouble, HorizontalDouble",
+		"Left": "VerticalDouble",
+		"Right": "VerticalDouble",
+		"BottomLeft": "VerticalDouble, RightDouble",
+		"Bottom": "HorizontalDouble",
+		"BottomRight": "HorizontalDouble, VerticalDouble"
+	},
+	"siderHorizontal": {
+		"TopLeft": "None",
+		"Top": "None",
+		"TopRight": "None",
+		"Left": "VerticalDouble",
+		"Right": "VerticalDouble",
+		"BottomLeft": "Right, UpDouble",
+		"Bottom": "Horizontal",
+		"BottomRight": "UpDouble, Horizontal"
+	},
+	"siderOpen": {
+		"TopLeft": "None",
+		"Top": "None",
+		"TopRight": "None",
+		"Left": "VerticalDouble",
+		"Right": "VerticalDouble",
+		"BottomLeft": "Right, VerticalDouble",
+		"Bottom": "Horizontal",
+		"BottomRight": "VerticalDouble, Horizontal"
+	},
+	"headerVertical": {
+		"TopLeft": "None",
+		"Top": "HorizontalDouble",
+		"TopRight": "LeftDouble, Down",
+		"Left": "None",
+		"Right": "Vertical",
+		"BottomLeft": "None",
+		"Bottom": "HorizontalDouble",
+		"BottomRight": "LeftDouble, Vertical"
+	},
+	"headerOpen": {
+		"TopLeft": "None",
+		"Top": "HorizontalDouble",
+		"TopRight": "HorizontalDouble, Down",
+		"Left": "None",
+		"Right": "Vertical",
+		"BottomLeft": "None",
+		"Bottom": "HorizontalDouble",
+		"BottomRight": "HorizontalDouble, Vertical"
+	},
+	"contentClosed": {
+		"TopLeft": "Right, Down",
+		"Top": "Horizontal",
+		"TopRight": "Left, Down",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Right, Up",
+		"Bottom": "Horizontal",
+		"BottomRight": "Left, Up"
+	},
+	"contentOpen": {
+		"TopLeft": "Vertical, Horizontal",
+		"Top": "Horizontal",
+		"TopRight": "Vertical, Horizontal",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Vertical, Horizontal",
+		"Bottom": "Horizontal",
+		"BottomRight": "Vertical, Horizontal"
+	}
+}

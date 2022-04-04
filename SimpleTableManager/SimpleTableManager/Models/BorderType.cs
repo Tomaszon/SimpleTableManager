@@ -17,6 +17,7 @@ namespace SimpleTableManager.Models
 		RightDouble = 32,
 		Down = 64,
 		DownDouble = 128,
+		Dotted = 256,
 		Vertical = Up | Down,
 		VerticalDouble = UpDouble | DownDouble,
 		Horizontal = Left | Right,

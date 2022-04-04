@@ -108,6 +108,8 @@ namespace SimpleTableManager.Services
 
 			var tableOffset = new Size((Console.WindowWidth - tSize.Width) / 2, 10);
 
+			DrawCellBorder(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize(), CellBorders.Get(CellBorderName.CornerCellOpen));
+
 			DrawCellContent(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
 
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
@@ -120,9 +122,12 @@ namespace SimpleTableManager.Services
 
 						var size = table.GetHeaderCellSize(x);
 
+						DrawCellBorder(cell, position, size, x < table.Size.Width - 1 ?
+							CellBorders.Get(CellBorderName.HeaderOpen) : CellBorders.Get(CellBorderName.HeaderVertical));
+
 						DrawCellContent(cell, position, size);
 					}
-				});
+				}, 10);
 
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 			{
@@ -133,9 +138,12 @@ namespace SimpleTableManager.Services
 
 					var size = table.GetSiderCellSize(y);
 
+					DrawCellBorder(cell, position, size, y < table.Size.Height - 1 ?
+						CellBorders.Get(CellBorderName.SiderOpen) : CellBorders.Get(CellBorderName.SiderHorizontal));
+
 					DrawCellContent(cell, position, size);
 				}
-			});
+			}, 10);
 
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 				Shared.IndexArray(table.Size.Width).ForEach(x =>
@@ -148,14 +156,24 @@ namespace SimpleTableManager.Services
 
 							var size = table.GetContentCellSize(x, y);
 
+							var border = CellBorders.Get(CellBorderName.ContentOpen);
+
+							if (x == 0)
+							{
+								border = border.Trim(left: true);
+							}
+							if (y == 0)
+							{
+								border = border.Trim(top: true);
+							}
+
+							DrawCellBorder(cell, position, size, border);
+
 							DrawCellContent(cell, position, size);
 						}
-					}));
+					}, 10));
 
 
-
-
-			DrawCellBorder(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
 
 
 
@@ -176,35 +194,47 @@ namespace SimpleTableManager.Services
 			ChangeToTextColors();
 		}
 
-		private static void DrawCellBorder(Cell cell, Position position, Size size)
+		private static void DrawCellBorder(Cell cell, Position position, Size size, CellBorder border)
 		{
 			Console.SetCursorPosition(position.X, position.Y);
 			ChangeToCellBorderColors(cell);
 
-			Console.Write(TableBorderCharacters.GetIntersection(right: cell.Border.Top, down: cell.Border.Left));
+			DrawBorderSegment(border.TopLeft);
 
-			Shared.IndexArray(size.Width - 2).ForEach(i => Console.Write(TableBorderCharacters.Get(cell.Border.Top)));
+			DrawBorderSegment(border.Top, size.Width - 2);
 
-			Console.Write(TableBorderCharacters.GetIntersection(left: cell.Border.Top, down: cell.Border.Right));
+			DrawBorderSegment(border.TopRight);
 
 			Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
 			{
-				Console.SetCursorPosition(position.X, position.Y + i);
+				Shared.StepCursor(-size.Width, 1);
 
-				Console.Write(TableBorderCharacters.Get(cell.Border.Left));
+				DrawBorderSegment(border.Left);
 
-				Console.SetCursorPosition(position.X + size.Width - 1, position.Y + i);
+				Shared.StepCursor(size.Width - 2, 0);
 
-				Console.Write(TableBorderCharacters.Get(cell.Border.Right));
+				DrawBorderSegment(border.Right);
 			});
 
-			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
+			Shared.StepCursor(-size.Width, 1);
 
-			Console.Write(TableBorderCharacters.GetIntersection(right: cell.Border.Bottom, up: cell.Border.Left));
+			DrawBorderSegment(border.BottomLeft);
 
-			Shared.IndexArray(size.Width - 2).ForEach(i => Console.Write(TableBorderCharacters.Get(cell.Border.Bottom)));
+			DrawBorderSegment(border.Bottom, size.Width - 2);
 
-			Console.Write(TableBorderCharacters.GetIntersection(left: cell.Border.Bottom, up: cell.Border.Right));
+			DrawBorderSegment(border.BottomRight);
+		}
+
+		private static void DrawBorderSegment(BorderType border, int count = 1)
+		{
+			if (border != BorderType.None)
+			{
+				Console.Write(new string(BorderCharacters.Get(border), count));
+			}
+			else
+			{
+				Shared.StepCursor(count, 0);
+			}
 		}
 
 		private static void DrawCellContent(Cell cell, Position position, Size size)
@@ -532,15 +562,15 @@ namespace SimpleTableManager.Services
 				var right = GetNextTableCharacter(borderColNo < columnCount, borderRowNo < 2, BorderType.Right);
 				var down = GetNextTableCharacter(borderRowNo < rowCount, borderColNo < 2, BorderType.Down);
 
-				return TableBorderCharacters.Get(up | left | right | down);
+				return BorderCharacters.Get(up | left | right | down);
 			}
 			else if (betweenColumns)
 			{
-				return TableBorderCharacters.Get(GetNextTableCharacter(true, borderRowNo < 2, BorderType.Horizontal));
+				return BorderCharacters.Get(GetNextTableCharacter(true, borderRowNo < 2, BorderType.Horizontal));
 			}
 			else if (betweenRows)
 			{
-				return TableBorderCharacters.Get(GetNextTableCharacter(true, borderColNo < 2, BorderType.Vertical));
+				return BorderCharacters.Get(GetNextTableCharacter(true, borderColNo < 2, BorderType.Vertical));
 			}
 
 			throw new InvalidOperationException();
