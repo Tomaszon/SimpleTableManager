@@ -98,5 +98,35 @@
 		"BottomLeft": "Vertical, Horizontal",
 		"Bottom": "Horizontal",
 		"BottomRight": "Vertical, Horizontal"
+	},
+	"contentUpLeft": {
+		"TopLeft": "Vertical, Horizontal",
+		"Top": "Horizontal",
+		"TopRight": "Vertical, Left",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Horizontal, Up",
+		"Bottom": "Horizontal",
+		"BottomRight": "Up, Left"
+	},
+	"contentHorizontalUp": {
+		"TopLeft": "Vertical, Horizontal",
+		"Top": "Horizontal",
+		"TopRight": "Vertical, Horizontal",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Horizontal, Up",
+		"Bottom": "Horizontal",
+		"BottomRight": "Horizontal, Up"
+	},
+	"contentVerticalLeft": {
+		"TopLeft": "Vertical, Horizontal",
+		"Top": "Horizontal",
+		"TopRight": "Left, Vertical",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Vertical, Horizontal",
+		"Bottom": "Horizontal",
+		"BottomRight": "Left, Vertical"
 	}
 }

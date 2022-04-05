@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
@@ -123,11 +122,11 @@ namespace SimpleTableManager.Services
 						var size = table.GetHeaderCellSize(x);
 
 						DrawCellBorder(cell, position, size, x < table.Size.Width - 1 ?
-							CellBorders.Get(CellBorderName.HeaderOpen) : CellBorders.Get(CellBorderName.HeaderVertical));
+							CellBorders.Get(CellBorderName.HeaderOpen) : CellBorders.Get(CellBorderName.HeaderVertical).Trim(left: true));
 
 						DrawCellContent(cell, position, size);
 					}
-				}, 10);
+				});
 
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 			{
@@ -139,41 +138,33 @@ namespace SimpleTableManager.Services
 					var size = table.GetSiderCellSize(y);
 
 					DrawCellBorder(cell, position, size, y < table.Size.Height - 1 ?
-						CellBorders.Get(CellBorderName.SiderOpen) : CellBorders.Get(CellBorderName.SiderHorizontal));
+						CellBorders.Get(CellBorderName.SiderOpen) : CellBorders.Get(CellBorderName.SiderHorizontal).Trim(top: true));
 
 					DrawCellContent(cell, position, size);
 				}
-			}, 10);
+			});
 
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 				Shared.IndexArray(table.Size.Width).ForEach(x =>
 					{
 						var cell = table[x, y];
 
-						if (!cell.IsHidden && table.IsCellInView(x, y))
+						if (!cell.IsSelected && !cell.IsHidden && table.IsCellInView(x, y))
 						{
-							var position = table.GetContentCellPosition(tableOffset, x, y);
-
-							var size = table.GetContentCellSize(x, y);
-
-							var border = CellBorders.Get(CellBorderName.ContentOpen);
-
-							if (x == 0)
-							{
-								border = border.Trim(left: true);
-							}
-							if (y == 0)
-							{
-								border = border.Trim(top: true);
-							}
-
-							DrawCellBorder(cell, position, size, border);
-
-							DrawCellContent(cell, position, size);
+							RenderContentCell(table, cell, tableOffset, x, y);
 						}
-					}, 10));
+					}));
 
+			Shared.IndexArray(table.Size.Height).ForEach(y =>
+				Shared.IndexArray(table.Size.Width).ForEach(x =>
+				{
+					var cell = table[x, y];
 
+					if (cell.IsSelected && !cell.IsHidden && table.IsCellInView(x, y))
+					{
+						RenderContentCell(table, cell, tableOffset, x, y);
+					}
+				}));
 
 
 
@@ -194,33 +185,81 @@ namespace SimpleTableManager.Services
 			ChangeToTextColors();
 		}
 
+		private static void RenderContentCell(Table table, Cell cell, Size tableOffset, int x, int y)
+		{
+			var position = table.GetContentCellPosition(tableOffset, x, y);
+
+			var size = table.GetContentCellSize(x, y);
+
+			var cellBorderName = CellBorderName.ContentOpen;
+
+			if (x == table.Size.Width - 1 && y == table.Size.Height - 1)
+			{
+				cellBorderName = CellBorderName.ContentUpLeft;
+			}
+			else if (x == table.Size.Width - 1)
+			{
+				cellBorderName = CellBorderName.ContentVerticalLeft;
+			}
+			else if (y == table.Size.Height - 1)
+			{
+				cellBorderName = CellBorderName.ContentHorizontalUp;
+			}
+
+			var border = CellBorders.Get(cellBorderName);
+
+			if (x == 0)
+			{
+				border = border.Trim(left: true);
+			}
+			if (y == 0)
+			{
+				border = border.Trim(top: true);
+			}
+
+			DrawCellBorder(cell, position, size, border);
+
+			DrawCellContent(cell, position, size);
+		}
+
 		private static void DrawCellBorder(Cell cell, Position position, Size size, CellBorder border)
 		{
-			Console.SetCursorPosition(position.X, position.Y);
-			ChangeToCellBorderColors(cell);
+			Console.SetCursorPosition(position.X + 1, position.Y);
 
-			DrawBorderSegment(border.TopLeft);
+			ChangeToCellBorderColors(cell);
 
 			DrawBorderSegment(border.Top, size.Width - 2);
 
-			DrawBorderSegment(border.TopRight);
-
+			Shared.StepCursor(-(size.Width - 1), 1);
 			Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
 			{
-				Shared.StepCursor(-size.Width, 1);
-
 				DrawBorderSegment(border.Left);
 
 				Shared.StepCursor(size.Width - 2, 0);
 
 				DrawBorderSegment(border.Right);
+				Shared.StepCursor(-size.Width, 1);
 			});
 
-			Shared.StepCursor(-size.Width, 1);
+			Shared.StepCursor(1, 0);
+
+			DrawBorderSegment(border.Bottom, size.Width - 2);
+
+			Console.SetCursorPosition(position.X, position.Y);
+
+			ChangeToTextColors();
+
+			DrawBorderSegment(border.TopLeft);
+
+			Shared.StepCursor(size.Width - 2, 0);
+
+			DrawBorderSegment(border.TopRight);
+
+			Shared.StepCursor(-size.Width, size.Height - 1);
 
 			DrawBorderSegment(border.BottomLeft);
 
-			DrawBorderSegment(border.Bottom, size.Width - 2);
+			Shared.StepCursor(size.Width - 2, 0);
 
 			DrawBorderSegment(border.BottomRight);
 		}
@@ -239,28 +278,6 @@ namespace SimpleTableManager.Services
 
 		private static void DrawCellContent(Cell cell, Position position, Size size)
 		{
-			//Console.SetCursorPosition(position.X, position.Y);
-			//ChangeToCellBorderColors(cell);
-
-
-
-			//-------
-			//if (y == 0)
-			//{
-			//	Console.Write($"#{new string(TableBorderCharacters.Get(cell.Border.Top), size.Width - 2)}#");
-			//}
-			//else
-			//{
-			//	Console.Write('+');
-			//	Shared.IndexArray((size.Width - 2 + 1) / 2).ForEach(i =>
-			//	{
-			//		Console.Write(TableBorderCharacters.Get(cell.Border.Top));
-			//		Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
-			//	});
-			//	Console.Write('+');
-			//}
-			//-------
-
 			var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
 
 			Shared.IndexArray(sizeWithoutBorders.Height).ForEach(i =>
@@ -286,16 +303,10 @@ namespace SimpleTableManager.Services
 
 							case HorizontalAlignment.Center:
 								{
-									content = content.PadLeftRight(sizeWithoutBorders.Width);
+									var startIndex = GetStartIndexForCenteredContent(sizeWithoutBorders.Width, content.Length, cell.Padding.Left, cell.Padding.Right);
 
-									var frontCount = content.TakeWhile(Char.IsWhiteSpace).Count();
-									var endCount = content.Reverse().TakeWhile(Char.IsWhiteSpace).Count();
-
-									content = frontCount < cell.Padding.Left ?
-										content.AppendLeft(' ', cell.Padding.Left - frontCount) : content;
-
-									content = endCount < cell.Padding.Right ?
-										content.AppendRight(' ', cell.Padding.Right - endCount) : content;
+									content = content.AppendLeft(' ', startIndex);
+									content = content.PadRight(sizeWithoutBorders.Width);
 								}
 								break;
 
@@ -309,33 +320,10 @@ namespace SimpleTableManager.Services
 					}
 				}
 
-				//ChangeToCellBorderColors(cell);
-				//Console.Write(TableBorderCharacters.Get(cell.Border.Left));
 				ChangeToCellContentColors(cell);
+
 				Console.Write(content);
-				//ChangeToCellBorderColors(cell);
-				//Console.Write(TableBorderCharacters.Get(cell.Border.Right));
 			});
-
-			//Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
-			//ChangeToCellBorderColors(cell);
-			////-------
-
-			//if (y == h - 1)
-			//{
-			//	Console.Write($"+{new string(TableBorderCharacters.Get(cell.Border.Bottom), size.Width - 2)}+");
-			//}
-			//else
-			//{
-			//	Console.Write('+');
-			//	Shared.IndexArray((size.Width - 2 + 1) / 2).ForEach(i =>
-			//	{
-			//		Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
-			//		Console.Write(TableBorderCharacters.Get(cell.Border.Bottom));
-			//	});
-			//	Console.Write('+');
-			//}
-			//-------
 		}
 
 		//private static bool IsViewTableShrinkNeeded(Table table)
@@ -417,13 +405,11 @@ namespace SimpleTableManager.Services
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
 		{
-			var ch = cell.Content.Count;
-
 			var startLineIndex = cell.VertialAlignment switch
 			{
 				VertialAlignment.Top => cell.Padding.Top,
-				VertialAlignment.Center => Shared.Max((height - ch) / 2, cell.Padding.Top),
-				_ => height - ch - cell.Padding.Bottom
+				VertialAlignment.Center => GetStartIndexForCenteredContent(height, cell.Content.Count, cell.Padding.Top, cell.Padding.Bottom),
+				_ => height - cell.Content.Count - cell.Padding.Bottom
 			};
 
 			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
@@ -433,41 +419,10 @@ namespace SimpleTableManager.Services
 			return isDrawNeeded;
 		}
 
-		//private static void Draw(Cell cell, int lineIndex, int rowIndex, int width)
-		//{
-		//	var content = new string(' ', width);
-
-		//	if (IsCellContentDrawNeeded(cell, lineIndex, rowIndex, out var contentIndex) && cell.Content.Count > contentIndex)
-		//	{
-		//		content = cell.Content[contentIndex].ToString();
-
-		//		switch (cell.HorizontalAlignment)
-		//		{
-		//			case HorizontalAlignment.Left:
-		//				content = content.PadRight(width - 1).PadLeft(width);
-		//				break;
-
-		//			case HorizontalAlignment.Center:
-		//				content = content.PadLeftRight(width);
-		//				break;
-
-		//			case HorizontalAlignment.Right:
-		//				content = content.PadLeft(width - 1).PadRight(width);
-		//				break;
-		//		}
-		//	}
-
-		//	ChangeToCellColors(cell);
-
-		//	Draw(content);
-		//}
-
-		//private static void Draw(object content)
-		//{
-		//	var formattedContent = content.ToString();
-
-		//	Console.Write(formattedContent);
-		//}
+		private static int GetStartIndexForCenteredContent(int contentAreaSize, int contentLength, int padding1, int padding2)
+		{
+			return Shared.Min(Shared.Max((contentAreaSize - contentLength) / 2, padding1), contentAreaSize - padding2 - contentLength);
+		}
 
 		private static void ChangeToCellContentColors(Cell cell)
 		{

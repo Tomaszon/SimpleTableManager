@@ -99,6 +99,11 @@ namespace SimpleTableManager.Services
 			return Enumerable.Max(values);
 		}
 
+		public static int Min(params int[] values)
+		{
+			return Enumerable.Min(values);
+		}
+
 		public static void StepCursor(int x, int y)
 		{
 			Console.SetCursorPosition(Console.CursorLeft + x, Console.CursorTop + y);

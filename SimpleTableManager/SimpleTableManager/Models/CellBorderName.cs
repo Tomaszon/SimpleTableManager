@@ -11,6 +11,9 @@
 		HeaderVertical,
 		HeaderOpen,
 		ContentClosed,
-		ContentOpen
+		ContentOpen,
+		ContentUpLeft,
+		ContentHorizontalUp,
+		ContentVerticalLeft
 	}
 }
