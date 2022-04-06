@@ -12,9 +12,21 @@
 			Height = height;
 		}
 
+		public Size(Position position)
+		{
+			Width = position.X;
+			Height = position.Y;
+		}
+
 		public override string ToString()
 		{
 			return $"W: {Width}, H: {Height}";
+		}
+
+		public void Deconstruct(out int w, out int h)
+		{
+			w = Width;
+			h = Height;
 		}
 	}
 }

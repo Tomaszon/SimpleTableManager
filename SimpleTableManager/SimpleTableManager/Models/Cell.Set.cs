@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleTableManager.Models
 {
@@ -7,7 +8,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetContent(params object[] contents)
 		{
-			Content = new List<object>(contents);
+			Content = contents.ToList();
 		}
 
 		[CommandReference]

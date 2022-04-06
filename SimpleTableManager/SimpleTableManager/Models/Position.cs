@@ -12,9 +12,21 @@
 			Y = y;
 		}
 
+		public Position(Size size)
+		{
+			X = size.Width;
+			Y = size.Height;
+		}
+
 		public override string ToString()
 		{
 			return $"X: {X}, Y: {Y}";
+		}
+
+		public void Deconstruct(out int x, out int y)
+		{
+			x = X;
+			y = Y;
 		}
 	}
 }

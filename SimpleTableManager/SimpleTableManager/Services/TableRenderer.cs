@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
@@ -19,115 +22,95 @@ namespace SimpleTableManager.Services
 
 			Console.WriteLine($"{table.Name}\n");
 
-			//do
-			//{
-			//	CreateViewTable(table);
+			var tableSize = table.GetTableSize();
 
-			//	_COLUMN_WIDTHS = _VIEW_TABLE.GetColumnWidths();
+			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, 10);
 
-			//	_ROW_HEIGHTS = _VIEW_TABLE.GetRowHeights();
+			RenderTempCell(tableOffset, tableSize);
 
-			//	_VIEW_TABLE_GRAPHICAL_SIZE = new Size(_COLUMN_WIDTHS.Sum() + _COLUMN_WIDTHS.Count + 1, _ROW_HEIGHTS.Sum() + _ROW_HEIGHTS.Count + 1);
+			RenderCornerCell(table, tableOffset);
 
-			//	_TABLE_OFFSET = new Position((Console.WindowWidth - _VIEW_TABLE_GRAPHICAL_SIZE.Width) / 2, Console.CursorTop);
-			//}
-			//while (IsViewTableShrinkNeeded(table));
+			RenderHeader(table, tableOffset);
 
-			//Console.SetCursorPosition(0, _TABLE_OFFSET.Y);
+			RenderSider(table, tableOffset);
 
-			//TODO resolve this mess
-			//--------------
-			#region mess
-			//Random rand = new Random();
+			RenderContent(table, tableOffset);
 
+			Console.WriteLine();
 
-			//int fadeSize = 5;
-			//var lorem = "";
+			ChangeToTextColors();
+		}
 
-			//for (int y = 0; y < _VIEW_TABLE_GRAPHICAL_SIZE.Height; y++)
-			//{
-			//	lorem += new string(' ', _TABLE_OFFSET.X);
-			//	for (int x = 0; x < _VIEW_TABLE_GRAPHICAL_SIZE.Width; x++)
-			//	{
-			//		if (x < fadeSize || y < fadeSize)
-			//		{
-			//			if (rand.Next(0, Math.Min(x + 1, y + 1) + 1) == 0)
-			//			{
-			//				lorem += ' ';
-			//			}
-			//			else
-			//			{
-			//				lorem += (char)rand.Next(' ' + 1, 'Z');
-			//			}
-			//		}
-			//		else if (x > _VIEW_TABLE_GRAPHICAL_SIZE.Width - fadeSize - 1 || y > _VIEW_TABLE_GRAPHICAL_SIZE.Height - fadeSize - 1)
-			//		{
-			//			if (rand.Next(0, Math.Min(_VIEW_TABLE_GRAPHICAL_SIZE.Width - x + 1, _VIEW_TABLE_GRAPHICAL_SIZE.Height - y + 1) + 1) == 0)
-			//			{
-			//				lorem += ' ';
-			//			}
-			//			else
-			//			{
-			//				lorem += (char)rand.Next(' ' + 1, 'Z');
-			//			}
-			//		}
-			//		else
-			//		{
-			//			lorem += (char)rand.Next(' ' + 1, 'Z');
-			//		}
-			//	}
-			//	lorem += ('\n');
-			//}
+		private static void RenderTempCell(Size tableOffset, Size size)
+		{
+			var placeHolderCell = new Cell(GetTmpBackground(size)) { ForegroundColor = Settings.Current.TextForegroundColor };
+			var placeHolderCellPosition = new Position(tableOffset);
 
-			//Console.Write(lorem);
+			DrawCellBorder(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderName.CornerCellClosed));
 
+			DrawCellContent(placeHolderCell, placeHolderCellPosition, size);
 
-			#endregion
-			//--------------
+			Task.Delay(250).Wait();
+		}
 
-			//Console.SetCursorPosition(_TABLE_OFFSET.X, _TABLE_OFFSET.Y);
+		private static string[] GetTmpBackground(Size size)
+		{
+			var pattern1 = ".   ";
+			var pattern2 = "  . ";
 
-			//DrawSeparatorLine(0, _VIEW_TABLE.Size.Width, _VIEW_TABLE.Size.Height);
+			string line1 = GetLine(size, pattern1);
+			string line2 = GetLine(size, pattern2);
 
-			//for (int y = 0; y < _VIEW_TABLE.Size.Height; y++)
-			//{
-			//	for (int i = 0; i < _ROW_HEIGHTS[y]; i++)
-			//	{
-			//		var cellsToDraw = table.GetCellsInView(y);
+			var result = new List<string>();
 
-			//		DrawContentLine(i, cellsToDraw, y, table.ViewOptions.Size.Height);
-			//	}
+			Shared.IndexArray((int)Math.Ceiling((size.Height - 2) / 2m)).ForEach(i =>
+			{
+				result.Add(line1);
+				result.Add(line2);
+			});
 
-			//	DrawSeparatorLine(y + 1, _VIEW_TABLE.Size.Width, _VIEW_TABLE.Size.Height);
-			//}
+			return result.Take(size.Height - 2).ToArray();
 
-			var tSize = table.GetTableSize();
+			static string GetLine(Size size, string value)
+			{
+				return Shared.IndexArray((int)Math.Ceiling((size.Width - 2) / (decimal)value.Length))
+					.Aggregate("", (s, i) => s += value)[..(size.Width - 2)];
+			}
+		}
 
-			Console.WriteLine(tSize);
+		private static void RenderCornerCell(Table table, Size tableOffset)
+		{
+			var position = new Position(tableOffset.Width, tableOffset.Height);
 
-			var tableOffset = new Size((Console.WindowWidth - tSize.Width) / 2, 10);
+			var size = table.GetCornerCellSize();
 
-			DrawCellBorder(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize(), CellBorders.Get(CellBorderName.CornerCellOpen));
+			DrawCellBorder(table.CornerCell, position, size, CellBorders.Get(CellBorderName.CornerCellOpen));
 
-			DrawCellContent(table.CornerCell, new Position(tableOffset.Width, tableOffset.Height), table.GetCornerCellSize());
+			DrawCellContent(table.CornerCell, position, size);
+		}
 
+		private static void RenderHeader(Table table, Size tableOffset)
+		{
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
+			{
+				var cell = table.Header[x];
+
+				if (!cell.IsHidden && table.IsCellInView(x: x))
 				{
-					var cell = table.Header[x];
+					var position = table.GetHeaderCellPosition(tableOffset, x);
 
-					if (!cell.IsHidden && table.IsCellInView(x: x))
-					{
-						var position = table.GetHeaderCellPosition(tableOffset, x);
+					var size = table.GetHeaderCellSize(x);
 
-						var size = table.GetHeaderCellSize(x);
+					DrawCellBorder(cell, position, size, x < table.Size.Width - 1 ?
+						CellBorders.Get(CellBorderName.HeaderOpen) : CellBorders.Get(CellBorderName.HeaderVertical).Trim(left: true));
 
-						DrawCellBorder(cell, position, size, x < table.Size.Width - 1 ?
-							CellBorders.Get(CellBorderName.HeaderOpen) : CellBorders.Get(CellBorderName.HeaderVertical).Trim(left: true));
+					DrawCellContent(cell, position, size);
+				}
+			}, 10);
+		}
 
-						DrawCellContent(cell, position, size);
-					}
-				});
-
+		private static void RenderSider(Table table, Size tableOffset)
+		{
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 			{
 				var cell = table.Sider[y];
@@ -142,84 +125,61 @@ namespace SimpleTableManager.Services
 
 					DrawCellContent(cell, position, size);
 				}
-			});
+			}, 10);
+		}
 
-			Shared.IndexArray(table.Size.Height).ForEach(y =>
-				Shared.IndexArray(table.Size.Width).ForEach(x =>
-					{
-						var cell = table[x, y];
-
-						if (!cell.IsSelected && !cell.IsHidden && table.IsCellInView(x, y))
-						{
-							RenderContentCell(table, cell, tableOffset, x, y);
-						}
-					}));
-
+		private static void RenderContent(Table table, Size tableOffset)
+		{
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 				Shared.IndexArray(table.Size.Width).ForEach(x =>
 				{
 					var cell = table[x, y];
 
-					if (cell.IsSelected && !cell.IsHidden && table.IsCellInView(x, y))
+					if (!cell.IsHidden && table.IsCellInView(x, y))
 					{
-						RenderContentCell(table, cell, tableOffset, x, y);
+						var position = table.GetContentCellPosition(tableOffset, x, y);
+
+						var size = table.GetContentCellSize(x, y);
+
+						var cellBorderName = CellBorderName.ContentOpen;
+
+						if (x == table.Size.Width - 1 && y == table.Size.Height - 1)
+						{
+							cellBorderName = CellBorderName.ContentUpLeft;
+						}
+						else if (x == table.Size.Width - 1)
+						{
+							cellBorderName = CellBorderName.ContentVerticalLeft;
+						}
+						else if (y == table.Size.Height - 1)
+						{
+							cellBorderName = CellBorderName.ContentHorizontalUp;
+						}
+
+						var border = CellBorders.Get(cellBorderName);
+
+						if (x == 0 || x > 0 && table[x - 1, y].IsSelected && !cell.IsSelected)
+						{
+							border = border.Trim(left: true);
+						}
+						if (y == 0 || y > 0 && table[x, y - 1].IsSelected && !cell.IsSelected)
+						{
+							border = border.Trim(top: true);
+						}
+						if (x < table.Size.Width - 1 && table[x + 1, y].IsSelected && !cell.IsSelected)
+						{
+							border = border.Trim(right: true);
+						}
+						if (y < table.Size.Height - 1 && table[x, y + 1].IsSelected && !cell.IsSelected)
+						{
+							border = border.Trim(bottom: true);
+						}
+
+						DrawCellBorder(cell, position, size, border);
+
+						DrawCellContent(cell, position, size);
 					}
 				}));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			Console.WriteLine();
-
-			ChangeToTextColors();
-		}
-
-		private static void RenderContentCell(Table table, Cell cell, Size tableOffset, int x, int y)
-		{
-			var position = table.GetContentCellPosition(tableOffset, x, y);
-
-			var size = table.GetContentCellSize(x, y);
-
-			var cellBorderName = CellBorderName.ContentOpen;
-
-			if (x == table.Size.Width - 1 && y == table.Size.Height - 1)
-			{
-				cellBorderName = CellBorderName.ContentUpLeft;
-			}
-			else if (x == table.Size.Width - 1)
-			{
-				cellBorderName = CellBorderName.ContentVerticalLeft;
-			}
-			else if (y == table.Size.Height - 1)
-			{
-				cellBorderName = CellBorderName.ContentHorizontalUp;
-			}
-
-			var border = CellBorders.Get(cellBorderName);
-
-			if (x == 0)
-			{
-				border = border.Trim(left: true);
-			}
-			if (y == 0)
-			{
-				border = border.Trim(top: true);
-			}
-
-			DrawCellBorder(cell, position, size, border);
-
-			DrawCellContent(cell, position, size);
 		}
 
 		private static void DrawCellBorder(Cell cell, Position position, Size size, CellBorder border)
