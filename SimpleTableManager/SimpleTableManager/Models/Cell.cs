@@ -54,19 +54,15 @@ namespace SimpleTableManager.Models
 
 		public ContentPadding Padding { get; set; } = new ContentPadding();
 
-		//public CellBorder Border { get; set; } = new CellBorder();
+		public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);
 
-		public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+		public ConsoleColorSet ContentColor { get; set; } = new ConsoleColorSet(Settings.Current.DefaultContentColor);
 
-		public VertialAlignment VertialAlignment { get; set; } = VertialAlignment.Center;
+		public ConsoleColorSet BorderColor { get; set; } = new ConsoleColorSet(Settings.Current.DefaultBorderColor);
 
-		public ConsoleColor ForegroundColor { get; set; } = Settings.Current.DefaultCellForegroundColor;
+		public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
 
-		public ConsoleColor BackgroundColor { get; set; } = Settings.Current.DefaultCellBackgroundColor;
-
-		public ConsoleColor BorderForegroundColor { get; set; } = Settings.Current.DefaultBorderForegroundColor;
-
-		public ConsoleColor BorderBackgroundColor { get; set; } = Settings.Current.DefaultBorderBackgroundColor;
+		public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
 		[JsonConstructor]
 		private Cell()

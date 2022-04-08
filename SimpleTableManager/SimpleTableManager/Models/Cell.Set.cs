@@ -12,15 +12,15 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void SetVerticalAlignment(VertialAlignment alignment)
+		public void SetVerticalAlignment(VerticalAlignment alignment)
 		{
-			VertialAlignment = alignment;
+			ContentAlignment.Vertical = alignment;
 		}
 
 		[CommandReference]
 		public void SetHorizontalAlignment(HorizontalAlignment alignment)
 		{
-			HorizontalAlignment = alignment;
+			ContentAlignment.Horizontal = alignment;
 		}
 
 		[CommandReference]

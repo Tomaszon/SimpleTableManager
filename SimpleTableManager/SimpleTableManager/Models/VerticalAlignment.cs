@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 namespace SimpleTableManager.Models
 {
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum VertialAlignment
+	public enum VerticalAlignment
 	{
 		Top,
 		Center,

@@ -43,7 +43,7 @@ namespace SimpleTableManager.Services
 
 		private static void RenderTempCell(Size tableOffset, Size size)
 		{
-			var placeHolderCell = new Cell(GetTmpBackground(size)) { ForegroundColor = Settings.Current.TextForegroundColor };
+			var placeHolderCell = new Cell(GetTmpBackground(size)) { ContentColor = new ConsoleColorSet(Settings.Current.TextColor) };
 			var placeHolderCellPosition = new Position(tableOffset);
 
 			DrawCellBorder(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderName.CornerCellClosed));
@@ -141,45 +141,73 @@ namespace SimpleTableManager.Services
 
 						var size = table.GetContentCellSize(x, y);
 
-						var cellBorderName = CellBorderName.ContentOpen;
-
-						if (x == table.Size.Width - 1 && y == table.Size.Height - 1)
-						{
-							cellBorderName = CellBorderName.ContentUpLeft;
-						}
-						else if (x == table.Size.Width - 1)
-						{
-							cellBorderName = CellBorderName.ContentVerticalLeft;
-						}
-						else if (y == table.Size.Height - 1)
-						{
-							cellBorderName = CellBorderName.ContentHorizontalUp;
-						}
-
-						var border = CellBorders.Get(cellBorderName);
-
-						if (x == 0 || x > 0 && table[x - 1, y].IsSelected && !cell.IsSelected)
-						{
-							border = border.Trim(left: true);
-						}
-						if (y == 0 || y > 0 && table[x, y - 1].IsSelected && !cell.IsSelected)
-						{
-							border = border.Trim(top: true);
-						}
-						if (x < table.Size.Width - 1 && table[x + 1, y].IsSelected && !cell.IsSelected)
-						{
-							border = border.Trim(right: true);
-						}
-						if (y < table.Size.Height - 1 && table[x, y + 1].IsSelected && !cell.IsSelected)
-						{
-							border = border.Trim(bottom: true);
-						}
+						var border = GetCellBorder(table, cell, x, y);
 
 						DrawCellBorder(cell, position, size, border);
 
 						DrawCellContent(cell, position, size);
 					}
 				}));
+		}
+
+		private static CellBorder GetCellBorder(Table table, Cell cell, int x, int y)
+		{
+			var cellBorderName = GetBorderCellName(table, x, y);
+
+			var border = CellBorders.Get(cellBorderName);
+
+			border = DotCellBorder(border, table, cell, x, y);
+
+			border = TrimCellBorder(border, table, cell, x, y);
+
+			return border;
+
+			static CellBorder DotCellBorder(CellBorder border, Table table, Cell cell, int x, int y)
+			{
+				return border;
+			}
+
+			static CellBorder TrimCellBorder(CellBorder border, Table table, Cell cell, int x, int y)
+			{
+				if (x == 0 || x > 0 && table[x - 1, y].IsSelected && !cell.IsSelected)
+				{
+					return border.Trim(left: true);
+				}
+				if (y == 0 || y > 0 && table[x, y - 1].IsSelected && !cell.IsSelected)
+				{
+					return border.Trim(top: true);
+				}
+				if (x < table.Size.Width - 1 && table[x + 1, y].IsSelected && !cell.IsSelected)
+				{
+					return border.Trim(right: true);
+				}
+				if (y < table.Size.Height - 1 && table[x, y + 1].IsSelected && !cell.IsSelected)
+				{
+					return border.Trim(bottom: true);
+				}
+
+				return border;
+			}
+
+			static CellBorderName GetBorderCellName(Table table, int x, int y)
+			{
+				if (x == table.Size.Width - 1 && y == table.Size.Height - 1)
+				{
+					return CellBorderName.ContentUpLeft;
+				}
+				else if (x == table.Size.Width - 1)
+				{
+					return CellBorderName.ContentVerticalLeft;
+				}
+				else if (y == table.Size.Height - 1)
+				{
+					return CellBorderName.ContentHorizontalUp;
+				}
+				else
+				{
+					return CellBorderName.ContentOpen;
+				}
+			}
 		}
 
 		private static void DrawCellBorder(Cell cell, Position position, Size size, CellBorder border)
@@ -252,7 +280,7 @@ namespace SimpleTableManager.Services
 
 					if (!string.IsNullOrWhiteSpace(content))
 					{
-						switch (cell.HorizontalAlignment)
+						switch (cell.ContentAlignment.Horizontal)
 						{
 							case HorizontalAlignment.Left:
 								{
@@ -365,10 +393,10 @@ namespace SimpleTableManager.Services
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
 		{
-			var startLineIndex = cell.VertialAlignment switch
+			var startLineIndex = cell.ContentAlignment.Vertical switch
 			{
-				VertialAlignment.Top => cell.Padding.Top,
-				VertialAlignment.Center => GetStartIndexForCenteredContent(height, cell.Content.Count, cell.Padding.Top, cell.Padding.Bottom),
+				VerticalAlignment.Top => cell.Padding.Top,
+				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, cell.Content.Count, cell.Padding.Top, cell.Padding.Bottom),
 				_ => height - cell.Content.Count - cell.Padding.Bottom
 			};
 
@@ -387,23 +415,23 @@ namespace SimpleTableManager.Services
 		private static void ChangeToCellContentColors(Cell cell)
 		{
 			Console.ForegroundColor = cell.IsSelected ?
-				Settings.Current.SelectedCellForegroundColor : cell.ForegroundColor;
+				Settings.Current.SelectedContentColor.Foreground : cell.ContentColor.Foreground;
 			Console.BackgroundColor = cell.IsSelected ?
-				Settings.Current.SelectedCellBackgroundColor : cell.BackgroundColor;
+				Settings.Current.SelectedContentColor.Background : cell.ContentColor.Background;
 		}
 
 		private static void ChangeToCellBorderColors(Cell cell)
 		{
 			Console.ForegroundColor = cell.IsSelected ?
-				Settings.Current.SelectedBorderForegroundColor : cell.BorderForegroundColor;
+				Settings.Current.SelectedBorderColor.Foreground : cell.BorderColor.Foreground;
 			Console.BackgroundColor = cell.IsSelected ?
-				Settings.Current.SelectedBorderBackgroundColor : cell.BorderBackgroundColor;
+				Settings.Current.SelectedBorderColor.Background : cell.BorderColor.Background;
 		}
 
 		private static void ChangeToTextColors()
 		{
-			Console.ForegroundColor = Settings.Current.TextForegroundColor;
-			Console.BackgroundColor = Settings.Current.TextBackgroundColor;
+			Console.ForegroundColor = Settings.Current.TextColor.Foreground;
+			Console.BackgroundColor = Settings.Current.TextColor.Background;
 		}
 
 		//private static void CreateViewTable(Table table)
