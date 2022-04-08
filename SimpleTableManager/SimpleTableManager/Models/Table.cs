@@ -248,16 +248,11 @@ namespace SimpleTableManager.Models
 			y = y == -1 ? ViewOptions.StartPosition.Y : y;
 
 			return IsColumnInView(x) && IsRowInView(y);
+		}
 
-
-
-
-
-			//var visibleHeader = Header.GetRange(ViewOptions.StartPosition.X, ViewOptions.Size.Width);
-			//var visibleSider = Sider.GetRange(ViewOptions.StartPosition.Y, ViewOptions.Size.Height);
-			//var visibleContent = this[ViewOptions.StartPosition.X, ViewOptions.StartPosition.Y, ViewOptions.EndPosition.X, ViewOptions.EndPosition.Y];
-
-			//return visibleHeader.Union(visibleSider).Union(visibleContent).Contains(cell);
+		public (int vX, int vY) PositionInView(int x, int y)
+		{
+			return (x - ViewOptions.StartPosition.X, y - ViewOptions.StartPosition.Y);
 		}
 
 		public bool IsColumnInView(int x)

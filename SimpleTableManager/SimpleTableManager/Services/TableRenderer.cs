@@ -22,7 +22,7 @@ namespace SimpleTableManager.Services
 
 			Console.WriteLine($"{table.Name}\n");
 
-			var tableSize = table.GetTableSize();
+			var tableSize = ShrinkTableIfNeeded(table);
 
 			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, 10);
 
@@ -39,6 +39,29 @@ namespace SimpleTableManager.Services
 			Console.WriteLine();
 
 			ChangeToTextColors();
+		}
+
+		private static Size ShrinkTableIfNeeded(Table table)
+		{
+			int freeLinesForInput = 16;
+
+			while (true)
+			{
+				var size = table.GetTableSize();
+
+				if (Console.WindowWidth - size.Width < 0)
+				{
+					table.ViewOptions.DecreaseWidth();
+				}
+				else if (Console.WindowHeight - freeLinesForInput - size.Height < 0)
+				{
+					table.ViewOptions.DecreaseHeight();
+				}
+				else
+				{
+					return size;
+				}
+			}
 		}
 
 		private static void RenderTempCell(Size tableOffset, Size size)
@@ -141,7 +164,9 @@ namespace SimpleTableManager.Services
 
 						var size = table.GetContentCellSize(x, y);
 
-						var border = GetCellBorder(table, cell, x, y);
+						var (vX, vY) = table.PositionInView(x, y);
+
+						var border = GetCellBorder(table, cell, vX, vY);
 
 						DrawCellBorder(cell, position, size, border);
 
@@ -152,15 +177,15 @@ namespace SimpleTableManager.Services
 
 		private static CellBorder GetCellBorder(Table table, Cell cell, int x, int y)
 		{
-			var cellBorderName = GetBorderCellName(table, x, y);
+			var (w, h) = table.ViewOptions.Size;
+
+			var cellBorderName = GetBorderCellName(w, h, x, y);
 
 			var border = CellBorders.Get(cellBorderName);
 
 			border = DotCellBorder(border, table, cell, x, y);
 
-			border = TrimCellBorder(border, table, cell, x, y);
-
-			return border;
+			return TrimCellBorder(border, table, cell, x, y);
 
 			static CellBorder DotCellBorder(CellBorder border, Table table, Cell cell, int x, int y)
 			{
@@ -171,35 +196,35 @@ namespace SimpleTableManager.Services
 			{
 				if (x == 0 || x > 0 && table[x - 1, y].IsSelected && !cell.IsSelected)
 				{
-					return border.Trim(left: true);
+					border = border.Trim(left: true);
 				}
 				if (y == 0 || y > 0 && table[x, y - 1].IsSelected && !cell.IsSelected)
 				{
-					return border.Trim(top: true);
+					border = border.Trim(top: true);
 				}
 				if (x < table.Size.Width - 1 && table[x + 1, y].IsSelected && !cell.IsSelected)
 				{
-					return border.Trim(right: true);
+					border = border.Trim(right: true);
 				}
 				if (y < table.Size.Height - 1 && table[x, y + 1].IsSelected && !cell.IsSelected)
 				{
-					return border.Trim(bottom: true);
+					border = border.Trim(bottom: true);
 				}
 
 				return border;
 			}
 
-			static CellBorderName GetBorderCellName(Table table, int x, int y)
+			static CellBorderName GetBorderCellName(int w, int h, int x, int y)
 			{
-				if (x == table.Size.Width - 1 && y == table.Size.Height - 1)
+				if (x == w - 1 && y == h - 1)
 				{
 					return CellBorderName.ContentUpLeft;
 				}
-				else if (x == table.Size.Width - 1)
+				else if (x == w - 1)
 				{
 					return CellBorderName.ContentVerticalLeft;
 				}
-				else if (y == table.Size.Height - 1)
+				else if (y == h - 1)
 				{
 					return CellBorderName.ContentHorizontalUp;
 				}
@@ -313,83 +338,6 @@ namespace SimpleTableManager.Services
 				Console.Write(content);
 			});
 		}
-
-		//private static bool IsViewTableShrinkNeeded(Table table)
-		//{
-		//int freeLinesForInput = 16;
-
-		//if (Console.WindowWidth - _VIEW_TABLE_GRAPHICAL_SIZE.Width < 0)
-		//{
-		//	table.ViewOptions.DecreaseWidth();
-
-		//	return true;
-		//}
-		//else if (Console.WindowHeight - freeLinesForInput - _VIEW_TABLE_GRAPHICAL_SIZE.Height < 0)
-		//{
-		//	table.ViewOptions.DecreaseHeight();
-
-		//	return true;
-		//}
-
-		//	return false;
-		//}
-
-		//private static void DrawSeparatorLine(int rowIndex, int columnCount, int rowCount)
-		//{
-		//	//TODO fix coloring
-		//	Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
-
-		//	ChangeToBorderColors(false);
-
-		//	Draw(GetTableCharacter(rowIndex, 0, rowCount, columnCount));
-
-		//	for (int x = 0; x < columnCount; x++)
-		//	{
-		//		ChangeToBorderColors(IsHorizontalBorderSegmentSelected(x, rowIndex));
-
-		//		Draw(new string(GetTableCharacter(rowIndex, x + 0.5m, rowCount, columnCount), _COLUMN_WIDTHS[x]));
-
-		//		//var isSelected = _VIEW_TABLE.IsColumnSelected(x + 1) &&
-		//		//	(_VIEW_TABLE.IsRowSelected(rowIndex) || _VIEW_TABLE.IsRowSelected(rowIndex - 1));
-
-		//		ChangeToBorderColors(IsCornerBorderSegmentSelected(x, rowIndex));
-
-		//		Draw(GetTableCharacter(rowIndex, x + 1, rowCount, columnCount));
-		//	}
-
-		//	Console.WriteLine();
-		//}
-
-		//private static void DrawContentLine(int lineIndex, List<Cell> cells, int rowIndex, int rowCount)
-		//{
-		//	Console.SetCursorPosition(_TABLE_OFFSET.X, Console.CursorTop);
-
-		//	ChangeToBorderColors(false);
-
-		//	Draw(GetTableCharacter(rowIndex + 0.5m, 0, rowCount, cells.Count));
-
-		//	for (int i = 0; i < cells.Count; i++)
-		//	{
-		//		Draw(cells[i], lineIndex, rowIndex, _COLUMN_WIDTHS[i]);
-
-		//		ChangeToBorderColors(cells[i].IsSelected || i + 1 < cells.Count && cells[i + 1].IsSelected);
-
-		//		Draw(GetTableCharacter(rowIndex + 0.5m, i + 1, rowCount, cells.Count));
-		//	}
-
-		//	Console.WriteLine();
-		//}
-
-		//private static bool IsHorizontalBorderSegmentSelected(int columnIndex, int rowIndex)
-		//{
-		//	return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1);
-		//}
-
-		//private static bool IsCornerBorderSegmentSelected(int columnIndex, int rowIndex)
-		//{
-		//	return _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex, rowIndex - 1) ||
-		//		_VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex) || _VIEW_TABLE.IsCellSelected(columnIndex + 1, rowIndex - 1);
-		//}
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
 		{

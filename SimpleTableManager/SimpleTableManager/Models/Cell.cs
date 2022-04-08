@@ -23,7 +23,7 @@ namespace SimpleTableManager.Models
 			new Size(Content.Max(e => e.ToString().Length), Content.Count) : new Size(1, 1);
 
 		/// <summary>
-		/// Max of <see cref="ContentSize"/> and <see cref="GivenSize"/>
+		/// Max of <see cref="ContentSize"/> and <see cref="GivenSize"/> plus border size
 		/// </summary>
 		public Size Size => new Size
 			(
