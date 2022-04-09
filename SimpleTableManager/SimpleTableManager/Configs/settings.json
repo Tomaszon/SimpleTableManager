@@ -7,5 +7,10 @@
 	//"BorderBackgroundColor": "White",
 	"SelectedCellForegroundColor": "Yellow",
 	"SelectedCellBackgroundColor": "Black",
-	"ModernTableBorder": false
+	"ModernTableBorder": false,
+	"IndexCellLeftArrow": "◀",
+	"IndexCellRightArrow": "▶",
+	"IndexCellUpArrow": "▲",
+	"IndexCellDownArrow": "▼",
+	"TmpBackgroundCharacter": "?"
 }

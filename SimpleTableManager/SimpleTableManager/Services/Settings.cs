@@ -25,5 +25,15 @@ namespace SimpleTableManager.Services
 		}
 
 		public static Settings Current { get; private set; }
+
+		public char IndexCellLeftArrow { get; set; }
+
+		public char IndexCellRightArrow { get; set; }
+
+		public char IndexCellUpArrow { get; set; }
+
+		public char IndexCellDownArrow { get; set; }
+
+		public char TmpBackgroundCharacter { get; set; }
 	}
 }

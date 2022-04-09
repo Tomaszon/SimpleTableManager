@@ -17,17 +17,11 @@ namespace SimpleTableManager.Models
 
 		public List<Cell> Content { get; set; } = new List<Cell>();
 
-		public List<Cell> Header { get; set; } = new List<Cell>();
+		public List<IndexCell> Header { get; set; } = new List<IndexCell>();
 
-		public List<Cell> Sider { get; set; } = new List<Cell>();
+		public List<IndexCell> Sider { get; set; } = new List<IndexCell>();
 
-		public Cell CornerCell { get; set; } = new Cell(@"y \ x")
-		{
-			//BackgroundColor = System.ConsoleColor.DarkGray,
-			//ForegroundColor = System.ConsoleColor.Black,
-			//BorderBackgroundColor = System.ConsoleColor.DarkGray,
-			//BorderForegroundColor = System.ConsoleColor.Black
-		};
+		public Cell CornerCell { get; set; } = new Cell(@"y \ x");
 
 		public Dictionary<int, List<Cell>> Columns
 		{
@@ -63,38 +57,16 @@ namespace SimpleTableManager.Models
 			ResetViewOptions();
 
 			Shared.IndexArray(rowCount).ForEach(y =>
-				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell("T", new Position(x, y), ":)"))));
+				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell("Cell x"/*, new Position(x, y), ":)"*/))));
 
-			Shared.IndexArray(columnCount).ForEach(x => Header.Add(new Cell(x)
-			{
-				ContentType = typeof(int),
-				//BackgroundColor = System.ConsoleColor.DarkGray,
-				//ForegroundColor = System.ConsoleColor.Black,
-				//BorderBackgroundColor = System.ConsoleColor.DarkGray,
-				//BorderForegroundColor = System.ConsoleColor.Black
-			}));
+			Shared.IndexArray(columnCount).ForEach(x =>
+				Header.Add(new IndexCell(x, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow)));
 
-			Shared.IndexArray(rowCount).ForEach(y => Sider.Add(new Cell(y)
-			{
-				ContentType = typeof(int),
-				//BackgroundColor = System.ConsoleColor.DarkGray,
-				//ForegroundColor = System.ConsoleColor.Black,
-				//BorderBackgroundColor = System.ConsoleColor.DarkGray,
-				//BorderForegroundColor = System.ConsoleColor.Black
-			}));
+			Shared.IndexArray(rowCount).ForEach(y =>
+				Sider.Add(new IndexCell(y, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow)));
 
 			//HideColumn(3);
 		}
-
-		//public List<int> GetColumnWidths()
-		//{
-		//	return Shared.IndexArray(Size.Width).Select(i => GetColumnWidth(i)).ToList();
-		//}
-
-		//public List<int> GetRowHeights()
-		//{
-		//	return Shared.IndexArray(Size.Height).Select(i => GetRowHeight(i)).ToList();
-		//}
 
 		public int GetRowHeight(int index)
 		{
@@ -192,6 +164,26 @@ namespace SimpleTableManager.Models
 			return x > 0 && x < Size.Width && y > 0 && y < Size.Height && this[x, y].IsSelected;
 		}
 
+		public IndexCell GetFirstVisibleHeaderInView()
+		{
+			return Header.FirstOrDefault(h => IsColumnInView(h.Index) && !IsColumnHidden(h.Index));
+		}
+
+		public IndexCell GetLastVisibleHeaderInView()
+		{
+			return Header.LastOrDefault(h => IsColumnInView(h.Index) && !IsColumnHidden(h.Index));
+		}
+
+		public IndexCell GetFirstVisibleSiderInView()
+		{
+			return Sider.FirstOrDefault(s => IsRowInView(s.Index) && !IsRowHidden(s.Index));
+		}
+
+		public IndexCell GetLastVisibleSiderInView()
+		{
+			return Sider.LastOrDefault(s => IsRowInView(s.Index) && !IsRowHidden(s.Index));
+		}
+
 		//#region Set
 		[CommandReference]
 		public void SetColumnWidth(int index, int width)
@@ -274,6 +266,7 @@ namespace SimpleTableManager.Models
 		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
 		//}
 
+		[CommandReference]
 		public void HideColumn(int x)
 		{
 			Header[x].IsHidden = true;

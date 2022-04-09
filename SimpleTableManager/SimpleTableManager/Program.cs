@@ -43,6 +43,8 @@ namespace SimpleTableManager
 			//}
 
 
+			//document.GetActiveTable().Header[0].AppendRightEllipsis(456);
+
 			//document.GetActiveTable()[0, 0].BorderForegroundColor = ConsoleColor.Yellow;
 			//document.GetActiveTable()[1, 0].ForegroundColor = ConsoleColor.Red;
 			//document.GetActiveTable()[1, 0].BackgroundColor = ConsoleColor.Cyan;

@@ -4,7 +4,6 @@ using System.Linq;
 
 using Newtonsoft.Json;
 
-using SimpleTableManager.Extensions;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -80,9 +79,14 @@ namespace SimpleTableManager.Models
 			Content.Clear();
 		}
 
-		public void AddContents(params object[] contents)
+		public void AddContentsFirst(params object[] contents)
 		{
-			contents.ForEach(c => Content.Add(c));
+			Content.InsertRange(0, contents);
+		}
+
+		public void AddContentsLast(params object[] contents)
+		{
+			Content.AddRange(contents);
 		}
 
 		public void RemoveContent()
