@@ -10,11 +10,8 @@ namespace SimpleTableManager.Services
 {
 	public static class TableRenderer
 	{
-		//private static List<int> _COLUMN_WIDTHS;
-		//private static List<int> _ROW_HEIGHTS;
-		//private static Position _TABLE_OFFSET;
-		//private static Size _VIEW_TABLE_GRAPHICAL_SIZE;
-		//private static Table _VIEW_TABLE;
+		private static int _FREE_LINES_BELOW_TABLE = 16;
+		private static int _FREE_LINES_ABOW_TABLE = 5;
 
 		public static void Render(Table table)
 		{
@@ -24,7 +21,7 @@ namespace SimpleTableManager.Services
 
 			var tableSize = ShrinkTableIfNeeded(table);
 
-			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, 10);
+			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
 			RenderTempCell(tableOffset, tableSize);
 
@@ -36,15 +33,13 @@ namespace SimpleTableManager.Services
 
 			RenderContent(table, tableOffset);
 
-			Console.WriteLine();
+			Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
 
 			ChangeToTextColors();
 		}
 
 		private static Size ShrinkTableIfNeeded(Table table)
 		{
-			int freeLinesForInput = 16;
-
 			while (true)
 			{
 				var size = table.GetTableSize();
@@ -53,7 +48,7 @@ namespace SimpleTableManager.Services
 				{
 					table.ViewOptions.DecreaseWidth();
 				}
-				else if (Console.WindowHeight - freeLinesForInput - size.Height < 0)
+				else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - _FREE_LINES_ABOW_TABLE - size.Height < 0)
 				{
 					table.ViewOptions.DecreaseHeight();
 				}
@@ -69,7 +64,7 @@ namespace SimpleTableManager.Services
 			var placeHolderCell = new Cell(GetTmpBackground(size)) { ContentColor = new ConsoleColorSet(Settings.Current.TextColor) };
 			var placeHolderCellPosition = new Position(tableOffset);
 
-			DrawCellBorder(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderName.CornerCellClosed));
+			DrawCellBorder(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
 
 			DrawCellContent(placeHolderCell, placeHolderCellPosition, size);
 
@@ -107,7 +102,7 @@ namespace SimpleTableManager.Services
 
 			var size = table.GetCornerCellSize();
 
-			DrawCellBorder(table.CornerCell, position, size, CellBorders.Get(CellBorderName.CornerCellOpen));
+			DrawCellBorder(table.CornerCell, position, size, CellBorders.Get(CellBorderType.CornerCellOpen));
 
 			DrawCellContent(table.CornerCell, position, size);
 		}
@@ -124,12 +119,15 @@ namespace SimpleTableManager.Services
 
 					var size = table.GetHeaderCellSize(x);
 
-					DrawCellBorder(cell, position, size, x < table.Size.Width - 1 ?
-						CellBorders.Get(CellBorderName.HeaderOpen) : CellBorders.Get(CellBorderName.HeaderVertical).Trim(left: true));
+					var posInView = table.PositionInView(x, -1);
+
+					var border = CellBorders.Get(GetHeaderCellBorderType(table.ViewOptions.Size.Width, posInView.X));
+
+					DrawCellBorder(cell, position, size, border);
 
 					DrawCellContent(cell, position, size);
 				}
-			}, 10);
+			});
 		}
 
 		private static void RenderSider(Table table, Size tableOffset)
@@ -143,12 +141,15 @@ namespace SimpleTableManager.Services
 
 					var size = table.GetSiderCellSize(y);
 
-					DrawCellBorder(cell, position, size, y < table.Size.Height - 1 ?
-						CellBorders.Get(CellBorderName.SiderOpen) : CellBorders.Get(CellBorderName.SiderHorizontal).Trim(top: true));
+					var posInView = table.PositionInView(-1, y);
+
+					var border = CellBorders.Get(GetSiderCellBorderType(table.ViewOptions.Size.Height, posInView.Y));
+
+					DrawCellBorder(cell, position, size, border);
 
 					DrawCellContent(cell, position, size);
 				}
-			}, 10);
+			});
 		}
 
 		private static void RenderContent(Table table, Size tableOffset)
@@ -164,9 +165,9 @@ namespace SimpleTableManager.Services
 
 						var size = table.GetContentCellSize(x, y);
 
-						var (vX, vY) = table.PositionInView(x, y);
+						var posInView = table.PositionInView(x, y);
 
-						var border = GetCellBorder(table, cell, vX, vY);
+						var border = GetContentCellBorder(table, cell, posInView);
 
 						DrawCellBorder(cell, position, size, border);
 
@@ -175,63 +176,85 @@ namespace SimpleTableManager.Services
 				}));
 		}
 
-		private static CellBorder GetCellBorder(Table table, Cell cell, int x, int y)
+		private static CellBorder GetContentCellBorder(Table table, Cell cell, Position position)
 		{
-			var (w, h) = table.ViewOptions.Size;
+			var cellBorderType = GetContentCellBorderType(table.ViewOptions.Size, position);
 
-			var cellBorderName = GetBorderCellName(w, h, x, y);
+			var border = CellBorders.Get(cellBorderType);
 
-			var border = CellBorders.Get(cellBorderName);
+			border = DotContentCellBorder(border, table, cell, position);
 
-			border = DotCellBorder(border, table, cell, x, y);
+			return TrimContentCellBorder(border, table, cell, position);
+		}
 
-			return TrimCellBorder(border, table, cell, x, y);
+		private static CellBorder DotContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
+		{
+			return border;
+		}
 
-			static CellBorder DotCellBorder(CellBorder border, Table table, Cell cell, int x, int y)
+		private static CellBorder TrimContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
+		{
+			if (position.X == 0 || position.X > 0 && table[position.X - 1, position.Y].IsSelected && !cell.IsSelected)
 			{
-				return border;
+				border = border.Trim(left: true);
+			}
+			if (position.Y == 0 || position.Y > 0 && table[position.X, position.Y - 1].IsSelected && !cell.IsSelected)
+			{
+				border = border.Trim(top: true);
+			}
+			if (position.X < table.Size.Width - 1 && table[position.X + 1, position.Y].IsSelected && !cell.IsSelected)
+			{
+				border = border.Trim(right: true);
+			}
+			if (position.Y < table.Size.Height - 1 && table[position.X, position.Y + 1].IsSelected && !cell.IsSelected)
+			{
+				border = border.Trim(bottom: true);
 			}
 
-			static CellBorder TrimCellBorder(CellBorder border, Table table, Cell cell, int x, int y)
-			{
-				if (x == 0 || x > 0 && table[x - 1, y].IsSelected && !cell.IsSelected)
-				{
-					border = border.Trim(left: true);
-				}
-				if (y == 0 || y > 0 && table[x, y - 1].IsSelected && !cell.IsSelected)
-				{
-					border = border.Trim(top: true);
-				}
-				if (x < table.Size.Width - 1 && table[x + 1, y].IsSelected && !cell.IsSelected)
-				{
-					border = border.Trim(right: true);
-				}
-				if (y < table.Size.Height - 1 && table[x, y + 1].IsSelected && !cell.IsSelected)
-				{
-					border = border.Trim(bottom: true);
-				}
+			return border;
+		}
 
-				return border;
+		private static CellBorderType GetContentCellBorderType(Size size, Position position)
+		{
+			if (position.X == size.Width - 1 && position.Y == size.Height - 1)
+			{
+				return CellBorderType.ContentUpLeft;
 			}
-
-			static CellBorderName GetBorderCellName(int w, int h, int x, int y)
+			else if (position.X == size.Width - 1)
 			{
-				if (x == w - 1 && y == h - 1)
-				{
-					return CellBorderName.ContentUpLeft;
-				}
-				else if (x == w - 1)
-				{
-					return CellBorderName.ContentVerticalLeft;
-				}
-				else if (y == h - 1)
-				{
-					return CellBorderName.ContentHorizontalUp;
-				}
-				else
-				{
-					return CellBorderName.ContentOpen;
-				}
+				return CellBorderType.ContentVerticalLeft;
+			}
+			else if (position.Y == size.Height - 1)
+			{
+				return CellBorderType.ContentHorizontalUp;
+			}
+			else
+			{
+				return CellBorderType.ContentOpen;
+			}
+		}
+
+		private static CellBorderType GetHeaderCellBorderType(int size, int position)
+		{
+			if (position == size - 1)
+			{
+				return CellBorderType.HeaderVertical;
+			}
+			else
+			{
+				return CellBorderType.HeaderOpen;
+			}
+		}
+
+		private static CellBorderType GetSiderCellBorderType(int size, int position)
+		{
+			if (position == size - 1)
+			{
+				return CellBorderType.SiderHorizontal;
+			}
+			else
+			{
+				return CellBorderType.SiderOpen;
 			}
 		}
 

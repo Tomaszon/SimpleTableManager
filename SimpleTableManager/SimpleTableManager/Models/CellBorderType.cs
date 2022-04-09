@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models
 {
-	public enum CellBorderName
+	public enum CellBorderType
 	{
 		CornerCellClosed,
 		CornerCellHorizontal,

@@ -7,5 +7,5 @@
 	//"BorderBackgroundColor": "White",
 	"SelectedCellForegroundColor": "Yellow",
 	"SelectedCellBackgroundColor": "Black",
-	"ModernTableBorder": true
+	"ModernTableBorder": false
 }

@@ -250,9 +250,9 @@ namespace SimpleTableManager.Models
 			return IsColumnInView(x) && IsRowInView(y);
 		}
 
-		public (int vX, int vY) PositionInView(int x, int y)
+		public Position PositionInView(int x = -1, int y = -1)
 		{
-			return (x - ViewOptions.StartPosition.X, y - ViewOptions.StartPosition.Y);
+			return new Position(x - ViewOptions.StartPosition.X, y - ViewOptions.StartPosition.Y);
 		}
 
 		public bool IsColumnInView(int x)
