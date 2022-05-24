@@ -1,5 +1,5 @@
 {
-	"set": {
+	"set|s": {
 		"content|c": "setContent",
 		"vertical-alignment|va": "setVerticalAlignment",
 		"horizontal-alignment|ha": "setHorizontalAlignment",

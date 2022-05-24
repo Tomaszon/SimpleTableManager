@@ -11,6 +11,10 @@ namespace SimpleTableManager.Models
 {
 	public static class CommandTree
 	{
+		private const string _REGEX_PREFIX = "regex:";
+
+		private const string _HELP_COMMAND = "help";
+
 		public static IDictionary<string, object> Commands { get; } = new ExpandoObject();
 
 		public static void FromJsonFolder(string folderPath)
@@ -25,6 +29,11 @@ namespace SimpleTableManager.Models
 		{
 			var keys = value.Split(' ', System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries).Select(k => k.Replace("\\s", " ").Replace("\\t", " ")).ToList();
 
+			if (keys.Count == 0)
+			{
+				throw new IncompleteCommandException(null);
+			}
+
 			return new CommandReference()
 			{
 				ClassName = keys.FirstOrDefault(),
@@ -36,36 +45,37 @@ namespace SimpleTableManager.Models
 		{
 			if (obj is ExpandoObject o)
 			{
-				if (keys.FirstOrDefault() == "-help")
+				if (keys.FirstOrDefault() == _HELP_COMMAND)
 				{
 					var l = o.Select(e => e.Key).ToList();
 
 					arguments = null;
 					availableKeys = l;
 
-					return null;
+					return _HELP_COMMAND;
 				}
 				else
 				{
-					//TODO given command 'hp' maps to configured command 'padding|p'
-					var v = o.FirstOrDefault(e => Regex.IsMatch(keys.FirstOrDefault(), $"^{e.Key}$", RegexOptions.IgnoreCase)).Value;
+					var value = o.FirstOrDefault(e =>
+						e.Key.StartsWith(_REGEX_PREFIX) && Regex.IsMatch(keys.FirstOrDefault(), e.Key.Substring(_REGEX_PREFIX.Length), RegexOptions.IgnoreCase) ||
+						!e.Key.StartsWith(_REGEX_PREFIX) && e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(keys.FirstOrDefault(), StringComparer.OrdinalIgnoreCase)).Value;
 
-					if (v is null)
+					if (value is null)
 					{
 						throw new KeyNotFoundException($"Unknow command key '{keys.FirstOrDefault()}' in '{fullValue}'");
 					}
 
-					if (v is ExpandoObject && keys.Count <= 1 || !(v is ExpandoObject) && keys.Count < 1)
+					if (value is ExpandoObject && keys.Count <= 1 || !(value is ExpandoObject) && keys.Count < 1)
 					{
 						throw new IncompleteCommandException(fullValue);
 					}
 
-					return GetReferenceMethodNameRecursive(v, keys.GetRange(1, keys.Count - 1), fullValue, out arguments, out availableKeys);
+					return GetReferenceMethodNameRecursive(value, keys.GetRange(1, keys.Count - 1), fullValue, out arguments, out availableKeys);
 				}
 			}
 			else
 			{
-				if (keys.FirstOrDefault() == "-help")
+				if (keys.FirstOrDefault() == _HELP_COMMAND)
 				{
 					arguments = null;
 					availableKeys = null;

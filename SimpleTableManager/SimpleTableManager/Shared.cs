@@ -42,7 +42,6 @@ namespace SimpleTableManager.Services
 			{
 				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'");
 			}
-			//}
 		}
 
 		private static MethodInfo GetParseMethod(Type dataType)
@@ -107,6 +106,20 @@ namespace SimpleTableManager.Services
 		public static void StepCursor(int x, int y)
 		{
 			Console.SetCursorPosition(Console.CursorLeft + x, Console.CursorTop + y);
+		}
+
+		public static string ReadLineWhile(string message, IEnumerable<object> validValues, bool caseSensitive = false)
+		{
+			do
+			{
+				Console.WriteLine(message);
+
+				if (Console.ReadLine() is var answer && validValues.Select(v => v.ToString()).Contains(answer, StringComparer.OrdinalIgnoreCase))
+				{
+					return answer;
+				}
+			}
+			while (true);
 		}
 	}
 }

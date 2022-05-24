@@ -13,7 +13,7 @@ namespace SimpleTableManager
 		public static string lastHelp = "Enter command to execute";
 		//public static string prevCommand = "";
 
-		static InstanceMap InstanceMap { get; set; } = new InstanceMap();
+		public static InstanceMap InstanceMap { get; set; } = new InstanceMap();
 
 
 		private static void Main(string[] args)
@@ -28,7 +28,9 @@ namespace SimpleTableManager
 			CellBorders.FromJson(@".\Configs\cellBorders.json");
 
 			var document = new Document();
+			var app = new App();
 
+			InstanceMap.Add(() => app);
 			InstanceMap.Add(() => document);
 			InstanceMap.Add(() => document.GetActiveTable());
 			InstanceMap.Add(() => document.GetActiveTable().GetSelectedCells());
@@ -74,41 +76,30 @@ namespace SimpleTableManager
 				{
 					Draw(document.GetActiveTable());
 
-
 					var rawCommand = Console.ReadLine().Trim();//ReadInput();
 
-					if (rawCommand == "exit")
+					try
 					{
-						break;
-					}
-					else if (rawCommand.Contains("-help"))
-					{
-						GetHelp(rawCommand);
-					}
-					else if (rawCommand == "refresh")
-					{
-						Console.ResetColor();
-						rawCommand = "";
-						Console.Clear();
-					}
-					else
-					{
-						try
-						{
-							var command = Command.FromString(rawCommand);
+						var command = Command.FromString(rawCommand);
 
+						if (command.Reference.MethodName == "help")
+						{
+							lastHelp = app.ShowHelp(null);
+						}
+						else
+						{
 							command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
 
 							lastHelp = "Enter command to execute";
 						}
-						catch (IncompleteCommandException)
-						{
-							GetHelp($"{rawCommand} -help", "Incomplete command");
-						}
-						catch (TargetParameterCountException)
-						{
-							GetHelp($"{rawCommand} -help", "Arguments needed");
-						}
+					}
+					catch (IncompleteCommandException)
+					{
+						lastHelp = app.ShowHelp($"{rawCommand} help", "Incomplete command");
+					}
+					catch (TargetParameterCountException)
+					{
+						lastHelp = app.ShowHelp($"{rawCommand} help", "Arguments needed");
 					}
 				}
 				catch (Exception ex)
@@ -121,28 +112,6 @@ namespace SimpleTableManager
 				Console.Clear();
 			}
 			while (true);
-
-			Console.WriteLine("Good bye!");
-
-			Console.ReadKey();
-		}
-
-		public static void GetHelp(string rawCommand, string error = null)
-		{
-			var command = Command.FromString(rawCommand);
-
-			if (command.AvailableKeys is { })
-			{
-				lastHelp = $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
-			}
-			else if (command.Reference is { })
-			{
-				var instances = InstanceMap.GetInstances(command.Reference.ClassName);
-
-				var parameters = command.GetParameters(command.GetMethod(instances.First()));
-
-				lastHelp = $"{error}\n    Parameters:\n        {string.Join("\n        ", parameters)}\n    of '{rawCommand.Replace("-help", "").TrimEnd()}'".Trim();
-			}
 		}
 
 		public static void Draw(Table table)
@@ -230,5 +199,50 @@ namespace SimpleTableManager
 		//	prevCommand = buffer;
 		//	return buffer.Trim();
 		//}
+	}
+
+	public class App
+	{
+		[CommandReference]
+		public void Exit()
+		{
+			var answer = Shared.ReadLineWhile("Are you sure y/n", new[] { "y", "n" });
+
+			if (answer.ToLower() == "y")
+			{
+				Console.WriteLine("Good bye!");
+
+				Console.ReadKey();
+
+				Environment.Exit(0);
+			}
+		}
+
+		[CommandReference]
+		public void Refresh()
+		{
+			Console.ResetColor();
+			Console.Clear();
+		}
+
+		public string ShowHelp(string rawCommand, string error = null)
+		{
+			var command = Command.FromString(rawCommand);
+
+			if (command.AvailableKeys is { })
+			{
+				return $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{rawCommand.Replace("help", "").TrimEnd()}'".Trim();
+			}
+			else if (command.Reference is { })
+			{
+				var instances = Program.InstanceMap.GetInstances(command.Reference.ClassName);
+
+				var parameters = command.GetParameters(command.GetMethod(instances.First()));
+
+				return $"{error}\n    Parameters:\n        {string.Join("\n        ", parameters)}\n    of '{rawCommand.Replace("help", "").TrimEnd()}'".Trim();
+			}
+
+			return "¯\\_(ツ)_/¯";
+		}
 	}
 }
