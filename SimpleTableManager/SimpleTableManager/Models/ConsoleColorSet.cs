@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace SimpleTableManager.Models
 {
@@ -8,6 +9,7 @@ namespace SimpleTableManager.Models
 
 		public ConsoleColor Background { get; set; }
 
+		[JsonConstructor]
 		public ConsoleColorSet(ConsoleColor foreground, ConsoleColor background)
 		{
 			Foreground = foreground;

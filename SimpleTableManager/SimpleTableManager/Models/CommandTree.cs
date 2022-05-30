@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
 
+using SimpleTableManager.Services;
+
 namespace SimpleTableManager.Models
 {
 	public static class CommandTree
 	{
 		private const string _REGEX_PREFIX = "regex:";
-
-		private const string _HELP_COMMAND = "help";
 
 		public static IDictionary<string, object> Commands { get; } = new ExpandoObject();
 
@@ -45,14 +45,14 @@ namespace SimpleTableManager.Models
 		{
 			if (obj is ExpandoObject o)
 			{
-				if (keys.FirstOrDefault() == _HELP_COMMAND)
+				if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
 				{
 					var l = o.Select(e => e.Key).ToList();
 
 					arguments = null;
 					availableKeys = l;
 
-					return _HELP_COMMAND;
+					return Shared.HELP_COMMAND;
 				}
 				else
 				{
@@ -75,7 +75,7 @@ namespace SimpleTableManager.Models
 			}
 			else
 			{
-				if (keys.FirstOrDefault() == _HELP_COMMAND)
+				if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
 				{
 					arguments = null;
 					availableKeys = null;

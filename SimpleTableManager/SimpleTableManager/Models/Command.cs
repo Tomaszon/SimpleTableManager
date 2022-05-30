@@ -15,6 +15,8 @@ namespace SimpleTableManager.Models
 
 		public List<string> AvailableKeys { get; set; }
 
+		public string RawCommand { get; set; }
+
 		public static Command FromString(string value)
 		{
 			var reference = CommandTree.GetCommandReference(value, out var arguments, out var availableKeys);
@@ -23,7 +25,8 @@ namespace SimpleTableManager.Models
 			{
 				Reference = reference,
 				Arguments = arguments,
-				AvailableKeys = availableKeys
+				AvailableKeys = availableKeys,
+				RawCommand = value
 			};
 		}
 

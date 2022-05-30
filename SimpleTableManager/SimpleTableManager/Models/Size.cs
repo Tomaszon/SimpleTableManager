@@ -1,4 +1,7 @@
-﻿namespace SimpleTableManager.Models
+﻿
+using Newtonsoft.Json;
+
+namespace SimpleTableManager.Models
 {
 	public class Size
 	{
@@ -6,6 +9,7 @@
 
 		public int Height { get; set; }
 
+		[JsonConstructor]
 		public Size(int width, int height)
 		{
 			Width = width;

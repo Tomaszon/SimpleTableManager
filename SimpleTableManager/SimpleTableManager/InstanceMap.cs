@@ -18,6 +18,11 @@ namespace SimpleTableManager
 			ArrayMap.Add(typeof(T).Name.ToLower(), () => new[] { func.Invoke() }.Select(e => (object)e));
 		}
 
+		public void Remove<T>(Func<T> func)
+		{
+			ArrayMap.Remove(typeof(T).Name.ToLower());
+		}
+
 		public IEnumerable<object> GetInstances(string typeName)
 		{
 			return ArrayMap[typeName].Invoke();

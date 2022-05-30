@@ -6,7 +6,7 @@ namespace SimpleTableManager.Models
 	{
 		public string FullValue { get; set; }
 
-		public IncompleteCommandException(string fullValue) : base($"Incomplete command '{fullValue}'")
+		public IncompleteCommandException(string fullValue) : base($"Can not execute incomplete command '{fullValue}'")
 		{
 
 		}

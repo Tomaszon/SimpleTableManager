@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-
+using Newtonsoft.Json;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -49,6 +50,40 @@ namespace SimpleTableManager.Models
 			Tables.Add(new Table(name, columnCount, rowCount));
 
 			ActivateTable(Tables.Count - 1);
+		}
+
+		[CommandReference]
+		public void Save(string fileName, bool overwrite = false)
+		{
+			fileName = GetSaveFilePath(fileName);
+
+			if (File.Exists(fileName) && !overwrite)
+			{
+				throw new IOException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
+			}
+
+			using var f = File.Create(fileName);
+			using var sw = new StreamWriter(f);
+
+			new JsonSerializer().Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t' }, this);
+		}
+
+		[CommandReference]
+		public void Load(string fileName)
+		{
+			fileName = GetSaveFilePath(fileName);
+
+			using var f = File.Open(fileName, FileMode.Open);
+			using var sr = new StreamReader(f);
+
+			var content = sr.ReadToEnd();
+
+			JsonConvert.PopulateObject(content, this, new JsonSerializerSettings() {  });
+		}
+
+		private static string GetSaveFilePath(string fileName)
+		{
+			return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.json");
 		}
 	}
 }

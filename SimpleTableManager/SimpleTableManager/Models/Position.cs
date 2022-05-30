@@ -1,4 +1,7 @@
-﻿namespace SimpleTableManager.Models
+﻿
+using Newtonsoft.Json;
+
+namespace SimpleTableManager.Models
 {
 	public class Position
 	{
@@ -6,6 +9,7 @@
 
 		public int Y { get; set; }
 
+		[JsonConstructor]
 		public Position(int x, int y)
 		{
 			X = x;

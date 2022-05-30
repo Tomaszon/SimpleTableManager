@@ -3,7 +3,7 @@ using System.IO;
 
 using SimpleTableManager.Models;
 
-namespace SimpleTableManager.Services
+namespace SimpleTableManager.Models
 {
 	public class Settings
 	{
@@ -35,5 +35,7 @@ namespace SimpleTableManager.Services
 		public char IndexCellDownArrow { get; set; }
 
 		public char TmpBackgroundCharacter { get; set; }
+
+		public string DefaultWorkDirectory { get; set; }
 	}
 }

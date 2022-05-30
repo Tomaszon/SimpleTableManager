@@ -18,7 +18,6 @@ namespace SimpleTableManager
 
 		private static void Main(string[] args)
 		{
-			//Console.WriteLine("Hello World!");
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
 			Console.InputEncoding = System.Text.Encoding.Unicode;
 
@@ -72,35 +71,31 @@ namespace SimpleTableManager
 
 			do
 			{
+				string rawCommand = "";
+
 				try
 				{
 					Draw(document.GetActiveTable());
 
-					var rawCommand = Console.ReadLine().Trim();//ReadInput();
+					rawCommand = Console.ReadLine().Trim();//ReadInput();
 
-					try
-					{
-						var command = Command.FromString(rawCommand);
+					var command = Command.FromString(rawCommand);
 
-						if (command.Reference.MethodName == "help")
-						{
-							lastHelp = app.ShowHelp(null);
-						}
-						else
-						{
-							command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
+					if (command.Reference.MethodName == Shared.HELP_COMMAND)
+					{
+						lastHelp = app.ShowHelp(command);
+					}
+					else
+					{
+						command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
 
-							lastHelp = "Enter command to execute";
-						}
+						lastHelp = "Enter command to execute";
 					}
-					catch (IncompleteCommandException)
-					{
-						lastHelp = app.ShowHelp($"{rawCommand} help", "Incomplete command");
-					}
-					catch (TargetParameterCountException)
-					{
-						lastHelp = app.ShowHelp($"{rawCommand} help", "Arguments needed");
-					}
+
+				}
+				catch (Exception ex) when (ex is IncompleteCommandException || ex is TargetParameterCountException)
+				{
+					lastHelp = app.ShowHelp($"{rawCommand} help", ex.Message);
 				}
 				catch (Exception ex)
 				{
@@ -225,13 +220,11 @@ namespace SimpleTableManager
 			Console.Clear();
 		}
 
-		public string ShowHelp(string rawCommand, string error = null)
+		public string ShowHelp(Command command, string error = null)
 		{
-			var command = Command.FromString(rawCommand);
-
 			if (command.AvailableKeys is { })
 			{
-				return $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{rawCommand.Replace("help", "").TrimEnd()}'".Trim();
+				return $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
 			}
 			else if (command.Reference is { })
 			{
@@ -239,10 +232,17 @@ namespace SimpleTableManager
 
 				var parameters = command.GetParameters(command.GetMethod(instances.First()));
 
-				return $"{error}\n    Parameters:\n        {string.Join("\n        ", parameters)}\n    of '{rawCommand.Replace("help", "").TrimEnd()}'".Trim();
+				return $"{error}\n    Parameters:\n        {string.Join("\n        ", parameters)}\n    of '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
 			}
 
 			return "¯\\_(ツ)_/¯";
+		}
+
+		public string ShowHelp(string rawCommand, string error = null)
+		{
+			var command = Command.FromString(rawCommand);
+
+			return ShowHelp(command, error);
 		}
 	}
 }

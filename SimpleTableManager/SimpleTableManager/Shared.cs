@@ -7,6 +7,8 @@ namespace SimpleTableManager.Services
 {
 	public static class Shared
 	{
+		public const string HELP_COMMAND = "help";
+
 		public static Type GetTypeByName(string name)
 		{
 			Dictionary<string, string> nameMap = new Dictionary<string, string>
@@ -58,7 +60,7 @@ namespace SimpleTableManager.Services
 				}
 				else
 				{
-					return m.Name == "Parse" && parameters.Length == 1;
+					return m.Name == "Parse" && parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
 				}
 			}).SingleOrDefault();
 		}
