@@ -232,7 +232,7 @@ namespace SimpleTableManager
 
 				var parameters = command.GetParameters(command.GetMethod(instances.First()));
 
-				return $"{error}\n    Parameters:\n        {string.Join("\n        ", parameters)}\n    of '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
+				return $"{error}\n    Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    of '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
 			}
 
 			return "¯\\_(ツ)_/¯";

@@ -11,10 +11,10 @@
 			"at|a": "activateTableAt"
 		}
 	},
-	"save": {
-		"as": "save"
+	"set": {
+		"title": "setTitle"
 	},
-	"load": {
-		"from": "load"
-	}
+	"save": "save",
+	"save-as": "saveAs",
+	"load": "load"
 }

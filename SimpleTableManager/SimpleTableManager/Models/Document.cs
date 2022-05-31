@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -14,7 +16,13 @@ namespace SimpleTableManager.Models
 
 		public Document()
 		{
-			Metadata = new Metadata("", 0, "");
+			Clear();
+		}
+
+		public void Clear()
+		{
+			Metadata = new Metadata(null, null);
+			Tables.Clear();
 			Tables.Add(new Table("Table1", 10, 4) { /*ViewOptions = new ViewOptions(3, 2, 6, 7)*/ });
 
 			ActivateTable(0);
@@ -23,6 +31,12 @@ namespace SimpleTableManager.Models
 		public Table GetActiveTable()
 		{
 			return Tables.Single(t => t.IsActive);
+		}
+
+		[CommandReference]
+		public void SetTitle(string title)
+		{
+			Metadata.Title = title;
 		}
 
 		[CommandReference("activateTableAt")]
@@ -53,19 +67,48 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void Save()
+		{
+			if (Metadata.Path is null)
+			{
+				throw new IOException($"Specify a file name to save to with 'save as'");
+			}
+			else
+			{
+				Save(Metadata.Path, true);
+			}
+		}
+
+		[CommandReference("saveAs")]
 		public void Save(string fileName, bool overwrite = false)
 		{
 			fileName = GetSaveFilePath(fileName);
 
-			if (File.Exists(fileName) && !overwrite)
+			try
 			{
-				throw new IOException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
+				if (File.Exists(fileName) && !overwrite)
+				{
+					throw new IOException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
+				}
+
+				using var f = File.Create(fileName);
+				using var sw = new StreamWriter(f);
+
+				Metadata.Path = fileName;
+
+				new JsonSerializer().Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t' }, this);
 			}
+			catch (Exception ex)
+			{
+				Metadata.ClearFileData();
 
-			using var f = File.Create(fileName);
-			using var sw = new StreamWriter(f);
+				if (File.Exists(fileName))
+				{
+					File.Delete(fileName);
+				}
 
-			new JsonSerializer().Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t' }, this);
+				throw ex;
+			}
 		}
 
 		[CommandReference]
@@ -73,12 +116,23 @@ namespace SimpleTableManager.Models
 		{
 			fileName = GetSaveFilePath(fileName);
 
-			using var f = File.Open(fileName, FileMode.Open);
-			using var sr = new StreamReader(f);
+			try
+			{
+				using var f = File.Open(fileName, FileMode.Open);
+				using var sr = new StreamReader(f);
 
-			var content = sr.ReadToEnd();
+				var content = sr.ReadToEnd();
 
-			JsonConvert.PopulateObject(content, this, new JsonSerializerSettings() {  });
+				JsonConvert.PopulateObject(content, this, new JsonSerializerSettings() { ContractResolver = new ClearPropertyContractResolver() });
+
+				Metadata.Path = fileName;
+			}
+			catch (Exception ex)
+			{
+				Clear();
+
+				throw ex;
+			}
 		}
 
 		private static string GetSaveFilePath(string fileName)

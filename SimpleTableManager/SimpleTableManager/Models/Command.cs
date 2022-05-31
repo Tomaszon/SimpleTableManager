@@ -37,7 +37,7 @@ namespace SimpleTableManager.Models
 				var method = GetMethod(instance);
 				var parameters = GetParameters(method);
 
-				if (parameters.Count(p => !p.Optional) > Arguments.Count)
+				if (parameters.Count(p => !p.Optional) > Arguments.Count || parameters.Count < Arguments.Count)
 				{
 					throw new TargetParameterCountException();
 				}

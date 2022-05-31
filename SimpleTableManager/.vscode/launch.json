@@ -25,12 +25,14 @@
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/SimpleTableManager/Views"
-			}
+			},
+			"justMyCode": false
 		},
 		{
 			"name": ".NET Core Attach",
 			"type": "coreclr",
-			"request": "attach"
+			"request": "attach",
+			"justMyCode": false
 		}
 	]
 }
