@@ -11,17 +11,19 @@ namespace SimpleTableManager.Services
 	public static class TableRenderer
 	{
 		private static int _FREE_LINES_BELOW_TABLE = 16;
-		private static int _FREE_LINES_ABOW_TABLE = 5;
+		private static int _FREE_LINES_ABOW_TABLE = 10;
 
 		public static void Render(Table table)
 		{
 			ChangeToTextColors();
 
-			Console.WriteLine($"{table.Name}\n");
+			//Console.WriteLine($"{table.Name}\n");
 
 			var tableSize = MaximizeTableView(table);
 
 			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
+
+			RenderTableName(table, tableOffset);
 
 			RenderTempCell(tableOffset, tableSize);
 
@@ -383,6 +385,15 @@ namespace SimpleTableManager.Services
 
 				Console.Write(content);
 			});
+		}
+
+		private static void RenderTableName(Table table, Size tableOffset)
+		{
+			Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 1);
+
+			ChangeToTextColors();
+
+			Console.WriteLine(table.Name);
 		}
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)

@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
 
-using SimpleTableManager.Services;
+using SimpleTableManager.Models;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Services
 {
 	public static class CommandTree
 	{

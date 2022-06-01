@@ -7,7 +7,7 @@
 	//"BorderBackgroundColor": "White",
 	"SelectedCellForegroundColor": "Yellow",
 	"SelectedCellBackgroundColor": "Black",
-	"ModernTableBorder": false,
+	"ModernTableBorder": true,
 	"IndexCellLeftArrow": "◀",
 	"IndexCellRightArrow": "▶",
 	"IndexCellUpArrow": "▲",

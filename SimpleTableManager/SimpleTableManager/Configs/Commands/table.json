@@ -37,7 +37,8 @@
 		},
 		"view|v": "setViewOptions",
 		"view-columns|vc": "setViewOptionsColumns",
-		"view-rows|vr": "setViewOptionsRows"
+		"view-rows|vr": "setViewOptionsRows",
+		"name|n": "setName"
 	},
 	"select": {
 		"cell": "selectCell",
@@ -57,6 +58,11 @@
 		"view|v": "resetViewOptions"
 	},
 	"hide": {
-		"column|c": "hideColumn"
+		"column|c": "hideColumn",
+		"row|r": "hideRow"
+	},
+	"show": {
+		"column|c": "showColumn",
+		"row|r": "showRow"
 	}
 }

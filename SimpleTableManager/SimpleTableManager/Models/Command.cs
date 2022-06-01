@@ -64,7 +64,7 @@ namespace SimpleTableManager.Models
 					}
 					else
 					{
-						var value = i < Arguments.Count ? 
+						var value = i < Arguments.Count ?
 							Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
 						parsedArguments.Add(value);
@@ -84,23 +84,18 @@ namespace SimpleTableManager.Models
 
 		public MethodInfo GetMethod(object instance)
 		{
-			var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).ToList();
+			var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
+			(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
+				e.attribute is not null).ToDictionary(k => k.attribute.MethodReference.ToLower(), v => v.method);
 
-			var method = methods.SingleOrDefault(m =>
+			if (methods.TryGetValue(Reference.MethodName.ToLower(), out var method))
 			{
-				var attribute = m.GetCustomAttributes(typeof(CommandReferenceAttribute), false).FirstOrDefault() as CommandReferenceAttribute;
-
-				return attribute is { } &&
-					(attribute.MethodReference?.ToLower() == Reference.MethodName.ToLower() ||
-					m.Name.ToLower() == Reference.MethodName.ToLower());
-			});
-
-			if (method is null)
+				return method;
+			}
+			else
 			{
 				throw new KeyNotFoundException($"Method '{Reference}' not found on object type of '{instance.GetType()}'");
 			}
-
-			return method;
 		}
 
 		public List<CommandParameter> GetParameters(MethodInfo method)
