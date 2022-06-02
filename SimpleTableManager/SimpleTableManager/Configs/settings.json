@@ -5,8 +5,28 @@
 	//"DefaultCellBackgroundColor": "Yellow",
 	//"BorderForegroundColor": "Magenta",
 	//"BorderBackgroundColor": "White",
-	"SelectedCellForegroundColor": "Yellow",
-	"SelectedCellBackgroundColor": "Black",
+	// "SelectedCellForegroundColor": "Yellow",
+	// "SelectedCellBackgroundColor": "Black",
+	// "TextColor": {
+	// 	"Foreground": "Black",
+	// 	"Background": "White"
+	// },
+	// "DefaultContentColor": {
+	// 	"Foreground": "Black",
+	// 	"Background": "White"
+	// },
+	// "DefaultBorderColor": {
+	// 	"Foreground": "Black",
+	// 	"Background": "White"
+	// },
+	"SelectedContentColor": {
+		"Foreground": "Green"
+		//"Background": "Red"
+	},
+	"SelectedBorderColor": {
+		"Foreground": "Green"
+		//"Background": "Red"
+	},
 	"ModernTableBorder": true,
 	"IndexCellLeftArrow": "◀",
 	"IndexCellRightArrow": "▶",

@@ -1,5 +1,4 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace SimpleTableManager.Models
 {
@@ -31,6 +30,17 @@ namespace SimpleTableManager.Models
 		{
 			x = X;
 			y = Y;
+		}
+
+		[ParseFormat("x,y")]
+		public static Position Parse(string value)
+		{
+			var values = value.Split(',');
+
+			var x = int.Parse(values[0].Trim());
+			var y = int.Parse(values[1].Trim());
+
+			return new Position(x, y);
 		}
 	}
 }

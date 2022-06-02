@@ -8,13 +8,17 @@ namespace SimpleTableManager.Models
 
 		public string Name { get; set; }
 
-		public bool Optional { get; set; }
+		public bool IsOptional { get; set; }
 
 		public object DefaultValue { get; set; }
 
+		public bool IsArray { get; set; }
+
+		public string ParseFormat { get; set; }
+
 		public override string ToString()
 		{
-			return $"{{{Name}:{Type.Name}{(Optional ? $":default={DefaultValue}" : "")}}}";
+			return $"{{{Name}:{Type.Name}{(IsOptional ? $":default={Newtonsoft.Json.JsonConvert.SerializeObject(DefaultValue)}" : "")}{(ParseFormat is not null ? $":{(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "")}}}";
 		}
 	}
 }

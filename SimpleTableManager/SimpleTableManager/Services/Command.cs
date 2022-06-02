@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using SimpleTableManager.Services;
+using SimpleTableManager.Models;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Services
 {
 	public class Command
 	{
@@ -37,7 +37,8 @@ namespace SimpleTableManager.Models
 				var method = GetMethod(instance);
 				var parameters = GetParameters(method);
 
-				if (parameters.Count(p => !p.Optional) > Arguments.Count || parameters.Count < Arguments.Count)
+				if (parameters.Count(p => !p.IsOptional) > Arguments.Count ||
+					parameters.All(p => !p.IsArray) && parameters.Count < Arguments.Count)
 				{
 					throw new TargetParameterCountException();
 				}
@@ -50,22 +51,13 @@ namespace SimpleTableManager.Models
 
 					if (paramType.IsArray)
 					{
-						var rest = Arguments.GetRange(i, Arguments.Count - i);
+						var values = ParseArrayValues(parameters, i, paramType);
 
-						var type = Shared.GetTypeByName(paramType.Name.TrimEnd('[', ']'));
-
-						var typedArray = Array.CreateInstance(type, rest.Count);
-
-						Array.Copy(rest.Select(a => Shared.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
-
-						parsedArguments.Add(typedArray);
-
-						break;
+						parsedArguments.Add(values);
 					}
 					else
 					{
-						var value = i < Arguments.Count ?
-							Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
+						var value = i < Arguments.Count ? Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
 						parsedArguments.Add(value);
 					}
@@ -79,6 +71,26 @@ namespace SimpleTableManager.Models
 				{
 					throw ex.InnerException ?? ex;
 				}
+			}
+		}
+
+		private Array ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType)
+		{
+			if (index < Arguments.Count)
+			{
+				var rest = Arguments.GetRange(index, Arguments.Count - index);
+
+				var type = arrayType.GetElementType();
+
+				var typedArray = Array.CreateInstance(type, rest.Count);
+
+				Array.Copy(rest.Select(a => Shared.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
+
+				return typedArray;
+			}
+			else
+			{
+				return (Array)parameters[index].DefaultValue;
 			}
 		}
 
@@ -101,14 +113,19 @@ namespace SimpleTableManager.Models
 		public List<CommandParameter> GetParameters(MethodInfo method)
 		{
 			return method.GetParameters().Select(p =>
-				new CommandParameter
+			{
+				var isArray = p.ParameterType.IsArray;
+
+				return new CommandParameter
 				{
 					Type = p.ParameterType,
 					Name = p.Name,
-					Optional = p.IsOptional,
-					DefaultValue = p.DefaultValue
-				}).ToList();
+					IsOptional = p.IsOptional || isArray,
+					DefaultValue = isArray ? Array.CreateInstance(p.ParameterType.GetElementType(), 0) : p.DefaultValue,
+					IsArray = isArray,
+					ParseFormat = Shared.GetParseMethod(isArray ? p.ParameterType.GetElementType() : p.ParameterType)?.GetCustomAttribute<ParseFormatAttribute>()?.Format
+				};
+			}).ToList();
 		}
 	}
-
 }

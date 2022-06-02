@@ -5,9 +5,9 @@ namespace SimpleTableManager.Models
 {
 	public class ConsoleColorSet
 	{
-		public ConsoleColor Foreground { get; set; }
+		public ConsoleColor Foreground { get; set; } = ConsoleColor.Gray;
 
-		public ConsoleColor Background { get; set; }
+		public ConsoleColor Background { get; set; } = ConsoleColor.Black;
 
 		[JsonConstructor]
 		public ConsoleColorSet(ConsoleColor foreground, ConsoleColor background)

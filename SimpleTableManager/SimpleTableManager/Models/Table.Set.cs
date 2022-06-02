@@ -34,17 +34,23 @@ namespace SimpleTableManager.Models
 			ViewOptions.StartPosition = new Position(x1, y1);
 			ViewOptions.EndPosition = new Position(x2, y2);
 		}
-		
-		//[CommandReference]
-		//public void SetViewOptionsColumns(int x1, int x2)
-		//{
-		//	SetViewOptions(x1, ViewOptions.StartPosition.Y, x2, ViewOptions.EndPosition.Y);
-		//}
 
-		//[CommandReference]
-		//public void SetViewOptionsRows(int y1, int y2)
-		//{
-		//	SetViewOptions(ViewOptions.StartPosition.X, y1, ViewOptions.EndPosition.X, y2);
-		//}
+		[CommandReference]
+		public void SetViewOptionsColumns(int x1, int x2)
+		{
+			SetViewOptions(x1, ViewOptions.StartPosition.Y, x2, ViewOptions.EndPosition.Y);
+		}
+
+		[CommandReference]
+		public void SetViewOptionsRows(int y1, int y2)
+		{
+			SetViewOptions(ViewOptions.StartPosition.X, y1, ViewOptions.EndPosition.X, y2);
+		}
+
+		[CommandReference]
+		public void SetCellContent(int x, int y, params object[] contents)
+		{
+			this[x, y].SetContent(contents);
+		}
 	}
 }

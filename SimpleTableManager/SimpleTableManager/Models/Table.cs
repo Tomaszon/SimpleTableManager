@@ -23,32 +23,20 @@ namespace SimpleTableManager.Models
 
 		public Cell CornerCell { get; set; } = new Cell(@"y \ x");
 
-		public Dictionary<int, List<Cell>> Columns
-		{
-			get => Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);
-		}
+		public Dictionary<int, List<Cell>> Columns =>
+			Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);
 
-		public Dictionary<int, List<Cell>> Rows
-		{
-			get => Shared.IndexArray(Size.Height).ToDictionary(y => y, y => this[0, y, Size.Width - 1, y]);
-		}
+		public Dictionary<int, List<Cell>> Rows =>
+			Shared.IndexArray(Size.Height).ToDictionary(y => y, y => this[0, y, Size.Width - 1, y]);
 
-		public Cell this[int x, int y]
-		{
-			get
-			{
-				return Content[y * Size.Width + x];
-			}
-		}
+		public Cell this[Position position] => this[position.X, position.Y];
 
-		public List<Cell> this[int x1, int y1, int x2, int y2]
-		{
-			get
-			{
-				return Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
-					Shared.IndexArray(x2 - x1 + 1, x1).Select(x => this[x, y])).ToList();
-			}
-		}
+		public Cell this[int x, int y] => Content[y * Size.Width + x];
+
+		public List<Cell> this[int x1, int y1, int x2, int y2] =>
+			Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
+				Shared.IndexArray(x2 - x1 + 1, x1).Select(x => this[x, y])).ToList();
+
 
 		public Table(string name, int columnCount, int rowCount)
 		{

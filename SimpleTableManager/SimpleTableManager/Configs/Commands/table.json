@@ -38,11 +38,13 @@
 		"view|v": "setViewOptions",
 		"view-columns|vc": "setViewOptionsColumns",
 		"view-rows|vr": "setViewOptionsRows",
-		"name|n": "setName"
+		"name|n": "setName",
+		"content|c": "setCellContent"
 	},
 	"select": {
 		"cell": "selectCell",
 		"cells": "selectCells",
+		"cell-range": "selectCellRange",
 		"column": "selectColumn",
 		"row": "selectRow",
 		"all": "selectAll"
@@ -50,6 +52,7 @@
 	"deselect": {
 		"cell": "deselectCell",
 		"cells": "deselectCells",
+		"cell-range": "deselectCellRange",
 		"column": "deselectColumn",
 		"row": "deselectRow",
 		"all": "deselectAll"

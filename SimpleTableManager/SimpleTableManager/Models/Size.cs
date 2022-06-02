@@ -32,5 +32,16 @@ namespace SimpleTableManager.Models
 			w = Width;
 			h = Height;
 		}
+
+		[ParseFormat("width,height")]
+		public static Size Parse(string value)
+		{
+			var values = value.Split(',');
+
+			var w = int.Parse(values[0].Trim());
+			var h = int.Parse(values[1].Trim());
+
+			return new Size(w, h);
+		}
 	}
 }

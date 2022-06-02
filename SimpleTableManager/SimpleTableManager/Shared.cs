@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services
 {
@@ -42,11 +43,13 @@ namespace SimpleTableManager.Services
 			}
 			catch (Exception)
 			{
-				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'");
+				var attribute = method.GetCustomAttribute<ParseFormatAttribute>();
+
+				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}");
 			}
 		}
 
-		private static MethodInfo GetParseMethod(Type dataType)
+		public static MethodInfo GetParseMethod(Type dataType)
 		{
 			return dataType.GetMethods().Where(m =>
 			{
@@ -79,9 +82,14 @@ namespace SimpleTableManager.Services
 
 		public static void Validate(Func<bool> validator, string error)
 		{
+			Validate<InvalidOperationException>(validator, error);
+		}
+
+		public static void Validate<T>(Func<bool> validator, string error) where T : Exception
+		{
 			if (!validator())
 			{
-				throw new InvalidOperationException(error);
+				throw (T)Activator.CreateInstance(typeof(T), error);
 			}
 		}
 

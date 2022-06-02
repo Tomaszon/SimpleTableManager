@@ -34,7 +34,7 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void AddTable(int columnCount, int rowCount, string name = null)
+		public void AddTable(Size size, string name = null)
 		{
 			name = name ?? $"Table{Tables.Count}";
 
@@ -44,7 +44,7 @@ namespace SimpleTableManager.Models
 			}
 			else
 			{
-				Tables.Add(new Table(name, columnCount, rowCount));
+				Tables.Add(new Table(name, size.Width, size.Height));
 
 				ActivateTable(Tables.Count - 1);
 			}

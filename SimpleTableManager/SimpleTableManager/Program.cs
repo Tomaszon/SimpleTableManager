@@ -15,7 +15,6 @@ namespace SimpleTableManager
 
 		public static InstanceMap InstanceMap { get; set; } = new InstanceMap();
 
-
 		private static void Main(string[] args)
 		{
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
