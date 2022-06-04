@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -80,21 +81,21 @@ namespace SimpleTableManager
 
 					var command = Command.FromString(rawCommand);
 
-					if (command.Reference.MethodName == Shared.HELP_COMMAND)
-					{
-						lastHelp = app.ShowHelp(command);
-					}
-					else
-					{
-						command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
+					command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
 
-						lastHelp = "Enter command to execute";
-					}
-
+					lastHelp = "Enter command to execute";
 				}
-				catch (Exception ex) when (ex is IncompleteCommandException || ex is TargetParameterCountException)
+				catch (ParameterCountException ex)
 				{
-					lastHelp = app.ShowHelp($"{rawCommand} help", ex.Message);
+					lastHelp = app.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
+				}
+				catch (IncompleteCommandException ex)
+				{
+					lastHelp = app.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
+				}
+				catch (HelpRequestedException ex)
+				{
+					lastHelp = app.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
 				}
 				catch (Exception ex)
 				{
@@ -219,7 +220,7 @@ namespace SimpleTableManager
 			Console.Clear();
 		}
 
-		public string ShowHelp(Command command, string error = null)
+		public string ShowHelp(Command command, string error)
 		{
 			if (command.AvailableKeys is { })
 			{
@@ -237,11 +238,9 @@ namespace SimpleTableManager
 			return "¯\\_(ツ)_/¯";
 		}
 
-		public string ShowHelp(string rawCommand, string error = null)
+		public string ShowHelp(string rawCommand, List<string> availableKeys, CommandReference commandReference, string error)
 		{
-			var command = Command.FromString(rawCommand);
-
-			return ShowHelp(command, error);
+			return ShowHelp(new Command() { AvailableKeys = availableKeys, RawCommand = rawCommand, Reference = commandReference }, error);
 		}
 	}
 }

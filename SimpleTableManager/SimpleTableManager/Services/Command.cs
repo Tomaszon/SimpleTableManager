@@ -17,16 +17,15 @@ namespace SimpleTableManager.Services
 
 		public string RawCommand { get; set; }
 
-		public static Command FromString(string value)
+		public static Command FromString(string rawCommand)
 		{
-			var reference = CommandTree.GetCommandReference(value, out var arguments, out var availableKeys);
+			var reference = CommandTree.GetCommandReference(rawCommand, out var arguments);
 
 			return new Command
 			{
 				Reference = reference,
 				Arguments = arguments,
-				AvailableKeys = availableKeys,
-				RawCommand = value
+				RawCommand = rawCommand
 			};
 		}
 
@@ -40,7 +39,7 @@ namespace SimpleTableManager.Services
 				if (parameters.Count(p => !p.IsOptional) > Arguments.Count ||
 					parameters.All(p => !p.IsArray) && parameters.Count < Arguments.Count)
 				{
-					throw new TargetParameterCountException();
+					throw new ParameterCountException(RawCommand, Reference);
 				}
 
 				List<object> parsedArguments = new List<object>();

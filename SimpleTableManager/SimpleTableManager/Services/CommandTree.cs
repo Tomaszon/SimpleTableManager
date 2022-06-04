@@ -25,34 +25,27 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		public static CommandReference GetCommandReference(string value, out List<string> arguments, out List<string> availableKeys)
+		public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments)
 		{
-			var keys = value.Split(' ', System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries).Select(k => k.Replace("\\s", " ").Replace("\\t", " ")).ToList();
+			var keys = rawCommand.Split(' ', System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries).Select(k => k.Replace("\\s", " ").Replace("\\t", " ")).ToList();
 
 			if (keys.Count == 0)
 			{
-				throw new IncompleteCommandException(null);
+				throw new IncompleteCommandException(rawCommand, Commands.Keys.ToList());
 			}
 
-			return new CommandReference()
-			{
-				ClassName = keys.FirstOrDefault(),
-				MethodName = GetReferenceMethodNameRecursive(Commands, keys, value, out arguments, out availableKeys)
-			};
+			var methodName = GetReferenceMethodNameRecursive(Commands, keys.First(), keys, rawCommand, out arguments);
+
+			return new CommandReference(keys.FirstOrDefault(), methodName);
 		}
 
-		private static string GetReferenceMethodNameRecursive(object obj, List<string> keys, string fullValue, out List<string> arguments, out List<string> availableKeys)
+		private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments)
 		{
 			if (obj is ExpandoObject o)
 			{
 				if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
 				{
-					var l = o.Select(e => e.Key).ToList();
-
-					arguments = null;
-					availableKeys = l;
-
-					return Shared.HELP_COMMAND;
+					throw new HelpRequestedException(rawCommand, o.Select(e => e.Key).ToList(), null);
 				}
 				else
 				{
@@ -62,30 +55,26 @@ namespace SimpleTableManager.Services
 
 					if (value is null)
 					{
-						throw new KeyNotFoundException($"Unknow command key '{keys.FirstOrDefault()}' in '{fullValue}'");
+						throw new KeyNotFoundException($"Unknow command key '{keys.FirstOrDefault()}' in '{rawCommand}'");
 					}
 
 					if (value is ExpandoObject && keys.Count <= 1 || !(value is ExpandoObject) && keys.Count < 1)
 					{
-						throw new IncompleteCommandException(fullValue);
+						throw new IncompleteCommandException(rawCommand, (value as ExpandoObject)?.Select(e => e.Key).ToList());
 					}
 
-					return GetReferenceMethodNameRecursive(value, keys.GetRange(1, keys.Count - 1), fullValue, out arguments, out availableKeys);
+					return GetReferenceMethodNameRecursive(value, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
 				}
 			}
 			else
 			{
 				if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
 				{
-					arguments = null;
-					availableKeys = null;
-
-					return (string)obj;
+					throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()));
 				}
 				else
 				{
 					arguments = keys;
-					availableKeys = null;
 
 					return (string)obj;
 				}
