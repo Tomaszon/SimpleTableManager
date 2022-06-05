@@ -18,7 +18,7 @@ public class SmartConsole
 
 	private static int _commandHistoryLength = 3;
 
-	private static int _rawCommandHistoryIndex = -1;
+	private static int _rawCommandHistoryIndex = 0;
 
 	public static void Draw(Document document)
 	{
@@ -64,162 +64,130 @@ public class SmartConsole
 
 	public static string ReadInput()
 	{
-		int instertIndex = 0;
+		int insertIndex = 0;
 		StringBuilder buffer = new StringBuilder();
 
-		while (Console.ReadKey(false) is var k)
+		while (ReadInputChar(buffer, ref insertIndex)) ;
+
+		var rawCommand = buffer.ToString().Trim();
+
+		rawCommandHistory.Add(rawCommand);
+
+		if (rawCommandHistory.Count > _commandHistoryLength)
 		{
-			switch (k.Key)
+			rawCommandHistory.RemoveAt(0);
+		}
+
+		_rawCommandHistoryIndex = rawCommandHistory.Count;
+
+		return rawCommand;
+	}
+
+	private static bool ReadInputChar(StringBuilder buffer, ref int insertIndex)
+	{
+		var k = Console.ReadKey(true);
+
+		return k.Key switch
+		{
+			ConsoleKey.Enter => AcceptCommand(),
+
+			//ConsoleKey.Tab => true, //TODO autocomplete
+			ConsoleKey.Backspace => DeleteCharToLeft(buffer, ref insertIndex),
+			ConsoleKey.Delete => DeleteCharToRight(buffer, ref insertIndex),
+			//ConsoleKey.UpArrow => GetPreviousHistoryItem(buffer, ref insertIndex), //TODO fix
+			//ConsoleKey.DownArrow => GetNextHistoryItem(buffer, ref insertIndex),
+			ConsoleKey.RightArrow => MoveCursorRight(buffer, ref insertIndex) || true,
+			ConsoleKey.LeftArrow => MoveCursorLeft(buffer, ref insertIndex) || true,
+			ConsoleKey.Home => MoveCursorToTheLeft(buffer, ref insertIndex),
+			ConsoleKey.End => MoveCursorToTheRight(buffer, ref insertIndex),
+			ConsoleKey.Escape => ClearBuffer(buffer, ref insertIndex),
+
+			_ => InsterCharToBuffer(buffer, ref insertIndex, k.KeyChar)
+		};
+	}
+
+	private static bool AcceptCommand()
+	{
+		Console.WriteLine();
+
+		return false;
+	}
+
+	private static bool GetPreviousHistoryItem(StringBuilder buffer, ref int insertIndex)
+	{
+		if (_rawCommandHistoryIndex > 0)
+		{
+			ClearBuffer(buffer, ref insertIndex);
+
+			_rawCommandHistoryIndex--;
+
+			Console.Write(rawCommandHistory[_rawCommandHistoryIndex]);
+			InsterStringToBuffer(buffer, ref insertIndex, rawCommandHistory[_rawCommandHistoryIndex]);
+		}
+
+		return true;
+	}
+
+	private static bool GetNextHistoryItem(StringBuilder buffer, ref int insertIndex)
+	{
+		if (_rawCommandHistoryIndex < rawCommandHistory.Count)
+		{
+			ClearBuffer(buffer, ref insertIndex);
+
+			_rawCommandHistoryIndex++;
+
+			if (_rawCommandHistoryIndex < rawCommandHistory.Count)
 			{
-				case ConsoleKey.Enter:
-					{
-						var rawCommand = buffer.ToString().Trim();
-
-						rawCommandHistory.Add(rawCommand);
-
-						if (rawCommandHistory.Count > _commandHistoryLength)
-						{
-							rawCommandHistory.RemoveAt(0);
-						}
-
-						_rawCommandHistoryIndex = rawCommandHistory.Count - 1;
-
-						return rawCommand;
-					}
-
-				case ConsoleKey.Tab:
-					{
-						//lastHelp = "WEEE";
-						//Console.Clear();
-						//TableRenderer.Render(table, viewOptions);
-
-						//if (lastHelp is { })
-						//{
-						//	Console.WriteLine($"Help: {lastHelp}");
-						//}
-						//Console.Write("> ");
-
-						//break;
-
-						Console.SetCursorPosition(Console.CursorLeft - 8, Console.CursorTop);
-
-					}
-					break;
-
-				case ConsoleKey.Backspace:
-					{
-						DeleteCharToLeft(buffer, ref instertIndex);
-					}
-					break;
-
-				case ConsoleKey.Delete:
-					{
-						DeleteCharToRight(buffer, ref instertIndex);
-					}
-					break;
-
-				case ConsoleKey.UpArrow:
-					{
-						if (_rawCommandHistoryIndex >= 0)
-						{
-							Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
-							Console.Write(new string(' ', buffer.Length));
-							Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
-							Console.Write(rawCommandHistory[_rawCommandHistoryIndex]);
-							buffer.Clear();
-							instertIndex = 0;
-							InsterStringToBuffer(buffer, ref instertIndex, rawCommandHistory[_rawCommandHistoryIndex]);
-							_rawCommandHistoryIndex--;
-						}
-					}
-					break;
-
-				// case ConsoleKey.DownArrow:
-				// 	{
-				// 		Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
-				// 		Console.Write(new string(' ', buffer.Length));
-				// 		Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
-				// 		buffer = "";
-
-				// 	}
-				// 	break;
-
-				case ConsoleKey.RightArrow:
-					{
-						MoveCursorRight(buffer, ref instertIndex);
-					}
-					break;
-
-				case ConsoleKey.LeftArrow:
-					{
-						MoveCursorLeft(buffer, ref instertIndex);
-					}
-					break;
-
-				case ConsoleKey.Home:
-					{
-						MoveCursorToTheLeft(buffer, ref instertIndex);
-					}
-					break;
-
-				case ConsoleKey.End:
-					{
-						MoveCursorToTheRight(buffer, ref instertIndex);
-					}
-					break;
-
-				default:
-					{
-						InsterCharToBuffer(buffer, ref instertIndex, k.KeyChar);
-					}
-					break;
-			};
+				Console.Write(rawCommandHistory[_rawCommandHistoryIndex]);
+				InsterStringToBuffer(buffer, ref insertIndex, rawCommandHistory[_rawCommandHistoryIndex]);
+			}
 		}
 
-		return "¯\\_(ツ)_/¯";
+		return true;
 	}
 
-	private static void DeleteCharToLeft(StringBuilder buffer, ref int instertIndex)
+	private static bool DeleteCharToLeft(StringBuilder buffer, ref int insertIndex)
 	{
-		if (instertIndex > 0)
-		{
-			var clearLength = buffer.Length - instertIndex + 1;
-			buffer.Remove(instertIndex - 1, 1);
-			Console.Write(new string(' ', clearLength));
-			Shared.StepCursor(-clearLength, 0);
-			instertIndex--;
-
-			var rest = buffer.ToString().Substring(instertIndex);
-			Console.Write(rest);
-			Shared.StepCursor(-rest.Length, 0);
-		}
-		else
-		{
-			Shared.StepCursor(1, 0);
-		}
-	}
-
-	private static void DeleteCharToRight(StringBuilder buffer, ref int instertIndex)
-	{
-		if (instertIndex < buffer.Length)
-		{
-			var clearLength = buffer.Length - instertIndex + 1;
-			buffer.Remove(instertIndex, 1);
-			Console.Write(new string(' ', clearLength));
-			Shared.StepCursor(-clearLength, 0);
-
-			var rest = buffer.ToString().Substring(instertIndex);
-			Console.Write(rest);
-			Shared.StepCursor(-rest.Length, 0);
-		}
-	}
-
-	private static bool MoveCursorLeft(StringBuilder buffer, ref int instertIndex)
-	{
-		if (instertIndex > 0)
+		if (insertIndex > 0)
 		{
 			Shared.StepCursor(-1, 0);
-			instertIndex--;
+			var clearLength = buffer.Length - insertIndex + 1;
+			buffer.Remove(insertIndex - 1, 1);
+			Console.Write(new string(' ', clearLength));
+			Shared.StepCursor(-clearLength, 0);
+			insertIndex--;
+
+			var rest = buffer.ToString().Substring(insertIndex);
+			Console.Write(rest);
+			Shared.StepCursor(-rest.Length, 0);
+		}
+
+		return true;
+	}
+
+	private static bool DeleteCharToRight(StringBuilder buffer, ref int insertIndex)
+	{
+		if (insertIndex < buffer.Length)
+		{
+			var clearLength = buffer.Length - insertIndex;
+			buffer.Remove(insertIndex, 1);
+			Console.Write(new string(' ', clearLength));
+			Shared.StepCursor(-clearLength, 0);
+
+			var rest = buffer.ToString().Substring(insertIndex);
+			Console.Write(rest);
+			Shared.StepCursor(-rest.Length, 0);
+		}
+
+		return true;
+	}
+
+	private static bool MoveCursorLeft(StringBuilder buffer, ref int insertIndex)
+	{
+		if (insertIndex > 0)
+		{
+			Shared.StepCursor(-1, 0);
+			insertIndex--;
 
 			return true;
 		}
@@ -227,12 +195,12 @@ public class SmartConsole
 		return false;
 	}
 
-	private static bool MoveCursorRight(StringBuilder buffer, ref int instertIndex)
+	private static bool MoveCursorRight(StringBuilder buffer, ref int insertIndex)
 	{
-		if (instertIndex < buffer.Length)
+		if (insertIndex < buffer.Length)
 		{
 			Shared.StepCursor(1, 0);
-			instertIndex++;
+			insertIndex++;
 
 			return true;
 		}
@@ -240,33 +208,52 @@ public class SmartConsole
 		return false;
 	}
 
-	private static void MoveCursorToTheLeft(StringBuilder buffer, ref int instertIndex)
+	private static bool MoveCursorToTheLeft(StringBuilder buffer, ref int insertIndex)
 	{
-		while(MoveCursorLeft(buffer, ref instertIndex));
+		while (MoveCursorLeft(buffer, ref insertIndex)) ;
+
+		return true;
 	}
 
-	private static void MoveCursorToTheRight(StringBuilder buffer, ref int instertIndex)
+	private static bool MoveCursorToTheRight(StringBuilder buffer, ref int insertIndex)
 	{
-		while(MoveCursorRight(buffer, ref instertIndex));
+		while (MoveCursorRight(buffer, ref insertIndex)) ;
+
+		return true;
 	}
 
-	private static void InsterStringToBuffer(StringBuilder buffer, ref int instertIndex, string s)
+	private static void InsterStringToBuffer(StringBuilder buffer, ref int insertIndex, string s)
 	{
 		foreach (var c in s)
 		{
-			InsterCharToBuffer(buffer, ref instertIndex, c);
+			InsterCharToBuffer(buffer, ref insertIndex, c);
 		}
 	}
 
-	private static void InsterCharToBuffer(StringBuilder buffer, ref int instertIndex, char c)
+	private static bool InsterCharToBuffer(StringBuilder buffer, ref int insertIndex, char c)
 	{
 		if (c != '\0')
 		{
-			buffer.Insert(instertIndex, c);
-			instertIndex++;
-			var rest = buffer.ToString().Substring(instertIndex);
+			Console.Write(c);
+			buffer.Insert(insertIndex, c);
+			insertIndex++;
+			var rest = buffer.ToString().Substring(insertIndex);
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
+
+		return true;
+	}
+
+	private static bool ClearBuffer(StringBuilder buffer, ref int insertIndex)
+	{
+		Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
+		Console.Write(new string(' ', buffer.Length));
+		Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
+
+		buffer.Clear();
+		insertIndex = 0;
+
+		return true;
 	}
 }
