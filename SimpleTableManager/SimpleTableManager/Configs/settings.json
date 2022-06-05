@@ -27,7 +27,7 @@
 		"Foreground": "Green"
 		//"Background": "Red"
 	},
-	"ModernTableBorder": true,
+	"ModernTableBorder": false,
 	"IndexCellLeftArrow": "◀",
 	"IndexCellRightArrow": "▶",
 	"IndexCellUpArrow": "▲",

@@ -6,11 +6,13 @@ namespace SimpleTableManager.Models
 {
 	public class Metadata
 	{
-		public string Title { get; set; }
+		public string Title { get; set; } = "Document0";
 
 		public string Path { get; set; }
 
 		public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
+
+		public Metadata() { }
 
 		public Metadata(string title, string path)
 		{

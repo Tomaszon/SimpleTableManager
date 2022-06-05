@@ -8,13 +8,15 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services
 {
-	public static class TableRenderer
+	public static class Renderer
 	{
 		private static int _FREE_LINES_BELOW_TABLE = 16;
 		private static int _FREE_LINES_ABOW_TABLE = 10;
 
-		public static void Render(Table table)
+		public static void Render(Document document)
 		{
+			var table = document.GetActiveTable();
+
 			ChangeToTextColors();
 
 			//Console.WriteLine($"{table.Name}\n");
@@ -23,7 +25,7 @@ namespace SimpleTableManager.Services
 
 			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
-			RenderTableName(table, tableOffset);
+			RenderInfos(document.Metadata, table, tableOffset);
 
 			RenderTempCell(tableOffset, tableSize);
 
@@ -387,13 +389,18 @@ namespace SimpleTableManager.Services
 			});
 		}
 
-		private static void RenderTableName(Table table, Size tableOffset)
+		private static void RenderInfos(Metadata metadata, Table table, Size tableOffset)
 		{
-			Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 1);
-
 			ChangeToTextColors();
 
-			Console.WriteLine(table.Name);
+			Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 4);
+			Console.WriteLine($"Document title: {metadata.Title}");
+
+			Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 3);
+			Console.WriteLine(metadata.Path is not null ? $"Document path: {metadata.Path}" : "Unsaved document");
+
+			Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 1);
+			Console.WriteLine($"Table name: {table.Name}");
 		}
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)

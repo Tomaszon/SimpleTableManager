@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 using SimpleTableManager.Models;
 using SimpleTableManager.Services;
@@ -11,9 +7,6 @@ namespace SimpleTableManager
 {
 	internal class Program
 	{
-		public static string lastHelp = "Enter command to execute";
-		//public static string prevCommand = "";
-
 		public static InstanceMap InstanceMap { get; set; } = new InstanceMap();
 
 		private static void Main(string[] args)
@@ -71,31 +64,30 @@ namespace SimpleTableManager
 
 			do
 			{
-				string rawCommand = "";
-
 				try
 				{
-					Draw(document.GetActiveTable());
+					SmartConsole.Draw(document);
 
-					rawCommand = Console.ReadLine().Trim();//ReadInput();
+					//var rawCommand = Console.ReadLine().Trim();
+					var rawCommand = SmartConsole.ReadInput();
 
 					var command = Command.FromString(rawCommand);
 
 					command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
 
-					lastHelp = "Enter command to execute";
+					SmartConsole.LastHelp = "Enter command to execute";
 				}
 				catch (ParameterCountException ex)
 				{
-					lastHelp = app.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
+					SmartConsole.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
 				}
 				catch (IncompleteCommandException ex)
 				{
-					lastHelp = app.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
+					SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
 				}
 				catch (HelpRequestedException ex)
 				{
-					lastHelp = app.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
+					SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
 				}
 				catch (Exception ex)
 				{
@@ -107,140 +99,6 @@ namespace SimpleTableManager
 				Console.Clear();
 			}
 			while (true);
-		}
-
-		public static void Draw(Table table)
-		{
-			TableRenderer.Render(table);
-
-			if (lastHelp is { })
-			{
-				Console.Write("Help:\n");
-
-				foreach (var c in lastHelp)
-				{
-					Console.Write(c);
-
-					Task.Delay(10).Wait();
-				}
-
-				Console.WriteLine("\n");
-			}
-
-			Console.Write("> ");
-		}
-
-		//public static string ReadInput()
-		//{
-		//	var buffer = "";
-
-		//	while (Console.ReadKey(false) is var k)
-		//	{
-		//		if (k.Key == ConsoleKey.Enter)
-		//		{
-		//			break;
-		//		}
-		//		else if (k.Key == ConsoleKey.Tab)
-		//		{
-		//			//lastHelp = "WEEE";
-		//			//Console.Clear();
-		//			//TableRenderer.Render(table, viewOptions);
-
-		//			//if (lastHelp is { })
-		//			//{
-		//			//	Console.WriteLine($"Help: {lastHelp}");
-		//			//}
-		//			//Console.Write("> ");
-
-		//			//break;
-
-		//			Console.SetCursorPosition(Console.CursorLeft - 8, Console.CursorTop);
-
-		//		}
-		//		else if (k.Key == ConsoleKey.Backspace)
-		//		{
-		//			if (buffer.Length > 0)
-		//			{
-		//				buffer = buffer[0..^1];
-		//				Console.Write(" ");
-		//				Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
-		//			}
-		//			else
-		//			{
-		//				Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
-		//			}
-		//		}
-		//		else if (k.Key == ConsoleKey.UpArrow)
-		//		{
-		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
-		//			Console.Write(new string(' ', buffer.Length));
-		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
-		//			Console.Write(prevCommand);
-		//			buffer = prevCommand;
-		//		}
-		//		else if (k.Key == ConsoleKey.DownArrow)
-		//		{
-		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
-		//			Console.Write(new string(' ', buffer.Length));
-		//			Console.SetCursorPosition(Console.CursorLeft - buffer.Length, Console.CursorTop);
-		//			buffer = "";
-		//		}
-		//		else
-		//		{
-		//			buffer += k.KeyChar;
-		//		}
-		//	}
-
-		//	prevCommand = buffer;
-		//	return buffer.Trim();
-		//}
-	}
-
-	public class App
-	{
-		[CommandReference]
-		public void Exit()
-		{
-			var answer = Shared.ReadLineWhile("Are you sure y/n", new[] { "y", "n" });
-
-			if (answer.ToLower() == "y")
-			{
-				Console.WriteLine("Good bye!");
-
-				Console.ReadKey();
-
-				Environment.Exit(0);
-			}
-		}
-
-		[CommandReference]
-		public void Refresh()
-		{
-			Console.ResetColor();
-			Console.Clear();
-		}
-
-		public string ShowHelp(Command command, string error)
-		{
-			if (command.AvailableKeys is { })
-			{
-				return $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
-			}
-			else if (command.Reference is { })
-			{
-				var instances = Program.InstanceMap.GetInstances(command.Reference.ClassName);
-
-				var parameters = command.GetParameters(command.GetMethod(instances.First()));
-
-				return $"{error}\n    Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    of '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
-			}
-
-			return "¯\\_(ツ)_/¯";
-		}
-
-		public string ShowHelp(string rawCommand, List<string> availableKeys, CommandReference commandReference, string error)
-		{
-			return ShowHelp(new Command() { AvailableKeys = availableKeys, RawCommand = rawCommand, Reference = commandReference }, error);
 		}
 	}
 }

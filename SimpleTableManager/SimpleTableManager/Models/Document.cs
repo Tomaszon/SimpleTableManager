@@ -17,7 +17,7 @@ namespace SimpleTableManager.Models
 
 		public void Clear()
 		{
-			Metadata = new Metadata(null, null);
+			Metadata = new Metadata();
 			Tables.Clear();
 			AddTable(new Size(10, 4));
 		}
