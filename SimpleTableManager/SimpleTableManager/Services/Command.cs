@@ -126,5 +126,23 @@ namespace SimpleTableManager.Services
 				};
 			}).ToList();
 		}
+
+		public static bool IsValid(string rawCommand)
+		{
+			try
+			{
+				Command.FromString(rawCommand);
+
+				return true;
+			}
+			catch (Exception ex) when (ex is HelpRequestedException || ex is IncompleteCommandException)
+			{
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 	}
 }

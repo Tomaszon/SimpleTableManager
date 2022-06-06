@@ -12,13 +12,30 @@ public class SmartConsole
 {
 	public static string LastHelp = "Enter command to execute";
 
+	private static int _insertIndex = 0;
+
+	private static StringBuilder _buffer = new StringBuilder();
+
 	private const string _COMMAND_LINE_PREFIX = "> ";
 
-	public static List<string> rawCommandHistory = new List<string>();
+	private static List<string> _rawCommandHistory = new List<string>();
 
-	private static int _commandHistoryLength = 3;
+	private static int _commandHistoryLength = 10;
 
 	private static int _rawCommandHistoryIndex = 0;
+
+	private static int _autoCompleteLength = 0;
+
+	private static int _autoCompleteIndex = -1;
+
+	private static string _autoCompletePartialRawCommand;
+
+	public static void ResetAutoComplete()
+	{
+		_autoCompleteIndex = -1;
+		_autoCompleteLength = 0;
+		_autoCompletePartialRawCommand = null;
+	}
 
 	public static void Draw(Document document)
 	{
@@ -43,9 +60,11 @@ public class SmartConsole
 
 	public static void ShowHelp(Command command, string error)
 	{
+		LastHelp = $"{error}\n    ";
+
 		if (command.AvailableKeys is { })
 		{
-			LastHelp = $"{error}\n    Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
+			LastHelp += $"Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in ";
 		}
 		else if (command.Reference is { })
 		{
@@ -53,8 +72,12 @@ public class SmartConsole
 
 			var parameters = command.GetParameters(command.GetMethod(instances.First()));
 
-			LastHelp = $"{error}\n    Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    of '{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'".Trim();
+			LastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    of ";
 		}
+
+		LastHelp += $"'{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'";
+
+		LastHelp = LastHelp.Trim();
 	}
 
 	public static void ShowHelp(string rawCommand, List<string> availableKeys, CommandReference commandReference, string error)
@@ -64,26 +87,25 @@ public class SmartConsole
 
 	public static string ReadInput()
 	{
-		int insertIndex = 0;
-		StringBuilder buffer = new StringBuilder();
+		ClearBuffer();
 
-		while (ReadInputChar(buffer, ref insertIndex)) ;
+		while (ReadInputChar()) ;
 
-		var rawCommand = buffer.ToString().Trim();
+		var rawCommand = _buffer.ToString().Trim();
 
-		rawCommandHistory.Add(rawCommand);
+		_rawCommandHistory.Add(rawCommand);
 
-		if (rawCommandHistory.Count > _commandHistoryLength)
+		if (_rawCommandHistory.Count > _commandHistoryLength)
 		{
-			rawCommandHistory.RemoveAt(0);
+			_rawCommandHistory.RemoveAt(0);
 		}
 
-		_rawCommandHistoryIndex = rawCommandHistory.Count;
+		_rawCommandHistoryIndex = _rawCommandHistory.Count;
 
 		return rawCommand;
 	}
 
-	private static bool ReadInputChar(StringBuilder buffer, ref int insertIndex)
+	private static bool ReadInputChar()
 	{
 		var k = Console.ReadKey(true);
 
@@ -91,73 +113,196 @@ public class SmartConsole
 		{
 			ConsoleKey.Enter => AcceptCommand(),
 
-			//ConsoleKey.Tab => true, //TODO autocomplete
-			ConsoleKey.Backspace => DeleteCharToLeft(buffer, ref insertIndex),
-			ConsoleKey.Delete => DeleteCharToRight(buffer, ref insertIndex),
-			//ConsoleKey.UpArrow => GetPreviousHistoryItem(buffer, ref insertIndex), //TODO fix
-			//ConsoleKey.DownArrow => GetNextHistoryItem(buffer, ref insertIndex),
-			ConsoleKey.RightArrow => MoveCursorRight(buffer, ref insertIndex) || true,
-			ConsoleKey.LeftArrow => MoveCursorLeft(buffer, ref insertIndex) || true,
-			ConsoleKey.Home => MoveCursorToTheLeft(buffer, ref insertIndex),
-			ConsoleKey.End => MoveCursorToTheRight(buffer, ref insertIndex),
-			ConsoleKey.Escape => ClearBuffer(buffer, ref insertIndex),
+			ConsoleKey.Tab => GetHint(k.Modifiers),
+			ConsoleKey.Backspace => ManualDeleteCharToLeft(),
+			ConsoleKey.Delete => ManualDeleteCharToRight(),
+			ConsoleKey.UpArrow => GetPreviousHistoryItem(),
+			ConsoleKey.DownArrow => GetNextHistoryItem(),
+			ConsoleKey.RightArrow => MoveCursorRight() || true,
+			ConsoleKey.LeftArrow => MoveCursorLeft() || true,
+			ConsoleKey.Home => MoveCursorToTheLeft(),
+			ConsoleKey.End => MoveCursorToTheRight(),
+			ConsoleKey.Escape => ClearBuffer(),
 
-			_ => InsterCharToBuffer(buffer, ref insertIndex, k.KeyChar)
+			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
+	}
+
+	private static bool ManualInsertCharToBuffer(char c)
+	{
+		ResetAutoComplete();
+
+		return InsertCharToBuffer(c);
 	}
 
 	private static bool AcceptCommand()
 	{
+		ResetAutoComplete();
+
 		Console.WriteLine();
 
 		return false;
 	}
 
-	private static bool GetPreviousHistoryItem(StringBuilder buffer, ref int insertIndex)
+	private static void SetAutoComplete(string partialCommand, int autoCompleteLength)//, int keyCount, bool backwards)
+	{
+		_autoCompleteLength = autoCompleteLength;
+		_autoCompletePartialRawCommand = partialCommand;
+	}
+
+	private static void StepAutoCompleteIndex(int keyCount, bool backwards)
+	{
+		if (backwards)
+		{
+			_autoCompleteIndex -= _autoCompleteIndex > 0 ? 1 : -(keyCount - 1);
+		}
+		else
+		{
+			_autoCompleteIndex += _autoCompleteIndex < keyCount - 1 ? 1 : -(keyCount - 1);
+		}
+	}
+
+	private static bool GetHint(ConsoleModifiers modifiers)
+	{
+		var value = _autoCompletePartialRawCommand ?? _buffer.ToString();
+
+		var rawCommand = $"{value} help";
+
+		while (true)
+		{
+			var result = GetHintCore(rawCommand, out var availableKeys);
+
+			switch (result)
+			{
+				case GetHintResult.Hint:
+					{
+						var partialKey = value.Substring(value.LastIndexOf(' ') + 1);
+
+						var matchingKeys = availableKeys.Where(k => k.Split('|').Any(v => v.StartsWith(partialKey))).ToList();
+
+						if (matchingKeys.Count > 0)
+						{
+							StepAutoCompleteIndex(matchingKeys.Count, modifiers.HasFlag(ConsoleModifiers.Shift));
+
+							var key = matchingKeys[_autoCompleteIndex];
+
+							var suggestedKey = key.Split('|').First(a => a.StartsWith(partialKey));
+
+							var autoCombleteValue = suggestedKey.Substring(partialKey.Length);
+
+							MoveCursorToTheRight();
+
+							DeleteCharsToLeft(_autoCompleteLength);
+
+							SetAutoComplete(value, autoCombleteValue.Length);//, matchingKeys.Count, modifiers.HasFlag(ConsoleModifiers.Shift));
+
+							InsertStringToBuffer(autoCombleteValue);
+						}
+
+						return true;
+					}
+
+				case GetHintResult.Complete: return true;
+
+				case GetHintResult.PartialKey:
+					{
+
+					}
+					break;
+
+				default:
+					{
+						if (rawCommand.Count(c => c == ' ') > 1)
+						{
+							var a = rawCommand.Substring(0, rawCommand.Length - 5);
+							var b = a.Substring(0, a.LastIndexOf(' '));
+							rawCommand = $"{b} help";
+						}
+						else
+						{
+							rawCommand = "help";
+						}
+					}
+					break;
+			}
+		}
+	}
+
+	private static GetHintResult GetHintCore(string command, out List<string> availableKeys)
+	{
+		try
+		{
+			Command.FromString(command);
+		}
+		catch (HelpRequestedException ex)
+		{
+			availableKeys = ex.AvailableKeys;
+
+			return ex.AvailableKeys is not null || ex.AvailableKeys.Count > 0 ? GetHintResult.Hint : GetHintResult.Complete;
+		}
+		catch (PartialKeyException)
+		{
+			availableKeys = null;
+
+			return GetHintResult.PartialKey;
+		}
+		catch (KeyNotFoundException)
+		{
+			availableKeys = null;
+
+			return GetHintResult.UnknownKey;
+		}
+
+		throw new InvalidOperationException();
+	}
+
+	private static bool GetPreviousHistoryItem()
 	{
 		if (_rawCommandHistoryIndex > 0)
 		{
-			ClearBuffer(buffer, ref insertIndex);
+			ClearBuffer();
+
+			ResetAutoComplete();
 
 			_rawCommandHistoryIndex--;
 
-			Console.Write(rawCommandHistory[_rawCommandHistoryIndex]);
-			InsterStringToBuffer(buffer, ref insertIndex, rawCommandHistory[_rawCommandHistoryIndex]);
+			InsertStringToBuffer(_rawCommandHistory[_rawCommandHistoryIndex]);
 		}
 
 		return true;
 	}
 
-	private static bool GetNextHistoryItem(StringBuilder buffer, ref int insertIndex)
+	private static bool GetNextHistoryItem()
 	{
-		if (_rawCommandHistoryIndex < rawCommandHistory.Count)
+		if (_rawCommandHistoryIndex < _rawCommandHistory.Count)
 		{
-			ClearBuffer(buffer, ref insertIndex);
+			ClearBuffer();
+
+			ResetAutoComplete();
 
 			_rawCommandHistoryIndex++;
 
-			if (_rawCommandHistoryIndex < rawCommandHistory.Count)
+			if (_rawCommandHistoryIndex < _rawCommandHistory.Count)
 			{
-				Console.Write(rawCommandHistory[_rawCommandHistoryIndex]);
-				InsterStringToBuffer(buffer, ref insertIndex, rawCommandHistory[_rawCommandHistoryIndex]);
+				InsertStringToBuffer(_rawCommandHistory[_rawCommandHistoryIndex]);
 			}
 		}
 
 		return true;
 	}
 
-	private static bool DeleteCharToLeft(StringBuilder buffer, ref int insertIndex)
+	private static bool DeleteCharToLeft()
 	{
-		if (insertIndex > 0)
+		if (_insertIndex > 0)
 		{
 			Shared.StepCursor(-1, 0);
-			var clearLength = buffer.Length - insertIndex + 1;
-			buffer.Remove(insertIndex - 1, 1);
+			var clearLength = _buffer.Length - _insertIndex + 1;
+			_buffer.Remove(_insertIndex - 1, 1);
 			Console.Write(new string(' ', clearLength));
 			Shared.StepCursor(-clearLength, 0);
-			insertIndex--;
+			_insertIndex--;
 
-			var rest = buffer.ToString().Substring(insertIndex);
+			var rest = _buffer.ToString().Substring(_insertIndex);
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
@@ -165,16 +310,23 @@ public class SmartConsole
 		return true;
 	}
 
-	private static bool DeleteCharToRight(StringBuilder buffer, ref int insertIndex)
+	private static bool ManualDeleteCharToLeft()
 	{
-		if (insertIndex < buffer.Length)
+		ResetAutoComplete();
+
+		return DeleteCharToLeft();
+	}
+
+	private static bool DeleteCharToRight()
+	{
+		if (_insertIndex < _buffer.Length)
 		{
-			var clearLength = buffer.Length - insertIndex;
-			buffer.Remove(insertIndex, 1);
+			var clearLength = _buffer.Length - _insertIndex;
+			_buffer.Remove(_insertIndex, 1);
 			Console.Write(new string(' ', clearLength));
 			Shared.StepCursor(-clearLength, 0);
 
-			var rest = buffer.ToString().Substring(insertIndex);
+			var rest = _buffer.ToString().Substring(_insertIndex);
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
@@ -182,12 +334,19 @@ public class SmartConsole
 		return true;
 	}
 
-	private static bool MoveCursorLeft(StringBuilder buffer, ref int insertIndex)
+	private static bool ManualDeleteCharToRight()
 	{
-		if (insertIndex > 0)
+		ResetAutoComplete();
+
+		return DeleteCharToRight();
+	}
+
+	private static bool MoveCursorLeft()
+	{
+		if (_insertIndex > 0)
 		{
 			Shared.StepCursor(-1, 0);
-			insertIndex--;
+			_insertIndex--;
 
 			return true;
 		}
@@ -195,12 +354,12 @@ public class SmartConsole
 		return false;
 	}
 
-	private static bool MoveCursorRight(StringBuilder buffer, ref int insertIndex)
+	private static bool MoveCursorRight()
 	{
-		if (insertIndex < buffer.Length)
+		if (_insertIndex < _buffer.Length)
 		{
 			Shared.StepCursor(1, 0);
-			insertIndex++;
+			_insertIndex++;
 
 			return true;
 		}
@@ -208,36 +367,44 @@ public class SmartConsole
 		return false;
 	}
 
-	private static bool MoveCursorToTheLeft(StringBuilder buffer, ref int insertIndex)
+	private static bool MoveCursorToTheLeft()
 	{
-		while (MoveCursorLeft(buffer, ref insertIndex)) ;
+		while (MoveCursorLeft()) ;
 
 		return true;
 	}
 
-	private static bool MoveCursorToTheRight(StringBuilder buffer, ref int insertIndex)
+	private static bool MoveCursorToTheRight()
 	{
-		while (MoveCursorRight(buffer, ref insertIndex)) ;
+		while (MoveCursorRight()) ;
 
 		return true;
 	}
 
-	private static void InsterStringToBuffer(StringBuilder buffer, ref int insertIndex, string s)
+	private static void DeleteCharsToLeft(int length)
+	{
+		for (int i = 0; i < length; i++)
+		{
+			DeleteCharToLeft();
+		}
+	}
+
+	private static void InsertStringToBuffer(string s)
 	{
 		foreach (var c in s)
 		{
-			InsterCharToBuffer(buffer, ref insertIndex, c);
+			InsertCharToBuffer(c);
 		}
 	}
 
-	private static bool InsterCharToBuffer(StringBuilder buffer, ref int insertIndex, char c)
+	private static bool InsertCharToBuffer(char c)
 	{
 		if (c != '\0')
 		{
 			Console.Write(c);
-			buffer.Insert(insertIndex, c);
-			insertIndex++;
-			var rest = buffer.ToString().Substring(insertIndex);
+			_buffer.Insert(_insertIndex, c);
+			_insertIndex++;
+			var rest = _buffer.ToString().Substring(_insertIndex);
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
@@ -245,15 +412,23 @@ public class SmartConsole
 		return true;
 	}
 
-	private static bool ClearBuffer(StringBuilder buffer, ref int insertIndex)
+	private static bool ClearBuffer()
 	{
 		Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
-		Console.Write(new string(' ', buffer.Length));
+		Console.Write(new string(' ', _buffer.Length));
 		Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
 
-		buffer.Clear();
-		insertIndex = 0;
+		_buffer.Clear();
+		_insertIndex = 0;
 
 		return true;
+	}
+
+	public enum GetHintResult
+	{
+		Hint,
+		Complete,
+		PartialKey,
+		UnknownKey
 	}
 }

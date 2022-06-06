@@ -13,8 +13,6 @@ namespace SimpleTableManager.Services
 {
 	public static class CommandTree
 	{
-		private const string _REGEX_PREFIX = "regex:";
-
 		public static IDictionary<string, object> Commands { get; } = new ExpandoObject();
 
 		public static void FromJsonFolder(string folderPath)
@@ -49,21 +47,32 @@ namespace SimpleTableManager.Services
 				}
 				else
 				{
-					var value = o.FirstOrDefault(e =>
-						e.Key.StartsWith(_REGEX_PREFIX) && Regex.IsMatch(keys.FirstOrDefault(), e.Key.Substring(_REGEX_PREFIX.Length), RegexOptions.IgnoreCase) ||
-						!e.Key.StartsWith(_REGEX_PREFIX) && e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(keys.FirstOrDefault(), StringComparer.OrdinalIgnoreCase)).Value;
+					var key = keys.FirstOrDefault();
 
-					if (value is null)
+					var matchingValue = o.FirstOrDefault(e =>
+						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
+
+					var partialMatchingValue = o.FirstOrDefault(e =>
+						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(p => p.StartsWith(key, StringComparison.OrdinalIgnoreCase))).Value;
+
+					if (matchingValue is null)
 					{
-						throw new KeyNotFoundException($"Unknow command key '{keys.FirstOrDefault()}' in '{rawCommand}'");
+						if (partialMatchingValue is not null)
+						{
+							throw new PartialKeyException(rawCommand, key);
+						}
+						else
+						{
+							throw new KeyNotFoundException($"Unknow command key '{key}' in '{rawCommand}'");
+						}
 					}
 
-					if (value is ExpandoObject && keys.Count <= 1 || !(value is ExpandoObject) && keys.Count < 1)
+					if (matchingValue is ExpandoObject && keys.Count <= 1 || !(matchingValue is ExpandoObject) && keys.Count < 1)
 					{
-						throw new IncompleteCommandException(rawCommand, (value as ExpandoObject)?.Select(e => e.Key).ToList());
+						throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
 					}
 
-					return GetReferenceMethodNameRecursive(value, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
+					return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
 				}
 			}
 			else

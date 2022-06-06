@@ -85,6 +85,10 @@ namespace SimpleTableManager
 				{
 					SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
 				}
+				catch (PartialKeyException ex)
+				{
+					SmartConsole.ShowHelp(ex.RawCommand, null, null, ex.Message);
+				}
 				catch (HelpRequestedException ex)
 				{
 					SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
