@@ -95,9 +95,7 @@ namespace SimpleTableManager.Services
 
 		public MethodInfo GetMethod(object instance)
 		{
-			var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
-			(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
-				e.attribute is not null).ToDictionary(k => k.attribute.MethodReference.ToLower(), v => v.method);
+			var methods = GetMethods(instance);
 
 			if (methods.TryGetValue(Reference.MethodName.ToLower(), out var method))
 			{
@@ -107,6 +105,13 @@ namespace SimpleTableManager.Services
 			{
 				throw new KeyNotFoundException($"Method '{Reference}' not found on object type of '{instance.GetType()}'");
 			}
+		}
+
+		public static Dictionary<string, MethodInfo> GetMethods(object instance)
+		{
+			return instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
+				(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
+					e.attribute is not null).ToDictionary(k => k.attribute.MethodReference.ToLower(), v => v.method);
 		}
 
 		public List<CommandParameter> GetParameters(MethodInfo method)

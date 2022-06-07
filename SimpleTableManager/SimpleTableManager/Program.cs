@@ -66,10 +66,10 @@ namespace SimpleTableManager
 			{
 				try
 				{
-					SmartConsole.Draw(document);
+					SmartConsole.Render(document);
 
 					//var rawCommand = Console.ReadLine().Trim();
-					var rawCommand = SmartConsole.ReadInput();
+					var rawCommand = SmartConsole.ReadInputString();
 
 					var command = Command.FromString(rawCommand);
 

@@ -24,7 +24,7 @@ namespace SimpleTableManager
 			}
 		}
 
-		[CommandReference]
+		[CommandReference("Refreshes the view")]
 		public void Refresh()
 		{
 			Console.ResetColor();

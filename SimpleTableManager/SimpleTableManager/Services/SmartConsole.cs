@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using SimpleTableManager.Extensions;
@@ -18,17 +19,13 @@ public class SmartConsole
 
 	private const string _COMMAND_LINE_PREFIX = "> ";
 
-	private static List<string> _rawCommandHistory = new List<string>();
-
-	private static int _commandHistoryLength = 10;
-
-	private static int _rawCommandHistoryIndex = 0;
-
 	private static int _autoCompleteLength = 0;
 
 	private static int _autoCompleteIndex = -1;
 
 	private static string _autoCompletePartialRawCommand;
+
+	private static CommandHistory _commandHistory = new CommandHistory();
 
 	public static void ResetAutoComplete()
 	{
@@ -37,7 +34,7 @@ public class SmartConsole
 		_autoCompletePartialRawCommand = null;
 	}
 
-	public static void Draw(Document document)
+	public static void Render(Document document)
 	{
 		Renderer.Render(document);
 
@@ -58,8 +55,10 @@ public class SmartConsole
 		Console.Write(_COMMAND_LINE_PREFIX);
 	}
 
-	public static void ShowHelp(Command command, string error)
+	public static void ShowHelp(string rawCommand, List<string> availableKeys, CommandReference commandReference, string error)
 	{
+		var command = new Command() { AvailableKeys = availableKeys, RawCommand = rawCommand, Reference = commandReference };
+
 		LastHelp = $"{error}\n    ";
 
 		if (command.AvailableKeys is { })
@@ -70,7 +69,14 @@ public class SmartConsole
 		{
 			var instances = Program.InstanceMap.GetInstances(command.Reference.ClassName);
 
-			var parameters = command.GetParameters(command.GetMethod(instances.First()));
+			var method = command.GetMethod(instances.First());
+
+			var parameters = command.GetParameters(method);
+
+			if (method.GetCustomAttribute<CommandReferenceAttribute>().MethodInformation is var info && info is not null)
+			{
+				LastHelp += $"Summary:\n        {info}\n    ";
+			}
 
 			LastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    of ";
 		}
@@ -80,29 +86,17 @@ public class SmartConsole
 		LastHelp = LastHelp.Trim();
 	}
 
-	public static void ShowHelp(string rawCommand, List<string> availableKeys, CommandReference commandReference, string error)
-	{
-		ShowHelp(new Command() { AvailableKeys = availableKeys, RawCommand = rawCommand, Reference = commandReference }, error);
-	}
-
-	public static string ReadInput()
+	public static string ReadInputString()
 	{
 		ClearBuffer();
 
 		while (ReadInputChar()) ;
 
-		var rawCommand = _buffer.ToString().Trim();
+		var command = _buffer.ToString().Trim();
 
-		_rawCommandHistory.Add(rawCommand);
+		_commandHistory.Add(command);
 
-		if (_rawCommandHistory.Count > _commandHistoryLength)
-		{
-			_rawCommandHistory.RemoveAt(0);
-		}
-
-		_rawCommandHistoryIndex = _rawCommandHistory.Count;
-
-		return rawCommand;
+		return command;
 	}
 
 	private static bool ReadInputChar()
@@ -122,7 +116,7 @@ public class SmartConsole
 			ConsoleKey.LeftArrow => MoveCursorLeft() || true,
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
-			ConsoleKey.Escape => ClearBuffer(),
+			ConsoleKey.Escape => Escape(),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
@@ -258,15 +252,13 @@ public class SmartConsole
 
 	private static bool GetPreviousHistoryItem()
 	{
-		if (_rawCommandHistoryIndex > 0)
+		if (_commandHistory.TryGetPreviousHistoryItem(out var command))
 		{
 			ClearBuffer();
 
 			ResetAutoComplete();
 
-			_rawCommandHistoryIndex--;
-
-			InsertStringToBuffer(_rawCommandHistory[_rawCommandHistoryIndex]);
+			InsertStringToBuffer(command);
 		}
 
 		return true;
@@ -274,18 +266,13 @@ public class SmartConsole
 
 	private static bool GetNextHistoryItem()
 	{
-		if (_rawCommandHistoryIndex < _rawCommandHistory.Count)
+		if (_commandHistory.TryGetNextHistoryItem(out var command))
 		{
 			ClearBuffer();
 
 			ResetAutoComplete();
 
-			_rawCommandHistoryIndex++;
-
-			if (_rawCommandHistoryIndex < _rawCommandHistory.Count)
-			{
-				InsertStringToBuffer(_rawCommandHistory[_rawCommandHistoryIndex]);
-			}
+			InsertStringToBuffer(command);
 		}
 
 		return true;
@@ -391,9 +378,12 @@ public class SmartConsole
 
 	private static void InsertStringToBuffer(string s)
 	{
-		foreach (var c in s)
+		if (s is not null)
 		{
-			InsertCharToBuffer(c);
+			foreach (var c in s)
+			{
+				InsertCharToBuffer(c);
+			}
 		}
 	}
 
@@ -408,6 +398,15 @@ public class SmartConsole
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
+
+		return true;
+	}
+
+	private static bool Escape()
+	{
+		ClearBuffer();
+
+		_commandHistory.ResetCycle();
 
 		return true;
 	}
