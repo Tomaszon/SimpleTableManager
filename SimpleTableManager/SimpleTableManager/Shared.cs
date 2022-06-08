@@ -10,7 +10,7 @@ namespace SimpleTableManager.Services
 	{
 		public const string HELP_COMMAND = "help";
 
-		public static Type GetTypeByName(string name)
+		public static Type GetTypeByName(string name, string nameSpace = null)
 		{
 			Dictionary<string, string> nameMap = new Dictionary<string, string>
 			{
@@ -20,7 +20,7 @@ namespace SimpleTableManager.Services
 
 			var type = nameMap.TryGetValue(name.ToLower(), out var mapped) ? mapped : name.ToLower();
 
-			return Type.GetType($"system.{type}", true, true);
+			return Type.GetType($"{nameSpace ?? "system"}.{type}", true, true);
 		}
 
 		public static object ParseStringValue(Type dataType, string value)

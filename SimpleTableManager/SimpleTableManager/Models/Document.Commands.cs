@@ -14,7 +14,7 @@ namespace SimpleTableManager.Models
 			Metadata.Title = title;
 		}
 
-		[CommandReference(reference: "activateTableAt")]
+		[CommandReference("activateTableAt")]
 		public void ActivateTable(int index)
 		{
 			Shared.Validate(() => index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
@@ -63,7 +63,7 @@ namespace SimpleTableManager.Models
 			}
 		}
 
-		[CommandReference(reference: "saveAs")]
+		[CommandReference("saveAs")]
 		public void Save(string fileName, bool overwrite = false)
 		{
 			fileName = GetSaveFilePath(fileName);

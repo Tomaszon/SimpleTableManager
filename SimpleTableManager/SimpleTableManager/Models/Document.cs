@@ -6,6 +6,7 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {
+	[CommandInformation("Loading, saving and other document related commands")]
 	public partial class Document
 	{
 		public Metadata Metadata { get; set; }

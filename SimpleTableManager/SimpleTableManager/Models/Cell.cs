@@ -8,6 +8,7 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {
+	[CommandInformation("Cell related commands")]
 	public partial class Cell
 	{
 		/// <summary>

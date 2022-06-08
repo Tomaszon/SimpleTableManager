@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-using SimpleTableManager.Models;
 using SimpleTableManager.Services;
 
-namespace SimpleTableManager
+namespace SimpleTableManager.Models
 {
+	[CommandInformation("Basic application related commands")]
 	public class App
 	{
 		[CommandReference]
@@ -24,7 +22,8 @@ namespace SimpleTableManager
 			}
 		}
 
-		[CommandReference("Refreshes the view")]
+		[CommandReference()]
+		[CommandInformation("Refreshes the view")]
 		public void Refresh()
 		{
 			Console.ResetColor();

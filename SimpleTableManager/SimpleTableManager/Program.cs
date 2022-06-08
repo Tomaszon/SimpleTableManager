@@ -7,8 +7,6 @@ namespace SimpleTableManager
 {
 	internal class Program
 	{
-		public static InstanceMap InstanceMap { get; set; } = new InstanceMap();
-
 		private static void Main(string[] args)
 		{
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
@@ -22,10 +20,10 @@ namespace SimpleTableManager
 			var document = new Document();
 			var app = new App();
 
-			InstanceMap.Add(() => app);
-			InstanceMap.Add(() => document);
-			InstanceMap.Add(() => document.GetActiveTable());
-			InstanceMap.Add(() => document.GetActiveTable().GetSelectedCells());
+			InstanceMap.Instance.Add(() => app);
+			InstanceMap.Instance.Add(() => document);
+			InstanceMap.Instance.Add(() => document.GetActiveTable());
+			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
 			//foreach (var cell in table.Cells)
 			//{
@@ -73,7 +71,7 @@ namespace SimpleTableManager
 
 					var command = Command.FromString(rawCommand);
 
-					command.Execute(InstanceMap.GetInstances(command.Reference.ClassName));
+					command.Execute(InstanceMap.Instance.GetInstances(command.Reference.ClassName, out _));
 
 					SmartConsole.LastHelp = "Enter command to execute";
 				}

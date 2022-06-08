@@ -33,7 +33,7 @@ namespace SimpleTableManager.Services
 		{
 			foreach (var instance in instances)
 			{
-				var method = GetMethod(instance);
+				var method = GetMethod(instance.GetType());
 				var parameters = GetParameters(method);
 
 				if (parameters.Count(p => !p.IsOptional) > Arguments.Count ||
@@ -93,9 +93,9 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		public MethodInfo GetMethod(object instance)
+		public MethodInfo GetMethod(Type type)
 		{
-			var methods = GetMethods(instance);
+			var methods = GetMethods(type);
 
 			if (methods.TryGetValue(Reference.MethodName.ToLower(), out var method))
 			{
@@ -103,13 +103,13 @@ namespace SimpleTableManager.Services
 			}
 			else
 			{
-				throw new KeyNotFoundException($"Method '{Reference}' not found on object type of '{instance.GetType()}'");
+				throw new KeyNotFoundException($"Method '{Reference}' not found on object type of '{type}'");
 			}
 		}
 
-		public static Dictionary<string, MethodInfo> GetMethods(object instance)
+		public static Dictionary<string, MethodInfo> GetMethods(Type type)
 		{
-			return instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
+			return type.GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
 				(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
 					e.attribute is not null).ToDictionary(k => k.attribute.MethodReference.ToLower(), v => v.method);
 		}

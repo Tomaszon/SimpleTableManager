@@ -63,17 +63,31 @@ public class SmartConsole
 
 		if (command.AvailableKeys is { })
 		{
-			LastHelp += $"Available keys:\n        {string.Join("\n        ", command.AvailableKeys)}\n    in ";
+			LastHelp += $"Available keys:\n";
+
+			foreach (var key in command.AvailableKeys)
+			{
+				LastHelp += $"        {key}";
+
+				if (InstanceMap.Instance.TryGetInstances(key, out _, out var type) &&
+					type.GetCustomAttribute<CommandInformationAttribute>() is var attribute &&
+					attribute is not null)
+				{
+					LastHelp += $":  {attribute.Information}";
+				}
+
+				LastHelp += ",\n";
+			}
 		}
 		else if (command.Reference is { })
 		{
-			var instances = Program.InstanceMap.GetInstances(command.Reference.ClassName);
+			InstanceMap.Instance.GetInstances(command.Reference.ClassName, out var type);
 
-			var method = command.GetMethod(instances.First());
+			var method = command.GetMethod(type);
 
 			var parameters = command.GetParameters(method);
 
-			if (method.GetCustomAttribute<CommandReferenceAttribute>().MethodInformation is var info && info is not null)
+			if (method.GetCustomAttribute<CommandInformationAttribute>().Information is var info && info is not null)
 			{
 				LastHelp += $"Summary:\n        {info}\n    ";
 			}
@@ -81,7 +95,11 @@ public class SmartConsole
 			LastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    of ";
 		}
 
-		LastHelp += $"'{command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd()}'";
+		if (command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd() is var sanitedCommand &&
+			!string.IsNullOrWhiteSpace(sanitedCommand))
+		{
+			LastHelp += $"    in '{sanitedCommand}'";
+		}
 
 		LastHelp = LastHelp.Trim();
 	}

@@ -5,6 +5,7 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {
+	[CommandInformation("Cell selection and table related commands")]
 	public partial class Table
 	{
 		public string Name { get; set; }
