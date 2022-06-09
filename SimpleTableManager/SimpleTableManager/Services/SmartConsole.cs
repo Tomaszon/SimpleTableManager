@@ -19,20 +19,15 @@ public class SmartConsole
 
 	private const string _COMMAND_LINE_PREFIX = "> ";
 
-	private static int _autoCompleteLength = 0;
+	// private static int _autoCompleteLength = 0;
 
-	private static int _autoCompleteIndex = -1;
+	// private static int _autoCompleteIndex = -1;
 
-	private static string _autoCompletePartialRawCommand;
+	// private static string _autoCompletePartialRawCommand;
 
 	private static CommandHistory _commandHistory = new CommandHistory();
 
-	public static void ResetAutoComplete()
-	{
-		_autoCompleteIndex = -1;
-		_autoCompleteLength = 0;
-		_autoCompletePartialRawCommand = null;
-	}
+	private static AutoComplete _autoComplete = new AutoComplete();
 
 	public static void Render(Document document)
 	{
@@ -142,102 +137,81 @@ public class SmartConsole
 
 	private static bool ManualInsertCharToBuffer(char c)
 	{
-		ResetAutoComplete();
+		_autoComplete.Reset();
 
 		return InsertCharToBuffer(c);
 	}
 
 	private static bool AcceptCommand()
 	{
-		ResetAutoComplete();
+		_autoComplete.Reset();
 
 		Console.WriteLine();
 
 		return false;
 	}
 
-	private static void SetAutoComplete(string partialCommand, int autoCompleteLength)//, int keyCount, bool backwards)
-	{
-		_autoCompleteLength = autoCompleteLength;
-		_autoCompletePartialRawCommand = partialCommand;
-	}
-
-	private static void StepAutoCompleteIndex(int keyCount, bool backwards)
-	{
-		if (backwards)
-		{
-			_autoCompleteIndex -= _autoCompleteIndex > 0 ? 1 : -(keyCount - 1);
-		}
-		else
-		{
-			_autoCompleteIndex += _autoCompleteIndex < keyCount - 1 ? 1 : -(keyCount - 1);
-		}
-	}
-
 	private static bool GetHint(ConsoleModifiers modifiers)
 	{
-		var value = _autoCompletePartialRawCommand ?? _buffer.ToString();
+		var value = _buffer.ToString();
+
+		value = value.Substring(0, value.Length - _autoComplete.AutoCompleteLength);
 
 		var rawCommand = $"{value} help";
 
-		while (true)
+		// while (true)
+		// {
+		var result = GetHintCore(rawCommand, out var availableKeys);
+
+		if (!_autoComplete.Cycling)
 		{
-			var result = GetHintCore(rawCommand, out var availableKeys);
-
-			switch (result)
-			{
-				case GetHintResult.Hint:
-					{
-						var partialKey = value.Substring(value.LastIndexOf(' ') + 1);
-
-						var matchingKeys = availableKeys.Where(k => k.Split('|').Any(v => v.StartsWith(partialKey))).ToList();
-
-						if (matchingKeys.Count > 0)
-						{
-							StepAutoCompleteIndex(matchingKeys.Count, modifiers.HasFlag(ConsoleModifiers.Shift));
-
-							var key = matchingKeys[_autoCompleteIndex];
-
-							var suggestedKey = key.Split('|').First(a => a.StartsWith(partialKey));
-
-							var autoCombleteValue = suggestedKey.Substring(partialKey.Length);
-
-							MoveCursorToTheRight();
-
-							DeleteCharsToLeft(_autoCompleteLength);
-
-							SetAutoComplete(value, autoCombleteValue.Length);//, matchingKeys.Count, modifiers.HasFlag(ConsoleModifiers.Shift));
-
-							InsertStringToBuffer(autoCombleteValue);
-						}
-
-						return true;
-					}
-
-				case GetHintResult.Complete: return true;
-
-				case GetHintResult.PartialKey:
-					{
-
-					}
-					break;
-
-				default:
-					{
-						if (rawCommand.Count(c => c == ' ') > 1)
-						{
-							var a = rawCommand.Substring(0, rawCommand.Length - 5);
-							var b = a.Substring(0, a.LastIndexOf(' '));
-							rawCommand = $"{b} help";
-						}
-						else
-						{
-							rawCommand = "help";
-						}
-					}
-					break;
-			}
+			_autoComplete.SetKeys(availableKeys);
 		}
+
+		switch (result)
+		{
+			case GetHintResult.Hint:
+				{
+					var nextKey = _autoComplete.GetNextKey(null, modifiers.HasFlag(ConsoleModifiers.Shift), out var pacl);
+
+					MoveCursorToTheRight();
+					DeleteCharsToLeft(pacl);
+					InsertStringToBuffer(nextKey);
+				}
+				break;
+
+			case GetHintResult.PartialKey:
+				{
+
+				}
+				break;
+
+				// case GetHintResult.Complete: return true;
+
+				// case GetHintResult.PartialKey:
+				// 	{
+
+				// 	}
+				// 	break;
+
+				// default:
+				// 	{
+				// 		if (rawCommand.Count(c => c == ' ') > 1)
+				// 		{
+				// 			var a = rawCommand.Substring(0, rawCommand.Length - 5);
+				// 			var b = a.Substring(0, a.LastIndexOf(' '));
+				// 			rawCommand = $"{b} help";
+				// 		}
+				// 		else
+				// 		{
+				// 			rawCommand = "help";
+				// 		}
+				// 	}
+				// 	break;
+				//}
+		}
+
+		return true;
 	}
 
 	private static GetHintResult GetHintCore(string command, out List<string> availableKeys)
@@ -250,7 +224,7 @@ public class SmartConsole
 		{
 			availableKeys = ex.AvailableKeys;
 
-			return ex.AvailableKeys is not null || ex.AvailableKeys.Count > 0 ? GetHintResult.Hint : GetHintResult.Complete;
+			return ex.AvailableKeys is not null && ex.AvailableKeys.Count > 0 ? GetHintResult.Hint : GetHintResult.Complete;
 		}
 		catch (PartialKeyException)
 		{
@@ -274,7 +248,7 @@ public class SmartConsole
 		{
 			ClearBuffer();
 
-			ResetAutoComplete();
+			_autoComplete.Reset();
 
 			InsertStringToBuffer(command);
 		}
@@ -288,7 +262,7 @@ public class SmartConsole
 		{
 			ClearBuffer();
 
-			ResetAutoComplete();
+			_autoComplete.Reset();
 
 			InsertStringToBuffer(command);
 		}
@@ -317,7 +291,7 @@ public class SmartConsole
 
 	private static bool ManualDeleteCharToLeft()
 	{
-		ResetAutoComplete();
+		_autoComplete.Reset();
 
 		return DeleteCharToLeft();
 	}
@@ -341,7 +315,7 @@ public class SmartConsole
 
 	private static bool ManualDeleteCharToRight()
 	{
-		ResetAutoComplete();
+		_autoComplete.Reset();
 
 		return DeleteCharToRight();
 	}
