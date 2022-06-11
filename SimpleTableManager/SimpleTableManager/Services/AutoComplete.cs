@@ -6,7 +6,7 @@ namespace SimpleTableManager.Services;
 
 public class AutoComplete
 {
-	public int AutoCompleteLength { get; private set; } = 0;
+	private int _autoCompleteLength = 0;
 
 	public bool Cycling { get; set; }
 
@@ -18,9 +18,12 @@ public class AutoComplete
 	{
 		Reset();
 
-		keys.ForEach(p => _keys.AddRange(p.Split('|')));
+		if (keys is not null)
+		{
+			keys.ForEach(p => _keys.AddRange(p.Split('|')));
 
-		_index = _keys.Count;
+			_index = _keys.Count;
+		}
 	}
 
 	public string GetNextKey(string partialKey, bool backwards, out int previousAutoCompleteLength)
@@ -31,9 +34,9 @@ public class AutoComplete
 
 		var nextKey = _keys[_index];
 
-		previousAutoCompleteLength = AutoCompleteLength;
+		previousAutoCompleteLength = _autoCompleteLength;
 
-		AutoCompleteLength = partialKey is not null ? nextKey.Length - partialKey.Length : nextKey.Length;
+		_autoCompleteLength = partialKey is not null ? nextKey.Length - partialKey.Length : nextKey.Length;
 
 		return nextKey;
 	}
@@ -55,11 +58,16 @@ public class AutoComplete
 		}
 	}
 
+	public string TrimValueForCycling(string value)
+	{
+		return value.Substring(0, value.Length - _autoCompleteLength);
+	}
+
 	public void Reset()
 	{
 		if (Cycling)
 		{
-			AutoCompleteLength = 0;
+			_autoCompleteLength = 0;
 			_index = 0;
 			Cycling = false;
 			_keys.Clear();

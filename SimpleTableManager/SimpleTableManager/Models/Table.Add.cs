@@ -9,6 +9,8 @@ namespace SimpleTableManager.Models
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
+			Sider.Add(new IndexCell(index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+
 			for (int x = 0; x < Size.Width; x++)
 			{
 				Content.Insert(index * Size.Width + x, new Cell($"N:{x},{index}")
@@ -49,6 +51,8 @@ namespace SimpleTableManager.Models
 		public void AddColumnAt(int index)
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
+
+			Header.Add(new IndexCell(index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
 			for (int y = 0; y < Size.Height; y++)
 			{

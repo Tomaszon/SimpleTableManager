@@ -155,66 +155,43 @@ public class SmartConsole
 	{
 		var value = _buffer.ToString();
 
-		value = value.Substring(0, value.Length - _autoComplete.AutoCompleteLength);
+		value = _autoComplete.TrimValueForCycling(value);
 
-		var rawCommand = $"{value} help";
+		var rawCommand = Get1stLevelHelpCommand(value);
 
-		// while (true)
-		// {
-		var result = GetHintCore(rawCommand, out var availableKeys);
+		var result = GetHintCore(rawCommand, out var availableKeys, out var partialKey);
+
+		if (result == GetHintResult.PartialKey || result == GetHintResult.Complete)
+		{
+			rawCommand = Get2ndLevelHelpCommand(value);
+
+			result = GetHintCore(rawCommand, out availableKeys, out _);
+
+			partialKey ??= value.Substring(value.LastIndexOf(' ') + 1);
+		}
 
 		if (!_autoComplete.Cycling)
 		{
 			_autoComplete.SetKeys(availableKeys);
 		}
 
-		switch (result)
+		if (result == GetHintResult.Hint)
 		{
-			case GetHintResult.Hint:
-				{
-					var nextKey = _autoComplete.GetNextKey(null, modifiers.HasFlag(ConsoleModifiers.Shift), out var pacl);
+			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers.HasFlag(ConsoleModifiers.Shift), out var pacl);
 
-					MoveCursorToTheRight();
-					DeleteCharsToLeft(pacl);
-					InsertStringToBuffer(nextKey);
-				}
-				break;
-
-			case GetHintResult.PartialKey:
-				{
-
-				}
-				break;
-
-				// case GetHintResult.Complete: return true;
-
-				// case GetHintResult.PartialKey:
-				// 	{
-
-				// 	}
-				// 	break;
-
-				// default:
-				// 	{
-				// 		if (rawCommand.Count(c => c == ' ') > 1)
-				// 		{
-				// 			var a = rawCommand.Substring(0, rawCommand.Length - 5);
-				// 			var b = a.Substring(0, a.LastIndexOf(' '));
-				// 			rawCommand = $"{b} help";
-				// 		}
-				// 		else
-				// 		{
-				// 			rawCommand = "help";
-				// 		}
-				// 	}
-				// 	break;
-				//}
+			MoveCursorToTheRight();
+			DeleteCharsToLeft(pacl + (partialKey?.Length ?? 0));
+			if (IsSpaceAppendNeeded(value, partialKey))
+			{
+				InsertCharToBuffer(' ');
+			}
+			InsertStringToBuffer(nextKey);
 		}
 
 		return true;
 	}
 
-	private static GetHintResult GetHintCore(string command, out List<string> availableKeys)
+	private static GetHintResult GetHintCore(string command, out List<string> availableKeys, out string partialKey)
 	{
 		try
 		{
@@ -224,11 +201,15 @@ public class SmartConsole
 		{
 			availableKeys = ex.AvailableKeys;
 
+			partialKey = null;
+
 			return ex.AvailableKeys is not null && ex.AvailableKeys.Count > 0 ? GetHintResult.Hint : GetHintResult.Complete;
 		}
-		catch (PartialKeyException)
+		catch (PartialKeyException ex)
 		{
 			availableKeys = null;
+
+			partialKey = ex.PartialKey;
 
 			return GetHintResult.PartialKey;
 		}
@@ -236,10 +217,29 @@ public class SmartConsole
 		{
 			availableKeys = null;
 
+			partialKey = null;
+
 			return GetHintResult.UnknownKey;
 		}
 
 		throw new InvalidOperationException();
+	}
+
+	private static string Get1stLevelHelpCommand(string value)
+	{
+		return string.IsNullOrWhiteSpace(value) ? Shared.HELP_COMMAND : $"{value} {Shared.HELP_COMMAND}";
+	}
+
+	private static string Get2ndLevelHelpCommand(string value)
+	{
+		return !value.Contains(' ') ? Shared.HELP_COMMAND : $"{value.Substring(0, value.LastIndexOf(' '))} {Shared.HELP_COMMAND}";
+	}
+
+	private static bool IsSpaceAppendNeeded(string value, string partialKey)
+	{
+		return partialKey is null &&
+			!string.IsNullOrWhiteSpace(value) &&
+			!value.Substring(0, value.Length).EndsWith(' ');
 	}
 
 	private static bool GetPreviousHistoryItem()
