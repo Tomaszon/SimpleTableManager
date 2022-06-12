@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Services;
+﻿using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {
@@ -13,7 +14,7 @@ namespace SimpleTableManager.Models
 
 			for (int x = 0; x < Size.Width; x++)
 			{
-				Content.Insert(index * Size.Width + x, new Cell($"N:{x},{index}")
+				Content.Insert(index * Size.Width + x, new Cell()
 				{
 					ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor)
 				});
@@ -56,7 +57,7 @@ namespace SimpleTableManager.Models
 
 			for (int y = 0; y < Size.Height; y++)
 			{
-				Content.Insert(Size.Width * y + y + index, new Cell($"NEW,y:{y}")
+				Content.Insert(Size.Width * y + y + index, new Cell()
 				{
 					ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor)
 				});

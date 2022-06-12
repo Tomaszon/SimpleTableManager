@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
+using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -46,15 +46,13 @@ namespace SimpleTableManager.Models
 			ResetViewOptions();
 
 			Shared.IndexArray(rowCount).ForEach(y =>
-				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell("Cell x"/*, new Position(x, y), ":)"*/))));
+				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell())));
 
 			Shared.IndexArray(columnCount).ForEach(x =>
 				Header.Add(new IndexCell(x, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow)));
 
 			Shared.IndexArray(rowCount).ForEach(y =>
 				Sider.Add(new IndexCell(y, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow)));
-
-			//HideColumn(3);
 		}
 
 		public int GetRowHeight(int index)

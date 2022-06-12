@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -22,7 +22,7 @@ namespace SimpleTableManager.Models
 		{
 			Metadata = new Metadata();
 			Tables.Clear();
-			AddTable(new Size(10, 4));
+			AddTable(new Size(10, 5));
 		}
 
 		public Table GetActiveTable()

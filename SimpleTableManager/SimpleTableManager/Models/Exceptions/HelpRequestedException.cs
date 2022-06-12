@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Exceptions
 {
 	public class HelpRequestedException : CommandException
 	{

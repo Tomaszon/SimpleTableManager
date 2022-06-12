@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Newtonsoft.Json;
-
+using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
@@ -14,7 +14,7 @@ namespace SimpleTableManager.Models
 		/// <summary>
 		/// Manually set size not including the borders
 		/// </summary>
-		public Size GivenSize { get; set; } = new Size(1, 1);
+		public Size GivenSize { get; set; } = new Size(7, 1);
 
 		/// <summary>
 		/// Size not including the borders

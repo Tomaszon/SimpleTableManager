@@ -1,6 +1,4 @@
-using System;
-
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Exceptions
 {
 	public class ParameterCountException : CommandException
 	{

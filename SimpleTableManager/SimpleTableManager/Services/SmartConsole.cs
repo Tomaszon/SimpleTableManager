@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Models.Exceptions;
 
 namespace SimpleTableManager.Services;
 

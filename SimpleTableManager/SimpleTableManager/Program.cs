@@ -1,6 +1,7 @@
 ﻿using System;
 
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.Exceptions;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager

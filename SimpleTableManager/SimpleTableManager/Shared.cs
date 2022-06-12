@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Services
 {

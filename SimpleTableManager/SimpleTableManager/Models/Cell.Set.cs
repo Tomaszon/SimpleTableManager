@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Models
 {

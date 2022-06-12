@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Exceptions
 {
 	public class PartialKeyException : CommandException
 	{

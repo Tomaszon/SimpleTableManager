@@ -1,6 +1,6 @@
 using System;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Attributes
 {
 	//TODO multiple formats?
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

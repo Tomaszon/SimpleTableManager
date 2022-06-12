@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Models.Exceptions;
 
 namespace SimpleTableManager.Services
 {

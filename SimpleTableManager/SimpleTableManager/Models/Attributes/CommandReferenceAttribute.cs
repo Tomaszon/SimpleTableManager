@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Attributes
 {
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 	public class CommandReferenceAttribute : Attribute

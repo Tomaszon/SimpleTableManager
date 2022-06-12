@@ -1,5 +1,5 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Models
 {

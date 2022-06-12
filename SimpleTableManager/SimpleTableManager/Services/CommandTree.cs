@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.Exceptions;
 
 namespace SimpleTableManager.Services
 {
