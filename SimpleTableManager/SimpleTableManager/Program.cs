@@ -3,6 +3,7 @@
 using SimpleTableManager.Models;
 using SimpleTableManager.Models.Exceptions;
 using SimpleTableManager.Services;
+using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager
 {
@@ -26,6 +27,11 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
 			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
+			var function = FunctionCollection.GetFunction(NumericFunctionType.Avg, new[] { 5m, 4m });
+
+			var result = function.Execute();
+
+#region test
 			//foreach (var cell in table.Cells)
 			//{
 			//if (cell.Position.X % 3 == 0)
@@ -60,7 +66,7 @@ namespace SimpleTableManager
 			//table[0, 0].GivenSize = new Size(25, 1);
 
 			//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
-
+#endregion test
 			do
 			{
 				try

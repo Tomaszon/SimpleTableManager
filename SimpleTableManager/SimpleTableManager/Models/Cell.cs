@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
+using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models
 {
@@ -34,6 +35,7 @@ namespace SimpleTableManager.Models
 		public Type ContentType { get; set; } = typeof(string);
 
 		private List<object> _content = new();
+
 		public List<object> Content
 		{
 			get => _content;
@@ -63,6 +65,9 @@ namespace SimpleTableManager.Models
 		public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
 
 		public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
+
+		public RenderFunction Renderer { get; set; }
+
 
 		[JsonConstructor]
 		private Cell()

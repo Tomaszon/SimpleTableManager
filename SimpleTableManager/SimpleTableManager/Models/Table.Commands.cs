@@ -1,3 +1,4 @@
+using System;
 using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Models
@@ -7,7 +8,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void ResetViewOptions()
 		{
-			ViewOptions = new ViewOptions(0, 0, Size.Width - 1, Size.Height - 1);
+			ViewOptions = new ViewOptions(0, 0, Math.Max(Size.Width - 1, 0), Math.Max(Size.Height - 1, 0));
 		}
 
 		[CommandReference]

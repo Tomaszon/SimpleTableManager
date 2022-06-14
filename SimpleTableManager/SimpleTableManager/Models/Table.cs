@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
@@ -10,11 +11,11 @@ namespace SimpleTableManager.Models
 	{
 		public string Name { get; set; }
 
-		public Size Size { get; set; }
+		public Size Size { get; set; } = new Size(0, 0);
 
 		public bool IsActive { get; set; }
 
-		public ViewOptions ViewOptions { get; set; }
+		public ViewOptions ViewOptions { get; set; } = new ViewOptions(0, 0, 0, 0);
 
 		public List<Cell> Content { get; set; } = new List<Cell>();
 
@@ -42,17 +43,11 @@ namespace SimpleTableManager.Models
 		public Table(string name, int columnCount, int rowCount)
 		{
 			Name = name;
-			Size = new Size(columnCount, rowCount);
+
+			Shared.IndexArray(columnCount).ForEach(x => AddColumnLast());
+			Shared.IndexArray(rowCount).ForEach(y => AddRowLast());
+
 			ResetViewOptions();
-
-			Shared.IndexArray(rowCount).ForEach(y =>
-				Shared.IndexArray(columnCount).ForEach(x => Content.Add(new Cell())));
-
-			Shared.IndexArray(columnCount).ForEach(x =>
-				Header.Add(new IndexCell(x, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow)));
-
-			Shared.IndexArray(rowCount).ForEach(y =>
-				Sider.Add(new IndexCell(y, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow)));
 		}
 
 		public int GetRowHeight(int index)
