@@ -12,8 +12,19 @@ public static class FunctionCollection
 	{
 		_functions = new Dictionary<Type, Type>()
 		{
-			{ typeof(NumericFunctionType), typeof(NumericFunction<>) }
+			{ typeof(NumericFunctionType), typeof(NumericFunction) }
 		};
+	}
+
+	public static Function<object> GetFunction(string functionTypeName, Type paramType, params object[] arguments)
+	{
+		var key = _functions.Keys.Single(k => Enum.TryParse(k, functionTypeName, true, out _));
+
+		var functionType = Enum.Parse(key, functionTypeName, true);
+
+		var type = _functions[key];
+
+		return GetFunctionCore(type, paramType, functionType, arguments);
 	}
 
 	public static Function<TReturn> GetFunction<TReturn>(string functionTypeName, params TReturn[] arguments)
@@ -39,5 +50,14 @@ public static class FunctionCollection
 		var genericType = type.MakeGenericType(typeof(TReturn));
 
 		return (Function<TReturn>)Activator.CreateInstance(genericType, new object[] { functionType, arguments });
+	}
+
+	private static Function<object> GetFunctionCore(Type type, Type paramType, object functionType, object[] arguments)
+	{
+		var genericType = type.MakeGenericType(paramType);
+
+		var arr = arguments.Select(a => Convert.ChangeType a).ToArray();
+
+		return (Function<object>)Activator.CreateInstance(genericType, functionType, arr);
 	}
 }

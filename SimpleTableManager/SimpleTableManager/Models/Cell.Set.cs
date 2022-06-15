@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Services;
+using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models
 {
@@ -8,7 +10,20 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetContent(params object[] contents)
 		{
-			Content = contents.ToList();
+			if (contents.FirstOrDefault() is string first && first is not null && first.StartsWith('='))
+			{
+				//TODO do dynamically based on FunctionCollection config
+				var paramType = typeof(decimal);
+
+				var rest = contents[1..].Select(e => Shared.ParseStringValue(paramType, (string)e));
+
+				ContentFunction = FunctionCollection.GetFunction(first.TrimStart('='), paramType, rest.ToArray());
+				NotifyPropertyChanged();
+			}
+			else
+			{
+				Content = contents.ToList();
+			}
 		}
 
 		[CommandReference]

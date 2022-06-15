@@ -27,9 +27,9 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
 			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
-			var function = FunctionCollection.GetFunction(NumericFunctionType.Avg, new[] { 5m, 4m });
+			// var function = FunctionCollection.GetFunction(NumericFunctionType.Sum, new[] { 5, 4 });
 
-			var result = function.Execute();
+			// var result = function.Execute();
 
 #region test
 			//foreach (var cell in table.Cells)

@@ -202,5 +202,16 @@ namespace SimpleTableManager.Models
 
 		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
 		//}
+
+		public void CellPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if(sender is Cell cell)
+			{
+				
+				var result = cell.ContentFunction.Execute();
+
+				cell.SetContent(result);
+			}
+		}
 	}
 }

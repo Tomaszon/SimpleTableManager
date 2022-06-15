@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
@@ -10,7 +11,7 @@ using SimpleTableManager.Services.Functions;
 namespace SimpleTableManager.Models
 {
 	[CommandInformation("Cell related commands")]
-	public partial class Cell
+	public partial class Cell : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Manually set size not including the borders
@@ -50,6 +51,8 @@ namespace SimpleTableManager.Models
 			}
 		}
 
+		public Function<object> ContentFunction { get; set; }
+
 		public bool IsSelected { get; set; }
 
 		public bool IsHidden { get; set; }
@@ -68,6 +71,7 @@ namespace SimpleTableManager.Models
 
 		public RenderFunction Renderer { get; set; }
 
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		[JsonConstructor]
 		private Cell()
@@ -98,6 +102,11 @@ namespace SimpleTableManager.Models
 		public void RemoveContent()
 		{
 			Content.RemoveAt(Content.Count - 1);
+		}
+
+		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

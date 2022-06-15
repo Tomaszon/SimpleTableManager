@@ -5,16 +5,16 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
-public class NumericFunction<T> : Function<T>
+public class NumericFunction : Function<decimal>
 {
 	public NumericFunctionType Type { get; set; }
 
-	public NumericFunction(NumericFunctionType type, params T[] arguments) : base(arguments)
+	public NumericFunction(NumericFunctionType type, params decimal[] arguments) : base(arguments)
 	{
 		Type = type;
 	}
 
-	public override T Execute()
+	public override decimal Execute()
 	{
 		return Type switch
 		{
@@ -25,14 +25,20 @@ public class NumericFunction<T> : Function<T>
 		};
 	}
 
-	private FunctionParameter<T> Sum()
+	private FunctionParameter<decimal> Sum()
 	{
-		return Arguments.Aggregate(FunctionParameter<T>.Default, (a, v) => a += v);
+		var def = FunctionParameter<decimal>.Default;
+
+		var result = Arguments.Aggregate(def, (a, v) => a += v);
+
+		return result;
 	}
 
-	private FunctionParameter<T> Avg()
+	private FunctionParameter<decimal> Avg()
 	{
-		return Sum() / new FunctionParameter<T>((T)Convert.ChangeType(Arguments.Count, typeof(T)));
+		var result = Sum() / new FunctionParameter<decimal>(Arguments.Count);
+
+		return result;
 	}
 }
 

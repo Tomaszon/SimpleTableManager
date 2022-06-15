@@ -38,8 +38,7 @@
 		"view|v": "setViewOptions",
 		"view-columns|vc": "setViewOptionsColumns",
 		"view-rows|vr": "setViewOptionsRows",
-		"name|n": "setName",
-		"content|c": "setCellContent"
+		"name|n": "setName"
 	},
 	"select": {
 		"cell": "selectCell",

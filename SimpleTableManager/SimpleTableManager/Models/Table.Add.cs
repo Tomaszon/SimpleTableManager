@@ -14,10 +14,10 @@ namespace SimpleTableManager.Models
 
 			for (int x = 0; x < Size.Width; x++)
 			{
-				Content.Insert(index * Size.Width + x, new Cell()
-				{
-					ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor)
-				});
+				var cell = new Cell() { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
+				cell.PropertyChanged += CellPropertyChanged;
+
+				Content.Insert(index * Size.Width + x, cell);
 			}
 
 			if (ViewOptions.EndPosition.Y == Size.Height - 1)
@@ -57,10 +57,10 @@ namespace SimpleTableManager.Models
 
 			for (int y = 0; y < Size.Height; y++)
 			{
-				Content.Insert(Size.Width * y + y + index, new Cell()
-				{
-					ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor)
-				});
+				var cell = new Cell() { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
+				cell.PropertyChanged += CellPropertyChanged;
+
+				Content.Insert(Size.Width * y + y + index, cell);
 			}
 
 			if (ViewOptions.EndPosition.X == Size.Width - 1)
