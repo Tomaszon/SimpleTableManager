@@ -1,23 +1,26 @@
 namespace SimpleTableManager.Models;
 
-public class FunctionParameter<T>
+public class FunctionParameter
 {
-	public T Value { get; init; }
+	public Position ReferredCellPosition { get; set; }
 
-	public FunctionParameter(T value)
+	public object Value { get; init; }
+
+	public FunctionParameter(object value, Position referredCellPosition = null)
 	{
+		ReferredCellPosition = referredCellPosition;
 		Value = value;
 	}
 
-	public static FunctionParameter<T> Default => new FunctionParameter<T>(default);
+	public static FunctionParameter Default<T>() => new FunctionParameter(default(T));
 
-	public static FunctionParameter<T> operator +(FunctionParameter<T> value1, FunctionParameter<T> value2)
+	public static FunctionParameter operator +(FunctionParameter value1, FunctionParameter value2)
 	{
-		return new FunctionParameter<T>((dynamic)value1.Value + (dynamic)value2.Value);
+		return new FunctionParameter((dynamic)value1.Value + (dynamic)value2.Value);
 	}
 
-	public static FunctionParameter<T> operator /(FunctionParameter<T> value1, FunctionParameter<T> value2)
+	public static FunctionParameter operator /(FunctionParameter value1, FunctionParameter value2)
 	{
-		return new FunctionParameter<T>((dynamic)value1.Value / (dynamic)value2.Value);
+		return new FunctionParameter((dynamic)value1.Value / (dynamic)value2.Value);
 	}
 }

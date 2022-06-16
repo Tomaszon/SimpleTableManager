@@ -1,63 +1,42 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
 public static class FunctionCollection
 {
-	private static Dictionary<Type, Type> _functions;
+	private static List<(Type, Type)> _functions;
 
 	static FunctionCollection()
 	{
-		_functions = new Dictionary<Type, Type>()
+		_functions = new List<(Type, Type)>()
 		{
-			{ typeof(NumericFunctionType), typeof(NumericFunction) }
+			(typeof(NumericFunctionType), typeof(NumericFunction) )
 		};
 	}
 
-	public static Function<object> GetFunction(string functionTypeName, Type paramType, params object[] arguments)
+	public static Function GetFunction(string functionTypeName, params FunctionParameter[] arguments)
 	{
-		var key = _functions.Keys.Single(k => Enum.TryParse(k, functionTypeName, true, out _));
+		var key = _functions.Select(e => e.Item1).Single(k => Enum.TryParse(k, functionTypeName, true, out _));
 
 		var functionType = Enum.Parse(key, functionTypeName, true);
 
-		var type = _functions[key];
+		var type = _functions.Single(e => e.Item1 == key).Item2;
 
-		return GetFunctionCore(type, paramType, functionType, arguments);
+		return GetFunctionCore(type, functionType, arguments);
 	}
 
-	public static Function<TReturn> GetFunction<TReturn>(string functionTypeName, params TReturn[] arguments)
+	public static Function GetFunction(Enum functionType, params FunctionParameter[] arguments)
 	{
-		var key = _functions.Keys.Single(k => Enum.TryParse(k, functionTypeName, true, out _));
+		var type = _functions.Single(e => e.Item1 == functionType.GetType()).Item2;
 
-		var functionType = Enum.Parse(key, functionTypeName, true);
-
-		var type = _functions[key];
-
-		return GetFunctionCore<TReturn>(type, functionType, arguments);
+		return GetFunctionCore(type, functionType, arguments);
 	}
 
-	public static Function<TReturn> GetFunction<TFunctionType, TReturn>(TFunctionType functionType, params TReturn[] arguments)
+	private static Function GetFunctionCore(Type type, object functionType, FunctionParameter[] arguments)
 	{
-		var type = _functions[typeof(TFunctionType)];
-
-		return GetFunctionCore<TReturn>(type, functionType, arguments);
-	}
-
-	private static Function<TReturn> GetFunctionCore<TReturn>(Type type, object functionType, TReturn[] arguments)
-	{
-		var genericType = type.MakeGenericType(typeof(TReturn));
-
-		return (Function<TReturn>)Activator.CreateInstance(genericType, new object[] { functionType, arguments });
-	}
-
-	private static Function<object> GetFunctionCore(Type type, Type paramType, object functionType, object[] arguments)
-	{
-		var genericType = type.MakeGenericType(paramType);
-
-		var arr = arguments.Select(a => Convert.ChangeType a).ToArray();
-
-		return (Function<object>)Activator.CreateInstance(genericType, functionType, arr);
+		return (Function)Activator.CreateInstance(type, functionType, arguments);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Models
@@ -42,6 +43,22 @@ namespace SimpleTableManager.Models
 			var y = int.Parse(values[1].Trim());
 
 			return new Position(x, y);
+		}
+
+		public static bool TryParse(string value, [NotNullWhen(true)] out Position position)
+		{
+			try
+			{
+				position = Parse(value);
+
+				return true;
+			}
+			catch
+			{
+				position = null;
+
+				return false;
+			}
 		}
 	}
 }

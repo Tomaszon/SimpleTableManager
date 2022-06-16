@@ -27,11 +27,17 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
 			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
-			// var function = FunctionCollection.GetFunction(NumericFunctionType.Sum, new[] { 5, 4 });
+			var function = FunctionCollection.GetFunction(NumericFunctionType.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
 
-			// var result = function.Execute();
+			var result = function.Execute();
 
-#region test
+			document.GetActiveTable()[1, 1].ContentType = typeof(decimal);
+			document.GetActiveTable()[1, 1].SetContent(5);
+
+			document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
+			document.GetActiveTable()[2, 1].SetContent(4);
+
+			#region test
 			//foreach (var cell in table.Cells)
 			//{
 			//if (cell.Position.X % 3 == 0)
@@ -66,7 +72,7 @@ namespace SimpleTableManager
 			//table[0, 0].GivenSize = new Size(25, 1);
 
 			//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
-#endregion test
+			#endregion test
 			do
 			{
 				try

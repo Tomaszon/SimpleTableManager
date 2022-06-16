@@ -48,10 +48,23 @@ namespace SimpleTableManager.Models
 
 					return b ? e : Shared.ParseStringValue(ContentType.Name, e.ToString());
 				}).ToList();
+
+				NotifyPropertyChanged();
 			}
 		}
 
-		public Function<object> ContentFunction { get; set; }
+		private Function _contentFunction;
+
+		public Function ContentFunction
+		{
+			get => _contentFunction;
+			set
+			{
+				_contentFunction = value;
+
+				NotifyPropertyChanged();
+			}
+		}
 
 		public bool IsSelected { get; set; }
 
@@ -68,8 +81,6 @@ namespace SimpleTableManager.Models
 		public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
 
 		public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
-
-		public RenderFunction Renderer { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

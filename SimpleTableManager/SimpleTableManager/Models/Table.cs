@@ -205,11 +205,18 @@ namespace SimpleTableManager.Models
 
 		public void CellPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if(sender is Cell cell)
+			if (sender is Cell cell)
 			{
-				
-				var result = cell.ContentFunction.Execute();
+				if(e.PropertyName == nameof(Cell.ContentFunction))
 
+				var parameters = cell.ContentFunction.GetReferredCellPositions();
+
+				var arguments = parameters.Select(p =>
+					new FunctionParameter(this[p].Content.FirstOrDefault(), p)).Where(p => p.Value is not null).ToArray();
+
+				var result = cell.ContentFunction.Execute(arguments).Value;
+
+				cell.ContentType = result.GetType();
 				cell.SetContent(result);
 			}
 		}
