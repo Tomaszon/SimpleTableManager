@@ -2,13 +2,16 @@ namespace SimpleTableManager.Models;
 
 public class FunctionParameter
 {
-	public Position ReferredCellPosition { get; set; }
+	public Position ReferencePosition { get; set; }
+
+	public bool IsReference { get; set; }
 
 	public object Value { get; init; }
 
-	public FunctionParameter(object value, Position referredCellPosition = null)
+	public FunctionParameter(object value, Position referencePosition = null)
 	{
-		ReferredCellPosition = referredCellPosition;
+		ReferencePosition = referencePosition;
+		IsReference = referencePosition is not null;
 		Value = value;
 	}
 

@@ -9,9 +9,12 @@ public class NumericFunction : Function
 {
 	public NumericFunctionType Type { get; set; }
 
-	public NumericFunction(NumericFunctionType type, params FunctionParameter[] arguments) : base(arguments)
+	public NumericFunction(NumericFunctionType type, List<FunctionParameter> arguments) : base()
 	{
 		Type = type;
+
+		Arguments = arguments.Select(a =>
+			a.Value is null ? a : new FunctionParameter(Shared.ParseStringValue(typeof(decimal), a.Value.ToString()), a.ReferencePosition)).ToList();
 	}
 
 	public override FunctionParameter Execute(IEnumerable<FunctionParameter> parameters = null)
@@ -27,39 +30,25 @@ public class NumericFunction : Function
 
 	private FunctionParameter Sum(IEnumerable<FunctionParameter> parameters)
 	{
-		var result = Arguments.Aggregate(FunctionParameter.Default<decimal>(), (a, v) => a += (new Func<FunctionParameter>(() =>
-		{
-			if (parameters is not null && parameters.SingleOrDefault(p => p.ReferredCellPosition == v.ReferredCellPosition) is var x && !x.Equals(default))
-			{
-				return new FunctionParameter(x.Value);
-			}
-			else
-			{
-				return v;
-			}
-		})).Invoke());
+		return Arguments.Aggregate(FunctionParameter.Default<decimal>(), (a, c) => a += AggregateCore(parameters, c));
+	}
 
-		return result;
+	private FunctionParameter AggregateCore(IEnumerable<FunctionParameter> parameters, FunctionParameter current)
+	{
+		return parameters is not null &&
+			parameters.SingleOrDefault(p =>
+				p.ReferencePosition.Equals(current.ReferencePosition)) is var x && x is not null &&
+			!x.Equals(default) ?
+				new FunctionParameter(x.Value) : current;
 	}
 
 	private FunctionParameter Avg(IEnumerable<FunctionParameter> parameters)
 	{
-		var result = Sum(parameters) / new FunctionParameter(Arguments.Count);
-
-		return result;
+		return Sum(parameters) / new FunctionParameter(Arguments.Count());
 	}
-}
 
-public abstract class Function
-{
-	public abstract FunctionParameter Execute(IEnumerable<FunctionParameter> parameters = null);
-
-	public List<Position> GetReferredCellPositions() => Arguments.Where(a => a.ReferredCellPosition is not null).Select(a => a.ReferredCellPosition).ToList();
-
-	public List<FunctionParameter> Arguments { get; init; }
-
-	protected Function(params FunctionParameter[] arguments)
+	private string GetDebuggerDisplay()
 	{
-		Arguments = arguments.ToList();
+		return ToString();
 	}
 }

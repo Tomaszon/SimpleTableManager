@@ -42,29 +42,35 @@ namespace SimpleTableManager.Models
 			get => _content;
 			set
 			{
-				_content = value.Select(e =>
+				if (value.FirstOrDefault() is string first && first is not null && first.StartsWith('='))
 				{
-					var b = ContentType.IsAssignableFrom(e.GetType());
+					Content = new();
 
-					return b ? e : Shared.ParseStringValue(ContentType.Name, e.ToString());
-				}).ToList();
+					var rest = value.Skip(1).Select(e =>
+						Position.TryParse((string)e, out var position) ?
+							new FunctionParameter(null, position) : new FunctionParameter(e));
 
-				NotifyPropertyChanged();
+					ContentFunction = FunctionCollection.GetFunction(first.TrimStart('='), rest);
+
+					NotifyPropertyChanged(nameof(ContentFunction));
+				}
+				else
+				{
+					ContentFunction = null;
+
+					_content = value.Select(e =>
+					{
+						var b = ContentType.IsAssignableFrom(e.GetType());
+
+						return b ? e : Shared.ParseStringValue(ContentType.Name, e.ToString());
+					}).ToList();
+
+					NotifyPropertyChanged();
+				}
 			}
 		}
 
-		private Function _contentFunction;
-
-		public Function ContentFunction
-		{
-			get => _contentFunction;
-			set
-			{
-				_contentFunction = value;
-
-				NotifyPropertyChanged();
-			}
-		}
+		public Function ContentFunction { get; private set; }
 
 		public bool IsSelected { get; set; }
 

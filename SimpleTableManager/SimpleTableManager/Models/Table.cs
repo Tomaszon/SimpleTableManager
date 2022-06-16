@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using SimpleTableManager.Extensions;
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
 
@@ -34,6 +35,16 @@ namespace SimpleTableManager.Models
 		public Cell this[Position position] => this[position.X, position.Y];
 
 		public Cell this[int x, int y] => Content[y * Size.Width + x];
+
+		public Position this[Cell cell]
+		{
+			get
+			{
+				var index = Content.IndexOf(cell);
+
+				return new Position(index % Size.Width, index / Size.Width);
+			}
+		}
 
 		public List<Cell> this[int x1, int y1, int x2, int y2] =>
 			Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
@@ -207,13 +218,50 @@ namespace SimpleTableManager.Models
 		{
 			if (sender is Cell cell)
 			{
-				if(e.PropertyName == nameof(Cell.ContentFunction))
+				switch (e.PropertyName)
+				{
+					case nameof(Cell.ContentFunction):
+						{
+							if (cell.ContentFunction is not null)
+							{
+								UpdateReferenceCellContent(cell);
+							}
+						}
+						break;
 
-				var parameters = cell.ContentFunction.GetReferredCellPositions();
+					case nameof(Cell.Content):
+						{
+							var position = this[cell];
 
-				var arguments = parameters.Select(p =>
+							var referenceCells = Content.Where(c =>
+								c.ContentFunction?.GetReferredCellPositions().Contains(position) == true);
+
+							referenceCells.ForEach(c => UpdateReferenceCellContent(c));
+						}
+						break;
+				}
+			}
+		}
+
+		private void UpdateReferenceCellContent(Cell cell)
+		{
+			var referredPositions = cell.ContentFunction.GetReferredCellPositions();
+
+			if (referredPositions.Contains(this[cell]))
+			{
+				cell.ContentType = typeof(string);
+				cell.SetContent("Ref error");
+			}
+			else
+			{
+				//TODO do not use only the first item in Content
+				var arguments = referredPositions.Select(p =>
 					new FunctionParameter(this[p].Content.FirstOrDefault(), p)).Where(p => p.Value is not null).ToArray();
 
+				cell.ContentFunction.Arguments.RemoveAll(a =>
+					a.IsReference && !arguments.Any(p =>
+						p.ReferencePosition.Equals(a.ReferencePosition)));
+						
 				var result = cell.ContentFunction.Execute(arguments).Value;
 
 				cell.ContentType = result.GetType();

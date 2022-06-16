@@ -28,6 +28,16 @@ namespace SimpleTableManager.Models
 			return $"X: {X}, Y: {Y}";
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is Position p && p is not null)
+			{
+				return X == p.X && Y == p.Y;
+			}
+
+			return false;
+		}
+
 		public void Deconstruct(out int x, out int y)
 		{
 			x = X;
