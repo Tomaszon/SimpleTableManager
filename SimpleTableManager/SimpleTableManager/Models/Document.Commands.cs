@@ -92,7 +92,7 @@ namespace SimpleTableManager.Models
 					File.Delete(fileName);
 				}
 
-				throw ex;
+				throw new OperationCanceledException("Can not save document", ex);
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace SimpleTableManager.Models
 			{
 				Clear();
 
-				throw ex;
+				throw new OperationCanceledException("Can not load document", ex);
 			}
 		}
 	}

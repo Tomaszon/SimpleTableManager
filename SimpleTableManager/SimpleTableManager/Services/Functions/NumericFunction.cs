@@ -5,50 +5,38 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
-public class NumericFunction : Function
+public class NumericFunction : Function<NumericFunctionOperator>
 {
-	public NumericFunctionType Type { get; set; }
-
-	public NumericFunction(NumericFunctionType type, List<FunctionParameter> arguments) : base()
+	public NumericFunction(NumericFunctionOperator functionOperator, List<FunctionParameter> arguments) : base()
 	{
-		Type = type;
+		Operator = functionOperator;
 
-		Arguments = arguments.Select(a =>
-			a.Value is null ? a : new FunctionParameter(Shared.ParseStringValue(typeof(decimal), a.Value.ToString()), a.ReferencePosition)).ToList();
+		Arguments = arguments.Select(a => ParseArgumentValue<decimal>(a)).ToList();
 	}
 
-	public override FunctionParameter Execute(IEnumerable<FunctionParameter> parameters = null)
+	public override FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null)
 	{
-		return Type switch
+		return Operator switch
 		{
-			NumericFunctionType.Sum => Sum(parameters),
-			NumericFunctionType.Avg => Avg(parameters),
+			NumericFunctionOperator.Sum => Sum(parameters),
+			NumericFunctionOperator.Avg => Avg(parameters),
 
 			_ => throw new InvalidOperationException()
 		};
 	}
 
-	private FunctionParameter Sum(IEnumerable<FunctionParameter> parameters)
+	private FunctionParameter Sum(IEnumerable<FunctionParameterArray> parameters)
 	{
-		return Arguments.Aggregate(FunctionParameter.Default<decimal>(), (a, c) => a += AggregateCore(parameters, c));
+		return Aggregate(Arguments, parameters);
 	}
 
-	private FunctionParameter AggregateCore(IEnumerable<FunctionParameter> parameters, FunctionParameter current)
+	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateParameters = null)
 	{
-		return parameters is not null &&
-			parameters.SingleOrDefault(p =>
-				p.ReferencePosition.Equals(current.ReferencePosition)) is var x && x is not null &&
-			!x.Equals(default) ?
-				new FunctionParameter(x.Value) : current;
+		return list.Aggregate(FunctionParameter.Default<decimal>(), (a, c) => a += AggregateCore(parameters, c));
 	}
 
-	private FunctionParameter Avg(IEnumerable<FunctionParameter> parameters)
+	private FunctionParameter Avg(IEnumerable<FunctionParameterArray> parameters)
 	{
 		return Sum(parameters) / new FunctionParameter(Arguments.Count());
-	}
-
-	private string GetDebuggerDisplay()
-	{
-		return ToString();
 	}
 }

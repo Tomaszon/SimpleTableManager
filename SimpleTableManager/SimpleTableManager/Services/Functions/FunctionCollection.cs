@@ -13,30 +13,30 @@ public static class FunctionCollection
 	{
 		_functions = new Dictionary<Type, Type>()
 		{
-			{ typeof(NumericFunctionType), typeof(NumericFunction) }
+			{ typeof(NumericFunctionOperator), typeof(NumericFunction) }
 		};
 	}
 
-	public static Function GetFunction(string functionTypeName, IEnumerable<FunctionParameter> arguments)
+	public static IFunction GetFunction(string functionOperatorName, IEnumerable<FunctionParameter> arguments)
 	{
-		var key = _functions.Keys.Single(k => Enum.TryParse(k, functionTypeName, true, out _));
+		var key = _functions.Keys.Single(k => Enum.TryParse(k, functionOperatorName, true, out _));
 
-		var functionType = Enum.Parse(key, functionTypeName, true);
+		var functionOperator = Enum.Parse(key, functionOperatorName, true);
 
 		var type = _functions[key];
 
-		return GetFunctionCore(type, functionType, arguments);
+		return GetFunctionCore(type, functionOperator, arguments);
 	}
 
-	public static Function GetFunction(Enum functionType, IEnumerable<FunctionParameter> arguments)
+	public static IFunction GetFunction(Enum functionOperator, IEnumerable<FunctionParameter> arguments)
 	{
-		var type = _functions[functionType.GetType()];
+		var type = _functions[functionOperator.GetType()];
 
-		return GetFunctionCore(type, functionType, arguments);
+		return GetFunctionCore(type, functionOperator, arguments);
 	}
 
-	private static Function GetFunctionCore(Type type, object functionType, IEnumerable<FunctionParameter> arguments)
+	private static IFunction GetFunctionCore(Type type, object functionOperator, IEnumerable<FunctionParameter> arguments)
 	{
-		return (Function)Activator.CreateInstance(type, functionType, arguments.ToList());
+		return (IFunction)Activator.CreateInstance(type, functionOperator, arguments.ToList());
 	}
 }

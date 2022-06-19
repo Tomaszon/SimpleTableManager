@@ -254,18 +254,14 @@ namespace SimpleTableManager.Models
 			}
 			else
 			{
-				//TODO do not use only the first item in Content
-				var arguments = referredPositions.Select(p =>
-					new FunctionParameter(this[p].Content.FirstOrDefault(), p)).Where(p => p.Value is not null).ToArray();
+				var arguments = referredPositions.Where(p => this[p].Content.Count > 0).SelectMany(p =>
+					 this[p].Content.Select(c => new FunctionParameter(c, p))).GroupBy(g => g.ReferencePosition).Select(g =>
+					 	new FunctionParameterArray(g.Key, g.ToList())).ToArray();
 
-				cell.ContentFunction.Arguments.RemoveAll(a =>
-					a.IsReference && !arguments.Any(p =>
-						p.ReferencePosition.Equals(a.ReferencePosition)));
-						
 				var result = cell.ContentFunction.Execute(arguments).Value;
 
 				cell.ContentType = result.GetType();
-				cell.SetContent(result);
+				cell.Content = new List<object> { result };
 			}
 		}
 	}

@@ -27,17 +27,20 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
 			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
-			var function = FunctionCollection.GetFunction(NumericFunctionType.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
+
+			#region test
+			var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
 
 			var result = function.Execute();
 
 			document.GetActiveTable()[1, 1].ContentType = typeof(decimal);
-			document.GetActiveTable()[1, 1].SetContent(5);
+			document.GetActiveTable()[1, 1].SetContent(5, 2);
 
 			document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
 			document.GetActiveTable()[2, 1].SetContent(4);
 
-			#region test
+			document.GetActiveTable()[3, 1].SetContent("=avg", "1,1", "2,1", 7);
+
 			//foreach (var cell in table.Cells)
 			//{
 			//if (cell.Position.X % 3 == 0)

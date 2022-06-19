@@ -15,7 +15,7 @@ public class FunctionParameter
 		Value = value;
 	}
 
-	public static FunctionParameter Default<T>() => new FunctionParameter(default(T));
+	public static FunctionParameter Default<T>(Position referencePosition = null) => new FunctionParameter(default(T), referencePosition);
 
 	public static FunctionParameter operator +(FunctionParameter value1, FunctionParameter value2)
 	{

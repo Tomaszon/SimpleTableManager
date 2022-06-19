@@ -127,8 +127,8 @@ public class SmartConsole
 			ConsoleKey.Delete => ManualDeleteCharToRight(),
 			ConsoleKey.UpArrow => GetPreviousHistoryItem(),
 			ConsoleKey.DownArrow => GetNextHistoryItem(),
-			ConsoleKey.RightArrow => MoveCursorRight() || true,
-			ConsoleKey.LeftArrow => MoveCursorLeft() || true,
+			ConsoleKey.RightArrow => MoveCursorRight(k.Modifiers),
+			ConsoleKey.LeftArrow => MoveCursorLeft(k.Modifiers),
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
@@ -322,42 +322,97 @@ public class SmartConsole
 		return DeleteCharToRight();
 	}
 
-	private static bool MoveCursorLeft()
+	private static bool MoveCursorLeft(ConsoleModifiers modifiers = default)
 	{
-		if (_insertIndex > 0)
+		if (modifiers.HasFlag(ConsoleModifiers.Control))
 		{
-			Shared.StepCursor(-1, 0);
-			_insertIndex--;
-
-			return true;
+			do
+			{
+				MoveCursorLeft();
+			}
+			while (!IsLeftWordBorder());
+		}
+		else
+		{
+			if (_insertIndex > 0)
+			{
+				Shared.StepCursor(-1, 0);
+				_insertIndex--;
+			}
 		}
 
-		return false;
+		return true;
 	}
 
-	private static bool MoveCursorRight()
+	private static bool MoveCursorRight(ConsoleModifiers modifiers = default)
 	{
-		if (_insertIndex < _buffer.Length)
+		if (modifiers.HasFlag(ConsoleModifiers.Control))
 		{
-			Shared.StepCursor(1, 0);
-			_insertIndex++;
-
-			return true;
+			do
+			{
+				MoveCursorRight();
+			}
+			while (!IsRightWordBorder());
+		}
+		else
+		{
+			if (_insertIndex < _buffer.Length)
+			{
+				Shared.StepCursor(1, 0);
+				_insertIndex++;
+			}
 		}
 
-		return false;
+		return true;
+	}
+
+	private static bool IsRightWordBorder()
+	{
+		var charAtIndex = CharAtIndex();
+		var charBeforeIndex = CharAtIndex(-1);
+
+		return !CanCursorMoveRight() || charAtIndex == ' ' && charBeforeIndex != ' ';
+	}
+
+	private static bool IsLeftWordBorder()
+	{
+		var charAtIndex = CharAtIndex();
+		var charBeforeIndex = CharAtIndex(-1);
+
+		return !CanCursorMoveLeft() || charAtIndex != ' ' && charBeforeIndex == ' ';
+	}
+
+	private static bool CanCursorMoveLeft()
+	{
+		return _insertIndex > 0;
+	}
+
+	private static bool CanCursorMoveRight()
+	{
+		return _insertIndex < _buffer.Length;
+	}
+
+	private static char CharAtIndex(int offset = 0)
+	{
+		return _insertIndex + offset >= 0 && _insertIndex + offset < _buffer.Length ? _buffer[_insertIndex + offset] : default;
 	}
 
 	private static bool MoveCursorToTheLeft()
 	{
-		while (MoveCursorLeft()) ;
+		while (CanCursorMoveLeft())
+		{
+			MoveCursorLeft();
+		}
 
 		return true;
 	}
 
 	private static bool MoveCursorToTheRight()
 	{
-		while (MoveCursorRight()) ;
+		while (CanCursorMoveRight())
+		{
+			MoveCursorRight();
+		}
 
 		return true;
 	}
