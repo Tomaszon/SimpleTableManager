@@ -38,5 +38,11 @@ namespace SimpleTableManager.Models
 			Sider[y].IsHidden = false;
 			Rows[y].ForEach(c => c.IsHidden = false);
 		}
+
+		[CommandReference]
+		public object ShowCellDetails(Position position)
+		{
+			return this[position].ShowDetails();
+		}
 	}
 }

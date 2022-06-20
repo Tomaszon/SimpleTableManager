@@ -21,6 +21,8 @@ public class AutoComplete
 		{
 			keys.ForEach(p => _keys.AddRange(p.Split('|')));
 
+			_keys.Sort();
+
 			_index = _keys.Count;
 		}
 	}

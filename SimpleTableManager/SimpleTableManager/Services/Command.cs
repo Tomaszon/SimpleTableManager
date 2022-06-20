@@ -31,8 +31,10 @@ namespace SimpleTableManager.Services
 			};
 		}
 
-		public void Execute(IEnumerable<object> instances)
+		public List<object> Execute(IEnumerable<object> instances)
 		{
+			List<object> results = new List<object>();
+
 			foreach (var instance in instances)
 			{
 				var method = GetMethod(instance.GetType());
@@ -66,13 +68,15 @@ namespace SimpleTableManager.Services
 
 				try
 				{
-					method.Invoke(instance, parsedArguments.ToArray());
+					results.Add(method.Invoke(instance, parsedArguments.ToArray()));
 				}
 				catch (Exception ex)
 				{
 					throw ex.InnerException ?? ex;
 				}
 			}
+
+			return results;
 		}
 
 		private Array ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType)

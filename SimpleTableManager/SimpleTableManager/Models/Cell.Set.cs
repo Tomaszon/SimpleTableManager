@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models
@@ -55,6 +56,14 @@ namespace SimpleTableManager.Models
 		public void SetHorizontalPadding(int left, int right)
 		{
 			Padding = new ContentPadding(Padding.Top, Padding.Bottom, left, right);
+		}
+
+		[CommandReference]
+		public void SetType(string typeName)
+		{
+			var type = Shared.GetTypeByName(typeName);
+
+			ContentType = type;
 		}
 	}
 }

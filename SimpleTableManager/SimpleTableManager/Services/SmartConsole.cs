@@ -84,7 +84,7 @@ public class SmartConsole
 
 			var parameters = command.GetParameters(method);
 
-			if (method.GetCustomAttribute<CommandInformationAttribute>().Information is var info && info is not null)
+			if (method.GetCustomAttribute<CommandInformationAttribute>()?.Information is var info && info is not null)
 			{
 				LastHelp += $"Summary:\n        {info}\n    ";
 			}
@@ -457,7 +457,7 @@ public class SmartConsole
 
 		_commandHistory.ResetCycle();
 
-		return true;
+		return false;
 	}
 
 	private static bool ClearBuffer()

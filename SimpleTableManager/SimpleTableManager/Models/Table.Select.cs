@@ -8,9 +8,9 @@ namespace SimpleTableManager.Models
 	public partial class Table
 	{
 		[CommandReference]
-		public void SelectCell(int x, int y)
+		public void SelectCell(Position position)
 		{
-			this[x, y].IsSelected = true;
+			this[position].IsSelected = true;
 		}
 
 		[CommandReference]
@@ -22,9 +22,9 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void SelectCellRange(int x1, int y1, int x2, int y2)
+		public void SelectCellRange(Position positionFrom, Position positionTo)
 		{
-			this[x1, y1, x2, y2].ForEach(c => c.IsSelected = true);
+			this[positionFrom, positionTo].ForEach(c => c.IsSelected = true);
 		}
 
 		[CommandReference]

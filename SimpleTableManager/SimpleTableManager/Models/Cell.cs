@@ -33,7 +33,17 @@ namespace SimpleTableManager.Models
 				Shared.Max(ContentSize.Height + 2 + Padding.Top + Padding.Bottom, GivenSize.Height + 2)
 			);
 
-		public Type ContentType { get; set; } = typeof(string);
+		private Type _contentType = typeof(string);
+		public Type ContentType
+		{
+			get => _contentType;
+			set
+			{
+				_contentType = value;
+
+				Content = _content.Select(c => (object)c).ToList();
+			}
+		}
 
 		private List<object> _content = new();
 		public List<object> Content
@@ -111,6 +121,12 @@ namespace SimpleTableManager.Models
 		public void RemoveContent()
 		{
 			Content.RemoveAt(Content.Count - 1);
+		}
+
+		[CommandReference]
+		public object ShowDetails()
+		{
+			return new { Size, ContentType = ContentType.Name, ContentFunction, Padding, ContentAlignment };
 		}
 
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

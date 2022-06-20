@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Linq;
+using Newtonsoft.Json;
 using SimpleTableManager.Models;
 using SimpleTableManager.Models.Exceptions;
 using SimpleTableManager.Services;
@@ -87,9 +88,17 @@ namespace SimpleTableManager
 
 					var command = Command.FromString(rawCommand);
 
-					command.Execute(InstanceMap.Instance.GetInstances(command.Reference.ClassName, out _));
+					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference.ClassName, out _));
 
-					SmartConsole.LastHelp = "Enter command to execute";
+					if (results.Count > 0)
+					{
+						var formattedResults = results.Select(r => JsonConvert.SerializeObject(r, Formatting.Indented));
+						SmartConsole.LastHelp = $"Execution result:\n {string.Join(",\n", formattedResults)}";
+					}
+					else
+					{
+						SmartConsole.LastHelp = "Enter command to execute";
+					}
 				}
 				catch (ParameterCountException ex)
 				{

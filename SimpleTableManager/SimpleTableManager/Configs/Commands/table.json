@@ -64,7 +64,10 @@
 		"row|r": "hideRow"
 	},
 	"show": {
-		"column|c": "showColumn",
-		"row|r": "showRow"
+		"column": "showColumn",
+		"row": "showRow",
+		"cell": {
+			"details|d|info|i": "showCellDetails"
+		}
 	}
 }

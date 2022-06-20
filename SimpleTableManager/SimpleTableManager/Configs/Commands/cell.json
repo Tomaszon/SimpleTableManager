@@ -5,6 +5,10 @@
 		"horizontal-alignment|ha": "setHorizontalAlignment",
 		"padding|p": "setPadding",
 		"horizontal-padding|hp": "setHorizontalPadding",
-		"vertical-padding|vp": "setVerticalPadding"
+		"vertical-padding|vp": "setVerticalPadding",
+		"type|t": "setType"
+	},
+	"show": {
+		"details|d|info|i": "showDetails"
 	}
 }

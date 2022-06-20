@@ -8,9 +8,9 @@ namespace SimpleTableManager.Models
 	public partial class Table
 	{
 		[CommandReference]
-		public void DeselectCell(int x, int y)
+		public void DeselectCell(Position position)
 		{
-			this[x, y].IsSelected = false;
+			this[position].IsSelected = false;
 		}
 
 		[CommandReference]
@@ -22,9 +22,9 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void DeselectCellRange(int x1, int y1, int x2, int y2)
+		public void DeselectCellRange(Position positionFrom, Position positionTo)
 		{
-			this[x1, y1, x2, y2].ForEach(c => c.IsSelected = false);
+			this[positionFrom, positionTo].ForEach(c => c.IsSelected = false);
 		}
 
 		[CommandReference]

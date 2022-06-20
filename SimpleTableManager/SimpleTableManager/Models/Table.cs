@@ -50,6 +50,8 @@ namespace SimpleTableManager.Models
 			Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
 				Shared.IndexArray(x2 - x1 + 1, x1).Select(x => this[x, y])).ToList();
 
+		public List<Cell> this[Position position1, Position position2] => this[position1.X, position1.Y, position2.X, position2.Y];
+
 
 		public Table(string name, int columnCount, int rowCount)
 		{
