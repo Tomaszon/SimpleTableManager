@@ -43,19 +43,19 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetPadding(int top, int bottom, int left, int right)
 		{
-			Padding = new ContentPadding(top, bottom, left, right);
+			ContentPadding = new ContentPadding(top, bottom, left, right);
 		}
 
 		[CommandReference]
 		public void SetVerticalPadding(int top, int bottom)
 		{
-			Padding = new ContentPadding(top, bottom, Padding.Left, Padding.Right);
+			ContentPadding = new ContentPadding(top, bottom, ContentPadding.Left, ContentPadding.Right);
 		}
 
 		[CommandReference]
 		public void SetHorizontalPadding(int left, int right)
 		{
-			Padding = new ContentPadding(Padding.Top, Padding.Bottom, left, right);
+			ContentPadding = new ContentPadding(ContentPadding.Top, ContentPadding.Bottom, left, right);
 		}
 
 		[CommandReference]

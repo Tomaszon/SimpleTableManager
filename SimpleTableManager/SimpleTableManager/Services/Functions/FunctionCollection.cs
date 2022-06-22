@@ -13,7 +13,8 @@ public static class FunctionCollection
 	{
 		_functions = new Dictionary<Type, Type>()
 		{
-			{ typeof(NumericFunctionOperator), typeof(NumericFunction) }
+			{ typeof(NumericFunctionOperator), typeof(NumericFunction) },
+			{ typeof(StringFunctionOperator), typeof(StringFunction) }
 		};
 	}
 

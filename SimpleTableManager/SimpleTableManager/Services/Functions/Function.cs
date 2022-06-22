@@ -5,24 +5,30 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
-public abstract class Function<T> : IFunction where T : Enum
+public abstract class Function<T, T2> : IFunction where T : Enum
 {
-	public string Type => this.GetType().Name;
+	public string TypeName => this.GetType().Name;
 
 	public T Operator { get; set; }
 
 	public List<FunctionParameter> Arguments { get; init; }
 
+	public Function(T functionOperator, IEnumerable<FunctionParameter> arguments)
+	{
+		Operator = functionOperator;
+		Arguments = arguments.Select(a => ParseArgumentValue<T2>(a))?.ToList();
+	}
+
 	public List<Position> GetReferredCellPositions() => Arguments.Where(a => a.ReferencePosition is not null).Select(a => a.ReferencePosition).ToList();
 
-	protected abstract FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateParameters = null);
+	protected abstract FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null);
 
 	public abstract FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null);
 
-	protected FunctionParameter AggregateCore(IEnumerable<FunctionParameterArray> parameters, FunctionParameter current)
+	protected FunctionParameter AggregateCore(IEnumerable<FunctionParameterArray> parameters, FunctionParameter current,Dictionary<string, object> aggregateArguments = null)
 	{
 		return parameters?.SingleOrDefault(p => p.Position?.Equals(current.ReferencePosition) == true) is var x && x is not null ?
-			Aggregate(x.Parameters.Select(p => new FunctionParameter(p.Value)), parameters) : current;
+			Aggregate(x.Parameters.Select(p => new FunctionParameter(p.Value)), parameters, aggregateArguments) : current;
 	}
 
 	protected FunctionParameter ParseArgumentValue<TParse>(FunctionParameter argument)

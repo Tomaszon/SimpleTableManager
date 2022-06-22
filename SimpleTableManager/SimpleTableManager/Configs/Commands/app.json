@@ -1,4 +1,4 @@
 {
-	"refresh|r": "refresh",
-	"exit|e|quit|q": "exit"
+	"refresh": "refresh",
+	"exit|quit": "exit"
 }

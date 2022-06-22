@@ -44,5 +44,11 @@ namespace SimpleTableManager.Models
 		{
 			return this[position].ShowDetails();
 		}
+
+		[CommandReference]
+		public object ShowCellContentFunction(Position position)
+		{
+			return this[position].ShowContentFunction();
+		}
 	}
 }

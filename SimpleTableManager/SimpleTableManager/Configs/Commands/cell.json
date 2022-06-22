@@ -1,14 +1,15 @@
 {
-	"set|s": {
-		"content|c": "setContent",
-		"vertical-alignment|va": "setVerticalAlignment",
-		"horizontal-alignment|ha": "setHorizontalAlignment",
-		"padding|p": "setPadding",
-		"horizontal-padding|hp": "setHorizontalPadding",
-		"vertical-padding|vp": "setVerticalPadding",
-		"type|t": "setType"
+	"set": {
+		"content": "setContent",
+		"vertical-alignment": "setVerticalAlignment",
+		"horizontal-alignment": "setHorizontalAlignment",
+		"padding": "setPadding",
+		"horizontal-padding": "setHorizontalPadding",
+		"vertical-padding": "setVerticalPadding",
+		"type": "setType"
 	},
 	"show": {
-		"details|d|info|i": "showDetails"
+		"details|info": "showDetails",
+		"function": "showContentFunction"
 	}
 }

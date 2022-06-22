@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
 using SimpleTableManager.Models.Attributes;
@@ -13,19 +14,15 @@ namespace SimpleTableManager.Services;
 
 public class SmartConsole
 {
-	public static string LastHelp = "Enter command to execute";
+	private static string _LAST_HELP_PLACEHOLDER = "Enter command to execute";
+
+	public static string LastHelp = _LAST_HELP_PLACEHOLDER;
 
 	private static int _insertIndex = 0;
 
 	private static StringBuilder _buffer = new StringBuilder();
 
 	private const string _COMMAND_LINE_PREFIX = "> ";
-
-	// private static int _autoCompleteLength = 0;
-
-	// private static int _autoCompleteIndex = -1;
-
-	// private static string _autoCompletePartialRawCommand;
 
 	private static CommandHistory _commandHistory = new CommandHistory();
 
@@ -101,6 +98,26 @@ public class SmartConsole
 		LastHelp = LastHelp.Trim();
 	}
 
+	public static void ShowResults(IEnumerable<object> results)
+	{
+		results = results.Where(r => r is not null);
+
+		if (results?.Count() > 0)
+		{
+			var formattedResults = results.Select(r => JsonConvert.SerializeObject(r, Formatting.Indented));
+
+			LastHelp = $"Execution result:\n";
+
+			formattedResults.ForEach(r => LastHelp += $"{r},\n");
+		}
+		else
+		{
+			LastHelp = _LAST_HELP_PLACEHOLDER;
+		}
+
+		LastHelp = LastHelp.TrimEnd(',', '\n');
+	}
+
 	public static string ReadInputString()
 	{
 		ClearBuffer();
@@ -122,7 +139,7 @@ public class SmartConsole
 		{
 			ConsoleKey.Enter => AcceptCommand(),
 
-			ConsoleKey.Tab => GetHint(k.Modifiers),
+			ConsoleKey.Tab => IterateHint(k.Modifiers),
 			ConsoleKey.Backspace => ManualDeleteCharToLeft(),
 			ConsoleKey.Delete => ManualDeleteCharToRight(),
 			ConsoleKey.UpArrow => GetPreviousHistoryItem(),
@@ -132,9 +149,47 @@ public class SmartConsole
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
+			ConsoleKey.Spacebar => AutoHint(),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
+	}
+
+	private static bool IterateHint(ConsoleModifiers modifiers)
+	{
+		var nextKey = GetHint(modifiers, out _, out var isSpaceAppendNeeded, out var pacl, out var pkl);
+
+		if (nextKey is not null)
+		{
+			MoveCursorToTheRight();
+			DeleteCharsToLeft(pacl + pkl);
+			if (isSpaceAppendNeeded)
+			{
+				InsertCharToBuffer(' ');
+			}
+			InsertStringToBuffer(nextKey);
+		}
+
+		return true;
+	}
+
+	private static bool AutoHint()
+	{
+		if (!_autoComplete.Cycling)
+		{
+			var nextKey = GetHint(default, out var keyCount, out _, out var pacl, out var pkl);
+
+			if (keyCount == 1)
+			{
+				MoveCursorToTheRight();
+				DeleteCharsToLeft(pacl + pkl);
+				InsertStringToBuffer(nextKey);
+			}
+		}
+
+		ManualInsertCharToBuffer(' ');
+
+		return true;
 	}
 
 	private static bool ManualInsertCharToBuffer(char c)
@@ -153,7 +208,7 @@ public class SmartConsole
 		return false;
 	}
 
-	private static bool GetHint(ConsoleModifiers modifiers)
+	private static string GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out int partialKeyLength)
 	{
 		var value = _buffer.ToString();
 
@@ -179,18 +234,21 @@ public class SmartConsole
 
 		if (result == GetHintResult.Hint)
 		{
-			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers.HasFlag(ConsoleModifiers.Shift), out var pacl);
+			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers.HasFlag(ConsoleModifiers.Shift), out prevoiusAutoCompleteLength, out keyCount);
 
-			MoveCursorToTheRight();
-			DeleteCharsToLeft(pacl + (partialKey?.Length ?? 0));
-			if (IsSpaceAppendNeeded(value, partialKey))
-			{
-				InsertCharToBuffer(' ');
-			}
-			InsertStringToBuffer(nextKey);
+			isSpaceAppendNeeded = IsSpaceAppendNeeded(value, partialKey);
+
+			partialKeyLength = partialKey?.Length ?? 0;
+
+			return nextKey;
 		}
 
-		return true;
+		keyCount = 0;
+		isSpaceAppendNeeded = false;
+		prevoiusAutoCompleteLength = 0;
+		partialKeyLength = 0;
+
+		return null;
 	}
 
 	private static GetHintResult GetHintCore(string command, out List<string> availableKeys, out string partialKey)
@@ -457,7 +515,7 @@ public class SmartConsole
 
 		_commandHistory.ResetCycle();
 
-		return false;
+		return true;
 	}
 
 	private static bool ClearBuffer()

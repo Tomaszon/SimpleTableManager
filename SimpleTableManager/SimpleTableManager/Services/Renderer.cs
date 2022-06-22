@@ -359,14 +359,14 @@ namespace SimpleTableManager.Services
 						{
 							case HorizontalAlignment.Left:
 								{
-									content = content.AppendLeft(' ', cell.Padding.Left);
+									content = content.AppendLeft(' ', cell.ContentPadding.Left);
 									content = content.PadRight(sizeWithoutBorders.Width);
 								}
 								break;
 
 							case HorizontalAlignment.Center:
 								{
-									var startIndex = GetStartIndexForCenteredContent(sizeWithoutBorders.Width, content.Length, cell.Padding.Left, cell.Padding.Right);
+									var startIndex = GetStartIndexForCenteredContent(sizeWithoutBorders.Width, content.Length, cell.ContentPadding.Left, cell.ContentPadding.Right);
 
 									content = content.AppendLeft(' ', startIndex);
 									content = content.PadRight(sizeWithoutBorders.Width);
@@ -375,7 +375,7 @@ namespace SimpleTableManager.Services
 
 							case HorizontalAlignment.Right:
 								{
-									content = content.AppendRight(' ', cell.Padding.Right);
+									content = content.AppendRight(' ', cell.ContentPadding.Right);
 									content = content.PadLeft(sizeWithoutBorders.Width);
 								}
 								break;
@@ -407,9 +407,9 @@ namespace SimpleTableManager.Services
 		{
 			var startLineIndex = cell.ContentAlignment.Vertical switch
 			{
-				VerticalAlignment.Top => cell.Padding.Top,
-				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, cell.Content.Count, cell.Padding.Top, cell.Padding.Bottom),
-				_ => height - cell.Content.Count - cell.Padding.Bottom
+				VerticalAlignment.Top => cell.ContentPadding.Top,
+				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, cell.Content.Count, cell.ContentPadding.Top, cell.ContentPadding.Bottom),
+				_ => height - cell.Content.Count - cell.ContentPadding.Bottom
 			};
 
 			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;

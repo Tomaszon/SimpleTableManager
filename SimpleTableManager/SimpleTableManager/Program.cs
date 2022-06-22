@@ -40,7 +40,20 @@ namespace SimpleTableManager
 			document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
 			document.GetActiveTable()[2, 1].SetContent(4);
 
-			document.GetActiveTable()[3, 1].SetContent("=avg", "1,1", "2,1", 7);
+			document.GetActiveTable()[3, 1].SetContent("=avg", "1,1", "2,1");
+
+			document.GetActiveTable()[4, 1].SetContent("szilva");
+
+			document.GetActiveTable()[5, 1].SetContent("=len", "4,1");
+
+			document.GetActiveTable()[6, 1].SetContent("alma", "körte");
+
+			document.GetActiveTable()[7, 1].SetContent("=con", "4,1", "6,1");
+
+			document.GetActiveTable()[8, 1].SetContent("=join", "4,1", "6,1");
+
+			//document.GetActiveTable()[8, 1].SetContent("=join", "7,1", "8,1");
+
 
 			//foreach (var cell in table.Cells)
 			//{
@@ -83,22 +96,13 @@ namespace SimpleTableManager
 				{
 					SmartConsole.Render(document);
 
-					//var rawCommand = Console.ReadLine().Trim();
 					var rawCommand = SmartConsole.ReadInputString();
 
 					var command = Command.FromString(rawCommand);
 
 					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference.ClassName, out _));
 
-					if (results.Count > 0)
-					{
-						var formattedResults = results.Select(r => JsonConvert.SerializeObject(r, Formatting.Indented));
-						SmartConsole.LastHelp = $"Execution result:\n {string.Join(",\n", formattedResults)}";
-					}
-					else
-					{
-						SmartConsole.LastHelp = "Enter command to execute";
-					}
+					SmartConsole.ShowResults(results);
 				}
 				catch (ParameterCountException ex)
 				{

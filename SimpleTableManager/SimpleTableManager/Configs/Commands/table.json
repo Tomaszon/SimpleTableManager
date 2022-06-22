@@ -1,12 +1,12 @@
 {
 	"add": {
-		"row|r": {
+		"row": {
 			"at": "AddRowAt",
 			"after": "addRowAfter",
 			"first": "addRowFirst",
 			"last": "addRowLast"
 		},
-		"column|c": {
+		"column": {
 			"at": "addColumnAt",
 			"after": "addColumnAfter",
 			"first": "addColumnFirst",
@@ -14,12 +14,12 @@
 		}
 	},
 	"remove|delete": {
-		"row|r": {
+		"row": {
 			"at": "removeRowAt",
 			"first": "removeFirstRow",
 			"last": "removeLastRow"
 		},
-		"column|c": {
+		"column": {
 			"at": "removeColumnAt",
 			"first": "removeFirstColumn",
 			"last": "removeLastColumn"
@@ -27,18 +27,18 @@
 	},
 	"set": {
 		"column": {
-			"width|w": "setColumnWidth"
+			"width": "setColumnWidth"
 		},
 		"row": {
-			"height|h": "setRowHeight"
+			"height": "setRowHeight"
 		},
 		"cell": {
-			"content|c": "setCellContent"
+			"content": "setCellContent"
 		},
-		"view|v": "setViewOptions",
-		"view-columns|vc": "setViewOptionsColumns",
-		"view-rows|vr": "setViewOptionsRows",
-		"name|n": "setName"
+		"view": "setViewOptions",
+		"view-columns": "setViewOptionsColumns",
+		"view-rows": "setViewOptionsRows",
+		"name": "setName"
 	},
 	"select": {
 		"cell": "selectCell",
@@ -57,17 +57,18 @@
 		"all": "deselectAll"
 	},
 	"reset": {
-		"view|v": "resetViewOptions"
+		"view": "resetViewOptions"
 	},
 	"hide": {
-		"column|c": "hideColumn",
-		"row|r": "hideRow"
+		"column": "hideColumn",
+		"row": "hideRow"
 	},
 	"show": {
 		"column": "showColumn",
 		"row": "showRow",
 		"cell": {
-			"details|d|info|i": "showCellDetails"
+			"details|info": "showCellDetails",
+			"function": "showCellContentFunction"
 		}
 	}
 }

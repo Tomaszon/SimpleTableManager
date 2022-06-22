@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using SimpleTableManager.Extensions;
 
 namespace SimpleTableManager.Services;
@@ -27,7 +28,7 @@ public class AutoComplete
 		}
 	}
 
-	public string GetNextKey(string partialKey, bool backwards, out int previousAutoCompleteLength)
+	public string GetNextKey(string partialKey, bool backwards, out int previousAutoCompleteLength, out int mathcingKeyCount)
 	{
 		Cycling = true;
 
@@ -37,7 +38,9 @@ public class AutoComplete
 
 		previousAutoCompleteLength = _autoCompleteLength;
 
-		_autoCompleteLength = partialKey is not null ? nextKey.Length - partialKey.Length : nextKey.Length;
+		_autoCompleteLength = nextKey.Length - (partialKey?.Length ?? 0);
+
+		mathcingKeyCount = _keys.Count(k => k.StartsWith(partialKey ?? ""));
 
 		return nextKey;
 	}

@@ -1,14 +1,14 @@
 {
 	"add": {
-		"table|t": "addTable"
+		"table": "addTable"
 	},
 	"remove": {
-		"table|t": "removeTable"
+		"table": "removeTable"
 	},
 	"activate": {
-		"table|t": {
-			"named|n": "activateTable",
-			"at|a": "activateTableAt"
+		"table": {
+			"named": "activateTable",
+			"at": "activateTableAt"
 		}
 	},
 	"set": {

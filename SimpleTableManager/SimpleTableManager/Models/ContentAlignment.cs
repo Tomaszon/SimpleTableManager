@@ -16,5 +16,10 @@
 		{
 			return new ContentAlignment(record.horizontal, record.vertical);
 		}
+
+		public override string ToString()
+		{
+			return $"H: {Horizontal}, V: {Vertical}";
+		}
 	}
 }

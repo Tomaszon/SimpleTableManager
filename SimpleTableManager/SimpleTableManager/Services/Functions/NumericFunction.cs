@@ -5,13 +5,12 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
-public class NumericFunction : Function<NumericFunctionOperator>
+public class NumericFunction : Function<NumericFunctionOperator, decimal>
 {
-	public NumericFunction(NumericFunctionOperator functionOperator, List<FunctionParameter> arguments) : base()
+	public NumericFunction(NumericFunctionOperator functionOperator, List<FunctionParameter> arguments) :
+		base(functionOperator, arguments)
 	{
-		Operator = functionOperator;
-
-		Arguments = arguments.Select(a => ParseArgumentValue<decimal>(a)).ToList();
+		
 	}
 
 	public override FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null)
@@ -30,7 +29,7 @@ public class NumericFunction : Function<NumericFunctionOperator>
 		return Aggregate(Arguments, parameters);
 	}
 
-	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateParameters = null)
+	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null)
 	{
 		return list.Aggregate(FunctionParameter.Default<decimal>(), (a, c) => a += AggregateCore(parameters, c));
 	}
