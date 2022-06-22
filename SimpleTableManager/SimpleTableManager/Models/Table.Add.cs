@@ -10,12 +10,12 @@ namespace SimpleTableManager.Models
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
-			Sider.Add(new IndexCell(index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+			Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
 			for (int x = 0; x < Size.Width; x++)
 			{
-				var cell = new Cell() { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-				cell.PropertyChanged += CellPropertyChanged;
+				var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
+				//cell.PropertyChanged += CellPropertyChanged;
 
 				Content.Insert(index * Size.Width + x, cell);
 			}
@@ -53,12 +53,12 @@ namespace SimpleTableManager.Models
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
-			Header.Add(new IndexCell(index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+			Header.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
 			for (int y = 0; y < Size.Height; y++)
 			{
-				var cell = new Cell() { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-				cell.PropertyChanged += CellPropertyChanged;
+				var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
+				//cell.PropertyChanged += CellPropertyChanged;
 
 				Content.Insert(Size.Width * y + y + index, cell);
 			}

@@ -9,5 +9,5 @@ public interface IFunction
 
 	List<Position> GetReferredCellPositions();
 
-	FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null);
+	List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null);
 }

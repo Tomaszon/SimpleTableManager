@@ -10,7 +10,7 @@ namespace SimpleTableManager.Models
 
 		public int Index { get; set; }
 
-		public IndexCell(int index, char lowerArrow, char higherArrow) : base(index)
+		public IndexCell(Table table, int index, char lowerArrow, char higherArrow) : base(table, index)
 		{
 			Index = index;
 			LowerArrow = lowerArrow;

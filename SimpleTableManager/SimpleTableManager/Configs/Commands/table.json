@@ -33,7 +33,8 @@
 			"height": "setRowHeight"
 		},
 		"cell": {
-			"content": "setCellContent"
+			"content": "setCellContent",
+			"type": "setCellType"
 		},
 		"view": "setViewOptions",
 		"view-columns": "setViewOptionsColumns",

@@ -15,15 +15,18 @@ public class StringFunction : Function<StringFunctionOperator, string>
 
 	}
 
-	public override FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null)
+	public override List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null)
 	{
-		return Operator switch
+		return new List<FunctionParameter>()
 		{
-			StringFunctionOperator.Con => Concat(parameters),
-			StringFunctionOperator.Join => Join(parameters),
-			StringFunctionOperator.Len => Length(parameters),
+			Operator switch
+			{
+				StringFunctionOperator.Con => Concat(parameters),
+				StringFunctionOperator.Join => Join(parameters),
+				StringFunctionOperator.Len => Length(parameters),
 
-			_ => throw new InvalidOperationException()
+				_ => throw new InvalidOperationException()
+			}
 		};
 	}
 

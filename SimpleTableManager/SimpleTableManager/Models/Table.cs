@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Newtonsoft.Json;
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
@@ -8,6 +10,7 @@ using SimpleTableManager.Services;
 namespace SimpleTableManager.Models
 {
 	[CommandInformation("Cell selection and table related commands")]
+	[JsonObject(IsReference = true)]
 	public partial class Table
 	{
 		public string Name { get; set; }
@@ -24,7 +27,7 @@ namespace SimpleTableManager.Models
 
 		public List<IndexCell> Sider { get; set; } = new List<IndexCell>();
 
-		public Cell CornerCell { get; set; } = new Cell(@"y \ x");
+		public Cell CornerCell { get; set; }
 
 		public Dictionary<int, List<Cell>> Columns =>
 			Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);
@@ -57,6 +60,7 @@ namespace SimpleTableManager.Models
 		{
 			Name = name;
 
+			CornerCell = new Cell(this, @"y \ x");
 			Shared.IndexArray(columnCount).ForEach(x => AddColumnLast());
 			Shared.IndexArray(rowCount).ForEach(y => AddRowLast());
 
@@ -216,43 +220,15 @@ namespace SimpleTableManager.Models
 		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
 		//}
 
-		public void CellPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (sender is Cell cell)
-			{
-				switch (e.PropertyName)
-				{
-					case nameof(Cell.ContentFunction):
-						{
-							if (cell.ContentFunction is not null)
-							{
-								UpdateReferenceCellContent(cell);
-							}
-						}
-						break;
-
-					case nameof(Cell.Content):
-						{
-							var position = this[cell];
-
-							var referenceCells = Content.Where(c =>
-								c.ContentFunction?.GetReferredCellPositions().Contains(position) == true);
-
-							referenceCells.ForEach(c => UpdateReferenceCellContent(c));
-						}
-						break;
-				}
-			}
-		}
-
-		private void UpdateReferenceCellContent(Cell cell)
+		public List<FunctionParameter> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
 		{
 			var referredPositions = cell.ContentFunction.GetReferredCellPositions();
 
 			if (referredPositions.Contains(this[cell]))
 			{
-				cell.ContentType = typeof(string);
-				cell.SetContent("Ref error");
+				contentType = typeof(string);
+
+				return new List<FunctionParameter> { new FunctionParameter("Ref error") };
 			}
 			else
 			{
@@ -260,10 +236,11 @@ namespace SimpleTableManager.Models
 					 this[p].Content.Select(c => new FunctionParameter(c, p))).GroupBy(g => g.ReferencePosition).Select(g =>
 					 	new FunctionParameterArray(g.Key, g.ToList())).ToArray();
 
-				var result = cell.ContentFunction.Execute(arguments).Value;
+				var result = cell.ContentFunction.Execute(arguments);
 
-				cell.ContentType = result.GetType();
-				cell.Content = new List<object> { result };
+				contentType = result.FirstOrDefault()?.Value?.GetType();
+
+				return result.ToList();
 			}
 		}
 	}

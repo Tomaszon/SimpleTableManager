@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SimpleTableManager.Models;
 
@@ -14,13 +15,22 @@ public static class FunctionCollection
 		_functions = new Dictionary<Type, Type>()
 		{
 			{ typeof(NumericFunctionOperator), typeof(NumericFunction) },
-			{ typeof(StringFunctionOperator), typeof(StringFunction) }
+			{ typeof(StringFunctionOperator), typeof(StringFunction) },
+			{ typeof(ObjectFunctionOperator), typeof(ObjectFunction) }
 		};
+	}
+
+	public static bool HasFunction(string functionOperatorName, [NotNullWhen(true)] out Type operatorType)
+	{
+		operatorType = _functions.Keys.SingleOrDefault(k => 
+			Enum.GetNames(k).Contains(functionOperatorName, StringComparer.OrdinalIgnoreCase));
+
+		return operatorType is not null;
 	}
 
 	public static IFunction GetFunction(string functionOperatorName, IEnumerable<FunctionParameter> arguments)
 	{
-		var key = _functions.Keys.Single(k => Enum.TryParse(k, functionOperatorName, true, out _));
+		HasFunction(functionOperatorName, out var key);
 
 		var functionOperator = Enum.Parse(key, functionOperatorName, true);
 

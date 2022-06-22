@@ -256,6 +256,11 @@ public class SmartConsole
 		try
 		{
 			Command.FromString(command);
+
+			partialKey = null;
+			availableKeys = null;
+
+			return GetHintResult.Complete;
 		}
 		catch (HelpRequestedException ex)
 		{
@@ -281,7 +286,7 @@ public class SmartConsole
 
 			return GetHintResult.UnknownKey;
 		}
-
+		
 		throw new InvalidOperationException();
 	}
 

@@ -13,6 +13,8 @@ namespace SimpleTableManager.Models
 	[CommandInformation("Cell related commands")]
 	public partial class Cell : INotifyPropertyChanged
 	{
+		public Table Table { get; set; }
+
 		/// <summary>
 		/// Manually set size not including the borders
 		/// </summary>
@@ -33,46 +35,25 @@ namespace SimpleTableManager.Models
 				Shared.Max(ContentSize.Height + 2 + ContentPadding.Top + ContentPadding.Bottom, GivenSize.Height + 2)
 			);
 
-		private Type _contentType = typeof(string);
-		public Type ContentType
-		{
-			get => _contentType;
-			set
-			{
-				_contentType = value;
+		public Type ContentType { get; set; } = typeof(string);
 
-				Content = _content.Select(c => (object)c).ToList();
-			}
-		}
-
-		private List<object> _content = new();
 		public List<object> Content
 		{
-			get => _content;
-			set
+			get
 			{
-				_content = value.Select(e =>
+				var result = Table.ExecuteCellFunctionWithParameters(this, out var contentType);
+
+				return result?.Select(r => r.Value).Select(r =>
 				{
-					var b = ContentType.IsAssignableFrom(e.GetType());
+					var b = ContentType.IsAssignableFrom(r.GetType());
 
-					return b ? e : Shared.ParseStringValue(ContentType.Name, e.ToString());
+					return b ? r : Shared.ParseStringValue(ContentType.Name, r.ToString());
+
 				}).ToList();
-
-				NotifyPropertyChanged();
 			}
 		}
 
-		private IFunction _contentFunction;
-		public IFunction ContentFunction
-		{
-			get => _contentFunction;
-			set
-			{
-				_contentFunction = value;
-
-				NotifyPropertyChanged(nameof(ContentFunction));
-			}
-		}
+		public IFunction ContentFunction { get; set; } = new ObjectFunction(ObjectFunctionOperator.Const, new List<FunctionParameter>());
 
 		public bool IsSelected { get; set; }
 
@@ -98,8 +79,10 @@ namespace SimpleTableManager.Models
 
 		}
 
-		public Cell(params object[] contents)
+		public Cell(Table table, params object[] contents)
 		{
+			Table = table;
+
 			SetContent(contents);
 		}
 
@@ -126,14 +109,14 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowDetails()
 		{
-			var funcDic = ContentFunction is not null ? 
+			var funcDic = ContentFunction is not null ?
 				ContentFunction.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(ContentFunction)) : null;
 
 			return new
 			{
 				Size = Size.ToString(),
 				ContentType = ContentType.Name,
-				ContentFunction = funcDic is not null ? 
+				ContentFunction = funcDic is not null ?
 					$"{funcDic[nameof(Function<Enum, object>.TypeName)]}:{funcDic[nameof(Function<Enum, object>.Operator)]}" : null,
 				Padding = ContentPadding.ToString(),
 				Alignment = ContentAlignment.ToString()

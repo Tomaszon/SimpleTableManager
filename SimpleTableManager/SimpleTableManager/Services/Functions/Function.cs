@@ -23,9 +23,9 @@ public abstract class Function<T, T2> : IFunction where T : Enum
 
 	protected abstract FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null);
 
-	public abstract FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null);
+	public abstract List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null);
 
-	protected FunctionParameter AggregateCore(IEnumerable<FunctionParameterArray> parameters, FunctionParameter current,Dictionary<string, object> aggregateArguments = null)
+	protected FunctionParameter AggregateCore(IEnumerable<FunctionParameterArray> parameters, FunctionParameter current, Dictionary<string, object> aggregateArguments = null)
 	{
 		return parameters?.SingleOrDefault(p => p.Position?.Equals(current.ReferencePosition) == true) is var x && x is not null ?
 			Aggregate(x.Parameters.Select(p => new FunctionParameter(p.Value)), parameters, aggregateArguments) : current;
@@ -34,6 +34,6 @@ public abstract class Function<T, T2> : IFunction where T : Enum
 	protected FunctionParameter ParseArgumentValue<TParse>(FunctionParameter argument)
 	{
 		return argument.Value is null ? FunctionParameter.Default<TParse>(argument.ReferencePosition) :
-			new FunctionParameter(Shared.ParseStringValue(typeof(TParse), argument.Value.ToString()), argument.ReferencePosition);
+			new FunctionParameter(typeof(TParse) == typeof(object) ? argument.Value : Shared.ParseStringValue(typeof(TParse), argument.Value.ToString()), argument.ReferencePosition);
 	}
 }

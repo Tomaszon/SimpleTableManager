@@ -19,15 +19,13 @@ namespace SimpleTableManager.Services
 
 			ChangeToTextColors();
 
-			//Console.WriteLine($"{table.Name}\n");
-
 			var tableSize = MaximizeTableView(table);
 
 			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
 			RenderInfos(document.Metadata, table, tableOffset);
 
-			RenderTempCell(tableOffset, tableSize);
+			RenderTempCell(table, tableOffset, tableSize);
 
 			RenderCornerCell(table, tableOffset);
 
@@ -81,9 +79,9 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		private static void RenderTempCell(Size tableOffset, Size size)
+		private static void RenderTempCell(Table table, Size tableOffset, Size size)
 		{
-			var placeHolderCell = new Cell(GetTmpBackground(size)) { ContentColor = new ConsoleColorSet(Settings.Current.TextColor) };
+			var placeHolderCell = new Cell(table, GetTmpBackground(size)) { ContentColor = new ConsoleColorSet(Settings.Current.TextColor) };
 			var placeHolderCellPosition = new Position(tableOffset);
 
 			DrawCellBorder(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));

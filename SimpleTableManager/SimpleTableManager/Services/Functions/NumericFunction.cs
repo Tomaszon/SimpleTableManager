@@ -10,17 +10,20 @@ public class NumericFunction : Function<NumericFunctionOperator, decimal>
 	public NumericFunction(NumericFunctionOperator functionOperator, List<FunctionParameter> arguments) :
 		base(functionOperator, arguments)
 	{
-		
+
 	}
 
-	public override FunctionParameter Execute(IEnumerable<FunctionParameterArray> parameters = null)
+	public override List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null)
 	{
-		return Operator switch
+		return new List<FunctionParameter>()
 		{
-			NumericFunctionOperator.Sum => Sum(parameters),
-			NumericFunctionOperator.Avg => Avg(parameters),
+			Operator switch
+			{
+				NumericFunctionOperator.Sum => Sum(parameters),
+				NumericFunctionOperator.Avg => Avg(parameters),
 
-			_ => throw new InvalidOperationException()
+				_ => throw new InvalidOperationException()
+			}
 		};
 	}
 

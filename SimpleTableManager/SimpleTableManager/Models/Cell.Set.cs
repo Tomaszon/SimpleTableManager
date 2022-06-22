@@ -10,21 +10,23 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetContent(params object[] contents)
 		{
-			if (contents.FirstOrDefault() is string first && first is not null && first.StartsWith('='))
-			{
-				_content = new();
+			var funcName = contents.FirstOrDefault()?.ToString();
 
-				var rest = contents.Skip(1).Select(e =>
+			var explicitFunc = FunctionCollection.HasFunction(funcName, out var t); 
+
+			if (explicitFunc)
+			{
+				var args = contents.Skip(1).Select(e =>
 					Position.TryParse(e.ToString(), out var position) ?
 						new FunctionParameter(null, position) : new FunctionParameter(e));
 
-				ContentFunction = FunctionCollection.GetFunction(first.TrimStart('='), rest);
+				ContentFunction = FunctionCollection.GetFunction(funcName, args);
 			}
 			else
 			{
-				_contentFunction = null;
+				var args = contents.Select(e => new FunctionParameter(e));
 
-				Content = contents.ToList();
+				ContentFunction = FunctionCollection.GetFunction(ObjectFunctionOperator.Const, args);
 			}
 		}
 

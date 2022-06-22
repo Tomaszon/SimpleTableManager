@@ -30,27 +30,27 @@ namespace SimpleTableManager
 
 
 			#region test
-			var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
+			// var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
 
-			var result = function.Execute();
+			// var result = function.Execute();
 
 			document.GetActiveTable()[1, 1].ContentType = typeof(decimal);
 			document.GetActiveTable()[1, 1].SetContent(5, 2);
 
-			document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
-			document.GetActiveTable()[2, 1].SetContent(4);
+			// document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
+			// document.GetActiveTable()[2, 1].SetContent(4);
 
-			document.GetActiveTable()[3, 1].SetContent("=avg", "1,1", "2,1");
+			// document.GetActiveTable()[3, 1].SetContent("=avg", "1,1", "2,1");
 
-			document.GetActiveTable()[4, 1].SetContent("szilva");
+			// document.GetActiveTable()[4, 1].SetContent("=const", "szilva");
 
-			document.GetActiveTable()[5, 1].SetContent("=len", "4,1");
+			// document.GetActiveTable()[5, 1].SetContent("=len", "4,1");
 
-			document.GetActiveTable()[6, 1].SetContent("alma", "körte");
+			// document.GetActiveTable()[6, 1].SetContent("=const", "alma", "körte");
 
-			document.GetActiveTable()[7, 1].SetContent("=con", "4,1", "6,1");
+			// document.GetActiveTable()[7, 1].SetContent("=con", "4,1", "6,1");
 
-			document.GetActiveTable()[8, 1].SetContent("=join", "4,1", "6,1");
+			// document.GetActiveTable()[8, 1].SetContent("=join", "4,1", "6,1");
 
 			//document.GetActiveTable()[8, 1].SetContent("=join", "7,1", "8,1");
 
