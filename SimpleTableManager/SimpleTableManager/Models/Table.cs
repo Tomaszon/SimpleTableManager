@@ -69,22 +69,22 @@ namespace SimpleTableManager.Models
 
 		public int GetRowHeight(int index)
 		{
-			return Shared.Max(Rows[index].Max(c => c.Size.Height), Sider[index].Size.Height);
+			return Shared.Max(Rows[index].Max(c => c.GetSize().Height), Sider[index].GetSize().Height);
 		}
 
 		public int GetColumnWidth(int index)
 		{
-			return Shared.Max(Columns[index].Max(c => c.Size.Width), Header[index].Size.Width);
+			return Shared.Max(Columns[index].Max(c => c.GetSize().Width), Header[index].GetSize().Width);
 		}
 
 		public int GetSiderWidth()
 		{
-			return Shared.Max(Sider.Max(c => c.Size.Width), CornerCell.Size.Width);
+			return Shared.Max(Sider.Max(c => c.GetSize().Width), CornerCell.GetSize().Width);
 		}
 
 		public int GetHeaderHeight()
 		{
-			return Shared.Max(Header.Max(c => c.Size.Height), CornerCell.Size.Height);
+			return Shared.Max(Header.Max(c => c.GetSize().Height), CornerCell.GetSize().Height);
 		}
 
 		public Size GetTableSize()
@@ -232,9 +232,12 @@ namespace SimpleTableManager.Models
 			}
 			else
 			{
-				var arguments = referredPositions.Where(p => this[p].Content.Count > 0).SelectMany(p =>
-					 this[p].Content.Select(c => new FunctionParameter(c, p))).GroupBy(g => g.ReferencePosition).Select(g =>
-					 	new FunctionParameterArray(g.Key, g.ToList())).ToArray();
+				var arguments = referredPositions.Select(p =>
+				{
+					var content = this[p].GetContents();
+
+					return (p, content.Select(c => new FunctionParameter(c)));
+				}).Where(e => e.Item2.Count() > 0).Select(e => new FunctionParameterArray(e.p, e.Item2.ToList()));
 
 				var result = cell.ContentFunction.Execute(arguments);
 

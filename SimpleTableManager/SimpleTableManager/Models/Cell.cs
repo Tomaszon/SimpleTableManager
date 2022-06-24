@@ -23,37 +23,50 @@ namespace SimpleTableManager.Models
 		/// <summary>
 		/// Size not including the borders
 		/// </summary>
-		public Size ContentSize => Content is { } && Content.Count > 0 ?
-			new Size(Content.Max(e => e.ToString().Length), Content.Count) : new Size(1, 1);
-
-		/// <summary>
-		/// Max of <see cref="ContentSize"/> and <see cref="GivenSize"/> plus border size
-		/// </summary>
-		public Size Size => new Size
-			(
-				Shared.Max(ContentSize.Width + 2 + ContentPadding.Left + ContentPadding.Right, GivenSize.Width + 2),
-				Shared.Max(ContentSize.Height + 2 + ContentPadding.Top + ContentPadding.Bottom, GivenSize.Height + 2)
-			);
-
-		public Type ContentType { get; set; } = typeof(string);
-
-		public List<object> Content
+		public Size GetContentSize()
 		{
-			get
+			var content = GetContents();
+
+			if (content is { } && content.Count > 0)
 			{
-				var result = Table.ExecuteCellFunctionWithParameters(this, out var contentType);
-
-				return result?.Select(r => r.Value).Select(r =>
-				{
-					var b = ContentType.IsAssignableFrom(r.GetType());
-
-					return b ? r : Shared.ParseStringValue(ContentType.Name, r.ToString());
-
-				}).ToList();
+				return new Size(content.Max(e => e.ToString().Length), content.Count);
+			}
+			else
+			{
+				return new Size(1, 1);
 			}
 		}
 
-		public IFunction ContentFunction { get; set; } = new ObjectFunction(ObjectFunctionOperator.Const, new List<FunctionParameter>());
+		/// <summary>
+		/// Max of <see cref="GetContentSize"/> and <see cref="GivenSize"/> plus border size
+		/// </summary>
+		public Size GetSize()
+		{
+			var contentSize = GetContentSize();
+
+			return new Size
+				(
+					Shared.Max(contentSize.Width + 2 + ContentPadding.Left + ContentPadding.Right, GivenSize.Width + 2),
+					Shared.Max(contentSize.Height + 2 + ContentPadding.Top + ContentPadding.Bottom, GivenSize.Height + 2)
+				);
+		}
+
+		public Type ContentType { get; set; } = typeof(string);
+
+		public List<object> GetContents()
+		{
+			var result = Table.ExecuteCellFunctionWithParameters(this, out var contentType);
+
+			return result.Select(r => r.Value).Select(r =>
+			{
+				var b = ContentType.IsAssignableFrom(r.GetType());
+
+				return b ? r : Shared.ParseStringValue(ContentType.Name, r.ToString());
+
+			}).ToList();
+		}
+
+		public IFunction ContentFunction { get; set; }
 
 		public bool IsSelected { get; set; }
 
@@ -88,22 +101,22 @@ namespace SimpleTableManager.Models
 
 		public void ClearContent()
 		{
-			Content.Clear();
+			ContentFunction  = ObjectFunction.Empty();
 		}
 
-		public void AddContentsFirst(params object[] contents)
+		public void AddArgumentFirst(params object[] contents)
 		{
-			Content.InsertRange(0, contents);
+			ContentFunction.InsertArguments(0, contents);
 		}
 
-		public void AddContentsLast(params object[] contents)
+		public void AddArgumentLast(params object[] contents)
 		{
-			Content.AddRange(contents);
+			ContentFunction.AddArguments(contents);
 		}
 
-		public void RemoveContent()
+		public void RemoveLastArgument()
 		{
-			Content.RemoveAt(Content.Count - 1);
+			ContentFunction.RemoveLastArgument();
 		}
 
 		[CommandReference]
@@ -114,7 +127,7 @@ namespace SimpleTableManager.Models
 
 			return new
 			{
-				Size = Size.ToString(),
+				Size = GetSize().ToString(),
 				ContentType = ContentType.Name,
 				ContentFunction = funcDic is not null ?
 					$"{funcDic[nameof(Function<Enum, object>.TypeName)]}:{funcDic[nameof(Function<Enum, object>.Operator)]}" : null,

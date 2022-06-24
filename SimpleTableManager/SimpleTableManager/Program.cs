@@ -37,22 +37,35 @@ namespace SimpleTableManager
 			document.GetActiveTable()[1, 1].ContentType = typeof(decimal);
 			document.GetActiveTable()[1, 1].SetContent(5, 2);
 
-			// document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
-			// document.GetActiveTable()[2, 1].SetContent(4);
+			document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
+			document.GetActiveTable()[2, 1].SetContent(4);
 
-			// document.GetActiveTable()[3, 1].SetContent("=avg", "1,1", "2,1");
+			var cell31 = document.GetActiveTable()[3, 1];
+			cell31.SetContent(NumericFunctionOperator.Avg, "1,1", "2,1");
+			cell31.SetHorizontalAlignment(HorizontalAlignment.Left);
+			cell31.BorderColor = new ConsoleColorSet(ConsoleColor.Red);
 
-			// document.GetActiveTable()[4, 1].SetContent("=const", "szilva");
+			document.GetActiveTable()[4, 1].SetContent(ObjectFunctionOperator.Const, "szilva");
 
-			// document.GetActiveTable()[5, 1].SetContent("=len", "4,1");
+			document.GetActiveTable()[5, 1].ContentType = typeof(decimal);
+			document.GetActiveTable()[5, 1].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Len, new[] { new FunctionParameter(new Position(4, 1)) });
 
-			// document.GetActiveTable()[6, 1].SetContent("=const", "alma", "körte");
+			document.GetActiveTable()[6, 1].SetContent("const", "alma", "körte");
 
-			// document.GetActiveTable()[7, 1].SetContent("=con", "4,1", "6,1");
+			document.GetActiveTable()[7, 1].SetContent("con", "4,1", "6,1");
 
-			// document.GetActiveTable()[8, 1].SetContent("=join", "4,1", "6,1");
-
-			//document.GetActiveTable()[8, 1].SetContent("=join", "7,1", "8,1");
+			document.GetActiveTable()[1, 2].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Join, new[]
+			{
+				FunctionCollection.GetFunction(NumericFunctionOperator.Avg, new[]
+				{
+					new FunctionParameter(new Position(2, 1)),
+					new FunctionParameter(new Position(5, 1))
+				}),
+				FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
+				{
+					new FunctionParameter(new Position(4, 1))
+				})
+			});
 
 
 			//foreach (var cell in table.Cells)
@@ -131,5 +144,10 @@ namespace SimpleTableManager
 			}
 			while (true);
 		}
+
+
+		//	table set content avg 3 4
+		//	table set content sum(avg(3 5 1,1) 9 2,1 avg(3,1 9))
+		//	
 	}
 }

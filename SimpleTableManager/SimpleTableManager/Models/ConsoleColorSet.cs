@@ -10,10 +10,16 @@ namespace SimpleTableManager.Models
 		public ConsoleColor Background { get; set; } = ConsoleColor.Black;
 
 		[JsonConstructor]
-		public ConsoleColorSet(ConsoleColor foreground, ConsoleColor background)
+		public ConsoleColorSet(ConsoleColor? foreground = null, ConsoleColor? background = null)
 		{
-			Foreground = foreground;
-			Background = background;
+			if (foreground is not null)
+			{
+				Foreground = foreground.Value;
+			}
+			if (background is not null)
+			{
+				Background = background.Value;
+			}
 		}
 
 		public ConsoleColorSet(ConsoleColorSet colorSet)

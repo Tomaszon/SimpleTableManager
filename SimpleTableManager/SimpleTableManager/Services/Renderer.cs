@@ -347,9 +347,11 @@ namespace SimpleTableManager.Services
 
 				var content = new string(' ', sizeWithoutBorders.Width);
 
-				if (IsCellContentDrawNeeded(cell, i, sizeWithoutBorders.Height, out var contentIndex) && cell.Content.Count > contentIndex)
+				var cellContents = cell.GetContents();
+
+				if (IsCellContentDrawNeeded(cell, i, sizeWithoutBorders.Height, out var contentIndex) && cellContents.Count > contentIndex)
 				{
-					content = cell.Content[contentIndex].ToString();
+					content = cellContents[contentIndex].ToString();
 
 					if (!string.IsNullOrWhiteSpace(content))
 					{
@@ -403,14 +405,16 @@ namespace SimpleTableManager.Services
 
 		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
 		{
+			var contents = cell.GetContents();
+
 			var startLineIndex = cell.ContentAlignment.Vertical switch
 			{
 				VerticalAlignment.Top => cell.ContentPadding.Top,
-				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, cell.Content.Count, cell.ContentPadding.Top, cell.ContentPadding.Bottom),
-				_ => height - cell.Content.Count - cell.ContentPadding.Bottom
+				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, contents.Count, cell.ContentPadding.Top, cell.ContentPadding.Bottom),
+				_ => height - contents.Count - cell.ContentPadding.Bottom
 			};
 
-			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + cell.Content.Count > lineIndex;
+			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + contents.Count > lineIndex;
 
 			contentIndex = isDrawNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
 

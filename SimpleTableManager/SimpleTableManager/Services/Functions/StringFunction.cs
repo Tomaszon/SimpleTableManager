@@ -5,12 +5,11 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
-//TODO make it work
 public class StringFunction : Function<StringFunctionOperator, string>
 {
 	private string _joinSeparator = ", ";
 
-	public StringFunction(StringFunctionOperator functionOperator, List<FunctionParameter> arguments) : base(functionOperator, arguments)
+	public StringFunction(StringFunctionOperator functionOperator, List<IFunction> arguments) : base(functionOperator, arguments)
 	{
 
 	}
@@ -32,12 +31,12 @@ public class StringFunction : Function<StringFunctionOperator, string>
 
 	private FunctionParameter Join(IEnumerable<FunctionParameterArray> parameters)
 	{
-		return Aggregate(Arguments, parameters, new() { { nameof(_joinSeparator), _joinSeparator } });
+		return Aggregate(Arguments.SelectMany(a => a.Execute(parameters)), parameters, new() { { nameof(_joinSeparator), _joinSeparator } });
 	}
 
 	private FunctionParameter Concat(IEnumerable<FunctionParameterArray> parameters)
 	{
-		return Aggregate(Arguments, parameters);
+		return Aggregate(Arguments.SelectMany(a => a.Execute(parameters)), parameters);
 	}
 
 	private FunctionParameter Length(IEnumerable<FunctionParameterArray> parameters)

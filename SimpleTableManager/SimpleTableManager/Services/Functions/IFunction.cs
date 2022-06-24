@@ -10,4 +10,10 @@ public interface IFunction
 	List<Position> GetReferredCellPositions();
 
 	List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null);
+
+	void AddArguments(IEnumerable<object> arguments);
+
+	void InsertArguments(int index,  IEnumerable<object> arguments);
+
+	void RemoveLastArgument();
 }

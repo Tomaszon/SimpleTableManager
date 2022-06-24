@@ -12,22 +12,13 @@ namespace SimpleTableManager.Models
 		{
 			var funcName = contents.FirstOrDefault()?.ToString();
 
-			var explicitFunc = FunctionCollection.HasFunction(funcName, out var t); 
+			var explicitFunc = FunctionCollection.HasFunction(funcName, out _);
 
-			if (explicitFunc)
-			{
-				var args = contents.Skip(1).Select(e =>
-					Position.TryParse(e.ToString(), out var position) ?
-						new FunctionParameter(null, position) : new FunctionParameter(e));
+			var args = contents.Select(e => new FunctionParameter(e));
 
-				ContentFunction = FunctionCollection.GetFunction(funcName, args);
-			}
-			else
-			{
-				var args = contents.Select(e => new FunctionParameter(e));
-
-				ContentFunction = FunctionCollection.GetFunction(ObjectFunctionOperator.Const, args);
-			}
+			ContentFunction = explicitFunc ?
+				FunctionCollection.GetFunction(funcName, args.Skip(1)) :
+				FunctionCollection.GetFunctionCore(typeof(ObjectFunction), ObjectFunctionOperator.Const, args);
 		}
 
 		[CommandReference]

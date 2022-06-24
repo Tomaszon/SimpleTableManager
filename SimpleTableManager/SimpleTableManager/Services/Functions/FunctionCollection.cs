@@ -28,7 +28,7 @@ public static class FunctionCollection
 		return operatorType is not null;
 	}
 
-	public static IFunction GetFunction(string functionOperatorName, IEnumerable<FunctionParameter> arguments)
+	public static IFunction GetFunction(string functionOperatorName, IEnumerable<IFunction> arguments)
 	{
 		HasFunction(functionOperatorName, out var key);
 
@@ -39,14 +39,14 @@ public static class FunctionCollection
 		return GetFunctionCore(type, functionOperator, arguments);
 	}
 
-	public static IFunction GetFunction(Enum functionOperator, IEnumerable<FunctionParameter> arguments)
+	public static IFunction GetFunction(Enum functionOperator, IEnumerable<IFunction> arguments)
 	{
 		var type = _functions[functionOperator.GetType()];
 
 		return GetFunctionCore(type, functionOperator, arguments);
 	}
 
-	private static IFunction GetFunctionCore(Type type, object functionOperator, IEnumerable<FunctionParameter> arguments)
+	public static IFunction GetFunctionCore(Type type, object functionOperator, IEnumerable<IFunction> arguments)
 	{
 		return (IFunction)Activator.CreateInstance(type, functionOperator, arguments.ToList());
 	}

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using SimpleTableManager.Models.Attributes;
 
@@ -62,6 +64,13 @@ namespace SimpleTableManager.Models
 
 		public static bool TryParse(string value, [NotNullWhen(true)] out Position position)
 		{
+			if (!Regex.IsMatch(value, "\\d,\\d"))
+			{
+				position = null;
+
+				return false;
+			}
+
 			try
 			{
 				position = Parse(value);

@@ -7,7 +7,7 @@ namespace SimpleTableManager.Services.Functions;
 
 public class NumericFunction : Function<NumericFunctionOperator, decimal>
 {
-	public NumericFunction(NumericFunctionOperator functionOperator, List<FunctionParameter> arguments) :
+	public NumericFunction(NumericFunctionOperator functionOperator, List<IFunction> arguments) :
 		base(functionOperator, arguments)
 	{
 
@@ -29,7 +29,7 @@ public class NumericFunction : Function<NumericFunctionOperator, decimal>
 
 	private FunctionParameter Sum(IEnumerable<FunctionParameterArray> parameters)
 	{
-		return Aggregate(Arguments, parameters);
+		return Aggregate(Arguments.SelectMany(a => a.Execute(parameters)), parameters);
 	}
 
 	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null)

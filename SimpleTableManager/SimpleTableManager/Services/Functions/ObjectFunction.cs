@@ -1,19 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
 public class ObjectFunction : Function<ObjectFunctionOperator, object>
 {
-	public ObjectFunction(ObjectFunctionOperator functionOperator, List<FunctionParameter> arguments) : base(functionOperator, arguments)
+	public static ObjectFunction Empty() => new ObjectFunction(ObjectFunctionOperator.Const, new List<IFunction>());
+
+	public ObjectFunction(ObjectFunctionOperator functionOperator, List<IFunction> arguments) : base(functionOperator, arguments)
 	{
 
 	}
 
 	public override List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null)
 	{
-		return Arguments;
+		return Arguments.SelectMany(a => a.Execute(parameters)).ToList();
 	}
 
 	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null)

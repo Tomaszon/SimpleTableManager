@@ -19,12 +19,12 @@ namespace SimpleTableManager.Models
 
 		public void AppendHigherEllipsis(int width)
 		{
-			SetContent($"{Content[0]} {HigherArrow} {width - 1}");
+			SetContent($"{GetContents()[0]} {HigherArrow} {width - 1}");
 		}
 
 		public void AppendLowerEllipsis()
 		{
-			SetContent($"0 {LowerArrow} {Content[0]}");
+			SetContent($"0 {LowerArrow} {GetContents()[0]}");
 		}
 
 		public void Normalize()

@@ -64,11 +64,5 @@ namespace SimpleTableManager.Models
 		{
 			RemoveColumnAt(Size.Width - 1);
 		}
-
-		[CommandReference]
-		public void RemoveCellContent()
-		{
-			Content.Where(c => c.IsSelected).ForEach(c => c.RemoveContent());
-		}
 	}
 }
