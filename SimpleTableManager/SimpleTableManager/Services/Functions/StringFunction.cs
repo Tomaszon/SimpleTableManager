@@ -14,9 +14,9 @@ public class StringFunction : Function<StringFunctionOperator, string>
 
 	}
 
-	public override List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null)
+	public override List<ObjectFunction> Execute(IEnumerable<GroupedObjectFunctions> parameters = null)
 	{
-		return new List<FunctionParameter>()
+		return new List<ObjectFunction>()
 		{
 			Operator switch
 			{
@@ -29,27 +29,29 @@ public class StringFunction : Function<StringFunctionOperator, string>
 		};
 	}
 
-	private FunctionParameter Join(IEnumerable<FunctionParameterArray> parameters)
+	private ObjectFunction Join(IEnumerable<GroupedObjectFunctions> parameters)
 	{
 		return Aggregate(Arguments.SelectMany(a => a.Execute(parameters)), parameters, new() { { nameof(_joinSeparator), _joinSeparator } });
 	}
 
-	private FunctionParameter Concat(IEnumerable<FunctionParameterArray> parameters)
+	private ObjectFunction Concat(IEnumerable<GroupedObjectFunctions> parameters)
 	{
 		return Aggregate(Arguments.SelectMany(a => a.Execute(parameters)), parameters);
 	}
 
-	private FunctionParameter Length(IEnumerable<FunctionParameterArray> parameters)
+	private ObjectFunction Length(IEnumerable<GroupedObjectFunctions> parameters)
 	{
-		return new FunctionParameter(Concat(parameters).Value.ToString().Length);
+		return new ObjectFunction(Concat(parameters).Value.ToString().Length);
 	}
 
-	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null)
+	protected override ObjectFunction Aggregate(IEnumerable<ObjectFunction> list, IEnumerable<GroupedObjectFunctions> parameters, Dictionary<string, object> aggregateArguments = null)
 	{
 		var hasSeparator = TryGetSeparator(out var separator, aggregateArguments);
 
-		var result = list.Aggregate(FunctionParameter.Default<string>(), (a, c) =>
-			a += hasSeparator ? AggregateCore(parameters, c, aggregateArguments) + new FunctionParameter(separator) : AggregateCore(parameters, c));
+		var result = list.Aggregate(ObjectFunction.Default<string>(), (a, c) =>
+			a += hasSeparator ?
+				AggregateCore(parameters, c, aggregateArguments) + new ObjectFunction(separator) :
+				AggregateCore(parameters, c));
 
 		if (hasSeparator && result.Value is string str && str is not null)
 		{

@@ -13,9 +13,9 @@ public class NumericFunction : Function<NumericFunctionOperator, decimal>
 
 	}
 
-	public override List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null)
+	public override List<ObjectFunction> Execute(IEnumerable<GroupedObjectFunctions> parameters = null)
 	{
-		return new List<FunctionParameter>()
+		return new List<ObjectFunction>()
 		{
 			Operator switch
 			{
@@ -27,18 +27,18 @@ public class NumericFunction : Function<NumericFunctionOperator, decimal>
 		};
 	}
 
-	private FunctionParameter Sum(IEnumerable<FunctionParameterArray> parameters)
+	private ObjectFunction Sum(IEnumerable<GroupedObjectFunctions> parameters)
 	{
 		return Aggregate(Arguments.SelectMany(a => a.Execute(parameters)), parameters);
 	}
 
-	protected override FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null)
+	protected override ObjectFunction Aggregate(IEnumerable<ObjectFunction> list, IEnumerable<GroupedObjectFunctions> parameters, Dictionary<string, object> aggregateArguments = null)
 	{
-		return list.Aggregate(FunctionParameter.Default<decimal>(), (a, c) => a += AggregateCore(parameters, c));
+		return list.Aggregate(ObjectFunction.Default<decimal>(), (a, c) => a += AggregateCore(parameters, c));
 	}
 
-	private FunctionParameter Avg(IEnumerable<FunctionParameterArray> parameters)
+	private ObjectFunction Avg(IEnumerable<GroupedObjectFunctions> parameters)
 	{
-		return Sum(parameters) / new FunctionParameter(Arguments.Count());
+		return new ObjectFunction((Sum(parameters) / new ObjectFunction(Arguments.Count())).Value);
 	}
 }

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
+using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models
 {
@@ -220,7 +221,7 @@ namespace SimpleTableManager.Models
 		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
 		//}
 
-		public List<FunctionParameter> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
+		public List<ObjectFunction> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
 		{
 			var referredPositions = cell.ContentFunction.GetReferredCellPositions();
 
@@ -228,7 +229,7 @@ namespace SimpleTableManager.Models
 			{
 				contentType = typeof(string);
 
-				return new List<FunctionParameter> { new FunctionParameter("Ref error") };
+				return new List<ObjectFunction> { new ObjectFunction("Ref error") };
 			}
 			else
 			{
@@ -236,8 +237,8 @@ namespace SimpleTableManager.Models
 				{
 					var content = this[p].GetContents();
 
-					return (p, content.Select(c => new FunctionParameter(c)));
-				}).Where(e => e.Item2.Count() > 0).Select(e => new FunctionParameterArray(e.p, e.Item2.ToList()));
+					return (p, content.Select(c => new ObjectFunction(c)));
+				}).Where(e => e.Item2.Count() > 0).Select(e => new GroupedObjectFunctions(e.p, e.Item2.ToList()));
 
 				var result = cell.ContentFunction.Execute(arguments);
 

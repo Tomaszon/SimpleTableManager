@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using SimpleTableManager.Models;
@@ -28,44 +29,50 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
 			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
-
 			#region test
 			// var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
 
 			// var result = function.Execute();
 
-			document.GetActiveTable()[1, 1].ContentType = typeof(decimal);
-			document.GetActiveTable()[1, 1].SetContent(5, 2);
+			document.GetActiveTable()[1, 0].ContentType = typeof(decimal);
+			document.GetActiveTable()[1, 0].SetContent(5, 2);
 
-			document.GetActiveTable()[2, 1].ContentType = typeof(decimal);
-			document.GetActiveTable()[2, 1].SetContent(4);
+			document.GetActiveTable()[2, 0].ContentType = typeof(decimal);
+			document.GetActiveTable()[2, 0].SetContent(4);
 
-			var cell31 = document.GetActiveTable()[3, 1];
-			cell31.SetContent(NumericFunctionOperator.Avg, "1,1", "2,1");
+			var cell31 = document.GetActiveTable()[3, 0];
+			cell31.SetContent(NumericFunctionOperator.Avg, "1,0", "2,0");
 			cell31.SetHorizontalAlignment(HorizontalAlignment.Left);
 			cell31.BorderColor = new ConsoleColorSet(ConsoleColor.Red);
 
-			document.GetActiveTable()[4, 1].SetContent(ObjectFunctionOperator.Const, "szilva");
+			document.GetActiveTable()[4, 0].SetContent(ObjectFunctionOperator.Const, "szilva");
 
-			document.GetActiveTable()[5, 1].ContentType = typeof(decimal);
-			document.GetActiveTable()[5, 1].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Len, new[] { new FunctionParameter(new Position(4, 1)) });
+			document.GetActiveTable()[5, 0].ContentType = typeof(decimal);
+			document.GetActiveTable()[5, 0].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
+			{
+				new ObjectFunction(new Position(4, 0))
+			});
 
-			document.GetActiveTable()[6, 1].SetContent("const", "alma", "körte");
+			document.GetActiveTable()[6, 0].SetContent("const", "alma", "körte");
 
-			document.GetActiveTable()[7, 1].SetContent("con", "4,1", "6,1");
+			document.GetActiveTable()[1, 1].SetContent("con", "4,0", "6,0");
 
-			document.GetActiveTable()[1, 2].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Join, new[]
+			document.GetActiveTable()[2, 1].SetContent("join", "1,0", "4,0");
+
+			document.GetActiveTable()[3, 1].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Join, new[]
 			{
 				FunctionCollection.GetFunction(NumericFunctionOperator.Avg, new[]
 				{
-					new FunctionParameter(new Position(2, 1)),
-					new FunctionParameter(new Position(5, 1))
+					new ObjectFunction(new Position(2, 0)),
+				 	new ObjectFunction(new Position(5, 0))
 				}),
 				FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
 				{
-					new FunctionParameter(new Position(4, 1))
+					new ObjectFunction(new Position(4, 0))
 				})
 			});
+
+			document.GetActiveTable()[4, 1].SetContent("sum", "1,0", 4);
 
 
 			//foreach (var cell in table.Cells)

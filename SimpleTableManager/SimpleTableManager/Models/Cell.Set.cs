@@ -14,11 +14,23 @@ namespace SimpleTableManager.Models
 
 			var explicitFunc = FunctionCollection.HasFunction(funcName, out _);
 
-			var args = contents.Select(e => new FunctionParameter(e));
-
-			ContentFunction = explicitFunc ?
-				FunctionCollection.GetFunction(funcName, args.Skip(1)) :
-				FunctionCollection.GetFunctionCore(typeof(ObjectFunction), ObjectFunctionOperator.Const, args);
+			if (contents.Length > 1)
+			{
+				ContentFunction = explicitFunc ?
+					FunctionCollection.GetFunction(funcName, contents.Skip(1).Select(p =>
+						p is IFunction f && f is not null ? f : new ObjectFunction(p))) :
+					FunctionCollection.GetFunctionCore(typeof(ObjectFunction), ObjectFunctionOperator.Const, contents.Select(p =>
+						p is IFunction f && f is not null ? f : new ObjectFunction(p)));
+			}
+			else if (contents.Length == 1)
+			{
+				ContentFunction = contents.First() is IFunction f && f is not null ? f : 
+					new ObjectFunction(contents.First());
+			}
+			else
+			{
+				ContentFunction = ObjectFunction.Empty();		
+			}
 		}
 
 		[CommandReference]

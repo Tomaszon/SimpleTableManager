@@ -108,12 +108,12 @@ namespace SimpleTableManager.Services
 			});
 
 			return result.Take(size.Height - 2).ToArray();
+		}
 
-			static string GetLine(Size size, string value)
-			{
-				return Shared.IndexArray((int)Math.Ceiling((size.Width - 2) / (decimal)value.Length))
-					.Aggregate("", (s, i) => s += value)[..(size.Width - 2)];
-			}
+		private static string GetLine(Size size, string value)
+		{
+			return Shared.IndexArray((int)Math.Ceiling((size.Width - 2) / (decimal)value.Length))
+				.Aggregate("", (s, i) => s += value)[..(size.Width - 2)];
 		}
 
 		private static void RenderCornerCell(Table table, Size tableOffset)

@@ -57,7 +57,7 @@ namespace SimpleTableManager.Models
 		{
 			var result = Table.ExecuteCellFunctionWithParameters(this, out var contentType);
 
-			return result.Select(r => r.Value).Select(r =>
+			return result.Select(r => r.Value).Where(r => r is not null).Select(r =>
 			{
 				var b = ContentType.IsAssignableFrom(r.GetType());
 
@@ -101,7 +101,7 @@ namespace SimpleTableManager.Models
 
 		public void ClearContent()
 		{
-			ContentFunction  = ObjectFunction.Empty();
+			ContentFunction = ObjectFunction.Empty();
 		}
 
 		public void AddArgumentFirst(params object[] contents)

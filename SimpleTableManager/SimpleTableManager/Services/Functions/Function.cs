@@ -17,14 +17,15 @@ public abstract class Function<T, T2> : IFunction where T : Enum
 	public Function(T functionOperator, IEnumerable<IFunction> arguments)
 	{
 		Operator = functionOperator;
-		arguments.Where(a => a is FunctionParameter p && p is not null && !p.IsReference()).ForEach(p =>
-			(p as FunctionParameter).ParseArgumentValue<T2>());
+		arguments.Where(a => a is ObjectFunction p && p is not null && !p.IsReference() == true).ForEach(p =>
+			(p as ObjectFunction).ParseArgumentValue<T2>());
 		Arguments = arguments.ToList();
 	}
 
 	public void InsertArguments(int index, IEnumerable<object> arguments)
 	{
-		var formattedArguments = arguments.Select(a => a is FunctionParameter p && p is not null ? p : new FunctionParameter(a)).ToArray();
+		var formattedArguments = arguments.Select(a =>
+			a is ObjectFunction p && p is not null ? p : new ObjectFunction(a)).ToArray();
 
 		Arguments.InsertRange(index, formattedArguments);
 	}
@@ -43,9 +44,9 @@ public abstract class Function<T, T2> : IFunction where T : Enum
 	{
 		var result = Arguments.SelectMany(a =>
 		{
-			if (a is FunctionParameter p && p is not null && p.IsReference())
+			if (a is ObjectFunction p && p is not null && p.IsReference() == true)
 			{
-				return new List<Position>() { (Position)(p as FunctionParameter).Value };
+				return new List<Position>() { (Position)p.Value };
 			}
 			else
 			{
@@ -56,13 +57,13 @@ public abstract class Function<T, T2> : IFunction where T : Enum
 		return result;
 	}
 
-	protected abstract FunctionParameter Aggregate(IEnumerable<FunctionParameter> list, IEnumerable<FunctionParameterArray> parameters, Dictionary<string, object> aggregateArguments = null);
+	protected abstract ObjectFunction Aggregate(IEnumerable<ObjectFunction> list, IEnumerable<GroupedObjectFunctions> parameters, Dictionary<string, object> aggregateArguments = null);
 
-	public abstract List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null);
+	public abstract List<ObjectFunction> Execute(IEnumerable<GroupedObjectFunctions> parameters = null);
 
-	protected FunctionParameter AggregateCore(IEnumerable<FunctionParameterArray> parameters, FunctionParameter current, Dictionary<string, object> aggregateArguments = null)
+	protected ObjectFunction AggregateCore(IEnumerable<GroupedObjectFunctions> parameters, ObjectFunction current, Dictionary<string, object> aggregateArguments = null)
 	{
 		return parameters?.SingleOrDefault(p => p.Position?.Equals(current.Value) == true) is var x && x is not null ?
-			Aggregate(x.Parameters.Select(p => new FunctionParameter(p.Value)), parameters, aggregateArguments) : current;
+			Aggregate(x.Values.Select(p => new ObjectFunction(p.Value)), parameters, aggregateArguments) : current;
 	}
 }

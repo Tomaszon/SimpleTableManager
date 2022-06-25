@@ -9,7 +9,7 @@ public interface IFunction
 
 	List<Position> GetReferredCellPositions();
 
-	List<FunctionParameter> Execute(IEnumerable<FunctionParameterArray> parameters = null);
+	List<ObjectFunction> Execute(IEnumerable<GroupedObjectFunctions> parameters = null);
 
 	void AddArguments(IEnumerable<object> arguments);
 
