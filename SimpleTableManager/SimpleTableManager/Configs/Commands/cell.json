@@ -6,7 +6,8 @@
 		"padding": "setPadding",
 		"horizontal-padding": "setHorizontalPadding",
 		"vertical-padding": "setVerticalPadding",
-		"type": "setType"
+		"type": "setType",
+		"border-color": "setBorderColor"
 	},
 	"show": {
 		"details|info": "showDetails",

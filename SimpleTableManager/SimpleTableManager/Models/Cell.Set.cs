@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
@@ -24,12 +26,12 @@ namespace SimpleTableManager.Models
 			}
 			else if (contents.Length == 1)
 			{
-				ContentFunction = contents.First() is IFunction f && f is not null ? f : 
+				ContentFunction = contents.First() is IFunction f && f is not null ? f :
 					new ObjectFunction(contents.First());
 			}
 			else
 			{
-				ContentFunction = ObjectFunction.Empty();		
+				ContentFunction = ObjectFunction.Empty();
 			}
 		}
 
@@ -69,6 +71,14 @@ namespace SimpleTableManager.Models
 			var type = Shared.GetTypeByName(typeName);
 
 			ContentType = type;
+		}
+
+		[CommandReference]
+		public void SetBorderColor(ConsoleColor foreground, ConsoleColor? background = null)
+		{
+			BorderColorIndex = Table.GetMaxCellBorderColorIndex() + 1;
+
+			BorderColor = (foreground, background);
 		}
 	}
 }

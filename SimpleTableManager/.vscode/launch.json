@@ -10,7 +10,7 @@
 			"request": "launch",
 			"preLaunchTask": "build",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/SimpleTableManager/bin/Debug/net6.0/SimpleTableManager.dll",
+			"program": "${workspaceFolder}/SimpleTableManager/bin/Debug/net8.0/SimpleTableManager.dll",
 			"console": "externalTerminal",
 			"args": [],
 			"cwd": "${workspaceFolder}/SimpleTableManager",

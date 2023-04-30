@@ -221,6 +221,11 @@ namespace SimpleTableManager.Models
 		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
 		//}
 
+		public int GetMaxCellBorderColorIndex()
+		{
+			return Content.Max(c => c.BorderColorIndex);
+		}
+
 		public List<ObjectFunction> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
 		{
 			var referredPositions = cell.ContentFunction.GetReferredCellPositions();

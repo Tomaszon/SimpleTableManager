@@ -28,7 +28,7 @@ namespace SimpleTableManager.Models
 			Background = colorSet.Background;
 		}
 
-		public static implicit operator ConsoleColorSet((ConsoleColor foreground, ConsoleColor background) record)
+		public static implicit operator ConsoleColorSet((ConsoleColor? foreground, ConsoleColor? background) record)
 		{
 			return new ConsoleColorSet(record.foreground, record.background);
 		}

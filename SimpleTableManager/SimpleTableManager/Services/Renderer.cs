@@ -299,6 +299,7 @@ namespace SimpleTableManager.Services
 				Shared.StepCursor(size.Width - 2, 0);
 
 				DrawBorderSegment(border.Right);
+				
 				Shared.StepCursor(-size.Width, 1);
 			});
 
@@ -308,7 +309,8 @@ namespace SimpleTableManager.Services
 
 			Console.SetCursorPosition(position.X, position.Y);
 
-			ChangeToTextColors();
+			//TODO find a better solution to the border corner segment coloring
+			ChangeToDefaultBorderColors();
 
 			DrawBorderSegment(border.TopLeft);
 
@@ -446,6 +448,12 @@ namespace SimpleTableManager.Services
 		{
 			Console.ForegroundColor = Settings.Current.TextColor.Foreground;
 			Console.BackgroundColor = Settings.Current.TextColor.Background;
+		}
+
+		public static void ChangeToDefaultBorderColors()
+		{
+			Console.ForegroundColor = Settings.Current.DefaultBorderColor.Foreground;
+			Console.BackgroundColor = Settings.Current.DefaultBorderColor.Background;
 		}
 	}
 }

@@ -43,7 +43,7 @@ namespace SimpleTableManager
 			var cell31 = document.GetActiveTable()[3, 0];
 			cell31.SetContent(NumericFunctionOperator.Avg, "1,0", "2,0");
 			cell31.SetHorizontalAlignment(HorizontalAlignment.Left);
-			cell31.BorderColor = new ConsoleColorSet(ConsoleColor.Red);
+			cell31.SetBorderColor(ConsoleColor.Red);
 
 			document.GetActiveTable()[4, 0].SetContent(ObjectFunctionOperator.Const, "szilva");
 
