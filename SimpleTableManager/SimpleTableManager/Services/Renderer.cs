@@ -10,8 +10,8 @@ namespace SimpleTableManager.Services
 {
 	public static class Renderer
 	{
-		private static int _FREE_LINES_BELOW_TABLE = 16;
-		private static int _FREE_LINES_ABOW_TABLE = 10;
+		private const int _FREE_LINES_BELOW_TABLE = 16;
+		private const int _FREE_LINES_ABOW_TABLE = 10;
 
 		public static void Render(Document document)
 		{
@@ -27,11 +27,11 @@ namespace SimpleTableManager.Services
 
 			RenderTempCell(table, tableOffset, tableSize);
 
-			RenderCornerCell(table, tableOffset);
-
 			RenderHeader(table, tableOffset);
 
 			RenderSider(table, tableOffset);
+
+			RenderCornerCell(table, tableOffset);
 
 			RenderContent(table, tableOffset);
 
@@ -193,7 +193,14 @@ namespace SimpleTableManager.Services
 
 						var border = GetContentCellBorder(table, cell, posInView);
 
-						DrawCellBorders(cell, position, size, border);
+						//TODO check hidden cells effects
+						//TODO fix selected cell border drawing
+						var drawTop = y > 0 && table[x, y - 1].LayerIndex <= cell.LayerIndex;
+						var drawBottom = y == table.Rows.Count - 1 || y < table.Rows.Count - 1 && table[x, y + 1].LayerIndex <= cell.LayerIndex;
+						var drawLeft = x > 0 && table[x - 1, y].LayerIndex <= cell.LayerIndex;
+						var drawRight = x == table.Columns.Count - 1 || x < table.Columns.Count - 1 && table[x + 1, y].LayerIndex <= cell.LayerIndex;
+
+						DrawCellBorders(cell, position, size, border, drawTop, drawBottom, drawLeft, drawRight);
 
 						DrawCellContent(cell, position, size);
 					}
@@ -304,6 +311,26 @@ namespace SimpleTableManager.Services
 
 			// 	Shared.StepCursor(-size.Width, 1);
 			// });
+
+			if (left)
+			{
+				Console.SetCursorPosition(position.X, position.Y + 1);
+				Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
+				{
+					DrawBorderSegment(border.Left);
+					Shared.StepCursor(-1, 1);
+				});
+			}
+
+			if (right)
+			{
+				Console.SetCursorPosition(position.X + size.Width - 1, position.Y + 1);
+				Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
+				{
+					DrawBorderSegment(border.Right);
+					Shared.StepCursor(-1, 1);
+				});
+			}
 
 			if (bottom)
 			{

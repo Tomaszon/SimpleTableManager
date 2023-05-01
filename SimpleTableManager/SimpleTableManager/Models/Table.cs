@@ -221,9 +221,14 @@ namespace SimpleTableManager.Models
 		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
 		//}
 
-		public int GetMaxCellBorderColorIndex()
+		public int GetMaxCellLayerIndex()
 		{
 			return Content.Max(c => c.LayerIndex);
+		}
+
+		public int GetMinCellLayerIndex()
+		{
+			return Content.Min(c => c.LayerIndex);
 		}
 
 		public List<ObjectFunction> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
