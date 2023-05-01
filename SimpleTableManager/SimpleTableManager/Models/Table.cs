@@ -223,7 +223,7 @@ namespace SimpleTableManager.Models
 
 		public int GetMaxCellBorderColorIndex()
 		{
-			return Content.Max(c => c.BorderColorIndex);
+			return Content.Max(c => c.LayerIndex);
 		}
 
 		public List<ObjectFunction> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)

@@ -84,7 +84,7 @@ namespace SimpleTableManager.Services
 			var placeHolderCell = new Cell(table, GetTmpBackground(size)) { ContentColor = new ConsoleColorSet(Settings.Current.TextColor) };
 			var placeHolderCellPosition = new Position(tableOffset);
 
-			DrawCellBorder(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
+			DrawCellBorders(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
 
 			DrawCellContent(placeHolderCell, placeHolderCellPosition, size);
 
@@ -122,7 +122,7 @@ namespace SimpleTableManager.Services
 
 			var size = table.GetCornerCellSize();
 
-			DrawCellBorder(table.CornerCell, position, size, CellBorders.Get(CellBorderType.CornerCellOpen));
+			DrawCellBorders(table.CornerCell, position, size, CellBorders.Get(CellBorderType.CornerCellOpen));
 
 			DrawCellContent(table.CornerCell, position, size);
 		}
@@ -145,7 +145,7 @@ namespace SimpleTableManager.Services
 
 					var border = CellBorders.Get(GetHeaderCellBorderType(table.ViewOptions.Size.Width, posInView.X));
 
-					DrawCellBorder(cell, position, size, border);
+					DrawCellBorders(cell, position, size, border);
 
 					DrawCellContent(cell, position, size);
 				}
@@ -169,7 +169,7 @@ namespace SimpleTableManager.Services
 
 					var border = CellBorders.Get(GetSiderCellBorderType(table.ViewOptions.Size.Height, posInView.Y));
 
-					DrawCellBorder(cell, position, size, border);
+					DrawCellBorders(cell, position, size, border);
 
 					DrawCellContent(cell, position, size);
 				}
@@ -193,7 +193,7 @@ namespace SimpleTableManager.Services
 
 						var border = GetContentCellBorder(table, cell, posInView);
 
-						DrawCellBorder(cell, position, size, border);
+						DrawCellBorders(cell, position, size, border);
 
 						DrawCellContent(cell, position, size);
 					}
@@ -283,47 +283,47 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		private static void DrawCellBorder(Cell cell, Position position, Size size, CellBorder border)
+		private static void DrawCellBorders(Cell cell, Position position, Size size, CellBorder border, bool top = true, bool bottom = true, bool left = true, bool right = true)
 		{
-			Console.SetCursorPosition(position.X + 1, position.Y);
-
 			ChangeToCellBorderColors(cell);
 
-			DrawBorderSegment(border.Top, size.Width - 2);
-
-			Shared.StepCursor(-(size.Width - 1), 1);
-			Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
+			if (top)
 			{
-				DrawBorderSegment(border.Left);
+				Console.SetCursorPosition(position.X + 1, position.Y);
+				DrawBorderSegment(border.Top, size.Width - 2);
+			}
 
-				Shared.StepCursor(size.Width - 2, 0);
+			// Shared.StepCursor(-(size.Width - 1), 1);
+			// Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
+			// {
+			// 	DrawBorderSegment(border.Left);
 
-				DrawBorderSegment(border.Right);
-				
-				Shared.StepCursor(-size.Width, 1);
-			});
+			// 	Shared.StepCursor(size.Width - 2, 0);
 
-			Shared.StepCursor(1, 0);
+			// 	DrawBorderSegment(border.Right);
 
-			DrawBorderSegment(border.Bottom, size.Width - 2);
+			// 	Shared.StepCursor(-size.Width, 1);
+			// });
 
-			Console.SetCursorPosition(position.X, position.Y);
+			if (bottom)
+			{
+				Console.SetCursorPosition(position.X + 1, position.Y + size.Height - 1);
+				DrawBorderSegment(border.Bottom, size.Width - 2);
+			}
 
 			//TODO find a better solution to the border corner segment coloring
 			ChangeToDefaultBorderColors();
 
+			Console.SetCursorPosition(position.X, position.Y);
 			DrawBorderSegment(border.TopLeft);
 
 			Shared.StepCursor(size.Width - 2, 0);
-
 			DrawBorderSegment(border.TopRight);
 
 			Shared.StepCursor(-size.Width, size.Height - 1);
-
 			DrawBorderSegment(border.BottomLeft);
 
 			Shared.StepCursor(size.Width - 2, 0);
-
 			DrawBorderSegment(border.BottomRight);
 		}
 

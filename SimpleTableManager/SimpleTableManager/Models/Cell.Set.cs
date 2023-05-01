@@ -76,9 +76,33 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetBorderColor(ConsoleColor foreground, ConsoleColor? background = null)
 		{
-			BorderColorIndex = Table.GetMaxCellBorderColorIndex() + 1;
+			LayerIndex = Table.GetMaxCellBorderColorIndex() + 1;
 
 			BorderColor = (foreground, background);
+		}
+
+		[CommandReference]
+		public void IncreaseLayerIndex()
+		{
+			LayerIndex = (int)Math.Min(int.MaxValue, (long)LayerIndex + 1);
+		}
+
+		[CommandReference]
+		public void DecreaseLayerIndex()
+		{
+			LayerIndex = (int)Math.Max(int.MinValue, (long)LayerIndex - 1);
+		}
+
+		[CommandReference]
+		public void SetLayerIndexToMax()
+		{
+			LayerIndex = int.MaxValue;
+		}
+
+		[CommandReference]
+		public void SetLayerIndexToMin()
+		{
+			LayerIndex = int.MinValue;
 		}
 	}
 }

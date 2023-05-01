@@ -7,10 +7,20 @@
 		"horizontal-padding": "setHorizontalPadding",
 		"vertical-padding": "setVerticalPadding",
 		"type": "setType",
-		"border-color": "setBorderColor"
+		"border-color": "setBorderColor",
+		"layer-index": {
+			"min": "setLayerIndexToMin",
+			"max": "setLayerIndexToMax"
+		}
 	},
 	"show": {
 		"details|info": "showDetails",
 		"function": "showContentFunction"
+	},
+	"increase": {
+		"layer-index": "increaseLayerIndex"
+	},
+	"decrease": {
+		"layer-index": "decreaseLayerIndex"
 	}
 }

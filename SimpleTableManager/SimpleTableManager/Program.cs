@@ -44,6 +44,8 @@ namespace SimpleTableManager
 			cell31.SetContent(NumericFunctionOperator.Avg, "1,0", "2,0");
 			cell31.SetHorizontalAlignment(HorizontalAlignment.Left);
 			cell31.SetBorderColor(ConsoleColor.Red);
+			cell31.SetLayerIndexToMax();
+			cell31.IncreaseLayerIndex();
 
 			document.GetActiveTable()[4, 0].SetContent(ObjectFunctionOperator.Const, "szilva");
 

@@ -80,7 +80,7 @@ namespace SimpleTableManager.Models
 
 		public ConsoleColorSet BorderColor { get; set; } = new ConsoleColorSet(Settings.Current.DefaultBorderColor);
 
-		public int BorderColorIndex { get; set; } = 0;
+		public int LayerIndex { get; set; } = 0;
 
 		public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
 
