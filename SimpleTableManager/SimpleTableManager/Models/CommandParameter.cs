@@ -18,7 +18,7 @@ namespace SimpleTableManager.Models
 
 		public override string ToString()
 		{
-			return $"{{{Name}:{Type.Name}{(IsOptional ? $":default={Newtonsoft.Json.JsonConvert.SerializeObject(DefaultValue)}" : "")}{(ParseFormat is not null ? $":{(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "")}}}";
+			return $"{{{Name}:  type={Type.Name}{(Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "")}{(IsOptional ? $"  default={Newtonsoft.Json.JsonConvert.SerializeObject(DefaultValue)}" : "")}{(ParseFormat is not null ? $"  {(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "")}}}";
 		}
 	}
 }

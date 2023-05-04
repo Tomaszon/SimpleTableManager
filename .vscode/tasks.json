@@ -7,7 +7,7 @@
 			"type": "process",
 			"args": [
 				"clean",
-				"${workspaceFolder}/SimpleTableManager/SimpleTableManager.csproj",
+				"${workspaceFolder}/SimpleTableManager/SimpleTableManager/SimpleTableManager.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			]
@@ -18,7 +18,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/SimpleTableManager/SimpleTableManager.csproj",
+				"${workspaceFolder}/SimpleTableManager/SimpleTableManager/SimpleTableManager.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],

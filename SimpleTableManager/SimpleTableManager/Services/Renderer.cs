@@ -10,6 +10,8 @@ namespace SimpleTableManager.Services
 {
 	public static class Renderer
 	{
+		public static RendererSettings RendererSettings { get; set; } = new RendererSettings();
+
 		private const int _FREE_LINES_BELOW_TABLE = 16;
 		private const int _FREE_LINES_ABOW_TABLE = 10;
 
@@ -86,7 +88,7 @@ namespace SimpleTableManager.Services
 
 			DrawCellBorders(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
 
-			DrawCellContent(placeHolderCell, placeHolderCellPosition, size);
+			DrawCellContent(placeHolderCell, placeHolderCellPosition, size, true);
 
 			Task.Delay(250).Wait();
 		}
@@ -124,7 +126,7 @@ namespace SimpleTableManager.Services
 
 			DrawCellBorders(table.CornerCell, position, size, CellBorders.Get(CellBorderType.CornerCellOpen));
 
-			DrawCellContent(table.CornerCell, position, size);
+			DrawCellContent(table.CornerCell, position, size, true);
 		}
 
 		private static void RenderHeader(Table table, Size tableOffset)
@@ -147,7 +149,7 @@ namespace SimpleTableManager.Services
 
 					DrawCellBorders(cell, position, size, border);
 
-					DrawCellContent(cell, position, size);
+					DrawCellContent(cell, position, size, true);
 				}
 			});
 		}
@@ -171,7 +173,7 @@ namespace SimpleTableManager.Services
 
 					DrawCellBorders(cell, position, size, border);
 
-					DrawCellContent(cell, position, size);
+					DrawCellContent(cell, position, size, true);
 				}
 			});
 		}
@@ -195,7 +197,7 @@ namespace SimpleTableManager.Services
 
 						DrawCellBorders(cell, position, size, border);
 
-						DrawCellContent(cell, position, size);
+						DrawCellContent(cell, position, size, false);
 					}
 				}));
 		}
@@ -225,7 +227,7 @@ namespace SimpleTableManager.Services
 			var bottomCell = position.Y < table.Size.Height - 1 ? table[position.X, position.Y + 1] : null;
 
 			if (position.X == 0 ||
-				leftCell is not null && !leftCell.IsHidden && 
+				leftCell is not null && !leftCell.IsHidden &&
 				(leftCell.IsSelected && !cell.IsSelected || leftCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.Trim(left: true);
@@ -358,9 +360,20 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		private static void DrawCellContent(Cell cell, Position position, Size size)
+		private static void DrawCellContent(Cell cell, Position position, Size size, bool ignoreRenderingMode)
 		{
 			var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
+
+			var contentToRender = cell.GetContents();
+			var horizontalAlignmentToRender = cell.ContentAlignment.Horizontal;
+			var verticalAlignmentToRender = cell.ContentAlignment.Vertical;
+
+			if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.LayerIndex)
+			{
+				contentToRender = cell.LayerIndex == 0 ? new List<object>() : new List<object>() { cell.LayerIndex };
+				horizontalAlignmentToRender = HorizontalAlignment.Center;
+				verticalAlignmentToRender = VerticalAlignment.Center;
+			}
 
 			Shared.IndexArray(sizeWithoutBorders.Height).ForEach(i =>
 			{
@@ -368,15 +381,13 @@ namespace SimpleTableManager.Services
 
 				var content = new string(' ', sizeWithoutBorders.Width);
 
-				var cellContents = cell.GetContents();
-
-				if (IsCellContentDrawNeeded(cell, i, sizeWithoutBorders.Height, out var contentIndex) && cellContents.Count > contentIndex)
+				if (IsCellContentDrawNeeded(contentToRender, verticalAlignmentToRender, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentToRender.Count > contentIndex)
 				{
-					content = cellContents[contentIndex].ToString();
+					content = contentToRender[contentIndex].ToString();
 
 					if (!string.IsNullOrWhiteSpace(content))
 					{
-						switch (cell.ContentAlignment.Horizontal)
+						switch (horizontalAlignmentToRender)
 						{
 							case HorizontalAlignment.Left:
 								{
@@ -424,15 +435,13 @@ namespace SimpleTableManager.Services
 			Console.WriteLine($"Table name: {table.Name}");
 		}
 
-		private static bool IsCellContentDrawNeeded(Cell cell, int lineIndex, int height, out int contentIndex)
+		private static bool IsCellContentDrawNeeded(List<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)
 		{
-			var contents = cell.GetContents();
-
-			var startLineIndex = cell.ContentAlignment.Vertical switch
+			var startLineIndex = alignment switch
 			{
-				VerticalAlignment.Top => cell.ContentPadding.Top,
-				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, contents.Count, cell.ContentPadding.Top, cell.ContentPadding.Bottom),
-				_ => height - contents.Count - cell.ContentPadding.Bottom
+				VerticalAlignment.Top => padding.Top,
+				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, contents.Count, padding.Top, padding.Bottom),
+				_ => height - contents.Count - padding.Bottom
 			};
 
 			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + contents.Count > lineIndex;

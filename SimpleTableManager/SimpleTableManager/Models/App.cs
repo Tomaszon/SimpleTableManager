@@ -29,5 +29,11 @@ namespace SimpleTableManager.Models
 			Console.ResetColor();
 			Console.Clear();
 		}
+
+		[CommandReference]
+		public void SetRenderingMode(RenderingMode renderingMode)
+		{
+			Renderer.RendererSettings.RenderingMode = renderingMode;
+		}
 	}
 }

@@ -1,4 +1,7 @@
 {
 	"refresh": "refresh",
-	"exit|quit": "exit"
+	"exit|quit": "exit",
+	"set": {
+		"rendering-mode": "setRenderingMode"
+	}
 }
