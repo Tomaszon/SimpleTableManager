@@ -141,12 +141,12 @@ namespace SimpleTableManager.Models
 
 		public bool IsColumnHidden(int x)
 		{
-			return Columns[x].All(c => c.IsHidden);
+			return Columns[x].All(c => c.Visibility.IsColumnHidden);
 		}
 
 		public bool IsRowHidden(int y)
 		{
-			return Rows[y].All(c => c.IsHidden);
+			return Rows[y].All(c => c.Visibility.IsRowHidden);
 		}
 
 		public bool IsColumnSelected(int index)

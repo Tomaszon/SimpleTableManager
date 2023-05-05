@@ -135,7 +135,7 @@ namespace SimpleTableManager.Services
 			{
 				var cell = table.Header[x];
 
-				if (!cell.IsHidden && table.IsCellInView(x: x))
+				if (cell.Visibility.IsVisible && table.IsCellInView(x: x))
 				{
 					var position = table.GetHeaderCellPosition(tableOffset, x);
 
@@ -159,7 +159,7 @@ namespace SimpleTableManager.Services
 			Shared.IndexArray(table.Size.Height).ForEach(y =>
 			{
 				var cell = table.Sider[y];
-				if (!cell.IsHidden && table.IsCellInView(y: y))
+				if (cell.Visibility.IsVisible && table.IsCellInView(y: y))
 				{
 					var position = table.GetSiderCellPosition(tableOffset, y);
 
@@ -185,7 +185,7 @@ namespace SimpleTableManager.Services
 				{
 					var cell = table[x, y];
 
-					if (!cell.IsHidden && table.IsCellInView(x, y))
+					if (cell.Visibility.IsVisible && table.IsCellInView(x, y))
 					{
 						var position = table.GetContentCellPosition(tableOffset, x, y);
 
@@ -223,27 +223,28 @@ namespace SimpleTableManager.Services
 
 		private static CellBorder TrimContentCellCornerBorder(CellBorder border, Table table, Cell cell, Position position)
 		{
+			//todo check not next cells, but next VISIBLE cells
 			var topLeftCell = position.Y > 0 && position.X > 0 ? table[position.X - 1, position.Y - 1] : null;
 			var topRightCell = position.Y > 0 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y - 1] : null;
 			var bottomLeftCell = position.Y < table.Size.Height - 1 && position.X > 0 ? table[position.X - 1, position.Y + 1] : null;
 			var bottomRightCell = position.Y < table.Size.Height - 1 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y + 1] : null;
 
-			if (topLeftCell is not null && !topLeftCell.IsHidden &&
+			if (topLeftCell is not null && topLeftCell.Visibility.IsVisible &&
 				(topLeftCell.IsSelected && !cell.IsSelected || topLeftCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimCorner(topLeft: true);
 			}
-			if (topRightCell is not null && !topRightCell.IsHidden &&
+			if (topRightCell is not null && topRightCell.Visibility.IsVisible &&
 				(topRightCell.IsSelected && !cell.IsSelected || topRightCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimCorner(topRight: true);
 			}
-			if (bottomLeftCell is not null && !bottomLeftCell.IsHidden &&
+			if (bottomLeftCell is not null && bottomLeftCell.Visibility.IsVisible &&
 				(bottomLeftCell.IsSelected && !cell.IsSelected || bottomLeftCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimCorner(bottomLeft: true);
 			}
-			if (bottomRightCell is not null && !bottomRightCell.IsHidden &&
+			if (bottomRightCell is not null && bottomRightCell.Visibility.IsVisible &&
 				(bottomRightCell.IsSelected && !cell.IsSelected || bottomRightCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimCorner(bottomRight: true);
@@ -260,23 +261,23 @@ namespace SimpleTableManager.Services
 			var bottomCell = position.Y < table.Size.Height - 1 ? table[position.X, position.Y + 1] : null;
 
 			if (position.X == 0 ||
-				leftCell is not null && !leftCell.IsHidden &&
+				leftCell is not null && leftCell.Visibility.IsVisible &&
 				(leftCell.IsSelected && !cell.IsSelected || leftCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(left: true);
 			}
 			if (position.Y == 0 ||
-				topCell is not null && !topCell.IsHidden &&
+				topCell is not null && topCell.Visibility.IsVisible &&
 				(topCell.IsSelected && !cell.IsSelected || topCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(top: true);
 			}
-			if (rightCell is not null && !rightCell.IsHidden &&
+			if (rightCell is not null && rightCell.Visibility.IsVisible &&
 				(rightCell.IsSelected && !cell.IsSelected || rightCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(right: true);
 			}
-			if (bottomCell is not null && !bottomCell.IsHidden &&
+			if (bottomCell is not null && bottomCell.Visibility.IsVisible &&
 				(bottomCell.IsSelected && !cell.IsSelected || bottomCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(bottom: true);

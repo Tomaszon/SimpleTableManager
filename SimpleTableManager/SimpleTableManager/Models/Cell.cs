@@ -70,7 +70,7 @@ namespace SimpleTableManager.Models
 
 		public bool IsSelected { get; set; }
 
-		public bool IsHidden { get; set; }
+		public CellVisibility Visibility { get; set; } = new CellVisibility();
 
 		public ContentPadding ContentPadding { get; set; } = new ContentPadding();
 

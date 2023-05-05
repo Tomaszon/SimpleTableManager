@@ -27,7 +27,8 @@ namespace SimpleTableManager.Models
 					Padding = ContentPadding.ToString(),
 					Alignment = ContentAlignment.ToString(),
 					Color = ContentColor.ToString(),
-				}
+				},
+				IsHidden = Visibility.IsHidden
 			};
 		}
 

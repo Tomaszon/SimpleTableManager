@@ -14,29 +14,29 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void HideColumn(int x)
 		{
-			Header[x].IsHidden = true;
-			Columns[x].ForEach(c => c.IsHidden = true);
+			Header[x].Visibility.IsColumnHidden = true;
+			Columns[x].ForEach(c => c.Visibility.IsColumnHidden = true);
 		}
 
 		[CommandReference]
 		public void HideRow(int y)
 		{
-			Sider[y].IsHidden = true;
-			Rows[y].ForEach(c => c.IsHidden = true);
+			Sider[y].Visibility.IsRowHidden = true;
+			Rows[y].ForEach(c => c.Visibility.IsRowHidden = true);
 		}
 
 		[CommandReference]
 		public void ShowColumn(int x)
 		{
-			Header[x].IsHidden = false;
-			Columns[x].ForEach(c => c.IsHidden = false);
+			Header[x].Visibility.IsColumnHidden = false;
+			Columns[x].ForEach(c => c.Visibility.IsColumnHidden = false);
 		}
 
 		[CommandReference]
 		public void ShowRow(int y)
 		{
-			Sider[y].IsHidden = false;
-			Rows[y].ForEach(c => c.IsHidden = false);
+			Sider[y].Visibility.IsRowHidden = false;
+			Rows[y].ForEach(c => c.Visibility.IsRowHidden = false);
 		}
 
 		[CommandReference]
