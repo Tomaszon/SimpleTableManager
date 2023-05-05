@@ -20,7 +20,12 @@ namespace SimpleTableManager.Models
 
 		public BorderType BottomRight { get; set; } = BorderType.Left | BorderType.Up;
 
-		public CellBorder Trim(bool top = false, bool bottom = false, bool left = false, bool right = false)
+		public CellBorder TrimCorner(bool topLeft = false, bool topRight = false, bool bottomLeft = false, bool bottomRight = false)
+		{
+			return ModifyCorners(BorderType.None, true, topLeft, topRight, bottomLeft, bottomRight);
+		}
+
+		public CellBorder TrimSide(bool top = false, bool bottom = false, bool left = false, bool right = false)
 		{
 			return ModifySides(BorderType.None, true, top, bottom, left, right);
 		}
@@ -32,7 +37,7 @@ namespace SimpleTableManager.Models
 
 		public CellBorder ModifySides(BorderType border, bool replace, bool top = false, bool bottom = false, bool left = false, bool right = false)
 		{
-			CellBorder result = (CellBorder)MemberwiseClone();
+			var result = (CellBorder)MemberwiseClone();
 
 			GetType().GetProperties().ForEach(p =>
 			{
@@ -44,6 +49,33 @@ namespace SimpleTableManager.Models
 					p.SetValue(result, replace ? border : (BorderType)p.GetValue(this) | border);
 				}
 			});
+
+			return result;
+		}
+
+		public CellBorder ModifyCorners(BorderType border, bool replace, bool topLeft, bool topRight, bool bottomLeft, bool bottomRight)
+		{
+			var result = (CellBorder)MemberwiseClone();
+
+			if (topLeft)
+			{
+				result.TopLeft = replace ? border : result.TopLeft | border;
+			}
+
+			if (topRight)
+			{
+				result.TopRight = replace ? border : result.TopRight | border;
+			}
+
+			if (bottomLeft)
+			{
+				result.BottomLeft = replace ? border : result.BottomLeft | border;
+			}
+
+			if (bottomRight)
+			{
+				result.BottomRight = replace ? border : result.BottomRight | border;
+			}
 
 			return result;
 		}

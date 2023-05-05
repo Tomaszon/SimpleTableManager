@@ -210,7 +210,9 @@ namespace SimpleTableManager.Services
 
 			border = DotContentCellBorder(border, table, cell, position);
 
-			return TrimContentCellBorder(border, table, cell, position);
+			border = TrimContentCellSideBorder(border, table, cell, position);
+
+			return TrimContentCellCornerBorder(border, table, cell, position);
 		}
 
 		private static CellBorder DotContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
@@ -219,7 +221,38 @@ namespace SimpleTableManager.Services
 			return border;
 		}
 
-		private static CellBorder TrimContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
+		private static CellBorder TrimContentCellCornerBorder(CellBorder border, Table table, Cell cell, Position position)
+		{
+			var topLeftCell = position.Y > 0 && position.X > 0 ? table[position.X - 1, position.Y - 1] : null;
+			var topRightCell = position.Y > 0 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y - 1] : null;
+			var bottomLeftCell = position.Y < table.Size.Height - 1 && position.X > 0 ? table[position.X - 1, position.Y + 1] : null;
+			var bottomRightCell = position.Y < table.Size.Height - 1 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y + 1] : null;
+
+			if (topLeftCell is not null && !topLeftCell.IsHidden &&
+				(topLeftCell.IsSelected && !cell.IsSelected || topLeftCell.LayerIndex > cell.LayerIndex))
+			{
+				border = border.TrimCorner(topLeft: true);
+			}
+			if (topRightCell is not null && !topRightCell.IsHidden &&
+				(topRightCell.IsSelected && !cell.IsSelected || topRightCell.LayerIndex > cell.LayerIndex))
+			{
+				border = border.TrimCorner(topRight: true);
+			}
+			if (bottomLeftCell is not null && !bottomLeftCell.IsHidden &&
+				(bottomLeftCell.IsSelected && !cell.IsSelected || bottomLeftCell.LayerIndex > cell.LayerIndex))
+			{
+				border = border.TrimCorner(bottomLeft: true);
+			}
+			if (bottomRightCell is not null && !bottomRightCell.IsHidden &&
+				(bottomRightCell.IsSelected && !cell.IsSelected || bottomRightCell.LayerIndex > cell.LayerIndex))
+			{
+				border = border.TrimCorner(bottomRight: true);
+			}
+
+			return border;
+		}
+
+		private static CellBorder TrimContentCellSideBorder(CellBorder border, Table table, Cell cell, Position position)
 		{
 			var leftCell = position.X > 0 ? table[position.X - 1, position.Y] : null;
 			var topCell = position.Y > 0 ? table[position.X, position.Y - 1] : null;
@@ -230,23 +263,23 @@ namespace SimpleTableManager.Services
 				leftCell is not null && !leftCell.IsHidden &&
 				(leftCell.IsSelected && !cell.IsSelected || leftCell.LayerIndex > cell.LayerIndex))
 			{
-				border = border.Trim(left: true);
+				border = border.TrimSide(left: true);
 			}
 			if (position.Y == 0 ||
 				topCell is not null && !topCell.IsHidden &&
 				(topCell.IsSelected && !cell.IsSelected || topCell.LayerIndex > cell.LayerIndex))
 			{
-				border = border.Trim(top: true);
+				border = border.TrimSide(top: true);
 			}
 			if (rightCell is not null && !rightCell.IsHidden &&
 				(rightCell.IsSelected && !cell.IsSelected || rightCell.LayerIndex > cell.LayerIndex))
 			{
-				border = border.Trim(right: true);
+				border = border.TrimSide(right: true);
 			}
 			if (bottomCell is not null && !bottomCell.IsHidden &&
 				(bottomCell.IsSelected && !cell.IsSelected || bottomCell.LayerIndex > cell.LayerIndex))
 			{
-				border = border.Trim(bottom: true);
+				border = border.TrimSide(bottom: true);
 			}
 
 			return border;
@@ -332,20 +365,29 @@ namespace SimpleTableManager.Services
 				DrawBorderSegment(border.Bottom, size.Width - 2);
 			}
 
-			//TODO find a better solution to the border corner segment coloring
-			ChangeToDefaultBorderColors();
+			if (border.TopLeft != BorderType.None)
+			{
+				Console.SetCursorPosition(position.X, position.Y);
+				DrawBorderSegment(border.TopLeft);
+			}
 
-			Console.SetCursorPosition(position.X, position.Y);
-			DrawBorderSegment(border.TopLeft);
+			if (border.TopRight != BorderType.None)
+			{
+				Console.SetCursorPosition(position.X + size.Width - 1, position.Y);
+				DrawBorderSegment(border.TopRight);
+			}
 
-			Shared.StepCursor(size.Width - 2, 0);
-			DrawBorderSegment(border.TopRight);
+			if (border.BottomLeft != BorderType.None)
+			{
+				Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
+				DrawBorderSegment(border.BottomLeft);
+			}
 
-			Shared.StepCursor(-size.Width, size.Height - 1);
-			DrawBorderSegment(border.BottomLeft);
-
-			Shared.StepCursor(size.Width - 2, 0);
-			DrawBorderSegment(border.BottomRight);
+			if (border.BottomRight != BorderType.None)
+			{
+				Console.SetCursorPosition(position.X + size.Width - 1, position.Y + size.Height - 1);
+				DrawBorderSegment(border.BottomRight);
+			}
 		}
 
 		private static void DrawBorderSegment(BorderType border, int count = 1)
