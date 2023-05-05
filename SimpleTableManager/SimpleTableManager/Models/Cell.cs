@@ -121,29 +121,6 @@ namespace SimpleTableManager.Models
 			ContentFunction.RemoveLastArgument();
 		}
 
-		[CommandReference]
-		public object ShowDetails()
-		{
-			var funcDic = ContentFunction is not null ?
-				ContentFunction.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(ContentFunction)) : null;
-
-			return new
-			{
-				Size = GetSize().ToString(),
-				ContentType = ContentType.Name,
-				ContentFunction = funcDic is not null ?
-					$"{funcDic[nameof(Function<Enum, object>.TypeName)]}:{funcDic[nameof(Function<Enum, object>.Operator)]}" : null,
-				Padding = ContentPadding.ToString(),
-				Alignment = ContentAlignment.ToString()
-			};
-		}
-
-		[CommandReference]
-		public object ShowContentFunction()
-		{
-			return ContentFunction;
-		}
-
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

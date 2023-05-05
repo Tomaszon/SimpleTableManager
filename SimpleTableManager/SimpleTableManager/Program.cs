@@ -40,6 +40,10 @@ namespace SimpleTableManager
 			document.GetActiveTable()[2, 0].ContentType = typeof(decimal);
 			document.GetActiveTable()[2, 0].SetContent(4);
 
+			var cell11 = document.GetActiveTable()[1,1];
+			cell11.SetContentColor(ConsoleColor.Red, ConsoleColor.Yellow);
+			cell11.SetBorderColor(ConsoleColor.Red, ConsoleColor.Yellow);
+
 			var cell31 = document.GetActiveTable()[3, 0];
 			cell31.SetContent(NumericFunctionOperator.Avg, "1,0", "2,0");
 			cell31.SetHorizontalAlignment(HorizontalAlignment.Left);

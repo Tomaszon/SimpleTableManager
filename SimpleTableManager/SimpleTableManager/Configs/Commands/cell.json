@@ -8,6 +8,7 @@
 		"vertical-padding": "setVerticalPadding",
 		"type": "setType",
 		"border-color": "setBorderColor",
+		"content-color": "setContentColor",
 		"layer-index": {
 			"min": "setLayerIndexToMin",
 			"max": "setLayerIndexToMax"

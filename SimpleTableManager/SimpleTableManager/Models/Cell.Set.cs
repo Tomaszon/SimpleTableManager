@@ -85,6 +85,12 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void SetContentColor(ConsoleColor foreground, ConsoleColor? background = null)
+		{
+			ContentColor = (foreground, background);
+		}
+
+		[CommandReference]
 		public void IncreaseLayerIndex()
 		{
 			LayerIndex = (int)Math.Min(int.MaxValue, (long)LayerIndex + 1);

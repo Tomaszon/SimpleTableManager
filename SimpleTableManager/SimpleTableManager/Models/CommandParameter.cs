@@ -1,4 +1,5 @@
 ﻿using System;
+using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {
@@ -12,13 +13,22 @@ namespace SimpleTableManager.Models
 
 		public object DefaultValue { get; set; }
 
-		public bool IsArray { get; set; }
+		public bool IsArray => Type.IsArray;
+
+		public bool IsNullable => Type.IsAssignableFrom(null);
 
 		public string ParseFormat { get; set; }
 
 		public override string ToString()
 		{
-			return $"{{{Name}:  type={Type.Name}{(Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "")}{(IsOptional ? $"  default={Newtonsoft.Json.JsonConvert.SerializeObject(DefaultValue)}" : "")}{(ParseFormat is not null ? $"  {(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "")}}}";
+			var typeName = $"  type={Shared.FormatTypeName(Type)}";
+			var values = Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "";
+			var nullable = IsNullable ? "  nullable=true" : "";
+			var optional = IsOptional ? $"  default={Newtonsoft.Json.JsonConvert.SerializeObject(DefaultValue)}" : "";
+			var format = ParseFormat is not null ? $"  {(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "";
+
+
+			return $"{{{Name}:{typeName}{values}{nullable}{optional}{format}}}";
 		}
 	}
 }

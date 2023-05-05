@@ -47,5 +47,10 @@ namespace SimpleTableManager.Models
 		{
 			return base.GetHashCode();
 		}
+
+		public override string ToString()
+		{
+			return $"F: {Foreground}, B: {Background}";
+		}
 	}
 }

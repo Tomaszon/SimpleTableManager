@@ -30,42 +30,53 @@ namespace SimpleTableManager.Services
 				return value;
 			}
 
-			var method = GetParseMethod(dataType.IsEnum ? typeof(Enum) : dataType);
+			var method = GetParseMethod(dataType, out var targetDataType);
 
 			if (method is null)
 			{
-				throw new Exception($"Type '{dataType.Name}' does not have 'Parse' method");
+				throw new Exception($"Type '{FormatTypeName(targetDataType)}' does not have 'Parse' method");
 			}
 
 			try
 			{
-				return method.Invoke(null, dataType.IsEnum ? new object[] { dataType, value, true } : new object[] { value });
+				return method.Invoke(null, method.GetParameters().Length == 3 ? new object[] { targetDataType, value, true } : new object[] { value });
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				var attribute = method.GetCustomAttribute<ParseFormatAttribute>();
 
-				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}");
+				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}", ex);
 			}
 		}
 
-		public static MethodInfo GetParseMethod(Type dataType)
+		public static MethodInfo GetParseMethod(Type dataType, out Type targetDataType)
 		{
-			return dataType.GetMethods().Where(m =>
+			if (dataType.Name == "Nullable`1")
 			{
-				var parameters = m.GetParameters();
-				if (dataType == typeof(Enum))
+				return GetParseMethod(dataType.GenericTypeArguments[0], out targetDataType);
+			}
+			else
+			{
+				var methods = dataType.IsEnum ? typeof(Enum).GetMethods() : dataType.GetMethods();
+
+				targetDataType = dataType;
+
+				return methods.Where(m =>
 				{
-					return m.Name == "Parse" && parameters.Length == 3 &&
-						parameters[0].ParameterType == typeof(Type) &&
-						parameters[1].ParameterType == typeof(string) &&
-						parameters[2].ParameterType == typeof(bool);
-				}
-				else
-				{
-					return m.Name == "Parse" && parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
-				}
-			}).SingleOrDefault();
+					var parameters = m.GetParameters();
+					if (dataType.IsEnum)
+					{
+						return m.Name == "Parse" && parameters.Length == 3 &&
+							parameters[0].ParameterType == typeof(Type) &&
+							parameters[1].ParameterType == typeof(string) &&
+							parameters[2].ParameterType == typeof(bool);
+					}
+					else
+					{
+						return m.Name == "Parse" && parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
+					}
+				}).SingleOrDefault();
+			}
 		}
 
 		public static object ParseStringValue(string dataTypeName, string value)
@@ -130,6 +141,11 @@ namespace SimpleTableManager.Services
 				}
 			}
 			while (true);
+		}
+
+		public static string FormatTypeName(Type type)
+		{
+			return type.IsGenericType ? $"{type.Name}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.Name;
 		}
 	}
 }
