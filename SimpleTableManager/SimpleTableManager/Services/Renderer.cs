@@ -223,67 +223,131 @@ namespace SimpleTableManager.Services
 
 		private static CellBorder TrimContentCellCornerBorder(CellBorder border, Table table, Cell cell, Position position)
 		{
-			//todo check not next cells, but next VISIBLE cells
-			var topLeftCell = position.Y > 0 && position.X > 0 ? table[position.X - 1, position.Y - 1] : null;
-			var topRightCell = position.Y > 0 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y - 1] : null;
-			var bottomLeftCell = position.Y < table.Size.Height - 1 && position.X > 0 ? table[position.X - 1, position.Y + 1] : null;
-			var bottomRightCell = position.Y < table.Size.Height - 1 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y + 1] : null;
+			// //todo check not next cells, but next VISIBLE cells
+			// var topLeftCell = position.Y > 0 && position.X > 0 ? table[position.X - 1, position.Y - 1] : null;
+			// var topRightCell = position.Y > 0 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y - 1] : null;
+			// var bottomLeftCell = position.Y < table.Size.Height - 1 && position.X > 0 ? table[position.X - 1, position.Y + 1] : null;
+			// var bottomRightCell = position.Y < table.Size.Height - 1 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y + 1] : null;
 
-			if (topLeftCell is not null && topLeftCell.Visibility.IsVisible &&
-				(topLeftCell.IsSelected && !cell.IsSelected || topLeftCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimCorner(topLeft: true);
-			}
-			if (topRightCell is not null && topRightCell.Visibility.IsVisible &&
-				(topRightCell.IsSelected && !cell.IsSelected || topRightCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimCorner(topRight: true);
-			}
-			if (bottomLeftCell is not null && bottomLeftCell.Visibility.IsVisible &&
-				(bottomLeftCell.IsSelected && !cell.IsSelected || bottomLeftCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimCorner(bottomLeft: true);
-			}
-			if (bottomRightCell is not null && bottomRightCell.Visibility.IsVisible &&
-				(bottomRightCell.IsSelected && !cell.IsSelected || bottomRightCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimCorner(bottomRight: true);
-			}
+			// if (topLeftCell is not null && topLeftCell.Visibility.IsVisible &&
+			// 	(topLeftCell.IsSelected && !cell.IsSelected || topLeftCell.LayerIndex > cell.LayerIndex))
+			// {
+			// 	border = border.TrimCorner(topLeft: true);
+			// }
+			// if (topRightCell is not null && topRightCell.Visibility.IsVisible &&
+			// 	(topRightCell.IsSelected && !cell.IsSelected || topRightCell.LayerIndex > cell.LayerIndex))
+			// {
+			// 	border = border.TrimCorner(topRight: true);
+			// }
+			// if (bottomLeftCell is not null && bottomLeftCell.Visibility.IsVisible &&
+			// 	(bottomLeftCell.IsSelected && !cell.IsSelected || bottomLeftCell.LayerIndex > cell.LayerIndex))
+			// {
+			// 	border = border.TrimCorner(bottomLeft: true);
+			// }
+			// if (bottomRightCell is not null && bottomRightCell.Visibility.IsVisible &&
+			// 	(bottomRightCell.IsSelected && !cell.IsSelected || bottomRightCell.LayerIndex > cell.LayerIndex))
+			// {
+			// 	border = border.TrimCorner(bottomRight: true);
+			// }
 
 			return border;
 		}
 
 		private static CellBorder TrimContentCellSideBorder(CellBorder border, Table table, Cell cell, Position position)
 		{
-			var leftCell = position.X > 0 ? table[position.X - 1, position.Y] : null;
-			var topCell = position.Y > 0 ? table[position.X, position.Y - 1] : null;
-			var rightCell = position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y] : null;
-			var bottomCell = position.Y < table.Size.Height - 1 ? table[position.X, position.Y + 1] : null;
-
-			if (position.X == 0 ||
-				leftCell is not null && leftCell.Visibility.IsVisible &&
+			if (GetNearestVisibleCellToLeft(table, position) is var leftCell && leftCell is not null &&
 				(leftCell.IsSelected && !cell.IsSelected || leftCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(left: true);
 			}
-			if (position.Y == 0 ||
-				topCell is not null && topCell.Visibility.IsVisible &&
+			
+			if (GetNearestVisibleCellToTop(table, position) is var topCell && topCell is not null &&
 				(topCell.IsSelected && !cell.IsSelected || topCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(top: true);
 			}
-			if (rightCell is not null && rightCell.Visibility.IsVisible &&
+
+			if (GetNearestVisibleCellToRight(table, position) is var rightCell && rightCell is not null &&
 				(rightCell.IsSelected && !cell.IsSelected || rightCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(right: true);
 			}
-			if (bottomCell is not null && bottomCell.Visibility.IsVisible &&
+
+			if (GetNearestVisibleCellToBottom(table, position) is var bottomCell && bottomCell is not null &&
 				(bottomCell.IsSelected && !cell.IsSelected || bottomCell.LayerIndex > cell.LayerIndex))
 			{
 				border = border.TrimSide(bottom: true);
 			}
 
 			return border;
+		}
+
+		public static Cell GetNearestVisibleCellToTop(Table table, Position position)
+		{
+			var y = position.Y;
+
+			while (y > 0)
+			{
+				var cell = table[position.X, --y];
+
+				if (cell.Visibility.IsVisible)
+				{
+					return cell;
+				}
+			}
+
+			return null;
+		}
+
+		public static Cell GetNearestVisibleCellToBottom(Table table, Position position)
+		{
+			var y = position.Y;
+
+			while (y < table.Size.Height - 1)
+			{
+				var cell = table[position.X, ++y];
+
+				if (cell.Visibility.IsVisible)
+				{
+					return cell;
+				}
+			}
+
+			return null;
+		}
+
+		public static Cell GetNearestVisibleCellToLeft(Table table, Position position)
+		{
+			var x = position.X;
+
+			while (x > 0)
+			{
+				var cell = table[--x, position.Y];
+
+				if (cell.Visibility.IsVisible)
+				{
+					return cell;
+				}
+			}
+
+			return null;
+		}
+
+		public static Cell GetNearestVisibleCellToRight(Table table, Position position)
+		{
+			var x = position.X;
+
+			while (x < table.Size.Width - 1)
+			{
+				var cell = table[++x, position.Y];
+
+				if (cell.Visibility.IsVisible)
+				{
+					return cell;
+				}
+			}
+
+			return null;
 		}
 
 		private static CellBorderType GetContentCellBorderType(Size size, Position position)
