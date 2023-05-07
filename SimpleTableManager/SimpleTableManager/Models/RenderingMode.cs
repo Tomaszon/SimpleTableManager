@@ -7,6 +7,6 @@ namespace SimpleTableManager.Models
 	public enum RenderingMode
 	{
 		Content,
-		LayerIndex
+		Layer
 	}
 }

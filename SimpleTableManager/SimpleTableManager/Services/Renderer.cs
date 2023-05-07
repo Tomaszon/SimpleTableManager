@@ -29,13 +29,13 @@ namespace SimpleTableManager.Services
 
 			RenderTempCell(table, tableOffset, tableSize);
 
+			RenderContent(table, tableOffset);
+
 			RenderHeader(table, tableOffset);
 
 			RenderSider(table, tableOffset);
 
 			RenderCornerCell(table, tableOffset);
-
-			RenderContent(table, tableOffset);
 
 			Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
 
@@ -143,6 +143,7 @@ namespace SimpleTableManager.Services
 
 					var posInView = table.PositionInView(x, -1);
 
+					//todo rework, remove from cell
 					cell.ShowSelection(table.IsColumnSelected(x));
 
 					var border = CellBorders.Get(GetHeaderCellBorderType(table.ViewOptions.Size.Width, posInView.X));
@@ -210,9 +211,7 @@ namespace SimpleTableManager.Services
 
 			border = DotContentCellBorder(border, table, cell, position);
 
-			border = TrimContentCellSideBorder(border, table, cell, position);
-
-			return TrimContentCellCornerBorder(border, table, cell, position);
+			return TrimContentCellBorder(border, table, cell, position);
 		}
 
 		private static CellBorder DotContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
@@ -221,125 +220,42 @@ namespace SimpleTableManager.Services
 			return border;
 		}
 
-		private static CellBorder TrimContentCellCornerBorder(CellBorder border, Table table, Cell cell, Position position)
+		private static CellBorder TrimContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
 		{
-			// //todo check not next cells, but next VISIBLE cells
-			// var topLeftCell = position.Y > 0 && position.X > 0 ? table[position.X - 1, position.Y - 1] : null;
-			// var topRightCell = position.Y > 0 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y - 1] : null;
-			// var bottomLeftCell = position.Y < table.Size.Height - 1 && position.X > 0 ? table[position.X - 1, position.Y + 1] : null;
-			// var bottomRightCell = position.Y < table.Size.Height - 1 && position.X < table.Size.Width - 1 ? table[position.X + 1, position.Y + 1] : null;
+			var matrix = new int[,] { { -1, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } };
 
-			// if (topLeftCell is not null && topLeftCell.Visibility.IsVisible &&
-			// 	(topLeftCell.IsSelected && !cell.IsSelected || topLeftCell.LayerIndex > cell.LayerIndex))
-			// {
-			// 	border = border.TrimCorner(topLeft: true);
-			// }
-			// if (topRightCell is not null && topRightCell.Visibility.IsVisible &&
-			// 	(topRightCell.IsSelected && !cell.IsSelected || topRightCell.LayerIndex > cell.LayerIndex))
-			// {
-			// 	border = border.TrimCorner(topRight: true);
-			// }
-			// if (bottomLeftCell is not null && bottomLeftCell.Visibility.IsVisible &&
-			// 	(bottomLeftCell.IsSelected && !cell.IsSelected || bottomLeftCell.LayerIndex > cell.LayerIndex))
-			// {
-			// 	border = border.TrimCorner(bottomLeft: true);
-			// }
-			// if (bottomRightCell is not null && bottomRightCell.Visibility.IsVisible &&
-			// 	(bottomRightCell.IsSelected && !cell.IsSelected || bottomRightCell.LayerIndex > cell.LayerIndex))
-			// {
-			// 	border = border.TrimCorner(bottomRight: true);
-			// }
+			for (int i = 0; i < matrix.GetLength(0); i++)
+			{
+				if (GetNearestVisibleCell(table, position, matrix[i, 0], matrix[i, 1]) is var nearestCell && nearestCell is not null &&
+					(nearestCell.IsSelected && !cell.IsSelected || nearestCell.LayerIndex > cell.LayerIndex && !cell.IsSelected))
+				{
+					if (matrix[i, 0] == 0 || matrix[i, 1] == 0)
+					{
+						border = border.TrimSide(matrix[i, 1] == -1, matrix[i, 1] == 1, matrix[i, 0] == -1, matrix[i, 0] == 1);
+					}
+					else
+					{
+						border = border.TrimCorner(matrix[i, 0] == -1 && matrix[i, 1] == -1, matrix[i, 0] == 1 && matrix[i, 1] == -1,
+							matrix[i, 0] == -1 && matrix[i, 1] == 1, matrix[i, 0] == 1 && matrix[i, 1] == 1);
+					}
+				}
+			};
 
 			return border;
 		}
 
-		private static CellBorder TrimContentCellSideBorder(CellBorder border, Table table, Cell cell, Position position)
-		{
-			if (GetNearestVisibleCellToLeft(table, position) is var leftCell && leftCell is not null &&
-				(leftCell.IsSelected && !cell.IsSelected || leftCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimSide(left: true);
-			}
-			
-			if (GetNearestVisibleCellToTop(table, position) is var topCell && topCell is not null &&
-				(topCell.IsSelected && !cell.IsSelected || topCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimSide(top: true);
-			}
-
-			if (GetNearestVisibleCellToRight(table, position) is var rightCell && rightCell is not null &&
-				(rightCell.IsSelected && !cell.IsSelected || rightCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimSide(right: true);
-			}
-
-			if (GetNearestVisibleCellToBottom(table, position) is var bottomCell && bottomCell is not null &&
-				(bottomCell.IsSelected && !cell.IsSelected || bottomCell.LayerIndex > cell.LayerIndex))
-			{
-				border = border.TrimSide(bottom: true);
-			}
-
-			return border;
-		}
-
-		public static Cell GetNearestVisibleCellToTop(Table table, Position position)
+		public static Cell GetNearestVisibleCell(Table table, Position position, int horizontalIncrement, int verticalIncrement)
 		{
 			var y = position.Y;
-
-			while (y > 0)
-			{
-				var cell = table[position.X, --y];
-
-				if (cell.Visibility.IsVisible)
-				{
-					return cell;
-				}
-			}
-
-			return null;
-		}
-
-		public static Cell GetNearestVisibleCellToBottom(Table table, Position position)
-		{
-			var y = position.Y;
-
-			while (y < table.Size.Height - 1)
-			{
-				var cell = table[position.X, ++y];
-
-				if (cell.Visibility.IsVisible)
-				{
-					return cell;
-				}
-			}
-
-			return null;
-		}
-
-		public static Cell GetNearestVisibleCellToLeft(Table table, Position position)
-		{
 			var x = position.X;
 
-			while (x > 0)
+			while (x + horizontalIncrement >= 0 && x + horizontalIncrement <= table.Size.Width - 1 &&
+				y + verticalIncrement >= 0 && y + verticalIncrement <= table.Size.Height - 1)
 			{
-				var cell = table[--x, position.Y];
+				y += verticalIncrement;
+				x += horizontalIncrement;
 
-				if (cell.Visibility.IsVisible)
-				{
-					return cell;
-				}
-			}
-
-			return null;
-		}
-
-		public static Cell GetNearestVisibleCellToRight(Table table, Position position)
-		{
-			var x = position.X;
-
-			while (x < table.Size.Width - 1)
-			{
-				var cell = table[++x, position.Y];
+				var cell = table[x, y];
 
 				if (cell.Visibility.IsVisible)
 				{
@@ -475,7 +391,7 @@ namespace SimpleTableManager.Services
 			var horizontalAlignmentToRender = cell.ContentAlignment.Horizontal;
 			var verticalAlignmentToRender = cell.ContentAlignment.Vertical;
 
-			if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.LayerIndex)
+			if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.Layer)
 			{
 				contentToRender = cell.LayerIndex == 0 ? new List<object>() : new List<object>() { cell.LayerIndex };
 				horizontalAlignmentToRender = HorizontalAlignment.Center;

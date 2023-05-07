@@ -36,6 +36,8 @@ namespace SimpleTableManager.Models
 		{
 			ContentColor.Foreground = selected ? 
 				Settings.Current.SelectedContentColor.Foreground : Settings.Current.DefaultContentColor.Foreground;
+			ContentColor.Background = selected ?
+				Settings.Current.SelectedContentColor.Background : Settings.Current.DefaultContentColor.Background;
 		}
 	}
 }

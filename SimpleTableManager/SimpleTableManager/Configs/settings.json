@@ -20,12 +20,11 @@
 	// 	"Background": "White"
 	// },
 	"SelectedContentColor": {
-		"Foreground": "Green"
-		//"Background": "Red"
+		"Foreground": "Black",
+		"Background": "DarkGreen"
 	},
 	"SelectedBorderColor": {
-		"Foreground": "Green"
-		//"Background": "Red"
+		"Foreground": "White"
 	},
 	"ModernTableBorder": false,
 	"IndexCellLeftArrow": "◀",
