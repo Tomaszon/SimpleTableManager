@@ -6,7 +6,9 @@ namespace SimpleTableManager.Services.Functions;
 [JsonConverter(typeof(StringEnumConverter))]
 public enum StringFunctionOperator
 {
+	Const,
 	Con,
 	Join,
-	Len
+	Len,
+	Split
 }

@@ -6,8 +6,12 @@ namespace SimpleTableManager.Services.Functions;
 [JsonConverter(typeof(StringEnumConverter))]
 public enum NumericFunctionOperator
 {
+	Const,
 	Sum,
 	Avg,
 	Min,
-	Max
+	Max,
+	Floor,
+	Ceiling,
+	Round
 }

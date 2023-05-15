@@ -30,6 +30,7 @@ namespace SimpleTableManager.Services
 				return value;
 			}
 
+
 			var method = GetParseMethod(dataType, out var targetDataType);
 
 			if (method is null)
