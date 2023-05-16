@@ -3,23 +3,21 @@ using System.Linq;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public class StringFunction2 : Function2<string, object, StringFunctionOperator>
+	public class StringFunction2 : Function2<StringFunctionOperator, string>
 	{
-		public override IEnumerable<object> Execute(List<string> referenceArguments = null)
+		public override IEnumerable<object> Execute()
 		{
-			var separator = GetSeparator();
+			var separator = NamedArguments["separator"] as string;
 
-			IEnumerable<object> result = Operator switch
+			var result = Operator switch
 			{
-				StringFunctionOperator.Const => Arguments.ToArray(),
-				StringFunctionOperator.Con =>
-					new[] { Concat(referenceArguments) },
-				StringFunctionOperator.Join =>
-					new[] { string.Join(separator, string.Join(separator, Arguments.Skip(1)), string.Join(separator, referenceArguments)) },
-				StringFunctionOperator.Len =>
-					new object[] { Concat(referenceArguments).Length },
+				StringFunctionOperator.Const => Arguments.Cast<object>(),
+				StringFunctionOperator.Con => new[] { ConcatArguments() },
+				StringFunctionOperator.Join => new[] { JoinArguments(separator) },
+				StringFunctionOperator.Len => new object[] { ConcatArguments().Length },
 				StringFunctionOperator.Split =>
-					Concat(referenceArguments, true).Split(separator),
+					Arguments.SelectMany(p => ((string)p).Split(separator))
+					.Union(ReferenceArguments.SelectMany(p => ((string)p).Split(separator))),
 
 				_ => throw new System.InvalidOperationException()
 			};
@@ -27,29 +25,16 @@ namespace SimpleTableManager.Services.Functions
 			return result;
 		}
 
-		private string GetSeparator()
+		private string ConcatArguments()
 		{
-			return Arguments.FirstOrDefault();
+			return string.Concat(string.Concat(Arguments), string.Concat(ReferenceArguments));
 		}
 
-		private string Concat(List<string> referenceArguments, bool skipFirstArgument = false)
+		private string JoinArguments(string separator)
 		{
-			return string.Concat(string.Concat(skipFirstArgument ? Arguments.Skip(1) : Arguments), string.Concat(referenceArguments));
-		}
+			var value = string.Join(separator, string.Join(separator, Arguments), string.Join(separator, ReferenceArguments));
 
-		public override string Convert(string value)
-		{
-			return value;
-		}
-
-		public override string ConvertFrom(object value)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override object ConvertTo(string value)
-		{
-			throw new System.NotImplementedException();
+			return value.Substring(0, value.Length - separator.Length);
 		}
 	}
 }

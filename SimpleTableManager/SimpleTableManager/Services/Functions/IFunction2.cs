@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public interface IFunction2<TIn, TOut>
+	public interface IFunction2
 	{
-		public abstract IEnumerable<TOut> Execute(List<TIn> referenceArguments = null);
+		public IEnumerable<object> Execute();
 	}
 }

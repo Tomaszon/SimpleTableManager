@@ -6,6 +6,7 @@ using SimpleTableManager.Models;
 using SimpleTableManager.Models.Exceptions;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
+using System.Diagnostics;
 
 namespace SimpleTableManager
 {
@@ -30,9 +31,28 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
 			#region test
+
 			// var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
 
 			// var result = function.Execute();
+
+			IFunction2 fn = new StringFunction2()
+			{
+				Operator = StringFunctionOperator.Const,
+				NamedArguments = new Dictionary<string, object>() { { "separator", "," } },
+				Arguments = new[] { "al,ma", "körte" }
+			};
+			var result = fn.Execute().ToList();
+
+			fn = new DecimalNumericFunction2()
+			{
+				Operator = NumericFunctionOperator.Ceiling,
+				NamedArguments = new Dictionary<string, object> { { "decimals", 0 } },
+				Arguments = new[] { 5.5m, 2.2m, 3.9m }
+			};
+			result = fn.Execute().ToList();
+
+			Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
 
 			document.GetActiveTable()[1, 0].ContentType = typeof(decimal);
 			document.GetActiveTable()[1, 0].SetContent(5, 2);
@@ -40,7 +60,7 @@ namespace SimpleTableManager
 			document.GetActiveTable()[2, 0].ContentType = typeof(decimal);
 			document.GetActiveTable()[2, 0].SetContent(4);
 
-			var cell11 = document.GetActiveTable()[1,1];
+			var cell11 = document.GetActiveTable()[1, 1];
 			cell11.SetContentColor(ConsoleColor.Red, ConsoleColor.Yellow);
 			cell11.SetBorderColor(ConsoleColor.Red, ConsoleColor.Yellow);
 

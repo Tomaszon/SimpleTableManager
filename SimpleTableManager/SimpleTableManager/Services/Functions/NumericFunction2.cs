@@ -1,38 +1,47 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public abstract class NumericFunction2<TIn, TOut> : Function2<TIn, TOut, NumericFunctionOperator>
-		where TIn : INumber<TIn>
+	public abstract class NumericFunction2<TType> : Function2<NumericFunctionOperator, TType>
+		where TType : INumber<TType>, IMinMaxValue<TType>
 	{
-		public override IEnumerable<TOut> Execute(List<TIn> referenceArguments = null)
+		public override IEnumerable<object> Execute()
 		{
 			var result = Operator switch
 			{
 				NumericFunctionOperator.Const => Arguments.ToArray(),
 				NumericFunctionOperator.Sum =>
-					new[] { Sum(Arguments) + Sum(referenceArguments) },
+					new[] { Sum(Arguments) + Sum(ReferenceArguments) },
 				NumericFunctionOperator.Avg =>
-					new[] { (Sum(Arguments) + Sum(referenceArguments)) / TIn.Parse((Arguments.Count + referenceArguments.Count).ToString(), System.Globalization.NumberStyles.Integer, null) },
+					new[] { (Sum(Arguments) + Sum(ReferenceArguments)) / TType.Parse((Arguments.Count() + ReferenceArguments.Count()).ToString(), NumberStyles.Integer, null) },
 				NumericFunctionOperator.Min =>
-					new[] { new[] { Arguments.Min(), referenceArguments.Min() }.Min() },
+					new[] { new[] { Min(Arguments), Min(ReferenceArguments) }.Min() },
 				NumericFunctionOperator.Max =>
-					new[] { new[] { Arguments.Max(), referenceArguments.Max() }.Max() },
+					new[] { new[] { Max(Arguments), Max(ReferenceArguments) }.Max() },
 
 				_ => throw new InvalidOperationException()
 			};
 
-			return result.Select(r => Convert(r));
+			return result.Cast<object>();
 		}
 
-		private TIn Sum(IEnumerable<TIn> array)
+		protected TType Sum(IEnumerable<TType> array)
 		{
-			return array.Aggregate(TIn.AdditiveIdentity, (a, c) => a += c);
+			return array.Aggregate(TType.AdditiveIdentity, (a, c) => a += c);
 		}
 
-		public abstract TOut Cast<T>(INumber<T> value) where T : INumber<T>;
+		private TType Min(IEnumerable<TType> array)
+		{
+			return array.Count() > 0 ? array.Min() : TType.MaxValue;
+		}
+
+		private TType Max (IEnumerable<TType> array)
+		{
+			return array.Count() > 0 ? array.Max() : TType.MinValue;
+		}
 	}
 }

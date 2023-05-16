@@ -68,6 +68,8 @@ namespace SimpleTableManager.Models
 
 		public IFunction ContentFunction { get; set; }
 
+		public IFunction2 ContentFunction2 { get; set; }
+
 		public bool IsSelected { get; set; }
 
 		public CellVisibility Visibility { get; set; } = new CellVisibility();
