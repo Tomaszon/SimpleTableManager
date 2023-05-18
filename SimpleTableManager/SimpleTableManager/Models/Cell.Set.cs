@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SimpleTableManager.Models.Attributes;
@@ -33,6 +34,28 @@ namespace SimpleTableManager.Models
 			{
 				ContentFunction = ObjectFunction.Empty();
 			}
+		}
+
+		[CommandReference]
+		public void SetContent2(params object[] contents)
+		{
+			ContentFunction2 = FunctionCollection2.GetFunction(ContentType.Name, "const", null, contents);
+		}
+
+		[CommandReference]
+		public void SetStringContentFunction(StringFunctionOperator functionOperator, params string[] arguments)
+		{
+			var args = Shared.SeparateNamedArguments<string>(arguments);
+
+			ContentFunction2 = new StringFunction2(functionOperator, args.Item1, args.Item2);
+		}
+
+		[CommandReference]
+		public void SetDecimalContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
+		{
+			var args = Shared.SeparateNamedArguments<decimal>(arguments);
+
+			ContentFunction2 = new DecimalNumericFunction2(functionOperator, args.Item1, args.Item2);
 		}
 
 		[CommandReference]
@@ -76,7 +99,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetBorderColor(ConsoleColor foreground, ConsoleColor? background = null)
 		{
-			if(LayerIndex == 0)
+			if (LayerIndex == 0)
 			{
 				SetLayerIndexToMax();
 			}
@@ -105,7 +128,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetLayerIndexToMax()
 		{
-			LayerIndex =  Table.GetMaxCellLayerIndex();
+			LayerIndex = Table.GetMaxCellLayerIndex();
 			IncreaseLayerIndex();
 		}
 

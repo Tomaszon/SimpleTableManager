@@ -36,73 +36,80 @@ namespace SimpleTableManager
 
 			// var result = function.Execute();
 
-			IFunction2 fn = new StringFunction2()
-			{
-				Operator = StringFunctionOperator.Const,
-				NamedArguments = new Dictionary<string, object>() { { "separator", "," } },
-				Arguments = new[] { "al,ma", "körte" }
-			};
-			var result = fn.Execute().ToList();
+			// IFunction2 fn = new StringFunction2()
+			// {
+			// 	Operator = StringFunctionOperator.Const,
+			// 	NamedArguments = new Dictionary<string, string>() { { "separator", "," } },
+			// 	Arguments = new[] { "al,ma", "körte" }
+			// };
+			// object result = fn.Execute(out _).ToList();
 
-			fn = new DecimalNumericFunction2()
-			{
-				Operator = NumericFunctionOperator.Ceiling,
-				NamedArguments = new Dictionary<string, object> { { "decimals", 0 } },
-				Arguments = new[] { 5.5m, 2.2m, 3.9m }
-			};
-			result = fn.Execute().ToList();
+			// fn = new DecimalNumericFunction2()
+			// {
+			// 	Operator = NumericFunctionOperator.Ceiling,
+			// 	NamedArguments = new Dictionary<string, string> { { "decimals", "0" } },
+			// 	Arguments = new[] { 5.5m, 2.2m, 3.9m }
+			// };
+			// result = fn.Execute(out _).ToList();
 
-			Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
+			// Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
+			document.GetActiveTable()[1,1].IsSelected = true;
 
-			document.GetActiveTable()[1, 0].ContentType = typeof(decimal);
-			document.GetActiveTable()[1, 0].SetContent(5, 2);
+			//document.GetActiveTable()[1,1].SetContent2("string", "con", "alma", "körte", "szilva");
 
-			document.GetActiveTable()[2, 0].ContentType = typeof(decimal);
-			document.GetActiveTable()[2, 0].SetContent(4);
+			// result = document.GetActiveTable()[1,1].ContentFunction2;
 
-			var cell11 = document.GetActiveTable()[1, 1];
-			cell11.SetContentColor(ConsoleColor.Red, ConsoleColor.Yellow);
-			cell11.SetBorderColor(ConsoleColor.Red, ConsoleColor.Yellow);
+			// Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
 
-			var cell31 = document.GetActiveTable()[3, 0];
-			cell31.SetContent(NumericFunctionOperator.Avg, "1,0", "2,0");
-			cell31.SetHorizontalAlignment(HorizontalAlignment.Left);
-			cell31.SetBorderColor(ConsoleColor.Red);
+			// document.GetActiveTable()[1, 0].ContentType = typeof(decimal);
+			// document.GetActiveTable()[1, 0].SetContent(5, 2);
 
-			var cell42 = document.GetActiveTable()[4, 1];
-			cell42.SetBorderColor(ConsoleColor.Green);
+			// document.GetActiveTable()[2, 0].ContentType = typeof(decimal);
+			// document.GetActiveTable()[2, 0].SetContent(4);
 
-			var cell32 = document.GetActiveTable()[3, 1];
-			cell32.SetBorderColor(ConsoleColor.Magenta);
+			// var cell11 = document.GetActiveTable()[1, 1];
+			// cell11.SetContentColor(ConsoleColor.Red, ConsoleColor.Yellow);
+			// cell11.SetBorderColor(ConsoleColor.Red, ConsoleColor.Yellow);
 
-			document.GetActiveTable()[4, 0].SetContent(ObjectFunctionOperator.Const, "szilva");
+			// var cell31 = document.GetActiveTable()[3, 0];
+			// cell31.SetContent(NumericFunctionOperator.Avg, "1,0", "2,0");
+			// cell31.SetHorizontalAlignment(HorizontalAlignment.Left);
+			// cell31.SetBorderColor(ConsoleColor.Red);
 
-			document.GetActiveTable()[5, 0].ContentType = typeof(decimal);
-			document.GetActiveTable()[5, 0].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
-			{
-				new ObjectFunction(new Position(4, 0))
-			});
+			// var cell42 = document.GetActiveTable()[4, 1];
+			// cell42.SetBorderColor(ConsoleColor.Green);
 
-			document.GetActiveTable()[6, 0].SetContent("const", "alma", "körte");
+			// var cell32 = document.GetActiveTable()[3, 1];
+			// cell32.SetBorderColor(ConsoleColor.Magenta);
 
-			document.GetActiveTable()[1, 1].SetContent("con", "4,0", "6,0");
+			// document.GetActiveTable()[4, 0].SetContent(ObjectFunctionOperator.Const, "szilva");
 
-			document.GetActiveTable()[2, 1].SetContent("join", "1,0", "4,0");
+			// document.GetActiveTable()[5, 0].ContentType = typeof(decimal);
+			// document.GetActiveTable()[5, 0].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
+			// {
+			// 	new ObjectFunction(new Position(4, 0))
+			// });
 
-			document.GetActiveTable()[3, 1].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Join, new[]
-			{
-				FunctionCollection.GetFunction(NumericFunctionOperator.Avg, new[]
-				{
-					new ObjectFunction(new Position(2, 0)),
-				 	new ObjectFunction(new Position(5, 0))
-				}),
-				FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
-				{
-					new ObjectFunction(new Position(4, 0))
-				})
-			});
+			// document.GetActiveTable()[6, 0].SetContent("const", "alma", "körte");
 
-			document.GetActiveTable()[4, 1].SetContent("sum", "1,0", 4);
+			// document.GetActiveTable()[1, 1].SetContent("con", "4,0", "6,0");
+
+			// document.GetActiveTable()[2, 1].SetContent("join", "1,0", "4,0");
+
+			// document.GetActiveTable()[3, 1].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Join, new[]
+			// {
+			// 	FunctionCollection.GetFunction(NumericFunctionOperator.Avg, new[]
+			// 	{
+			// 		new ObjectFunction(new Position(2, 0)),
+			// 	 	new ObjectFunction(new Position(5, 0))
+			// 	}),
+			// 	FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
+			// 	{
+			// 		new ObjectFunction(new Position(4, 0))
+			// 	})
+			// });
+
+			// document.GetActiveTable()[4, 1].SetContent("sum", "1,0", 4);
 
 
 			//foreach (var cell in table.Cells)

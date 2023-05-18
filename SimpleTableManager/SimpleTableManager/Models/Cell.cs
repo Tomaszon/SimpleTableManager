@@ -55,9 +55,16 @@ namespace SimpleTableManager.Models
 
 		public List<object> GetContents()
 		{
-			var result = Table.ExecuteCellFunctionWithParameters(this, out var contentType);
+			Type contentType = null;
 
-			return result.Select(r => r.Value).Where(r => r is not null).Select(r =>
+			var result = ContentFunction2?.Execute(out contentType) ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+
+			if (contentType is not null)
+			{
+				ContentType = contentType;
+			}
+
+			return result.Where(r => r is not null).Select(r =>
 			{
 				var b = ContentType.IsAssignableFrom(r.GetType());
 

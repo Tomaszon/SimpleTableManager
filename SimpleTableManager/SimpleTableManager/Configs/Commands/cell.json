@@ -1,6 +1,13 @@
 {
 	"set": {
 		"content": "setContent",
+		"content2": "setContent2",
+		"content-function2": {
+			"decimal": "setDecimalContentFunction",
+			"int": "setIntegerContentFunction",
+			"string": "setStringContentFunction",
+			"bool": "setBooleanContentFunction"
+		},
 		"vertical-alignment": "setVerticalAlignment",
 		"horizontal-alignment": "setHorizontalAlignment",
 		"padding": "setPadding",

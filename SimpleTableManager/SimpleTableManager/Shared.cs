@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SimpleTableManager.Models.Attributes;
+using System.Formats;
+using System.Globalization;
+
 
 namespace SimpleTableManager.Services
 {
@@ -30,7 +33,6 @@ namespace SimpleTableManager.Services
 				return value;
 			}
 
-
 			var method = GetParseMethod(dataType, out var targetDataType);
 
 			if (method is null)
@@ -40,7 +42,19 @@ namespace SimpleTableManager.Services
 
 			try
 			{
-				return method.Invoke(null, method.GetParameters().Length == 3 ? new object[] { targetDataType, value, true } : new object[] { value });
+				if (dataType.IsEnum)
+				{
+					if(int.TryParse(value, out _))
+					{
+						throw new FormatException("Enum must be provided by name instead of value");
+					}
+
+					return method.Invoke(null, new object[] { targetDataType, value, true });
+				}
+				else
+				{
+					return method.Invoke(null, new object[] { value });
+				}
 			}
 			catch (Exception ex)
 			{
@@ -147,6 +161,17 @@ namespace SimpleTableManager.Services
 		public static string FormatTypeName(Type type)
 		{
 			return type.IsGenericType ? $"{type.Name}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.Name;
+		}
+
+		public static (Dictionary<string, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments) where TType : IParsable<TType>
+		{
+			var namedArgs = arguments.Where(a => a.Contains(':') == true);
+
+			var regularArgs = arguments.Except(namedArgs).Select(e => TType.Parse(e, null));
+
+			var namedArgsDic = namedArgs.ToDictionary(k => k.Split(':')[0], v => v.Substring(v.IndexOf(':') + 1));
+
+			return (namedArgsDic, regularArgs);
 		}
 	}
 }

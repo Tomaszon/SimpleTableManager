@@ -6,10 +6,14 @@ using System.Numerics;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public abstract class NumericFunction2<TType> : Function2<NumericFunctionOperator, TType>
+	public abstract class NumericFunction2<TType> : FunctionBase2<NumericFunctionOperator, TType>
 		where TType : INumber<TType>, IMinMaxValue<TType>
 	{
-		public override IEnumerable<object> Execute()
+		public NumericFunction2() : base() { }
+
+		public NumericFunction2(NumericFunctionOperator functionOperator, Dictionary<string, string> namedArguments, IEnumerable<TType> arguments) : base(functionOperator, namedArguments, arguments) { }
+
+		public override IEnumerable<object> Execute(out Type resultType)
 		{
 			var result = Operator switch
 			{
@@ -26,6 +30,8 @@ namespace SimpleTableManager.Services.Functions
 				_ => throw new InvalidOperationException()
 			};
 
+			resultType = typeof(TType);
+
 			return result.Cast<object>();
 		}
 
@@ -39,7 +45,7 @@ namespace SimpleTableManager.Services.Functions
 			return array.Count() > 0 ? array.Min() : TType.MaxValue;
 		}
 
-		private TType Max (IEnumerable<TType> array)
+		private TType Max(IEnumerable<TType> array)
 		{
 			return array.Count() > 0 ? array.Max() : TType.MinValue;
 		}

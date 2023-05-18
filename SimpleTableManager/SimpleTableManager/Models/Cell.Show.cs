@@ -11,8 +11,8 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowDetails()
 		{
-			var funcDic = ContentFunction is not null ?
-				ContentFunction.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(ContentFunction)) : null;
+			var funcDic = ContentFunction2 is not null ?
+				ContentFunction2.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(ContentFunction2)) : null;
 
 			return new
 			{
@@ -35,7 +35,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowContentFunction()
 		{
-			return ContentFunction;
+			return ContentFunction2;
 		}
 	}
 }

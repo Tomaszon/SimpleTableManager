@@ -1,26 +1,34 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public class StringFunction2 : Function2<StringFunctionOperator, string>
+	public class StringFunction2 : FunctionBase2<StringFunctionOperator, string>
 	{
-		public override IEnumerable<object> Execute()
+		public StringFunction2() : base() { }
+
+		public StringFunction2(StringFunctionOperator functionOperator, Dictionary<string, string> namedArguments, IEnumerable<string> arguments) : base(functionOperator, namedArguments, arguments) { }
+
+		public override IEnumerable<object> Execute(out Type resultType)
 		{
-			var separator = NamedArguments["separator"] as string;
+			var separator = NamedArguments.TryGetValue("separator", out var s) ? s : " ";
 
 			var result = Operator switch
 			{
 				StringFunctionOperator.Const => Arguments.Cast<object>(),
 				StringFunctionOperator.Con => new[] { ConcatArguments() },
-				StringFunctionOperator.Join => new[] { JoinArguments(separator) },
+				StringFunctionOperator.Join => new[] { JoinArguments((string)separator) },
 				StringFunctionOperator.Len => new object[] { ConcatArguments().Length },
 				StringFunctionOperator.Split =>
-					Arguments.SelectMany(p => ((string)p).Split(separator))
-					.Union(ReferenceArguments.SelectMany(p => ((string)p).Split(separator))),
+					Arguments.SelectMany(p => ((string)p).Split((string)separator))
+					.Union(ReferenceArguments.SelectMany(p => ((string)p).Split((string)separator))),
 
 				_ => throw new System.InvalidOperationException()
 			};
+
+			//TODO handle other cases
+			resultType = typeof(string);
 
 			return result;
 		}
