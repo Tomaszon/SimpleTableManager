@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+
 using Newtonsoft.Json;
+
 using SimpleTableManager.Models.Attributes;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
@@ -73,7 +75,7 @@ namespace SimpleTableManager.Models
 			}).ToList();
 		}
 
-		public IFunction ContentFunction { get; set; }
+		//public IFunction ContentFunction { get; set; }
 
 		public IFunction2 ContentFunction2 { get; set; }
 
@@ -107,27 +109,35 @@ namespace SimpleTableManager.Models
 		{
 			Table = table;
 
-			SetContent(contents);
+			SetContent2(contents);
 		}
 
-		public void ClearContent()
-		{
-			ContentFunction = ObjectFunction.Empty();
-		}
+		// public void ClearContent()
+		// {
+		// 	ContentFunction2 = ObjectFunction.Empty();
+		// }
 
-		public void AddArgumentFirst(params object[] contents)
-		{
-			ContentFunction.InsertArguments(0, contents);
-		}
+		// public void AddArgumentFirst(params object[] contents)
+		// {
+		// 	ContentFunction.InsertArguments(0, contents);
+		// }
 
-		public void AddArgumentLast(params object[] contents)
-		{
-			ContentFunction.AddArguments(contents);
-		}
+		// public void AddArgumentLast(params object[] contents)
+		// {
+		// 	ContentFunction.AddArguments(contents);
+		// }
 
-		public void RemoveLastArgument()
+		// public void RemoveLastArgument()
+		// {
+		// 	ContentFunction.RemoveLastArgument();
+		// }
+
+		private void SetFunction<T>(Enum functionOperator, params string[] arguments)
+			where T : IParsable<T>
 		{
-			ContentFunction.RemoveLastArgument();
+			var args = Shared.SeparateNamedArguments<T>(arguments);
+
+			ContentFunction2 = FunctionCollection2.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
 		}
 
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

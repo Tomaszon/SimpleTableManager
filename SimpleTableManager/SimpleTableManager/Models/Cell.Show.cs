@@ -11,8 +11,8 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowDetails()
 		{
-			var funcDic = ContentFunction2 is not null ?
-				ContentFunction2.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(ContentFunction2)) : null;
+			var functionOperator = ContentFunction2 is not null ?
+				ContentFunction2.GetType().GetProperty(nameof(FunctionBase2<Enum, object>.Operator)).GetValue(ContentFunction2) : null;
 
 			return new
 			{
@@ -22,8 +22,9 @@ namespace SimpleTableManager.Models
 				Content = new
 				{
 					Type = ContentType.Name,
-					Function = funcDic is not null ?
-						$"{funcDic[nameof(Function<Enum, object>.TypeName)]}:{funcDic[nameof(Function<Enum, object>.Operator)]}" : null,
+					Function = ContentFunction2 is not null ?
+						$"{ContentFunction2.GetType().Name}:{functionOperator}" : null,
+					Value = GetContents(),
 					Padding = ContentPadding.ToString(),
 					Alignment = ContentAlignment.ToString(),
 					Color = ContentColor.ToString(),

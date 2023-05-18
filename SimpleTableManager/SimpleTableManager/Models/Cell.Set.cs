@@ -10,52 +10,62 @@ namespace SimpleTableManager.Models
 {
 	public partial class Cell
 	{
-		[CommandReference]
-		public void SetContent(params object[] contents)
-		{
-			var funcName = contents.FirstOrDefault()?.ToString();
+		// [CommandReference]
+		// public void SetContent(params object[] contents)
+		// {
+		// 	var funcName = contents.FirstOrDefault()?.ToString();
 
-			var explicitFunc = FunctionCollection.HasFunction(funcName, out _);
+		// 	var explicitFunc = FunctionCollection.HasFunction(funcName, out _);
 
-			if (contents.Length > 1)
-			{
-				ContentFunction = explicitFunc ?
-					FunctionCollection.GetFunction(funcName, contents.Skip(1).Select(p =>
-						p is IFunction f && f is not null ? f : new ObjectFunction(p))) :
-					FunctionCollection.GetFunctionCore(typeof(ObjectFunction), ObjectFunctionOperator.Const, contents.Select(p =>
-						p is IFunction f && f is not null ? f : new ObjectFunction(p)));
-			}
-			else if (contents.Length == 1)
-			{
-				ContentFunction = contents.First() is IFunction f && f is not null ? f :
-					new ObjectFunction(contents.First());
-			}
-			else
-			{
-				ContentFunction = ObjectFunction.Empty();
-			}
-		}
+		// 	if (contents.Length > 1)
+		// 	{
+		// 		ContentFunction = explicitFunc ?
+		// 			FunctionCollection.GetFunction(funcName, contents.Skip(1).Select(p =>
+		// 				p is IFunction f && f is not null ? f : new ObjectFunction(p))) :
+		// 			FunctionCollection.GetFunctionCore(typeof(ObjectFunction), ObjectFunctionOperator.Const, contents.Select(p =>
+		// 				p is IFunction f && f is not null ? f : new ObjectFunction(p)));
+		// 	}
+		// 	else if (contents.Length == 1)
+		// 	{
+		// 		ContentFunction = contents.First() is IFunction f && f is not null ? f :
+		// 			new ObjectFunction(contents.First());
+		// 	}
+		// 	else
+		// 	{
+		// 		ContentFunction = ObjectFunction.Empty();
+		// 	}
+		// }
 
 		[CommandReference]
 		public void SetContent2(params object[] contents)
 		{
-			ContentFunction2 = FunctionCollection2.GetFunction(ContentType.Name, "const", null, contents);
+			ContentFunction2 = contents?.Length > 0 ?
+				ContentFunction2 = FunctionCollection2.GetFunction(ContentType.Name, "const", null, contents) :
+				null;
 		}
 
 		[CommandReference]
 		public void SetStringContentFunction(StringFunctionOperator functionOperator, params string[] arguments)
 		{
-			var args = Shared.SeparateNamedArguments<string>(arguments);
+			SetFunction<string>(functionOperator, arguments);
+		}
 
-			ContentFunction2 = new StringFunction2(functionOperator, args.Item1, args.Item2);
+		[CommandReference]
+		public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
+		{
+			SetFunction<int>(functionOperator, arguments);
 		}
 
 		[CommandReference]
 		public void SetDecimalContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
 		{
-			var args = Shared.SeparateNamedArguments<decimal>(arguments);
+			SetFunction<decimal>(functionOperator, arguments);
+		}
 
-			ContentFunction2 = new DecimalNumericFunction2(functionOperator, args.Item1, args.Item2);
+		[CommandReference]
+		public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, params string[] arguments)
+		{
+			SetFunction<bool>(functionOperator, arguments);
 		}
 
 		[CommandReference]

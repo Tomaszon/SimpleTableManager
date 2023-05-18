@@ -51,7 +51,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetCellContent(Position position, params object[] contents)
 		{
-			this[position].SetContent(contents);
+			this[position].SetContent2(contents);
 		}
 
 		[CommandReference]

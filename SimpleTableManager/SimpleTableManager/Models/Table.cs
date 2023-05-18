@@ -212,15 +212,6 @@ namespace SimpleTableManager.Models
 			return y >= ViewOptions.StartPosition.Y && y <= ViewOptions.EndPosition.Y;
 		}
 
-		//public List<Cell> GetCellsInView(int y)
-		//{
-		//	var siderCell = this[0, y];
-
-		//	var contentCells = Rows[y].GetRange(ViewOptions.StartPosition.X, ViewOptions.Size.Width);
-
-		//	return Enumerable.Union(new[] { siderCell }, contentCells).ToList();
-		//}
-
 		public int GetMaxCellLayerIndex()
 		{
 			return Content.Max(c => c.LayerIndex);
@@ -231,31 +222,31 @@ namespace SimpleTableManager.Models
 			return Content.Min(c => c.LayerIndex);
 		}
 
-		public List<ObjectFunction> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
-		{
-			var referredPositions = cell.ContentFunction.GetReferredCellPositions();
+		// public List<ObjectFunction> ExecuteCellFunctionWithParameters(Cell cell, out Type contentType)
+		// {
+		// 	var referredPositions = cell.ContentFunction.GetReferredCellPositions();
 
-			if (referredPositions.Contains(this[cell]))
-			{
-				contentType = typeof(string);
+		// 	if (referredPositions.Contains(this[cell]))
+		// 	{
+		// 		contentType = typeof(string);
 
-				return new List<ObjectFunction> { new ObjectFunction("Ref error") };
-			}
-			else
-			{
-				var arguments = referredPositions.Select(p =>
-				{
-					var content = this[p].GetContents();
+		// 		return new List<ObjectFunction> { new ObjectFunction("Ref error") };
+		// 	}
+		// 	else
+		// 	{
+		// 		var arguments = referredPositions.Select(p =>
+		// 		{
+		// 			var content = this[p].GetContents();
 
-					return (p, content.Select(c => new ObjectFunction(c)));
-				}).Where(e => e.Item2.Count() > 0).Select(e => new GroupedObjectFunctions(e.p, e.Item2.ToList()));
+		// 			return (p, content.Select(c => new ObjectFunction(c)));
+		// 		}).Where(e => e.Item2.Count() > 0).Select(e => new GroupedObjectFunctions(e.p, e.Item2.ToList()));
 
-				var result = cell.ContentFunction.Execute(arguments);
+		// 		var result = cell.ContentFunction.Execute(arguments);
 
-				contentType = result.FirstOrDefault()?.Value?.GetType();
+		// 		contentType = result.FirstOrDefault()?.Value?.GetType();
 
-				return result.ToList();
-			}
-		}
+		// 		return result.ToList();
+		// 	}
+		// }
 	}
 }
