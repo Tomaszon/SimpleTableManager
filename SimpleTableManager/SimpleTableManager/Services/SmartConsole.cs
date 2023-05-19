@@ -39,8 +39,6 @@ public class SmartConsole
 			foreach (var c in LastHelp)
 			{
 				Console.Write(c);
-
-				Task.Delay(10).Wait();
 			}
 
 			Console.WriteLine("\n");

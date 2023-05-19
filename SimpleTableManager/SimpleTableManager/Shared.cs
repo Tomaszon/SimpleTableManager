@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using SimpleTableManager.Models.Attributes;
 using System.Formats;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
+using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Services
 {
@@ -18,7 +18,8 @@ namespace SimpleTableManager.Services
 			Dictionary<string, string> nameMap = new Dictionary<string, string>
 			{
 				{ "int", "int32" },
-				{ "long", "int64" }
+				{ "long", "int64" },
+				{ "bool", "boolean" }
 			};
 
 			var type = nameMap.TryGetValue(name.ToLower(), out var mapped) ? mapped : name.ToLower();
@@ -44,7 +45,7 @@ namespace SimpleTableManager.Services
 			{
 				if (dataType.IsEnum)
 				{
-					if(int.TryParse(value, out _))
+					if (int.TryParse(value, out _))
 					{
 						throw new FormatException("Enum must be provided by name instead of value");
 					}
@@ -167,7 +168,7 @@ namespace SimpleTableManager.Services
 		{
 			var namedArgs = arguments.Where(a => a.Contains(':') == true);
 
-			var regularArgs = arguments.Except(namedArgs).Select(e => TType.Parse(e, null));
+			var regularArgs = arguments.Where(a => !namedArgs.Contains(a)).Select(e => TType.Parse(e, null));
 
 			var namedArgsDic = namedArgs.ToDictionary(k => k.Split(':')[0], v => v.Substring(v.IndexOf(':') + 1));
 

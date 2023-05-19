@@ -1,19 +1,12 @@
 using System.Collections.Generic;
-using SimpleTableManager.Models;
+using System;
 
-namespace SimpleTableManager.Services.Functions;
-
-public interface IFunction
+namespace SimpleTableManager.Services.Functions
 {
-	string TypeName { get; }
+	public interface IFunction
+	{
+		public IEnumerable<object> Execute();
 
-	List<Position> GetReferredCellPositions();
-
-	List<ObjectFunction> Execute(IEnumerable<GroupedObjectFunctions> parameters = null);
-
-	void AddArguments(IEnumerable<object> arguments);
-
-	void InsertArguments(int index,  IEnumerable<object> arguments);
-
-	void RemoveLastArgument();
+		public Type GetReturnType();
+	}
 }

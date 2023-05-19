@@ -37,10 +37,14 @@ namespace SimpleTableManager.Models
 		// }
 
 		[CommandReference]
-		public void SetContent2(params object[] contents)
+		public void SetContent(params string[] contents)
 		{
-			ContentFunction2 = contents?.Length > 0 ?
-				ContentFunction2 = FunctionCollection2.GetFunction(ContentType.Name, "const", null, contents) :
+			var args = Shared.SeparateNamedArguments<string>(contents);
+
+			args.Item1.TryGetValue("type", out var typeName);
+
+			ContentFunction = contents?.Length > 0 ?
+				ContentFunction = FunctionCollection.GetFunction(typeName ?? ContentType.Name, "const", null, args.Item2) :
 				null;
 		}
 
@@ -101,9 +105,10 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void SetType(string typeName)
 		{
-			var type = Shared.GetTypeByName(typeName);
+			//TODO make it work with functions, but how?
+			// var type = Shared.GetTypeByName(typeName);
 
-			ContentType = type;
+			// SetContent(GetContents().Select(c => Shared.ParseStringValue(type, c.ToString())));
 		}
 
 		[CommandReference]

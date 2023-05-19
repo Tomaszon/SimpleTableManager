@@ -44,7 +44,7 @@ namespace SimpleTableManager.Services
 
 		private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell firstCell, IndexCell lastCell, int size)
 		{
-			collection.ForEach(s => s.Normalize());
+			collection.ForEach(s => s.RemoveEllipses());
 
 			if (firstCell is not null && firstCell.Index > 0)
 			{
@@ -404,9 +404,9 @@ namespace SimpleTableManager.Services
 
 				var content = new string(' ', sizeWithoutBorders.Width);
 
-				if (IsCellContentDrawNeeded(contentToRender, verticalAlignmentToRender, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentToRender.Count > contentIndex)
+				if (IsCellContentDrawNeeded(contentToRender, verticalAlignmentToRender, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentToRender.Count() > contentIndex)
 				{
-					content = contentToRender[contentIndex].ToString();
+					content = contentToRender.ElementAt(contentIndex).ToString();
 
 					if (!string.IsNullOrWhiteSpace(content))
 					{
@@ -458,16 +458,16 @@ namespace SimpleTableManager.Services
 			Console.WriteLine($"Table name: {table.Name}");
 		}
 
-		private static bool IsCellContentDrawNeeded(List<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)
+		private static bool IsCellContentDrawNeeded(IEnumerable<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)
 		{
 			var startLineIndex = alignment switch
 			{
 				VerticalAlignment.Top => padding.Top,
-				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, contents.Count, padding.Top, padding.Bottom),
-				_ => height - contents.Count - padding.Bottom
+				VerticalAlignment.Center => GetStartIndexForCenteredContent(height, contents.Count(), padding.Top, padding.Bottom),
+				_ => height - contents.Count() - padding.Bottom
 			};
 
-			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + contents.Count > lineIndex;
+			var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + contents.Count() > lineIndex;
 
 			contentIndex = isDrawNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
 

@@ -1,7 +1,7 @@
 {
 	"set": {
-		"content2": "setContent2",
-		"content-function2": {
+		"content": "setContent",
+		"content-function": {
 			"string": "setStringContentFunction",
 			"int": "setIntegerContentFunction",
 			"decimal": "setDecimalContentFunction",

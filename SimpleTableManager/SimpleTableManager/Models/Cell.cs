@@ -29,9 +29,9 @@ namespace SimpleTableManager.Models
 		{
 			var content = GetContents();
 
-			if (content is { } && content.Count > 0)
+			if (content is { } && content.Count() > 0)
 			{
-				return new Size(content.Max(e => e.ToString().Length), content.Count);
+				return new Size(content.Max(e => e.ToString().Length), content.Count());
 			}
 			else
 			{
@@ -53,31 +53,14 @@ namespace SimpleTableManager.Models
 				);
 		}
 
-		public Type ContentType { get; set; } = typeof(string);
+		public Type ContentType => ContentFunction?.GetReturnType() ?? typeof(string);
 
-		public List<object> GetContents()
+		public IEnumerable<object> GetContents()
 		{
-			Type contentType = null;
-
-			var result = ContentFunction2?.Execute(out contentType) ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
-
-			if (contentType is not null)
-			{
-				ContentType = contentType;
-			}
-
-			return result.Where(r => r is not null).Select(r =>
-			{
-				var b = ContentType.IsAssignableFrom(r.GetType());
-
-				return b ? r : Shared.ParseStringValue(ContentType.Name, r.ToString());
-
-			}).ToList();
+			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
 		}
 
-		//public IFunction ContentFunction { get; set; }
-
-		public IFunction2 ContentFunction2 { get; set; }
+		public IFunction ContentFunction { get; set; }
 
 		public bool IsSelected { get; set; }
 
@@ -105,11 +88,11 @@ namespace SimpleTableManager.Models
 
 		}
 
-		public Cell(Table table, params object[] contents)
+		public Cell(Table table, params string[] contents)
 		{
 			Table = table;
 
-			SetContent2(contents);
+			SetContent(contents);
 		}
 
 		// public void ClearContent()
@@ -137,7 +120,7 @@ namespace SimpleTableManager.Models
 		{
 			var args = Shared.SeparateNamedArguments<T>(arguments);
 
-			ContentFunction2 = FunctionCollection2.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
+			ContentFunction = FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
 		}
 
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

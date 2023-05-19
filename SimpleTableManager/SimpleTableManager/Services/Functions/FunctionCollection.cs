@@ -1,53 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using SimpleTableManager.Models;
+using SimpleTableManager.Extensions;
 
-namespace SimpleTableManager.Services.Functions;
-
-public static class FunctionCollection
+namespace SimpleTableManager.Services.Functions
 {
-	private static Dictionary<Type, Type> _functions;
-
-	static FunctionCollection()
+	public static class FunctionCollection
 	{
-		_functions = new Dictionary<Type, Type>()
+		public static Dictionary<Type, (Type, Type)> Functions { get; set; }
+
+		static FunctionCollection()
 		{
-			{ typeof(NumericFunctionOperator), typeof(NumericFunction) },
-			{ typeof(StringFunctionOperator), typeof(StringFunction) },
-			{ typeof(ObjectFunctionOperator), typeof(ObjectFunction) }
-		};
-	}
+			Functions = new Dictionary<Type, (Type, Type)>
+			{
+				{ typeof(int), (typeof(IntegerNumericFunction), typeof(NumericFunctionOperator)) },
+				{ typeof(decimal), (typeof(DecimalNumericFunction), typeof(NumericFunctionOperator)) },
+				{ typeof(string), (typeof(StringFunction), typeof(StringFunctionOperator)) },
+				{ typeof(bool), (typeof(BooleanFunction), typeof(BooleanFunctionOperator)) }
+			};
+		}
 
-	public static bool HasFunction(string functionOperatorName, [NotNullWhen(true)] out Type operatorType)
-	{
-		operatorType = _functions.Keys.SingleOrDefault(k => 
-			Enum.GetNames(k).Contains(functionOperatorName, StringComparer.OrdinalIgnoreCase));
+		public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<string, string> namedArguments, IEnumerable<object> arguments)
+		{
+			var types = Functions[Shared.GetTypeByName(typeName)];
+			var op = Enum.Parse(types.Item2, functionOperator, true);
+			var args = arguments.Select(a => a.ToString());
 
-		return operatorType is not null;
-	}
+			//TODO maybe get this by a custom attribute?
+			var constructor = types.Item1.GetConstructors().Where(c => c.GetParameters().Count() != 0).First();
 
-	public static IFunction GetFunction(string functionOperatorName, IEnumerable<IFunction> arguments)
-	{
-		HasFunction(functionOperatorName, out var key);
+			var argsInnerType = constructor.GetParameters().Last().ParameterType.GenericTypeArguments.First();
 
-		var functionOperator = Enum.Parse(key, functionOperatorName, true);
+			var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(argsInnerType));
 
-		var type = _functions[key];
+			var parsedArgs = argsInnerType == typeof(string) ? args : args.Select(a => Shared.ParseStringValue(argsInnerType, a));
 
-		return GetFunctionCore(type, functionOperator, arguments);
-	}
+			parsedArgs.ForEach(e => targetArray.Add(e));
 
-	public static IFunction GetFunction(Enum functionOperator, IEnumerable<IFunction> arguments)
-	{
-		var type = _functions[functionOperator.GetType()];
-
-		return GetFunctionCore(type, functionOperator, arguments);
-	}
-
-	public static IFunction GetFunctionCore(Type type, object functionOperator, IEnumerable<IFunction> arguments)
-	{
-		return (IFunction)Activator.CreateInstance(type, functionOperator, arguments.ToList());
+			return (IFunction)constructor.Invoke(new object[] { op, namedArguments, targetArray });
+		}
 	}
 }

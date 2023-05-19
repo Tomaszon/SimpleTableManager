@@ -11,8 +11,8 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowDetails()
 		{
-			var functionOperator = ContentFunction2 is not null ?
-				ContentFunction2.GetType().GetProperty(nameof(FunctionBase2<Enum, object>.Operator)).GetValue(ContentFunction2) : null;
+			var functionOperator = ContentFunction is not null ?
+				ContentFunction.GetType().GetProperty(nameof(FunctionBase<Enum, object>.Operator)).GetValue(ContentFunction) : null;
 
 			return new
 			{
@@ -22,8 +22,8 @@ namespace SimpleTableManager.Models
 				Content = new
 				{
 					Type = ContentType.Name,
-					Function = ContentFunction2 is not null ?
-						$"{ContentFunction2.GetType().Name}:{functionOperator}" : null,
+					Function = ContentFunction is not null ?
+						$"{ContentFunction.GetType().Name}:{functionOperator}" : null,
 					Value = GetContents(),
 					Padding = ContentPadding.ToString(),
 					Alignment = ContentAlignment.ToString(),
@@ -36,7 +36,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowContentFunction()
 		{
-			return ContentFunction2;
+			return ContentFunction;
 		}
 	}
 }
