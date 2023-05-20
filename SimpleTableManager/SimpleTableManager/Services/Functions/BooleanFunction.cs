@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,8 +5,6 @@ namespace SimpleTableManager.Services.Functions
 {
 	public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool>
 	{
-		public BooleanFunction(BooleanFunctionOperator functionOperator, Dictionary<string, string> namedArguments, IEnumerable<bool> arguments) : base(functionOperator, namedArguments, arguments) { }
-
 		public override IEnumerable<object> Execute()
 		{
 			return Operator switch

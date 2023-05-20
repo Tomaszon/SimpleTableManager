@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,10 +5,6 @@ namespace SimpleTableManager.Services.Functions
 {
 	public class StringFunction : FunctionBase<StringFunctionOperator, string>
 	{
-		public StringFunction() : base() { }
-
-		public StringFunction(StringFunctionOperator functionOperator, Dictionary<string, string> namedArguments, IEnumerable<string> arguments) : base(functionOperator, namedArguments, arguments) { }
-
 		public override IEnumerable<object> Execute()
 		{
 			var separator = NamedArguments.TryGetValue("separator", out var s) ? s : " ";

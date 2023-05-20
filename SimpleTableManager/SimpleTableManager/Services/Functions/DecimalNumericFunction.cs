@@ -6,10 +6,6 @@ namespace SimpleTableManager.Services.Functions
 {
 	public class DecimalNumericFunction : NumericFunction<decimal>
 	{
-		public DecimalNumericFunction() : base() { }
-
-		public DecimalNumericFunction(NumericFunctionOperator functionOperator, Dictionary<string, string> namedArguments, IEnumerable<decimal> arguments) : base(functionOperator, namedArguments, arguments) { }
-
 		public override IEnumerable<object> Execute()
 		{
 			var decimals = NamedArguments.TryGetValue("decimals", out var v) ? int.Parse(v) : 28;

@@ -20,16 +20,6 @@ namespace SimpleTableManager.Services.Functions
 
 		public TOpertor Operator { get; set; }
 
-		public FunctionBase(TOpertor functionOperator, Dictionary<string, string> namedArguments, IEnumerable<TIn> arguments)
-		{
-			Operator = functionOperator;
-			Arguments = arguments.Cast<TIn>();
-			if (namedArguments is not null)
-			{
-				NamedArguments = namedArguments;
-			}
-		}
-
 		public FunctionBase() { }
 
 		public abstract IEnumerable<object> Execute();

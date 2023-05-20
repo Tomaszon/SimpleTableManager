@@ -209,15 +209,7 @@ namespace SimpleTableManager.Services
 
 			var border = CellBorders.Get(cellBorderType);
 
-			border = DotContentCellBorder(border, table, cell, position);
-
 			return TrimContentCellBorder(border, table, cell, position);
-		}
-
-		private static CellBorder DotContentCellBorder(CellBorder border, Table table, Cell cell, Position position)
-		{
-			//TODO
-			return border;
 		}
 
 		private static CellBorder TrimContentCellBorder(CellBorder border, Table table, Cell cell, Position position)

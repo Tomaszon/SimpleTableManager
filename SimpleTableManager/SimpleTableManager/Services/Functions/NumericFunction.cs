@@ -9,10 +9,6 @@ namespace SimpleTableManager.Services.Functions
 	public abstract class NumericFunction<TType> : FunctionBase<NumericFunctionOperator, TType>
 		where TType : INumber<TType>, IMinMaxValue<TType>
 	{
-		public NumericFunction() : base() { }
-
-		public NumericFunction(NumericFunctionOperator functionOperator, Dictionary<string, string> namedArguments, IEnumerable<TType> arguments) : base(functionOperator, namedArguments, arguments) { }
-
 		public override IEnumerable<object> Execute()
 		{
 			return Operator switch
