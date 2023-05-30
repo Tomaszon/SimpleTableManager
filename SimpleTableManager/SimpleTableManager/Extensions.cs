@@ -48,5 +48,10 @@ namespace SimpleTableManager.Extensions
 		{
 			return value.AppendLeft(c, countToLeft).AppendRight(c, countToRight);
 		}
+
+		public static IEnumerable<T> Wrap<T>(this T value)
+		{
+			return new [] { value };
+		}
 	}
 }

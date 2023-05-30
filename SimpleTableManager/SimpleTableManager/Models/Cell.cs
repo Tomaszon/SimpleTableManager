@@ -57,7 +57,14 @@ namespace SimpleTableManager.Models
 
 		public IEnumerable<object> GetContents()
 		{
-			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+			try
+			{
+				return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+			}
+			catch
+			{
+				return new object[] { "Content function error" };
+			}
 		}
 
 		public IFunction ContentFunction { get; set; }

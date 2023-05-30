@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using SimpleTableManager.Extensions;
+
 namespace SimpleTableManager.Services.Functions
 {
-	public class StringFunction : FunctionBase<StringFunctionOperator, string>
+	public class StringFunction : FunctionBase<StringFunctionOperator, string, object>
 	{
 		public override IEnumerable<object> Execute()
 		{
@@ -12,12 +14,12 @@ namespace SimpleTableManager.Services.Functions
 			return Operator switch
 			{
 				StringFunctionOperator.Const => Arguments.Cast<object>(),
-				StringFunctionOperator.Con => new[] { ConcatArguments() },
-				StringFunctionOperator.Join => new[] { JoinArguments((string)separator) },
-				StringFunctionOperator.Len => new object[] { ConcatArguments().Length },
+				StringFunctionOperator.Con => ConcatArguments().Wrap(),
+				StringFunctionOperator.Join => JoinArguments(separator).Wrap(),
+				StringFunctionOperator.Len => ConcatArguments().Length.Wrap<object>(),
 				StringFunctionOperator.Split =>
-					Arguments.SelectMany(p => ((string)p).Split((string)separator))
-					.Union(ReferenceArguments.SelectMany(p => ((string)p).Split((string)separator))),
+					Arguments.SelectMany(p => p.Split(separator))
+						.Union(ReferenceArguments.SelectMany(p => p.Split(separator))),
 
 				_ => throw new System.InvalidOperationException()
 			};

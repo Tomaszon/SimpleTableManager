@@ -7,6 +7,8 @@ namespace SimpleTableManager.Services.Functions;
 public enum NumericFunctionOperator
 {
 	Const,
+	Neg,
+	Abs,
 	Sum,
 	Avg,
 	Min,

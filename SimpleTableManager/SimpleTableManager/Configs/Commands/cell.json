@@ -21,7 +21,7 @@
 		}
 	},
 	"show": {
-		"details|info": "showDetails",
+		"details": "showDetails",
 		"function": "showContentFunction"
 	},
 	"increase": {

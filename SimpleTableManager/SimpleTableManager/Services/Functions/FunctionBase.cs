@@ -6,7 +6,7 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public abstract class FunctionBase<TOpertor, TIn> : IFunction where TOpertor : Enum
+	public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction where TOpertor : Enum
 	{
 		public Dictionary<string, string> NamedArguments { get; set; } = new Dictionary<string, string>();
 
@@ -18,15 +18,40 @@ namespace SimpleTableManager.Services.Functions
 
 		public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
 
-		public TOpertor Operator { get; set; }
+		IEnumerable<object> IFunction.Arguments => Arguments.Cast<object>();
+
+		public Enum Operator { get; set; }
 
 		public FunctionBase() { }
 
-		public abstract IEnumerable<object> Execute();
+		public abstract IEnumerable<TOut> Execute();
+
+		IEnumerable<object> IFunction.Execute() => Execute().Cast<object>();
 
 		public Type GetReturnType()
 		{
-			return Execute().First().GetType();
+			try
+			{
+				return Execute().First().GetType();
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
+		public string GetError()
+		{
+			try
+			{
+				Execute();
+			}
+			catch (Exception ex)
+			{
+				return ex.Message;
+			}
+
+			return "None";
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace SimpleTableManager.Models
 		public object ShowDetails()
 		{
 			var functionOperator = ContentFunction is not null ?
-				ContentFunction.GetType().GetProperty(nameof(FunctionBase<Enum, object>.Operator)).GetValue(ContentFunction) : null;
+				ContentFunction.GetType().GetProperty(nameof(IFunction.Operator)).GetValue(ContentFunction) : null;
 
 			return new
 			{
@@ -21,9 +21,10 @@ namespace SimpleTableManager.Models
 				BorderColor = BorderColor.ToString(),
 				Content = new
 				{
-					Type = ContentType.Name,
+					Type = ContentType?.Name ?? "None",
 					Function = ContentFunction is not null ?
 						$"{ContentFunction.GetType().Name}:{functionOperator}" : null,
+					Error = ContentFunction is not null ? ContentFunction.GetError() : "None",
 					Value = GetContents(),
 					Padding = ContentPadding.ToString(),
 					Alignment = ContentAlignment.ToString(),
@@ -34,7 +35,7 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public object ShowContentFunction()
+		public IFunction ShowContentFunction()
 		{
 			return ContentFunction;
 		}
