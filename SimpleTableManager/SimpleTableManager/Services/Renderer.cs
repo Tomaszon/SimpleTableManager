@@ -143,7 +143,7 @@ namespace SimpleTableManager.Services
 
 					var posInView = table.PositionInView(x, -1);
 
-					//todo rework, remove from cell
+					//TODO rework, remove from cell
 					cell.ShowSelection(table.IsColumnSelected(x));
 
 					var border = CellBorders.Get(GetHeaderCellBorderType(table.ViewOptions.Size.Width, posInView.X));

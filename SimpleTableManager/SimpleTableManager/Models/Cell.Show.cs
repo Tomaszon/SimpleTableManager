@@ -11,9 +11,6 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public object ShowDetails()
 		{
-			var functionOperator = ContentFunction is not null ?
-				ContentFunction.GetType().GetProperty(nameof(IFunction.Operator)).GetValue(ContentFunction) : null;
-
 			return new
 			{
 				Size = GetSize().ToString(),
@@ -23,7 +20,7 @@ namespace SimpleTableManager.Models
 				{
 					Type = ContentType?.Name ?? "None",
 					Function = ContentFunction is not null ?
-						$"{ContentFunction.GetType().Name}:{functionOperator}" : null,
+						$"{ContentFunction.GetType().Name}:{ContentFunction?.Operator}" : null,
 					Error = ContentFunction is not null ? ContentFunction.GetError() : "None",
 					Value = GetContents(),
 					Padding = ContentPadding.ToString(),
@@ -35,9 +32,18 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public IFunction ShowContentFunction()
+		public object ShowContentFunction()
 		{
-			return ContentFunction;
+			
+			return ContentFunction is null ? "None" : new
+			{
+				Type = ContentFunction.GetType().Name,
+				Operator = ContentFunction.Operator,
+				NamedArguments = ContentFunction.NamedArguments,
+				Arguments = ContentFunction.Arguments,
+				ReturnType = ContentFunction.GetReturnType()?.Name ?? "None",
+				Error = ContentFunction.GetError()
+			};
 		}
 	}
 }

@@ -2,14 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SimpleTableManager.Extensions;
+using SimpleTableManager.Models;
+using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Services.Functions
 {
+	[NamedArgument(ArgumentName.Separator, " ")]
 	public class StringFunction : FunctionBase<StringFunctionOperator, string, object>
 	{
-		public override IEnumerable<object> Execute()
+		protected override IEnumerable<object> Execute()
 		{
-			var separator = NamedArguments.TryGetValue("separator", out var s) ? s : " ";
+			var separator = GetNamedArgument<string>(ArgumentName.Separator);
 
 			return Operator switch
 			{
@@ -21,7 +24,7 @@ namespace SimpleTableManager.Services.Functions
 					Arguments.SelectMany(p => p.Split(separator))
 						.Union(ReferenceArguments.SelectMany(p => p.Split(separator))),
 
-				_ => throw new System.InvalidOperationException()
+				_ => throw GetInvalidOperatorException()
 			};
 		}
 

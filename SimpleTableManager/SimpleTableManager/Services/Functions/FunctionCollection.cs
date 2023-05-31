@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 using SimpleTableManager.Extensions;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions
 {
@@ -21,13 +23,16 @@ namespace SimpleTableManager.Services.Functions
 			};
 		}
 
-		public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<string, string> namedArguments, IEnumerable<object> arguments)
+		public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, string> namedArguments, IEnumerable<object> arguments)
 		{
+			var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic;
 			var types = Functions[Shared.GetTypeByName(typeName)];
 			var op = Enum.Parse(types.Item2, functionOperator, true);
 			var args = arguments?.Select(a => a.ToString());
 
-			var argsInnerType = types.Item1.GetProperty(nameof(IFunction.Arguments)).PropertyType.GenericTypeArguments.First();
+			var argumentsProperty = types.Item1.GetProperty(nameof(IFunction.Arguments), bindingFlags);
+
+			var argsInnerType = argumentsProperty.PropertyType.GenericTypeArguments.First();
 
 			var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(argsInnerType));
 
@@ -37,14 +42,15 @@ namespace SimpleTableManager.Services.Functions
 
 			var instance = (IFunction)Activator.CreateInstance(types.Item1);
 
-			types.Item1.GetProperty(nameof(IFunction.Operator)).SetValue(instance, op);
+			types.Item1.GetProperty(nameof(IFunction.Operator), bindingFlags).SetValue(instance, op);
+
 			if (namedArguments is not null)
 			{
 				types.Item1.GetProperty(nameof(IFunction.NamedArguments)).SetValue(instance, namedArguments);
 			}
 			if (arguments is not null)
 			{
-				types.Item1.GetProperty(nameof(IFunction.Arguments)).SetValue(instance, targetArray);
+				argumentsProperty.SetValue(instance, targetArray);
 			}
 
 			return instance;

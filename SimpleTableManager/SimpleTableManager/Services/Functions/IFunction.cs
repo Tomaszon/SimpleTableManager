@@ -1,20 +1,22 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions
 {
 	public interface IFunction
 	{
-		public Dictionary<string, string> NamedArguments { get; }
+		Dictionary<ArgumentName, string> NamedArguments { get; }
 
-		public IEnumerable<object> Arguments { get; }
+		IEnumerable<object> Arguments { get; }
 
-		public Enum Operator { get; }
+		Enum Operator { get; }
 
-		public IEnumerable<object> Execute();
+		IEnumerable<object> Execute();
 
-		public Type GetReturnType();
+		Type GetReturnType();
 
-		public string GetError();
+		string GetError();
 	}
 }

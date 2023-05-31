@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace SimpleTableManager.Services.Functions;
+namespace SimpleTableManager.Models;
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum NumericFunctionOperator
@@ -10,10 +10,16 @@ public enum NumericFunctionOperator
 	Neg,
 	Abs,
 	Sum,
+	Sub,
 	Avg,
 	Min,
 	Max,
 	Floor,
 	Ceiling,
-	Round
+	Round,
+	Mul,
+	Div,
+	Rem,
+	And,
+	Or
 }

@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+
 using SimpleTableManager.Extensions;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions
 {
 	public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
 	{
-		public override IEnumerable<bool> Execute()
+		protected override IEnumerable<bool> Execute()
 		{
 			return Operator switch
 			{
@@ -15,7 +17,7 @@ namespace SimpleTableManager.Services.Functions
 				BooleanFunctionOperator.And => Arguments.Union(ReferenceArguments).All(a => a).Wrap(),
 				BooleanFunctionOperator.Or => Arguments.Union(ReferenceArguments).Any(a => a).Wrap(),
 
-				_ => throw new System.InvalidOperationException()
+				_ => throw GetInvalidOperatorException()
 			};
 		}
 	}

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Formats;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
+using SimpleTableManager.Models;
 using SimpleTableManager.Models.Attributes;
 
 namespace SimpleTableManager.Services
@@ -164,13 +163,13 @@ namespace SimpleTableManager.Services
 			return type.IsGenericType ? $"{type.Name}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.Name;
 		}
 
-		public static (Dictionary<string, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments) where TType : IParsable<TType>
+		public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments) where TType : IParsable<TType>
 		{
 			var namedArgs = arguments.Where(a => a.Contains(':') == true);
 
 			var regularArgs = arguments.Where(a => !namedArgs.Contains(a)).Select(e => TType.Parse(e, null));
 
-			var namedArgsDic = namedArgs.ToDictionary(k => k.Split(':')[0], v => v.Substring(v.IndexOf(':') + 1));
+			var namedArgsDic = namedArgs.ToDictionary(k => Enum.Parse<ArgumentName>(k.Split(':')[0], true), v => v.Substring(v.IndexOf(':') + 1));
 
 			return (namedArgsDic, regularArgs);
 		}

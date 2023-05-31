@@ -53,18 +53,11 @@ namespace SimpleTableManager.Models
 				);
 		}
 
-		public Type ContentType => ContentFunction?.GetReturnType() ?? typeof(string);
+		public Type ContentType => ContentFunction is null ? typeof(string) : ContentFunction.GetReturnType();
 
 		public IEnumerable<object> GetContents()
 		{
-			try
-			{
-				return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
-			}
-			catch
-			{
-				return new object[] { "Content function error" };
-			}
+			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
 		}
 
 		public IFunction ContentFunction { get; set; }
