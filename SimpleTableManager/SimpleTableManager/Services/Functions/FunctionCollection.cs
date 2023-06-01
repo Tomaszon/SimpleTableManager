@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 
 using SimpleTableManager.Extensions;
-using SimpleTableManager.Models;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {

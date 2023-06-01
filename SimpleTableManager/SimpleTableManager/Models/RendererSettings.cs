@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations;
+
 namespace SimpleTableManager.Models
 {
 	public class RendererSettings

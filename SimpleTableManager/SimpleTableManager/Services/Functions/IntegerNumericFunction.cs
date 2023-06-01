@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SimpleTableManager.Extensions;
-using SimpleTableManager.Models;
 using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {
@@ -12,18 +12,15 @@ namespace SimpleTableManager.Services.Functions
 	{
 		protected override IEnumerable<int> Execute()
 		{
-			var divider = GetNamedArgument<int>(ArgumentName.Divider);
+			var divider = GetArgument<int>(ArgumentName.Divider);
 
 			return Operator switch
 			{
-				NumericFunctionOperator.Rem =>
-					Arguments.Select(p => DivRem(p, divider)),
+				NumericFunctionOperator.Rem => Arguments.Select(p => DivRem(p, divider)),
 
-				NumericFunctionOperator.And =>
-					And(Arguments).Wrap(),
+				NumericFunctionOperator.And => And(Arguments).Wrap(),
 
-				NumericFunctionOperator.Or =>
-					Or(Arguments).Wrap(),
+				NumericFunctionOperator.Or => Or(Arguments).Wrap(),
 
 				_ => base.Execute()
 			};

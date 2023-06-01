@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services
 {

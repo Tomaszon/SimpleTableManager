@@ -5,6 +5,7 @@ using System.Reflection;
 
 using SimpleTableManager.Models;
 using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {
@@ -71,7 +72,7 @@ namespace SimpleTableManager.Services.Functions
 			return new InvalidOperationException($"Operator '{Operator}' is not supported for function type '{GetType().Name}'");
 		}
 
-		protected TParse GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
+		protected TParse GetArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
 		{
 			return NamedArguments.TryGetValue(key, out var s) ?
 				TParse.Parse(s, null) :

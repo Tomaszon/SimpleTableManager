@@ -2,27 +2,35 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SimpleTableManager.Extensions;
-using SimpleTableManager.Models;
 using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {
 	[NamedArgument(ArgumentName.Separator, " ")]
+	[NamedArgument(ArgumentName.Trim, ' ')]
 	public class StringFunction : FunctionBase<StringFunctionOperator, string, object>
 	{
 		protected override IEnumerable<object> Execute()
 		{
-			var separator = GetNamedArgument<string>(ArgumentName.Separator);
+			var separator = GetArgument<string>(ArgumentName.Separator);
+			var trim = GetArgument<char>(ArgumentName.Trim);
 
 			return Operator switch
 			{
 				StringFunctionOperator.Const => Arguments.Cast<object>(),
+
 				StringFunctionOperator.Con => ConcatArguments().Wrap(),
+
 				StringFunctionOperator.Join => JoinArguments(separator).Wrap(),
+
 				StringFunctionOperator.Len => ConcatArguments().Length.Wrap<object>(),
-				StringFunctionOperator.Split =>
-					Arguments.SelectMany(p => p.Split(separator))
-						.Union(ReferenceArguments.SelectMany(p => p.Split(separator))),
+
+				StringFunctionOperator.Split => Arguments.SelectMany(p => p.Split(separator)),
+
+				StringFunctionOperator.Trim => Arguments.Select(p => p.Trim(trim)),
+
+				StringFunctionOperator.Blow => Arguments.SelectMany(p => p.ToArray()).Cast<object>(),
 
 				_ => throw GetInvalidOperatorException()
 			};

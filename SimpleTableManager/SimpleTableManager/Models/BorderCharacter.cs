@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager.Models
+﻿using SimpleTableManager.Models.Enumerations;
+
+namespace SimpleTableManager.Models
 {
 	public class BorderCharacter
 	{

@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Enumerations
 {
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum ArgumentName
@@ -9,6 +9,7 @@ namespace SimpleTableManager.Models
 		Type,
 		Divider,
 		Separator,
-		Decimals
+		Decimals,
+		Trim
 	}
 }

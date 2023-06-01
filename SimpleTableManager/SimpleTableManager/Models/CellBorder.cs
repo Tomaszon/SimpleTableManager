@@ -1,4 +1,5 @@
 ﻿using SimpleTableManager.Extensions;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Models
 {

@@ -1,7 +1,7 @@
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Enumerations
 {
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum RenderingMode

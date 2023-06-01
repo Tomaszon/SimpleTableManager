@@ -3,7 +3,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models.Enumerations
 {
 	[JsonConverter(typeof(StringEnumConverter)), Flags]
 	public enum BorderType

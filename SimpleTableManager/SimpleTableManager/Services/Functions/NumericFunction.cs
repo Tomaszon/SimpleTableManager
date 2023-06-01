@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 
 using SimpleTableManager.Extensions;
-using SimpleTableManager.Models;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {
@@ -17,24 +17,24 @@ namespace SimpleTableManager.Services.Functions
 			return Operator switch
 			{
 				NumericFunctionOperator.Const => Arguments.ToArray().Cast<TOut>(),
-				NumericFunctionOperator.Neg =>
-					Arguments.Select(a => -a).Cast<TOut>(),
-				NumericFunctionOperator.Abs =>
-					Arguments.Select(a => TIn.Abs(a)).Cast<TOut>(),
-				NumericFunctionOperator.Sum =>
-					Sum(Arguments.Union(ReferenceArguments)).Wrap<TOut>(),
-				NumericFunctionOperator.Sub =>
-					Sub(Arguments).Wrap<TOut>(),
-				NumericFunctionOperator.Avg =>
-					Avg(Arguments.Union(ReferenceArguments)).Wrap<TOut>(),
-				NumericFunctionOperator.Min =>
-					new[] { Min(Arguments), Min(ReferenceArguments) }.Min().Wrap<TOut>(),
-				NumericFunctionOperator.Max =>
-					new[] { Max(Arguments), Max(ReferenceArguments) }.Max().Wrap<TOut>(),
-				NumericFunctionOperator.Mul =>
-					Multiply(Arguments).Wrap<TOut>(),
-				NumericFunctionOperator.Div =>
-					Divide(Arguments).Wrap<TOut>(),
+
+				NumericFunctionOperator.Neg => Arguments.Select(a => -a).Cast<TOut>(),
+
+				NumericFunctionOperator.Abs => Arguments.Select(a => TIn.Abs(a)).Cast<TOut>(),
+
+				NumericFunctionOperator.Sum => Sum(Arguments.Union(ReferenceArguments)).Wrap<TOut>(),
+
+				NumericFunctionOperator.Sub => Sub(Arguments).Wrap<TOut>(),
+
+				NumericFunctionOperator.Avg => Avg(Arguments.Union(ReferenceArguments)).Wrap<TOut>(),
+
+				NumericFunctionOperator.Min => new[] { Min(Arguments), Min(ReferenceArguments) }.Min().Wrap<TOut>(),
+
+				NumericFunctionOperator.Max => new[] { Max(Arguments), Max(ReferenceArguments) }.Max().Wrap<TOut>(),
+
+				NumericFunctionOperator.Mul => Multiply(Arguments).Wrap<TOut>(),
+
+				NumericFunctionOperator.Div => Divide(Arguments).Wrap<TOut>(),
 
 				_ => throw GetInvalidOperatorException()
 			};

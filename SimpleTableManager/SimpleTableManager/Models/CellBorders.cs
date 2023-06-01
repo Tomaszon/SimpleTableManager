@@ -3,6 +3,8 @@ using System.IO;
 
 using Newtonsoft.Json;
 
+using SimpleTableManager.Models.Enumerations;
+
 namespace SimpleTableManager.Models
 {
 	public class CellBorders

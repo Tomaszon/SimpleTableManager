@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using SimpleTableManager.Models;
+using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {

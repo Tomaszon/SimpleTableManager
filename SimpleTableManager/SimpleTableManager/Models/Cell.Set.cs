@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using SimpleTableManager.Models.Attributes;
+using SimpleTableManager.Models.Enumerations;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
@@ -10,32 +9,6 @@ namespace SimpleTableManager.Models
 {
 	public partial class Cell
 	{
-		// [CommandReference]
-		// public void SetContent(params object[] contents)
-		// {
-		// 	var funcName = contents.FirstOrDefault()?.ToString();
-
-		// 	var explicitFunc = FunctionCollection.HasFunction(funcName, out _);
-
-		// 	if (contents.Length > 1)
-		// 	{
-		// 		ContentFunction = explicitFunc ?
-		// 			FunctionCollection.GetFunction(funcName, contents.Skip(1).Select(p =>
-		// 				p is IFunction f && f is not null ? f : new ObjectFunction(p))) :
-		// 			FunctionCollection.GetFunctionCore(typeof(ObjectFunction), ObjectFunctionOperator.Const, contents.Select(p =>
-		// 				p is IFunction f && f is not null ? f : new ObjectFunction(p)));
-		// 	}
-		// 	else if (contents.Length == 1)
-		// 	{
-		// 		ContentFunction = contents.First() is IFunction f && f is not null ? f :
-		// 			new ObjectFunction(contents.First());
-		// 	}
-		// 	else
-		// 	{
-		// 		ContentFunction = ObjectFunction.Empty();
-		// 	}
-		// }
-
 		[CommandReference]
 		public void SetContent(params string[] contents)
 		{

@@ -4,6 +4,7 @@ using System.Linq;
 
 using Newtonsoft.Json;
 
+using SimpleTableManager.Models.Enumerations;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models

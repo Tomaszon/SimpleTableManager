@@ -1,5 +1,7 @@
 using System;
 
+using SimpleTableManager.Models.Enumerations;
+
 namespace SimpleTableManager.Models.Attributes
 {
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
