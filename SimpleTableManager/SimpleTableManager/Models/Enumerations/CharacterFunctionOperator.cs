@@ -4,13 +4,11 @@ using Newtonsoft.Json.Converters;
 namespace SimpleTableManager.Models.Enumerations
 {
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum ArgumentName
+	public enum CharacterFunctionOperator
 	{
-		Type,
-		Divider,
-		Separator,
-		Decimals,
-		Trim,
-		Count
+		Const,
+		Concat,
+		Join,
+		Repeat
 	}
 }

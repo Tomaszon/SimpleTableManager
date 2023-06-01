@@ -10,27 +10,22 @@ namespace SimpleTableManager.Services.Functions
 {
 	public static class FunctionCollection
 	{
-		public static Dictionary<Type, (Type, Type)> Functions { get; set; }
+		public static List<Type> Functions { get; set; }
 
 		static FunctionCollection()
 		{
-			Functions = new Dictionary<Type, (Type, Type)>
-			{
-				{ typeof(int), (typeof(IntegerNumericFunction), typeof(NumericFunctionOperator)) },
-				{ typeof(decimal), (typeof(DecimalNumericFunction), typeof(NumericFunctionOperator)) },
-				{ typeof(string), (typeof(StringFunction), typeof(StringFunctionOperator)) },
-				{ typeof(bool), (typeof(BooleanFunction), typeof(BooleanFunctionOperator)) }
-			};
+			Functions = Assembly.GetExecutingAssembly().GetTypes().Where(t =>
+				t.Namespace == typeof(IFunction).Namespace && !t.IsAbstract && !t.IsInterface && !t.IsGenericType && !t.IsNested).ToList();
 		}
 
 		public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, string> namedArguments, IEnumerable<object> arguments)
 		{
 			var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic;
-			var types = Functions[Shared.GetTypeByName(typeName)];
-			var op = Enum.Parse(types.Item2, functionOperator, true);
+
+			var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == Shared.GetTypeByName(typeName));
 			var args = arguments?.Select(a => a.ToString());
 
-			var argumentsProperty = types.Item1.GetProperty(nameof(IFunction.Arguments), bindingFlags);
+			var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags);
 
 			var argsInnerType = argumentsProperty.PropertyType.GenericTypeArguments.First();
 
@@ -40,13 +35,17 @@ namespace SimpleTableManager.Services.Functions
 
 			parsedArgs.ForEach(e => targetArray.Add(e));
 
-			var instance = (IFunction)Activator.CreateInstance(types.Item1);
+			var instance = (IFunction)Activator.CreateInstance(functionType);
 
-			types.Item1.GetProperty(nameof(IFunction.Operator), bindingFlags).SetValue(instance, op);
+			var operatorPoperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags);
+
+			var op = Enum.Parse(operatorPoperty.PropertyType, functionOperator, true);
+
+			operatorPoperty.SetValue(instance, op);
 
 			if (namedArguments is not null)
 			{
-				types.Item1.GetProperty(nameof(IFunction.NamedArguments)).SetValue(instance, namedArguments);
+				functionType.GetProperty(nameof(IFunction.NamedArguments)).SetValue(instance, namedArguments);
 			}
 			if (arguments is not null)
 			{
@@ -54,6 +53,11 @@ namespace SimpleTableManager.Services.Functions
 			}
 
 			return instance;
+		}
+
+		private static Type GetRootClass(Type type)
+		{
+			return type.BaseType != typeof(object) ? GetRootClass(type.BaseType) : type;
 		}
 	}
 }

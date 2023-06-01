@@ -5,7 +5,8 @@
 			"string": "setStringContentFunction",
 			"int": "setIntegerContentFunction",
 			"decimal": "setDecimalContentFunction",
-			"bool": "setBooleanContentFunction"
+			"bool": "setBooleanContentFunction",
+			"char" : "setCharacterContentFunction"
 		},
 		"vertical-alignment": "setVerticalAlignment",
 		"horizontal-alignment": "setHorizontalAlignment",

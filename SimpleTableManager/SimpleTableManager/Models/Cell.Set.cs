@@ -46,6 +46,12 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, params string[] arguments)
+		{
+			SetFunction<char>(functionOperator, arguments);
+		}
+
+		[CommandReference]
 		public void SetVerticalAlignment(VerticalAlignment alignment)
 		{
 			ContentAlignment.Vertical = alignment;
