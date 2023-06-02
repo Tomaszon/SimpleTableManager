@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {

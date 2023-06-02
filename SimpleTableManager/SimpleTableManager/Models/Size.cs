@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using SimpleTableManager.Models.Attributes;
-
-namespace SimpleTableManager.Models
+﻿namespace SimpleTableManager.Models
 {
 	public class Size
 	{

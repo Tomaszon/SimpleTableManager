@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
-using SimpleTableManager.Extensions;
-using SimpleTableManager.Models.Enumerations;
-
 namespace SimpleTableManager.Services.Functions
 {
 	public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>

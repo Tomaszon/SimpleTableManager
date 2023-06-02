@@ -1,5 +1,3 @@
-using System;
-
 namespace SimpleTableManager.Models.Attributes
 {
 	//TODO multiple formats?

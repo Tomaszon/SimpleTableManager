@@ -1,5 +1,3 @@
-using System;
-
 namespace SimpleTableManager.Models.Exceptions
 {
 	public class CommandException : Exception

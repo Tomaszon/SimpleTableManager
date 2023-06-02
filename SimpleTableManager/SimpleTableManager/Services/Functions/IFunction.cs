@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-
-using SimpleTableManager.Models.Enumerations;
-
 namespace SimpleTableManager.Services.Functions
 {
 	public interface IFunction

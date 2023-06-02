@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using SimpleTableManager.Models;
-using SimpleTableManager.Models.Exceptions;
+﻿using SimpleTableManager.Models;
 using SimpleTableManager.Services;
-using SimpleTableManager.Services.Functions;
-using System.Diagnostics;
 
 namespace SimpleTableManager
 {
@@ -53,7 +46,7 @@ namespace SimpleTableManager
 			// result = fn.Execute(out _).ToList();
 
 			// Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
-			document.GetActiveTable()[1,1].IsSelected = true;
+			document.GetActiveTable()[1, 1].IsSelected = true;
 
 			//document.GetActiveTable()[1,1].SetContent2("string", "con", "alma", "körte", "szilva");
 

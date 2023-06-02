@@ -1,6 +1,3 @@
-using System;
-using SimpleTableManager.Models.Attributes;
-
 namespace SimpleTableManager.Models
 {
 	public partial class Table

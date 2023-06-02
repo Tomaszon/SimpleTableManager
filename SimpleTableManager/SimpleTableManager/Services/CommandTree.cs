@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-using Newtonsoft.Json;
+﻿using System.Dynamic;
 
 using SimpleTableManager.Models;
-using SimpleTableManager.Models.Exceptions;
 
 namespace SimpleTableManager.Services
 {

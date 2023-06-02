@@ -1,5 +1,4 @@
-﻿using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {

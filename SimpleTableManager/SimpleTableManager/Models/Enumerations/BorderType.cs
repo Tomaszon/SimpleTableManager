@@ -1,9 +1,4 @@
-﻿using System;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace SimpleTableManager.Models.Enumerations
+﻿namespace SimpleTableManager.Models.Enumerations
 {
 	[JsonConverter(typeof(StringEnumConverter)), Flags]
 	public enum BorderType

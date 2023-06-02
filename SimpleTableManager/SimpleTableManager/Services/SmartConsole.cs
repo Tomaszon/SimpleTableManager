@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SimpleTableManager.Extensions;
+
 using SimpleTableManager.Models;
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Models.Exceptions;
 
 namespace SimpleTableManager.Services;
 
@@ -284,7 +276,7 @@ public class SmartConsole
 
 			return GetHintResult.UnknownKey;
 		}
-		
+
 		throw new InvalidOperationException();
 	}
 

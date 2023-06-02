@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-
-namespace SimpleTableManager
+﻿namespace SimpleTableManager
 {
 	public class InstanceMap
 	{

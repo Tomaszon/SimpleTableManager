@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimpleTableManager.Models
+﻿namespace SimpleTableManager.Models
 {
 	public class ViewOptions
 	{

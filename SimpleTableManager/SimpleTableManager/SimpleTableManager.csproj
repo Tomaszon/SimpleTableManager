@@ -5,6 +5,8 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<StartupObject>SimpleTableManager.Program</StartupObject>
 		<LangVersion>11.0</LangVersion>
+		<nullable>enable</nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>

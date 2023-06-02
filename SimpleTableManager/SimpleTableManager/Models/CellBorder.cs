@@ -1,7 +1,4 @@
-﻿using SimpleTableManager.Extensions;
-using SimpleTableManager.Models.Enumerations;
-
-namespace SimpleTableManager.Models
+﻿namespace SimpleTableManager.Models
 {
 	public class CellBorder
 	{

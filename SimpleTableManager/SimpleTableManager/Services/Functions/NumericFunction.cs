@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Numerics;
-
-using SimpleTableManager.Extensions;
-using SimpleTableManager.Models.Enumerations;
 
 namespace SimpleTableManager.Services.Functions
 {

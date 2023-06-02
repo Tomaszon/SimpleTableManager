@@ -1,10 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
-using SimpleTableManager.Extensions;
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Models.Enumerations;
-
 namespace SimpleTableManager.Services.Functions
 {
 	[NamedArgument(ArgumentName.Divider, 2)]

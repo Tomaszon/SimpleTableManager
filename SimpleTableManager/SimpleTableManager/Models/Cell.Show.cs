@@ -1,9 +1,3 @@
-using System;
-using System.Linq;
-
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Services.Functions;
-
 namespace SimpleTableManager.Models
 {
 	public partial class Cell

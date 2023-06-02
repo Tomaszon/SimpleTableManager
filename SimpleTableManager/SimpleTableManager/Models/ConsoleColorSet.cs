@@ -1,7 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
-
-namespace SimpleTableManager.Models
+﻿namespace SimpleTableManager.Models
 {
 	public class ConsoleColorSet
 	{

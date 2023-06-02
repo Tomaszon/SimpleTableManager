@@ -1,8 +1,4 @@
-﻿using System.Linq;
-
-using SimpleTableManager.Extensions;
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {

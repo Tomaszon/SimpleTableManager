@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using Newtonsoft.Json;
-using SimpleTableManager.Extensions;
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Services;
-using SimpleTableManager.Services.Functions;
+﻿using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models
 {

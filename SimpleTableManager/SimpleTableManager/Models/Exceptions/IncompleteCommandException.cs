@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SimpleTableManager.Models.Exceptions
+﻿namespace SimpleTableManager.Models.Exceptions
 {
 	public class IncompleteCommandException : CommandException
 	{

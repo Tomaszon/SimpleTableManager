@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SimpleTableManager.Extensions
+﻿namespace SimpleTableManager.Extensions
 {
 	public static class Extensions
 	{
@@ -51,7 +46,7 @@ namespace SimpleTableManager.Extensions
 
 		public static IEnumerable<T> Wrap<T>(this T value)
 		{
-			return new [] { value };
+			return new[] { value };
 		}
 	}
 }

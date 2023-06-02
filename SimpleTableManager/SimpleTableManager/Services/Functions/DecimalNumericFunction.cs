@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
-using SimpleTableManager.Models.Attributes;
-using SimpleTableManager.Models.Enumerations;
-
 namespace SimpleTableManager.Services.Functions
 {
 	[NamedArgument(ArgumentName.Decimals, 2)]
