@@ -1,4 +1,4 @@
-﻿namespace SimpleTableManager
+﻿namespace SimpleTableManager.Services
 {
 	public class InstanceMap
 	{

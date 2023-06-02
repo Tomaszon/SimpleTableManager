@@ -3,6 +3,24 @@
 	"tasks": [
 		{
 			"label": "clean",
+			"command": "echo",
+			"args": [
+				"All dependent projects cleaned"
+			],
+			"type": "shell",
+			"dependsOn": [
+				"stmClean",
+				"testsClean",
+			],
+			"dependsOrder": "sequence",
+			"problemMatcher": "$msCompile",
+			"group": {
+				"kind": "none",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "stmClean",
 			"command": "dotnet",
 			"type": "process",
 			"args": [
@@ -13,12 +31,54 @@
 			]
 		},
 		{
+			"label": "testsClean",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"clean",
+				"${workspaceFolder}/SimpleTableManager/Tests/SimpleTableManager.Tests.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			]
+		},
+		{
 			"label": "build",
+			"command": "echo",
+			"args": [
+				"All dependent projects built"
+			],
+			"type": "shell",
+			"dependsOn": [
+				"stmBuild",
+				"testsBuild",
+			],
+			"dependsOrder": "sequence",
+			"problemMatcher": "$msCompile",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "stmBuild",
 			"command": "dotnet",
 			"type": "process",
 			"args": [
 				"build",
 				"${workspaceFolder}/SimpleTableManager/SimpleTableManager/SimpleTableManager.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile",
+			"isBuildCommand": true
+		},
+		{
+			"label": "testsBuild",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/SimpleTableManager/Tests/SimpleTableManager.Tests.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],
