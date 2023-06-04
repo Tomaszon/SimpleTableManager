@@ -15,13 +15,13 @@ namespace SimpleTableManager
 			Settings.FromJson(@".\Configs\settings.json");
 			CellBorders.FromJson(@".\Configs\cellBorders.json");
 
-			var document = new Document();
 			var app = new App();
+			var document = new Document();
 
 			InstanceMap.Instance.Add(() => app);
 			InstanceMap.Instance.Add(() => document);
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
-			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
+			InstanceMap.Instance.Add(() => document.GetActiveTable()?.GetSelectedCells());
 
 			#region test
 

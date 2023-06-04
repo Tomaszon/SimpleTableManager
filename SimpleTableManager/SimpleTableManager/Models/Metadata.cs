@@ -4,7 +4,7 @@
 	{
 		public string Title { get; set; } = "Document0";
 
-		public string Path { get; set; }
+		public string? Path { get; set; }
 
 		public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
 

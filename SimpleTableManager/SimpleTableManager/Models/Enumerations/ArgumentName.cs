@@ -8,6 +8,7 @@ namespace SimpleTableManager.Models.Enumerations
 		Separator,
 		Decimals,
 		Trim,
-		Count
+		Count,
+		Format
 	}
 }

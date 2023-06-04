@@ -10,7 +10,7 @@ namespace SimpleTableManager.Services.Functions
 
 		IEnumerable<object> Execute();
 
-		Type GetReturnType();
+		Type? GetReturnType();
 
 		string GetError();
 	}

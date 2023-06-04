@@ -5,13 +5,13 @@ namespace SimpleTableManager.Models
 	[CommandInformation("Loading, saving and other document related commands")]
 	public partial class Document
 	{
-		public Metadata Metadata { get; set; }
+		public Metadata Metadata { get; set; } = new Metadata();
 
 		public List<Table> Tables { get; set; } = new List<Table>();
 
 		public Document()
 		{
-			Clear();
+
 		}
 
 		public void Clear()
@@ -21,9 +21,9 @@ namespace SimpleTableManager.Models
 			AddTable(new Size(10, 5));
 		}
 
-		public Table GetActiveTable()
+		public Table? GetActiveTable()
 		{
-			return Tables.Single(t => t.IsActive);
+			return Tables.SingleOrDefault(t => t.IsActive);
 		}
 
 		private static string GetSaveFilePath(string fileName)

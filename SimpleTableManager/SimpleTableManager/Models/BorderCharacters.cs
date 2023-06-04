@@ -9,7 +9,7 @@ namespace SimpleTableManager.Models
 
 		public static void FromJson(string path)
 		{
-			_CHARACTERS = JsonConvert.DeserializeObject<List<BorderCharacter>>(File.ReadAllText(path));
+			_CHARACTERS = JsonConvert.DeserializeObject<List<BorderCharacter>>(File.ReadAllText(path))!;
 		}
 
 		public static char Get(BorderType type)

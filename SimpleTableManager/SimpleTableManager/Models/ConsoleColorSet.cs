@@ -30,7 +30,7 @@
 			return new ConsoleColorSet(record.foreground, record.background);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is ConsoleColorSet another && another is not null)
 			{

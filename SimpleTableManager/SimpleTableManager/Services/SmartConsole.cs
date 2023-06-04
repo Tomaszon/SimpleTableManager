@@ -39,7 +39,7 @@ public class SmartConsole
 		Console.Write(_COMMAND_LINE_PREFIX);
 	}
 
-	public static void ShowHelp(string rawCommand, List<string> availableKeys, CommandReference commandReference, string error)
+	public static void ShowHelp(string rawCommand, List<string>? availableKeys, CommandReference? commandReference, string error)
 	{
 		var command = new Command() { AvailableKeys = availableKeys, RawCommand = rawCommand, Reference = commandReference };
 

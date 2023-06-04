@@ -6,7 +6,7 @@
 
 		public static void FromJson(string path)
 		{
-			_BORDERS = JsonConvert.DeserializeObject<Dictionary<CellBorderType, CellBorder>>(File.ReadAllText(path));
+			_BORDERS = JsonConvert.DeserializeObject<Dictionary<CellBorderType, CellBorder>>(File.ReadAllText(path))!;
 		}
 
 

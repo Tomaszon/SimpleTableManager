@@ -22,7 +22,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void ActivateTable(string name)
 		{
-			var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name));
+			var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name)!);
 
 			Shared.Validate(() => index != -1, $"No table found with name {name}");
 
@@ -30,7 +30,7 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void AddTable(Size size, string name = null)
+		public void AddTable(Size size, string? name = null)
 		{
 			name = name ?? $"Table{Tables.Count}";
 

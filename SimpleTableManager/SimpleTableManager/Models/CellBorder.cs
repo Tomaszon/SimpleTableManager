@@ -44,7 +44,7 @@
 					left && p.Name.Contains("Left") ||
 					right && p.Name.Contains("Right"))
 				{
-					p.SetValue(result, replace ? border : (BorderType)p.GetValue(this) | border);
+					p.SetValue(result, replace ? border : (BorderType)p.GetValue(this)! | border);
 				}
 			});
 

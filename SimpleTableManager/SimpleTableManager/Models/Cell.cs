@@ -54,7 +54,7 @@ namespace SimpleTableManager.Models
 			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
 		}
 
-		public IFunction ContentFunction { get; set; }
+		public IFunction? ContentFunction { get; set; }
 
 		public bool IsSelected { get; set; }
 

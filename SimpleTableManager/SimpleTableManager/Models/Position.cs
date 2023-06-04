@@ -26,7 +26,7 @@ namespace SimpleTableManager.Models
 			return $"X: {X}, Y: {Y}";
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is Position p && p is not null)
 			{
@@ -58,7 +58,7 @@ namespace SimpleTableManager.Models
 			return new Position(x, y);
 		}
 
-		public static bool TryParse(string value, [NotNullWhen(true)] out Position position)
+		public static bool TryParse(string value, [NotNullWhen(true)] out Position? position)
 		{
 			if (!Regex.IsMatch(value, "\\d,\\d"))
 			{

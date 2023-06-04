@@ -34,7 +34,7 @@ namespace SimpleTableManager.Services.Functions
 			}
 		}
 
-		public Type GetReturnType()
+		public Type? GetReturnType()
 		{
 			try
 			{

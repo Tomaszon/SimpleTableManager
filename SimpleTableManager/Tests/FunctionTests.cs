@@ -6,21 +6,10 @@ namespace SimpleTableManager.Tests
 {
 	public class FunctionTests
 	{
-		[SetUp]
+		[OneTimeSetUp]
 		public void Setup()
 		{
-			BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
-			CommandTree.FromJsonFolder(@".\Configs\Commands");
 			Settings.FromJson(@".\Configs\settings.json");
-			CellBorders.FromJson(@".\Configs\cellBorders.json");
-
-			var document = new Document();
-			var app = new App();
-
-			InstanceMap.Instance.Add(() => app);
-			InstanceMap.Instance.Add(() => document);
-			InstanceMap.Instance.Add(() => document.GetActiveTable());
-			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 		}
 
 		private IFunction CreateFunction<T>(Enum functionOperator, params T[] args)
@@ -28,22 +17,36 @@ namespace SimpleTableManager.Tests
 			return FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), null, args.Cast<object>());
 		}
 
-		public void CheckResults(IEnumerable<object> result, params object[] expectedValues)
+		public void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)
 		{
 			for (int i = 0; i < result.Count(); i++)
 			{
-				Assert.AreEqual(result.ElementAt(i), expectedValues[i]);
+				Assert.AreEqual(expectedValues.ElementAt(i), result.ElementAt(i));
 			}
 		}
 
 		[Test]
 		public void Bool1()
 		{
-			var fn = CreateFunction<bool>(BooleanFunctionOperator.Const, true, false);
+			var values = new[] { true, false };
 
-			var result = fn.Execute();
+			var fn = CreateFunction<bool>(BooleanFunctionOperator.Const, values);
 
-			CheckResults(result, true, false);
+			CheckResults(fn.Execute(), values);
+		}
+
+		[Test]
+		public void DateTime1()
+		{
+			var values = new[] { new DateTime(1, 2, 3, 4, 5, 59), new DateTime(6, 5, 4, 3, 2, 11) };
+
+			var fn = CreateFunction<DateTime>(DateTimeFunctionOperator.Const, values);
+
+			CheckResults(fn.Execute(), values);
+
+			fn = CreateFunction<DateTime>(DateTimeFunctionOperator.Sum, values);
+
+			CheckResults(fn.Execute(), new DateTime(7, 7, 7, 7, 8, 10).Wrap());
 		}
 	}
 }
