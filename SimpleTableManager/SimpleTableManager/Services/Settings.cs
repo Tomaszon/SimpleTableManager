@@ -18,10 +18,10 @@ namespace SimpleTableManager.Services
 
 		public static void FromJson(string path)
 		{
-			Current = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path));
+			Current = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path))!;
 		}
 
-		public static Settings Current { get; private set; }
+		public static Settings Current { get; private set; } = new Settings();
 
 		public char IndexCellLeftArrow { get; set; }
 
@@ -33,7 +33,7 @@ namespace SimpleTableManager.Services
 
 		public char TmpBackgroundCharacter { get; set; }
 
-		public string DefaultWorkDirectory { get; set; }
+		public string DefaultWorkDirectory { get; set; } = "";
 
 		public uint CommandHistorySize { get; set; }
 	}

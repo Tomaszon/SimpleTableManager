@@ -4,7 +4,7 @@
 	{
 		public const string HELP_COMMAND = "help";
 
-		public static Type GetTypeByName(string name, string nameSpace = null)
+		public static Type GetTypeByName(string name, string? nameSpace = null)
 		{
 			Dictionary<string, string> nameMap = new Dictionary<string, string>
 			{
@@ -15,7 +15,7 @@
 
 			var type = nameMap.TryGetValue(name.ToLower(), out var mapped) ? mapped : name.ToLower();
 
-			return Type.GetType($"{nameSpace ?? "system"}.{type}", true, true);
+			return Type.GetType($"{nameSpace ?? "system"}.{type}", true, true)!;
 		}
 
 		public static object ParseStringValue(Type dataType, string value)
@@ -41,11 +41,11 @@
 						throw new FormatException("Enum must be provided by name instead of value");
 					}
 
-					return method.Invoke(null, new object[] { targetDataType, value, true });
+					return method.Invoke(null, new object[] { targetDataType, value, true })!;
 				}
 				else
 				{
-					return method.Invoke(null, new object[] { value });
+					return method.Invoke(null, new object[] { value })!;
 				}
 			}
 			catch (Exception ex)
@@ -82,7 +82,7 @@
 					{
 						return m.Name == "Parse" && parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
 					}
-				}).SingleOrDefault();
+				}).Single();
 			}
 		}
 
@@ -107,7 +107,7 @@
 		{
 			if (!validator())
 			{
-				throw (T)Activator.CreateInstance(typeof(T), error);
+				throw (T)Activator.CreateInstance(typeof(T), error)!;
 			}
 		}
 
@@ -116,7 +116,7 @@
 			return Enumerable.Repeat(from, size).Select((value, index) => value + index * step).ToList();
 		}
 
-		public static object GetDefaultValue(Type type)
+		public static object? GetDefaultValue(Type type)
 		{
 			return type.IsValueType ? Activator.CreateInstance(type) : null;
 		}
@@ -144,6 +144,7 @@
 
 				if (Console.ReadLine() is var answer && validValues.Select(v => v.ToString()).Contains(answer, StringComparer.OrdinalIgnoreCase))
 				{
+					//TODO test nullability
 					return answer;
 				}
 			}

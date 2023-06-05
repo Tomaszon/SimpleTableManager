@@ -4,7 +4,7 @@ using System.Numerics;
 namespace SimpleTableManager.Services.Functions
 {
 	public abstract class NumericFunction<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
-		where TIn : INumber<TIn>, IMinMaxValue<TIn>, TOut
+		where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, TOut
 	{
 		protected override IEnumerable<TOut> Execute()
 		{

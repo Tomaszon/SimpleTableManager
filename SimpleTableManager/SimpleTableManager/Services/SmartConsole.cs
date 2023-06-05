@@ -41,7 +41,7 @@ public class SmartConsole
 
 	public static void ShowHelp(string rawCommand, List<string>? availableKeys, CommandReference? commandReference, string error)
 	{
-		var command = new Command() { AvailableKeys = availableKeys, RawCommand = rawCommand, Reference = commandReference };
+		var command = new Command(commandReference, rawCommand, null) { AvailableKeys = availableKeys };
 
 		LastHelp = $"{error}\n    ";
 

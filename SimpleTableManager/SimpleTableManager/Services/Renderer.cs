@@ -13,27 +13,30 @@ namespace SimpleTableManager.Services
 		{
 			var table = document.GetActiveTable();
 
-			ChangeToTextColors();
+			if (table is not null)
+			{
+				ChangeToTextColors();
 
-			var tableSize = MaximizeTableView(table);
+				var tableSize = MaximizeTableView(table);
 
-			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
+				var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
-			RenderInfos(document.Metadata, table, tableOffset);
+				RenderInfos(document.Metadata, table, tableOffset);
 
-			RenderTempCell(table, tableOffset, tableSize);
+				RenderTempCell(table, tableOffset, tableSize);
 
-			RenderContent(table, tableOffset);
+				RenderContent(table, tableOffset);
 
-			RenderHeader(table, tableOffset);
+				RenderHeader(table, tableOffset);
 
-			RenderSider(table, tableOffset);
+				RenderSider(table, tableOffset);
 
-			RenderCornerCell(table, tableOffset);
+				RenderCornerCell(table, tableOffset);
 
-			Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
+				Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
 
-			ChangeToTextColors();
+				ChangeToTextColors();
+			}
 		}
 
 		private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell firstCell, IndexCell lastCell, int size)

@@ -2,7 +2,8 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions
 {
-	public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction where TOpertor : Enum
+	public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
+		where TOpertor : struct, Enum
 	{
 		public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
 
@@ -38,7 +39,7 @@ namespace SimpleTableManager.Services.Functions
 		{
 			try
 			{
-				return Execute().First().GetType();
+				return Execute().First()!.GetType();
 			}
 			catch
 			{

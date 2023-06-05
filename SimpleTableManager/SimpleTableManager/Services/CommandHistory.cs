@@ -6,7 +6,7 @@ public class CommandHistory
 
 	private List<string> _history = new List<string>();
 
-	public bool TryGetPreviousHistoryItem([NotNullWhen(true)] out string command)
+	public bool TryGetPreviousHistoryItem([NotNullWhen(true)] out string? command)
 	{
 		if (_index > 0)
 		{
@@ -21,7 +21,7 @@ public class CommandHistory
 		return false;
 	}
 
-	public bool TryGetNextHistoryItem(out string command)
+	public bool TryGetNextHistoryItem(out string? command)
 	{
 		if (_index < _history.Count)
 		{

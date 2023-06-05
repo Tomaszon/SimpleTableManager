@@ -4,24 +4,26 @@ namespace SimpleTableManager.Services
 {
 	public class Command
 	{
-		public CommandReference Reference { get; set; }
+		public CommandReference? Reference { get; set; }
 
-		public List<string> Arguments { get; set; }
+		public List<string>? Arguments { get; set; }
 
-		public List<string> AvailableKeys { get; set; }
+		public List<string>? AvailableKeys { get; set; }
 
 		public string RawCommand { get; set; }
+
+		public Command(CommandReference? reference, string rawCommand, List<string>? arguments)
+		{
+			Reference = reference;
+			RawCommand = rawCommand;
+			Arguments = arguments;
+		}
 
 		public static Command FromString(string rawCommand)
 		{
 			var reference = CommandTree.GetCommandReference(rawCommand, out var arguments);
 
-			return new Command
-			{
-				Reference = reference,
-				Arguments = arguments,
-				RawCommand = rawCommand
-			};
+			return new Command(reference, rawCommand, arguments);
 		}
 
 		public List<object> Execute(IEnumerable<object> instances)
@@ -78,7 +80,7 @@ namespace SimpleTableManager.Services
 			{
 				var rest = Arguments.GetRange(index, Arguments.Count - index);
 
-				var type = arrayType.GetElementType();
+				var type = arrayType.GetElementType()!;
 
 				var typedArray = Array.CreateInstance(type, rest.Count);
 
