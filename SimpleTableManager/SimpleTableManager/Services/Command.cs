@@ -98,7 +98,7 @@ namespace SimpleTableManager.Services
 		{
 			var methods = GetMethods(type);
 
-			if (methods.TryGetValue(Reference.MethodName.ToLower(), out var method))
+			if (methods.TryGetValue(Reference?.MethodName.ToLower()!, out var method))
 			{
 				return method;
 			}
@@ -122,12 +122,13 @@ namespace SimpleTableManager.Services
 				var isArray = p.ParameterType.IsArray;
 
 				return new CommandParameter
+				(p.ParameterType, p.Name!)
 				{
-					Type = p.ParameterType,
-					Name = p.Name,
+					DefaultValue = isArray ?
+						Array.CreateInstance(p.ParameterType.GetElementType()!, 0) : p.DefaultValue,
 					IsOptional = p.IsOptional || isArray,
-					DefaultValue = isArray ? Array.CreateInstance(p.ParameterType.GetElementType(), 0) : p.DefaultValue,
-					ParseFormat = Shared.GetParseMethod(isArray ? p.ParameterType.GetElementType() : p.ParameterType, out _)?.GetCustomAttribute<ParseFormatAttribute>()?.Format
+					ParseFormat = Shared.GetParseMethod(isArray ? p.ParameterType.GetElementType()! :
+						p.ParameterType, out _).GetCustomAttribute<ParseFormatAttribute>()?.Format
 				};
 			}).ToList();
 		}

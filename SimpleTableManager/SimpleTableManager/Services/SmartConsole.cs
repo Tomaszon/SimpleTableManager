@@ -198,7 +198,7 @@ public class SmartConsole
 		return false;
 	}
 
-	private static string GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out int partialKeyLength)
+	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out int partialKeyLength)
 	{
 		var value = _buffer.ToString();
 
@@ -241,7 +241,7 @@ public class SmartConsole
 		return null;
 	}
 
-	private static GetHintResult GetHintCore(string command, out List<string> availableKeys, out string partialKey)
+	private static GetHintResult GetHintCore(string command, out List<string>? availableKeys, out string? partialKey)
 	{
 		try
 		{
@@ -290,7 +290,7 @@ public class SmartConsole
 		return !value.Contains(' ') ? Shared.HELP_COMMAND : $"{value.Substring(0, value.LastIndexOf(' '))} {Shared.HELP_COMMAND}";
 	}
 
-	private static bool IsSpaceAppendNeeded(string value, string partialKey)
+	private static bool IsSpaceAppendNeeded(string value, string? partialKey)
 	{
 		return partialKey is null &&
 			!string.IsNullOrWhiteSpace(value) &&
@@ -478,7 +478,7 @@ public class SmartConsole
 		}
 	}
 
-	private static void InsertStringToBuffer(string s)
+	private static void InsertStringToBuffer(string? s)
 	{
 		if (s is not null)
 		{

@@ -10,7 +10,7 @@ public class AutoComplete
 
 	private List<string> _keys = new List<string>();
 
-	public void SetKeys(IEnumerable<string> keys)
+	public void SetKeys(IEnumerable<string>? keys)
 	{
 		Reset();
 
@@ -24,7 +24,7 @@ public class AutoComplete
 		}
 	}
 
-	public string GetNextKey(string partialKey, bool backwards, out int previousAutoCompleteLength, out int mathcingKeyCount)
+	public string GetNextKey(string? partialKey, bool backwards, out int previousAutoCompleteLength, out int mathcingKeyCount)
 	{
 		Cycling = true;
 
@@ -41,7 +41,7 @@ public class AutoComplete
 		return nextKey;
 	}
 
-	private void StepIndex(string partialKey, bool backwards)
+	private void StepIndex(string? partialKey, bool backwards)
 	{
 		if (backwards)
 		{

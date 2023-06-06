@@ -13,7 +13,7 @@ namespace SimpleTableManager.Models
 			args.Item1.TryGetValue(ArgumentName.Type, out var typeName);
 
 			ContentFunction = contents?.Length > 0 ?
-				ContentFunction = FunctionCollection.GetFunction(typeName ?? ContentType.Name, "const", null, args.Item2) :
+				ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", null, args.Item2) :
 				null;
 		}
 

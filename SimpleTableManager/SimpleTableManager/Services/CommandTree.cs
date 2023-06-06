@@ -6,7 +6,7 @@ namespace SimpleTableManager.Services
 {
 	public static class CommandTree
 	{
-		public static IDictionary<string, object> Commands { get; } = new ExpandoObject();
+		public static IDictionary<string, object?> Commands { get; } = new ExpandoObject();
 
 		public static void FromJsonFolder(string folderPath)
 		{
@@ -27,7 +27,7 @@ namespace SimpleTableManager.Services
 
 			var methodName = GetReferenceMethodNameRecursive(Commands, keys.First(), keys, rawCommand, out arguments);
 
-			return new CommandReference(keys.FirstOrDefault(), methodName);
+			return new CommandReference(keys.First(), methodName);
 		}
 
 		private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments)
@@ -40,7 +40,7 @@ namespace SimpleTableManager.Services
 				}
 				else
 				{
-					var key = keys.FirstOrDefault();
+					var key = keys.First();
 
 					var matchingValue = o.FirstOrDefault(e =>
 						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
@@ -72,7 +72,7 @@ namespace SimpleTableManager.Services
 			{
 				if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
 				{
-					throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()));
+					throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!));
 				}
 				else
 				{

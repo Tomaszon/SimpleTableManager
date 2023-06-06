@@ -82,8 +82,10 @@ namespace SimpleTableManager.Models
 
 		public Size GetTableSize()
 		{
-			var sumWidth = Shared.IndexArray(Size.Width).Where(x => !IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1);
-			var sumHeight = Shared.IndexArray(Size.Height).Where(y => !IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1);
+			var sumWidth = Shared.IndexArray(Size.Width).Where(x => 
+				!IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1);
+			var sumHeight = Shared.IndexArray(Size.Height).Where(y => 
+				!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1);
 
 			return new Size(GetSiderWidth() + sumWidth, GetHeaderHeight() + sumHeight);
 		}
@@ -110,23 +112,27 @@ namespace SimpleTableManager.Models
 
 		public Position GetHeaderCellPosition(Size tableOffset, int x)
 		{
-			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => !IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
+			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => 
+				!IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
 
 			return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height);
 		}
 
 		public Position GetSiderCellPosition(Size tableOffset, int y)
 		{
-			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => !IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
+			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => 
+				!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
 			return new Position(tableOffset.Width, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);
 		}
 
 		public Position GetContentCellPosition(Size tableOffset, int x, int y)
 		{
-			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => !IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
+			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => 
+				!IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
 
-			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => !IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
+			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => 
+				!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
 			return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);
 		}
@@ -156,22 +162,22 @@ namespace SimpleTableManager.Models
 			return x > 0 && x < Size.Width && y > 0 && y < Size.Height && this[x, y].IsSelected;
 		}
 
-		public IndexCell GetFirstVisibleHeaderInView()
+		public IndexCell? GetFirstVisibleHeaderInView()
 		{
 			return Header.FirstOrDefault(h => IsColumnInView(h.Index) && !IsColumnHidden(h.Index));
 		}
 
-		public IndexCell GetLastVisibleHeaderInView()
+		public IndexCell? GetLastVisibleHeaderInView()
 		{
 			return Header.LastOrDefault(h => IsColumnInView(h.Index) && !IsColumnHidden(h.Index));
 		}
 
-		public IndexCell GetFirstVisibleSiderInView()
+		public IndexCell? GetFirstVisibleSiderInView()
 		{
 			return Sider.FirstOrDefault(s => IsRowInView(s.Index) && !IsRowHidden(s.Index));
 		}
 
-		public IndexCell GetLastVisibleSiderInView()
+		public IndexCell? GetLastVisibleSiderInView()
 		{
 			return Sider.LastOrDefault(s => IsRowInView(s.Index) && !IsRowHidden(s.Index));
 		}

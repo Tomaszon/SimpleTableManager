@@ -10,13 +10,19 @@ namespace SimpleTableManager.Models
 
 		public bool IsOptional { get; set; }
 
-		public object DefaultValue { get; set; }
+		public object? DefaultValue { get; set; }
 
 		public bool IsArray => Type.IsArray;
 
 		public bool IsNullable => Type.IsAssignableFrom(null);
 
-		public string ParseFormat { get; set; }
+		public string? ParseFormat { get; set; }
+
+		public CommandParameter(Type type, string name)
+		{
+			Type = type;
+			Name = name;
+		}
 
 		public override string ToString()
 		{

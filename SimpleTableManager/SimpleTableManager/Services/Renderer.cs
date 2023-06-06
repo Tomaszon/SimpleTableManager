@@ -39,7 +39,7 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell firstCell, IndexCell lastCell, int size)
+		private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell? firstCell, IndexCell? lastCell, int size)
 		{
 			collection.ForEach(s => s.RemoveEllipses());
 
@@ -233,7 +233,7 @@ namespace SimpleTableManager.Services
 			return border;
 		}
 
-		public static Cell GetNearestVisibleCell(Table table, Position position, int horizontalIncrement, int verticalIncrement)
+		public static Cell? GetNearestVisibleCell(Table table, Position position, int horizontalIncrement, int verticalIncrement)
 		{
 			var y = position.Y;
 			var x = position.X;

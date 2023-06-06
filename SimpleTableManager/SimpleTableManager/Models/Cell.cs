@@ -7,7 +7,7 @@ using SimpleTableManager.Services.Functions;
 namespace SimpleTableManager.Models
 {
 	[CommandInformation("Cell related commands")]
-	public partial class Cell : INotifyPropertyChanged
+	public partial class Cell// : INotifyPropertyChanged
 	{
 		public Table Table { get; set; }
 
@@ -25,7 +25,7 @@ namespace SimpleTableManager.Models
 
 			if (content is { } && content.Count() > 0)
 			{
-				return new Size(content.Max(e => e.ToString().Length), content.Count());
+				return new Size(content.Max(e => e.ToString()?.Length ?? 0), content.Count());
 			}
 			else
 			{
@@ -47,7 +47,7 @@ namespace SimpleTableManager.Models
 				);
 		}
 
-		public Type ContentType => ContentFunction is null ? typeof(string) : ContentFunction.GetReturnType();
+		public Type? ContentType => ContentFunction?.GetReturnType();
 
 		public IEnumerable<object> GetContents()
 		{
@@ -74,13 +74,13 @@ namespace SimpleTableManager.Models
 
 		public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
-		public event PropertyChangedEventHandler PropertyChanged;
+		// public event PropertyChangedEventHandler PropertyChanged;
 
-		[JsonConstructor]
-		private Cell()
-		{
+		// [JsonConstructor]
+		// private Cell()
+		// {
 
-		}
+		// }
 
 		public Cell(Table table, params string[] contents)
 		{
@@ -117,9 +117,9 @@ namespace SimpleTableManager.Models
 			ContentFunction = FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
 		}
 
-		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
+		// private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+		// {
+		// 	PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		// }
 	}
 }
