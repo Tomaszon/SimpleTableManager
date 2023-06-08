@@ -45,7 +45,8 @@
 				}
 				else
 				{
-					return method.Invoke(null, new object[] { value })!;
+					//TODO can not format types with iparsable
+					return method.Invoke(null, new object?[] { value, null })!;
 				}
 			}
 			catch (Exception ex)
@@ -64,7 +65,7 @@
 			}
 			else
 			{
-				var methods = dataType.IsEnum ? typeof(Enum).GetMethods() : dataType.GetMethods();
+				var methods = dataType.IsEnum ? typeof(Enum).GetMethods() : dataType.GetInterface("IParsable`1")!.GetMethods();
 
 				targetDataType = dataType;
 
@@ -80,7 +81,7 @@
 					}
 					else
 					{
-						return m.Name == "Parse" && parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
+						return m.Name == "Parse" && parameters.Length == 2 && parameters[0].ParameterType == typeof(string);
 					}
 				}).Single();
 			}

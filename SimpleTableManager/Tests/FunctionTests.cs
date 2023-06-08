@@ -1,4 +1,3 @@
-using SimpleTableManager.Models;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
@@ -21,7 +20,7 @@ namespace SimpleTableManager.Tests
 		{
 			for (int i = 0; i < result.Count(); i++)
 			{
-				Assert.AreEqual(expectedValues.ElementAt(i), result.ElementAt(i));
+				Assert.That(expectedValues.ElementAt(i), Is.EqualTo(result.ElementAt(i)));
 			}
 		}
 

@@ -1,4 +1,5 @@
 using SimpleTableManager.Services;
+using System.Reflection.Emit;
 
 namespace SimpleTableManager.Models
 {
@@ -113,6 +114,26 @@ namespace SimpleTableManager.Models
 
 				throw new OperationCanceledException("Can not load document", ex);
 			}
+		}
+
+		[CommandReference]
+		public void CreateEnumeration(string name, params string[] values)
+		{
+			AppDomain currentDomain = AppDomain.CurrentDomain;
+
+			AssemblyName aName = new AssemblyName(currentDomain.FriendlyName);
+
+			AssemblyBuilder ab = AssemblyBuilder.DefineDynamicAssembly(aName, AssemblyBuilderAccess.RunAndCollect);
+
+			ModuleBuilder mb = ab.DefineDynamicModule(aName.Name!);
+
+			EnumBuilder eb = mb.DefineEnum(name, TypeAttributes.Public, typeof(int));
+
+			Shared.IndexArray(values.Length).ForEach(i=> eb.DefineLiteral(values[i], i));
+
+			Type finished = eb.CreateType();
+
+			Metadata.CustomEnums.Add(name, finished);
 		}
 	}
 }

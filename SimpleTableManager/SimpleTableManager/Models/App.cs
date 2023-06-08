@@ -20,7 +20,7 @@ namespace SimpleTableManager.Models
 			}
 		}
 
-		[CommandReference()]
+		[CommandReference]
 		[CommandInformation("Refreshes the view")]
 		public void Refresh()
 		{
