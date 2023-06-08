@@ -9,7 +9,8 @@ namespace SimpleTableManager.Services.Functions
 
 		//TODO make it work, but how? reference cell or fixed position? how to decide?
 		public IEnumerable<TIn> ReferenceArguments =>
-			ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
+			//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
+			Enumerable.Empty<TIn>();
 
 		public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
 

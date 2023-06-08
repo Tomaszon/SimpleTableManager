@@ -2,18 +2,18 @@
 {
 	public class InstanceMap
 	{
-		Dictionary<Type, Func<IEnumerable<object?>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<object?>>>();
+		Dictionary<Type, Func<IEnumerable<object>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<object>>>();
 
 		public static InstanceMap Instance { get; } = new InstanceMap();
 
 		public void Add<T>(Func<IEnumerable<T>> func)
 		{
-			ArrayMap.Add(typeof(T), () => func.Invoke().Select(e => (object?)e));
+			ArrayMap.Add(typeof(T), () => func.Invoke().Cast<object>());
 		}
 
 		public void Add<T>(Func<T> func)
 		{
-			ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Select(e => (object?)e));
+			ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<object>());
 		}
 
 		public void Remove<T>(Func<T> func)
@@ -21,7 +21,7 @@
 			ArrayMap.Remove(typeof(T));
 		}
 
-		public IEnumerable<object?> GetInstances(string typeName, out Type type)
+		public IEnumerable<object> GetInstances(string typeName, out Type type)
 		{
 			var result = ArrayMap.First(p => p.Key.Name.ToLower() == typeName.ToLower());
 

@@ -26,22 +26,22 @@ namespace SimpleTableManager.Services
 			return new Command(reference, rawCommand, arguments);
 		}
 
-		public List<object> Execute(IEnumerable<object> instances)
+		public List<object?> Execute(IEnumerable<object> instances)
 		{
-			List<object> results = new List<object>();
+			List<object?> results = new List<object?>();
 
 			foreach (var instance in instances)
 			{
 				var method = GetMethod(instance.GetType());
 				var parameters = GetParameters(method);
 
-				if (parameters.Count(p => !p.IsOptional) > Arguments.Count ||
-					parameters.All(p => !p.IsArray) && parameters.Count < Arguments.Count)
+				if (parameters.Count(p => !p.IsOptional) > Arguments?.Count ||
+					parameters.All(p => !p.IsArray) && parameters.Count < Arguments?.Count)
 				{
 					throw new ParameterCountException(RawCommand, Reference);
 				}
 
-				List<object> parsedArguments = new List<object>();
+				List<object?> parsedArguments = new List<object?>();
 
 				for (var i = 0; i < parameters.Count; i++)
 				{
@@ -55,7 +55,8 @@ namespace SimpleTableManager.Services
 					}
 					else
 					{
-						var value = i < Arguments.Count ? Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
+						var value = i < Arguments?.Count ?
+							Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
 						parsedArguments.Add(value);
 					}
@@ -74,9 +75,9 @@ namespace SimpleTableManager.Services
 			return results;
 		}
 
-		private Array ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType)
+		private Array? ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType)
 		{
-			if (index < Arguments.Count)
+			if (index < Arguments?.Count)
 			{
 				var rest = Arguments.GetRange(index, Arguments.Count - index);
 
@@ -90,7 +91,7 @@ namespace SimpleTableManager.Services
 			}
 			else
 			{
-				return (Array)parameters[index].DefaultValue;
+				return (Array?)parameters[index].DefaultValue;
 			}
 		}
 
@@ -112,7 +113,7 @@ namespace SimpleTableManager.Services
 		{
 			return type.GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
 				(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
-					e.attribute is not null).ToDictionary(k => k.attribute.MethodReference.ToLower(), v => v.method);
+					e.attribute is not null).ToDictionary(k => k.attribute!.MethodReference.ToLower(), v => v.method);
 		}
 
 		public List<CommandParameter> GetParameters(MethodInfo method)

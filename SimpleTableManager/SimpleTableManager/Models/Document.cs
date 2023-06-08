@@ -11,7 +11,7 @@ namespace SimpleTableManager.Models
 
 		public Document()
 		{
-
+			Clear();
 		}
 
 		public void Clear()
@@ -21,9 +21,9 @@ namespace SimpleTableManager.Models
 			AddTable(new Size(10, 5));
 		}
 
-		public Table? GetActiveTable()
+		public Table GetActiveTable()
 		{
-			return Tables.SingleOrDefault(t => t.IsActive);
+			return Tables.Single(t => t.IsActive);
 		}
 
 		private static string GetSaveFilePath(string fileName)

@@ -142,9 +142,8 @@
 			{
 				Console.WriteLine(message);
 
-				if (Console.ReadLine() is var answer && validValues.Select(v => v.ToString()).Contains(answer, StringComparer.OrdinalIgnoreCase))
+				if (Console.ReadLine() is string answer && validValues.Select(v => v.ToString()).Contains(answer, StringComparer.OrdinalIgnoreCase))
 				{
-					//TODO test nullability
 					return answer;
 				}
 			}

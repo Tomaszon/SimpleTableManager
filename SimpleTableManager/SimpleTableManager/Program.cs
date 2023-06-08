@@ -21,7 +21,7 @@ namespace SimpleTableManager
 			InstanceMap.Instance.Add(() => app);
 			InstanceMap.Instance.Add(() => document);
 			InstanceMap.Instance.Add(() => document.GetActiveTable());
-			InstanceMap.Instance.Add(() => document.GetActiveTable()?.GetSelectedCells());
+			InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
 
 			#region test
 
@@ -150,7 +150,7 @@ namespace SimpleTableManager
 
 					var command = Command.FromString(rawCommand);
 
-					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference.ClassName, out _));
+					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out _));
 
 					SmartConsole.ShowResults(results);
 				}

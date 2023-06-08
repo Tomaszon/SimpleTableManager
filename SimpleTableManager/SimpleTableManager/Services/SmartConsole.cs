@@ -88,7 +88,7 @@ public class SmartConsole
 		LastHelp = LastHelp.Trim();
 	}
 
-	public static void ShowResults(IEnumerable<object> results)
+	public static void ShowResults(IEnumerable<object?> results)
 	{
 		results = results.Where(r => r is not null);
 
