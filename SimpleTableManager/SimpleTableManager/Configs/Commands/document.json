@@ -16,8 +16,5 @@
 	},
 	"save": "save",
 	"save-as": "saveAs",
-	"load": "load",
-	"define": {
-		"enumeration": "createEnumeration"
-	}
+	"load": "load"	
 }
