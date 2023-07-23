@@ -48,6 +48,12 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, params string[] arguments)
+		{
+			SetFunction<DateTime>(functionOperator, arguments);
+		}
+
+		[CommandReference]
 		public void SetVerticalAlignment(VerticalAlignment alignment)
 		{
 			ContentAlignment.Vertical = alignment;

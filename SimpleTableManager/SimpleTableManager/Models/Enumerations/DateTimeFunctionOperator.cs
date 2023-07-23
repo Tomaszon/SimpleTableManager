@@ -4,5 +4,6 @@ namespace SimpleTableManager.Models.Enumerations;
 public enum DateTimeFunctionOperator
 {
 	Const,
-	Sum
+	Sum,
+	Now
 }

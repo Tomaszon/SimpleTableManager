@@ -9,6 +9,7 @@ public class DateTimeFunction : FunctionBase<DateTimeFunctionOperator, DateTime,
 		{
 			DateTimeFunctionOperator.Const => Arguments,
 			DateTimeFunctionOperator.Sum => Sum().Wrap(),
+			DateTimeFunctionOperator.Now => DateTime.Now.Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};
