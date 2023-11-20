@@ -7,7 +7,10 @@
 			"decimal": "setDecimalContentFunction",
 			"bool": "setBooleanContentFunction",
 			"char" : "setCharacterContentFunction",
-			"datetime": "setDateTimeContentFunction"
+			"datetime": "setDateTimeContentFunction",
+			"date": "setDateContentFunction",
+			//TODO
+			// "time": "setTimeContentFunction"
 		},
 		"vertical-alignment": "setVerticalAlignment",
 		"horizontal-alignment": "setHorizontalAlignment",

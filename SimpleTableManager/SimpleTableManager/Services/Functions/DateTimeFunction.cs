@@ -1,26 +1,14 @@
 namespace SimpleTableManager.Services.Functions;
 
-[NamedArgument(ArgumentName.Format, "yyyy.MM.dd-HH:mm:ss")]
-public class DateTimeFunction : FunctionBase<DateTimeFunctionOperator, DateTime, DateTime>
+public class DateTimeFunction : DateFunctionBase<DateTime, DateTime, DateTime>
 {
-	protected override IEnumerable<DateTime> Execute()
+	protected override DateTime Sum()
 	{
-		return Operator switch
-		{
-			DateTimeFunctionOperator.Const => Arguments,
-			DateTimeFunctionOperator.Sum => Sum().Wrap(),
-			DateTimeFunctionOperator.Now => DateTime.Now.Wrap(),
-
-			_ => throw GetInvalidOperatorException()
-		};
+		return Arguments.Aggregate(DateTime.MinValue, (a, c) => a.Add(new TimeSpan(c.Ticks)));
 	}
 
-	private DateTime Sum()
+	protected override DateTime Now()
 	{
-		return Arguments.Aggregate(DateTime.MinValue, (a, c) => 
-			a.AddYears(c.Year).AddMonths(c.Month).AddDays(c.Day)
-			.AddHours(c.Hour).AddMinutes(c.Minute).AddSeconds(c.Second)
-			.AddMilliseconds(c.Millisecond).AddMicroseconds(c.Microsecond))
-			.AddYears(-1).AddMonths(-1).AddDays(-1);
+		return NowProperty is null ? (NowProperty = DateTime.Now).Value : NowProperty.Value;
 	}
 }
