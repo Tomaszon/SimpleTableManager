@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager.Services
+﻿using System.Text.RegularExpressions;
+
+namespace SimpleTableManager.Services
 {
 	public static class Shared
 	{
@@ -6,7 +8,7 @@
 
 		public static Type GetTypeByName(string name, string? nameSpace = null)
 		{
-			Dictionary<string, string> nameMap = new Dictionary<string, string>
+			Dictionary<string, string> nameMap = new()
 			{
 				{ "int", "int32" },
 				{ "long", "int64" },
@@ -45,7 +47,6 @@
 				}
 				else
 				{
-					//TODO can not format types with iparsable
 					return method.Invoke(null, new object?[] { value, null })!;
 				}
 			}
@@ -65,7 +66,7 @@
 			}
 			else
 			{
-				var methods = dataType.IsEnum ? typeof(Enum).GetMethods() : dataType.GetInterface("IParsable`1")!.GetMethods();
+				var methods = dataType.IsEnum ? typeof(Enum).GetMethods() : dataType.GetInterfaceMap(dataType.GetInterface("IParsable`1")!).TargetMethods;
 
 				targetDataType = dataType;
 
@@ -81,7 +82,10 @@
 					}
 					else
 					{
-						return m.Name == "Parse" && parameters.Length == 2 && parameters[0].ParameterType == typeof(string);
+						return m.Name.EndsWith("Parse") &&
+							m.Name != "TryParse" &&
+							parameters.Length == 2 &&
+							parameters[0].ParameterType == typeof(string);
 					}
 				}).Single();
 			}
@@ -137,7 +141,7 @@
 			Console.SetCursorPosition(Console.CursorLeft + x, Console.CursorTop + y);
 		}
 
-		public static string ReadLineWhile(string message, IEnumerable<object> validValues, bool caseSensitive = false)
+		public static string ReadLineWhile(string message, IEnumerable<object> validValues)
 		{
 			do
 			{
