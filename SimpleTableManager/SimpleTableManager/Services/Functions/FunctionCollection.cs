@@ -15,7 +15,6 @@ public static class FunctionCollection
 		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic;
 
 		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == Shared.GetTypeByName(typeName));
-		var args = arguments.Select(a => a.ToString());
 
 		var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
 
@@ -23,7 +22,7 @@ public static class FunctionCollection
 
 		var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(argsInnerType))!;
 
-		var parsedArgs = argsInnerType == typeof(string) ? args! : args.Select(a => Shared.ParseStringValue(argsInnerType, a!));
+		var parsedArgs = argsInnerType == typeof(string) ? arguments! : arguments.Select(a => a is string str ? Shared.ParseStringValue(argsInnerType, str!) : a);
 
 		parsedArgs.ForEach(e => targetArray.Add(e));
 

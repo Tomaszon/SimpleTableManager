@@ -1,11 +1,11 @@
 namespace SimpleTableManager.Services.Functions;
 
-public abstract class DateFunctionBase<TIn, TOut, TNow> : FunctionBase<DateTimeFunctionOperator, TIn, TOut>
+public abstract class DateTimeFunctionBase<TIn, TOut, TNow> : FunctionBase<DateTimeFunctionOperator, TIn, TOut>
 where TNow: struct
 {
 	protected TNow? NowProperty { get; set; }
 
-	protected override IEnumerable<TOut> Execute()
+	public override IEnumerable<TOut> Execute()
 	{
 		return Operator switch
 		{

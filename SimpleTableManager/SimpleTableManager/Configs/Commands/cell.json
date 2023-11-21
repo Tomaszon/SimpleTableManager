@@ -9,8 +9,7 @@
 			"char" : "setCharacterContentFunction",
 			"datetime": "setDateTimeContentFunction",
 			"date": "setDateContentFunction",
-			//TODO
-			// "time": "setTimeContentFunction"
+			"time": "setTimeContentFunction"
 		},
 		"vertical-alignment": "setVerticalAlignment",
 		"horizontal-alignment": "setHorizontalAlignment",

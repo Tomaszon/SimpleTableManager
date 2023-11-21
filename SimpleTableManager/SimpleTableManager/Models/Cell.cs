@@ -23,7 +23,7 @@ namespace SimpleTableManager.Models
 		{
 			var content = GetContents();
 
-			if (content is { } && content.Count() > 0)
+			if (content is { } && content.Any())
 			{
 				return new Size(content.Max(e => e.ToString()?.Length ?? 0), content.Count());
 			}

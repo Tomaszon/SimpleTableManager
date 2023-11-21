@@ -28,7 +28,7 @@ namespace SimpleTableManager.Services
 
 		public List<object?> Execute(IEnumerable<object> instances)
 		{
-			List<object?> results = new List<object?>();
+			List<object?> results = new();
 
 			foreach (var instance in instances)
 			{
@@ -41,7 +41,7 @@ namespace SimpleTableManager.Services
 					throw new ParameterCountException(RawCommand, Reference);
 				}
 
-				List<object?> parsedArguments = new List<object?>();
+				List<object?> parsedArguments = new();
 
 				for (var i = 0; i < parameters.Count; i++)
 				{
@@ -138,7 +138,7 @@ namespace SimpleTableManager.Services
 		{
 			try
 			{
-				Command.FromString(rawCommand);
+				FromString(rawCommand);
 
 				return true;
 			}

@@ -1,11 +1,11 @@
 namespace SimpleTableManager.Services.Functions
 {
 	[NamedArgument(ArgumentName.Divider, 2)]
-	public class IntegerNumericFunction : NumericFunction<int, int>
+	public class IntegerNumericFunction : NumericFunctionBase<int, int>
 	{
-		protected override IEnumerable<int> Execute()
+		public override IEnumerable<int> Execute()
 		{
-			var divider = GetArgument<int>(ArgumentName.Divider);
+			var divider = GetNamedArgument<int>(ArgumentName.Divider);
 
 			return Operator switch
 			{

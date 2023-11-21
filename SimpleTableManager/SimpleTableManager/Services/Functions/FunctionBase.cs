@@ -14,15 +14,15 @@ namespace SimpleTableManager.Services.Functions
 
 		public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
 
-		protected IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
+		public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
 
 		IEnumerable<object> IFunction.Arguments => Arguments.Cast<object>();
 
-		protected TOpertor Operator { get; set; }
+		public TOpertor Operator { get; set; }
 
 		Enum IFunction.Operator => Operator;
 
-		protected abstract IEnumerable<TOut> Execute();
+		public abstract IEnumerable<TOut> Execute();
 
 		IEnumerable<object> IFunction.Execute()
 		{
@@ -62,16 +62,24 @@ namespace SimpleTableManager.Services.Functions
 			}
 		}
 
+		public TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
+		{
+			if (NamedArguments.TryGetValue(key, out var s))
+			{
+				return TParse.Parse(s, null);
+			}
+
+			if (GetType().GetCustomAttributes<NamedArgumentAttribute>().SingleOrDefault(p => p.Key == key) is var a && a is { })
+			{
+				return (TParse)a.Value;
+			}
+
+			return default;
+		}
+
 		public Exception GetInvalidOperatorException()
 		{
 			return new InvalidOperationException($"Operator '{Operator}' is not supported for function type '{GetType().Name}'");
-		}
-
-		protected TParse GetArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
-		{
-			return NamedArguments.TryGetValue(key, out var s) ?
-				TParse.Parse(s, null) :
-				(TParse)GetType().GetCustomAttributes<NamedArgumentAttribute>().Single(p => p.Key == key).Value;
 		}
 	}
 }

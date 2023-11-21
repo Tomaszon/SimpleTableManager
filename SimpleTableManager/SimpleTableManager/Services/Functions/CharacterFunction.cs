@@ -4,10 +4,10 @@ namespace SimpleTableManager.Services.Functions
 	[NamedArgument(ArgumentName.Count, 1)]
 	public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, object>
 	{
-		protected override IEnumerable<object> Execute()
+		public override IEnumerable<object> Execute()
 		{
-			var separator = GetArgument<string>(ArgumentName.Separator);
-			var count = GetArgument<int>(ArgumentName.Count);
+			var separator = GetNamedArgument<string>(ArgumentName.Separator);
+			var count = GetNamedArgument<int>(ArgumentName.Count);
 
 			return Operator switch
 			{

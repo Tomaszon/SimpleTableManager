@@ -1,11 +1,11 @@
 namespace SimpleTableManager.Services.Functions
 {
 	[NamedArgument(ArgumentName.Decimals, 2)]
-	public class DecimalNumericFunction : NumericFunction<decimal, object>
+	public class DecimalNumericFunction : NumericFunctionBase<decimal, object>
 	{
-		protected override IEnumerable<object> Execute()
+		public override IEnumerable<object> Execute()
 		{
-			var decimals = GetArgument<int>(ArgumentName.Decimals);
+			var decimals = GetNamedArgument<int>(ArgumentName.Decimals);
 
 			return Operator switch
 			{

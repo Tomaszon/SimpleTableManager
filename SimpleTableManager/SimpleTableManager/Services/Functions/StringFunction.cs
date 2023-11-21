@@ -4,10 +4,10 @@ namespace SimpleTableManager.Services.Functions
 	[NamedArgument(ArgumentName.Trim, ' ')]
 	public class StringFunction : FunctionBase<StringFunctionOperator, string, object>
 	{
-		protected override IEnumerable<object> Execute()
+		public override IEnumerable<object> Execute()
 		{
-			var separator = GetArgument<string>(ArgumentName.Separator);
-			var trim = GetArgument<char>(ArgumentName.Trim);
+			var separator = GetNamedArgument<string>(ArgumentName.Separator);
+			var trim = GetNamedArgument<char>(ArgumentName.Trim);
 
 			return Operator switch
 			{

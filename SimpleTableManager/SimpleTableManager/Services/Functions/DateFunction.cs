@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Services.Functions;
 
-public class DateFunction : DateFunctionBase<DateOnly, DateOnly, DateOnly>
+public class DateFunction : DateTimeFunctionBase<DateOnly, DateOnly, DateOnly>
 {
 	protected override DateOnly Sum()
 	{
@@ -12,7 +12,7 @@ public class DateFunction : DateFunctionBase<DateOnly, DateOnly, DateOnly>
 	{
 		if (NowProperty is null)
 		{
-			(DateOnly d, TimeOnly _) = DateTime.Now;
+			(DateOnly d, _) = DateTime.Now;
 
 			NowProperty = d;
 		}

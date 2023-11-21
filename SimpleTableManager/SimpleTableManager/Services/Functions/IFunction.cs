@@ -12,6 +12,8 @@ namespace SimpleTableManager.Services.Functions
 
 		Type? GetReturnType();
 
+		TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
+
 		string GetError();
 	}
 }

@@ -5,6 +5,7 @@ namespace SimpleTableManager.Services
 	public static class Shared
 	{
 		public const string HELP_COMMAND = "help";
+		public const string NAMED_ARG_SEPARATOR = ":=";
 
 		public static Type GetTypeByName(string name, string? nameSpace = null)
 		{
@@ -160,13 +161,14 @@ namespace SimpleTableManager.Services
 			return type.IsGenericType ? $"{type.Name}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.Name;
 		}
 
-		public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments) where TType : IParsable<TType>
+		public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments) 
+		where TType : IParsable<TType>
 		{
-			var namedArgs = arguments.Where(a => a.Contains(':') == true);
+			var namedArgs = arguments.Where(a => a.Contains(NAMED_ARG_SEPARATOR) == true);
 
 			var regularArgs = arguments.Where(a => !namedArgs.Contains(a)).Select(e => TType.Parse(e, null));
 
-			var namedArgsDic = namedArgs.ToDictionary(k => Enum.Parse<ArgumentName>(k.Split(':')[0], true), v => v.Substring(v.IndexOf(':') + 1));
+			var namedArgsDic = namedArgs.ToDictionary(k => Enum.Parse<ArgumentName>(k.Split(NAMED_ARG_SEPARATOR)[0], true), v => v.Split(NAMED_ARG_SEPARATOR)[1]);
 
 			return (namedArgsDic, regularArgs);
 		}

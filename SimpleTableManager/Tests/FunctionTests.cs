@@ -25,7 +25,7 @@ namespace SimpleTableManager.Tests
 		{
 			for (int i = 0; i < result.Count(); i++)
 			{
-				Assert.That(expectedValues.ElementAt(i), Is.EqualTo(result.ElementAt(i)));
+				Assert.That(result.ElementAt(i), Is.EqualTo(expectedValues.ElementAt(i)));
 			}
 		}
 
@@ -44,9 +44,9 @@ namespace SimpleTableManager.Tests
 		[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01 10:30", "0001-01-01 02:20" }, "0001-01-01 12:50")]
 		public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 		{
-			var fn = CreateFunction(operation, values.Select(s => System.DateTime.Parse(s)).ToArray());
+			var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)).ToArray());
 
-			CheckResults(fn.Execute(), results.Select(s => System.DateTime.Parse(s)).ToArray());
+			CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)).ToArray());
 		}
 
 		[Test]
@@ -97,18 +97,39 @@ namespace SimpleTableManager.Tests
 		}
 
 		[Test]
-		public void DateAndTimeTest()
+		[TestCase(10, 5, 1)]
+		public void DateAndTimeTest(int hours, int minutes, int seconds)
 		{
-			(DateOnly d, TimeOnly t) = DateTime.Now;
+			(DateOnly d, _) = DateTime.Now;
+			var t = new TimeOnly(hours, minutes, seconds);
 
 			var fnd = CreateFunction(DateTimeFunctionOperator.Now, Array.Empty<DateOnly>());
 
 			CheckResults(fnd.Execute(), new[] { d });
 
-			//TODO
-			// var fnt = CreateFunction(DateTimeFunctionOperator.Now, Array.Empty<TimeOnly>());
+			var fnt = CreateFunction(DateTimeFunctionOperator.Const, new[] { t });
 
-			// CheckResults(fnt.Execute(), new[] { t });
+			CheckResults(fnt.Execute(), new[] { t });
+		}
+
+		[Test]
+		public void FormatTest()
+		{
+			IFunction fn = new TimeFunction()
+			{
+				Arguments = new[] { new TimeOnly(10, 5, 2) },
+				Operator = DateTimeFunctionOperator.Const,
+				NamedArguments = new() { { ArgumentName.Format, "HH:mm:ss" } }
+			};
+
+			var result = fn.Execute().First();
+
+			var format = fn.GetNamedArgument<string>(ArgumentName.Format);
+
+			// var s = (result as dynamic).ToString(new Formatter(format));
+
+			var s = string.Format(new Formatter("HH:mm:ss"), "{0}", result);
+			var b = string.Format(new Formatter("YasN"), "{0}", true);
 		}
 	}
 }

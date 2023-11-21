@@ -2,7 +2,7 @@ namespace SimpleTableManager.Services.Functions
 {
 	public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
 	{
-		protected override IEnumerable<bool> Execute()
+		public override IEnumerable<bool> Execute()
 		{
 			return Operator switch
 			{
