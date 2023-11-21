@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
+using Microsoft.Extensions.Localization;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
@@ -21,11 +21,11 @@ namespace SimpleTableManager.Models
 		/// </summary>
 		public Size GetContentSize()
 		{
-			var content = GetContents();
+			var contents = GetFormattedContents();
 
-			if (content is { } && content.Any())
+			if (contents is { } && contents.Any())
 			{
-				return new Size(content.Max(e => e.ToString()?.Length ?? 0), content.Count());
+				return new Size(contents.Max(e => e?.Length ?? 0), contents.Count());
 			}
 			else
 			{
@@ -52,6 +52,11 @@ namespace SimpleTableManager.Models
 		public IEnumerable<object> GetContents()
 		{
 			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+		}
+
+		public IEnumerable<string> GetFormattedContents()
+		{
+			return ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
 		}
 
 		public IFunction? ContentFunction { get; set; }

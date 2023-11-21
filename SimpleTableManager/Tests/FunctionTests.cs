@@ -113,23 +113,24 @@ namespace SimpleTableManager.Tests
 		}
 
 		[Test]
-		public void FormatTest()
+		[TestCase(10, 5, 2, "HH:mm:ss", "10:05:02")]
+		[TestCase(10, 0, 0, "HH", "10")]
+		public void TimeFormatTest(int h, int m, int s, string format, string expectedResult)
 		{
 			IFunction fn = new TimeFunction()
 			{
-				Arguments = new[] { new TimeOnly(10, 5, 2) },
+				Arguments = new[] { new TimeOnly(h, m, s) },
 				Operator = DateTimeFunctionOperator.Const,
-				NamedArguments = new() { { ArgumentName.Format, "HH:mm:ss" } }
+				NamedArguments = new() { { ArgumentName.Format, format } }
 			};
 
 			var result = fn.Execute().First();
 
-			var format = fn.GetNamedArgument<string>(ArgumentName.Format);
+			var f = fn.GetNamedArgument<string>(ArgumentName.Format);
 
-			// var s = (result as dynamic).ToString(new Formatter(format));
+			var formattedResult = string.Format(new ContentFormatter(f), "{0}", result);
 
-			var s = string.Format(new Formatter("HH:mm:ss"), "{0}", result);
-			var b = string.Format(new Formatter("YasN"), "{0}", true);
+			CheckResults(formattedResult.Wrap(), expectedResult.Wrap());
 		}
 	}
 }

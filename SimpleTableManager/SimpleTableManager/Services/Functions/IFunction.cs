@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Localization;
+
 namespace SimpleTableManager.Services.Functions
 {
 	public interface IFunction
@@ -9,6 +11,8 @@ namespace SimpleTableManager.Services.Functions
 		Enum Operator { get; }
 
 		IEnumerable<object> Execute();
+
+		IEnumerable<string> ExecuteAndFormat();
 
 		Type? GetReturnType();
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Localization;
 using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions
@@ -36,6 +37,22 @@ namespace SimpleTableManager.Services.Functions
 			}
 		}
 
+		public IEnumerable<string> ExecuteAndFormat()
+		{
+			try
+			{
+				var format = GetNamedArgument<string>(ArgumentName.Format);
+
+				var formatter = new ContentFormatter(format);
+
+				return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
+			}
+			catch
+			{
+				return new string[] { "Content format error" };
+			}
+		}
+
 		public Type? GetReturnType()
 		{
 			try
@@ -50,9 +67,12 @@ namespace SimpleTableManager.Services.Functions
 
 		public string GetError()
 		{
+			//TODO optimize
+			//TODO fix, exception not being thrown
 			try
 			{
 				Execute();
+				ExecuteAndFormat();
 
 				return "None";
 			}

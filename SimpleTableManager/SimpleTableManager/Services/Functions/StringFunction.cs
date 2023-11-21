@@ -6,18 +6,18 @@ namespace SimpleTableManager.Services.Functions
 	{
 		public override IEnumerable<object> Execute()
 		{
-			var separator = GetNamedArgument<string>(ArgumentName.Separator);
+			var separator = GetNamedArgument<string>(ArgumentName.Separator)!;
 			var trim = GetNamedArgument<char>(ArgumentName.Trim);
 
 			return Operator switch
 			{
 				StringFunctionOperator.Const => Arguments.Cast<object>(),
 
-				StringFunctionOperator.Con => ConcatArguments().Wrap(),
+				StringFunctionOperator.Con => Concat().Wrap(),
 
-				StringFunctionOperator.Join => JoinArguments(separator).Wrap(),
+				StringFunctionOperator.Join => Join(separator).Wrap(),
 
-				StringFunctionOperator.Len => ConcatArguments().Length.Wrap<object>(),
+				StringFunctionOperator.Len => Concat().Length.Wrap<object>(),
 
 				StringFunctionOperator.Split => Arguments.SelectMany(p => p.Split(separator)),
 
@@ -29,12 +29,12 @@ namespace SimpleTableManager.Services.Functions
 			};
 		}
 
-		private string ConcatArguments()
+		private string Concat()
 		{
 			return string.Concat(string.Concat(Arguments), string.Concat(ReferenceArguments));
 		}
 
-		private string JoinArguments(string separator)
+		private string Join(string separator)
 		{
 			var value = string.Join(separator, string.Join(separator, Arguments), string.Join(separator, ReferenceArguments));
 

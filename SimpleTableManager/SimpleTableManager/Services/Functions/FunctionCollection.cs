@@ -12,7 +12,7 @@ public static class FunctionCollection
 
 	public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<object> arguments)
 	{
-		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic;
+		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
 
 		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == Shared.GetTypeByName(typeName));
 

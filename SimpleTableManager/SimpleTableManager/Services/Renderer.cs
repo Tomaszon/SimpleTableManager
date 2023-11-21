@@ -377,13 +377,13 @@ namespace SimpleTableManager.Services
 		{
 			var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
 
-			var contentsToRender = cell.GetContents();
+			var contentsToRender = cell.GetFormattedContents();
 			var horizontalAlignmentToRender = cell.ContentAlignment.Horizontal;
 			var verticalAlignmentToRender = cell.ContentAlignment.Vertical;
 
 			if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.Layer)
 			{
-				contentsToRender = cell.LayerIndex == 0 ? new List<object>() : new List<object>() { cell.LayerIndex };
+				contentsToRender = cell.LayerIndex == 0 ? new List<string>() : new List<string>() { cell.LayerIndex.ToString() };
 				horizontalAlignmentToRender = HorizontalAlignment.Center;
 				verticalAlignmentToRender = VerticalAlignment.Center;
 			}
@@ -396,11 +396,7 @@ namespace SimpleTableManager.Services
 
 				if (IsCellContentDrawNeeded(contentsToRender, verticalAlignmentToRender, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
 				{
-					var format = cell.ContentFunction?.GetNamedArgument<string>(ArgumentName.Format);
-
-					content = "";
-					//contentsToRender.ElementAt(contentIndex);
-					//.ToString();
+					content = contentsToRender.ElementAt(contentIndex);
 
 					if (!string.IsNullOrWhiteSpace(content))
 					{
@@ -499,42 +495,6 @@ namespace SimpleTableManager.Services
 		{
 			Console.ForegroundColor = Settings.Current.DefaultBorderColor.Foreground;
 			Console.BackgroundColor = Settings.Current.DefaultBorderColor.Background;
-		}
-	}
-
-	public class Formatter : IFormatProvider, ICustomFormatter
-	{
-		private string? _format;
-
-		public Formatter(string? format)
-		{
-			_format = format;
-		}
-
-		public object? GetFormat(Type? formatType)
-		{
-			return this;
-		}
-
-		public string Format(string? format, object? arg, IFormatProvider? formatProvider)
-		{
-			if (arg is IFormattable p)
-			{
-				return p.ToString(_format, null);
-			}
-			else if (arg is bool b)
-			{
-				return _format switch
-				{
-					"YN" => b ? "Y" : "N",
-					"YesNo" => b ? "Yes" : "No",
-					"" => b.ToString(),
-
-					_ => throw new FormatException()
-				};
-			}
-
-			return arg!.ToString()!;
 		}
 	}
 }
