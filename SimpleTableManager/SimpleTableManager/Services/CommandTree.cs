@@ -60,7 +60,7 @@ namespace SimpleTableManager.Services
 						}
 					}
 
-					if (matchingValue is ExpandoObject && keys.Count <= 1 || !(matchingValue is ExpandoObject) && keys.Count < 1)
+					if (matchingValue is ExpandoObject && keys.Count <= 1 || matchingValue is not ExpandoObject && keys.Count < 1)
 					{
 						throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
 					}

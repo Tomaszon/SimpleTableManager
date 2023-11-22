@@ -21,7 +21,7 @@ namespace SimpleTableManager.Models
 					Alignment = ContentAlignment.ToString(),
 					Color = ContentColor.ToString(),
 				},
-				IsHidden = Visibility.IsHidden
+				Visibility.IsHidden
 			};
 		}
 
@@ -32,9 +32,9 @@ namespace SimpleTableManager.Models
 			return ContentFunction is null ? "None" : new
 			{
 				Type = ContentFunction.GetType().Name,
-				Operator = ContentFunction.Operator,
-				NamedArguments = ContentFunction.NamedArguments,
-				Arguments = ContentFunction.Arguments,
+				ContentFunction.Operator,
+				ContentFunction.NamedArguments,
+				ContentFunction.Arguments,
 				ReturnType = ContentFunction.GetReturnType()?.Name ?? "None",
 				Error = ContentFunction.GetError()
 			};

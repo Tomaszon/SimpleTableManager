@@ -4,7 +4,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace SimpleTableManager.Services
 {
-	public class ClearPropertyContractResolver : DefaultContractResolver
+    public class ClearPropertyContractResolver : DefaultContractResolver
 	{
 		protected override JsonArrayContract CreateArrayContract(Type objectType)
 		{

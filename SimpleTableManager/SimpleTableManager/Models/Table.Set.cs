@@ -11,6 +11,35 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
+		public void SetSize(Size size)
+		{
+			Shared.Validate(() => size.Width > 0 && size.Height > 0, "Can not decrease table size under 1 column or 1 row!");
+
+			while (Size.Width != size.Width)
+			{
+				if (Size.Width > size.Width)
+				{
+					RemoveLastColumn();
+				}
+				else
+				{
+					AddColumnLast();
+				}
+			}
+			while (Size.Height != size.Height)
+			{
+				if (Size.Height > size.Height)
+				{
+					RemoveLastRow();
+				}
+				else
+				{
+					AddRowLast();
+				}
+			}
+		}
+
+		[CommandReference]
 		public void SetColumnWidth(int index, int width)
 		{
 			Columns[index].ForEach(c => c.GivenSize = new Size(width, c.GivenSize.Height));
@@ -53,10 +82,10 @@ namespace SimpleTableManager.Models
 			this[position].SetContent(contents);
 		}
 
-		[CommandReference]
-		public void SetCellType(Position position, string typeName)
-		{
-			this[position].SetType(typeName);
-		}
+		// [CommandReference]
+		// public void SetCellType(Position position, string typeName)
+		// {
+		// 	this[position].SetType(typeName);
+		// }
 	}
 }

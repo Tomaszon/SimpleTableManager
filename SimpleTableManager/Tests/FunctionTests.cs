@@ -3,6 +3,7 @@ using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Tests
 {
+	[SuppressMessage("Usage", "CA1861")]
 	public class FunctionTests
 	{
 		[OneTimeSetUp]

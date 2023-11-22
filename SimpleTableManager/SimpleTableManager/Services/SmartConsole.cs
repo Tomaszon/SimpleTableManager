@@ -6,29 +6,29 @@ namespace SimpleTableManager.Services;
 
 public class SmartConsole
 {
-	private static string _LAST_HELP_PLACEHOLDER = "Enter command to execute";
+	private static readonly string _LAST_HELP_PLACEHOLDER = "Enter command to execute";
 
-	public static string LastHelp = _LAST_HELP_PLACEHOLDER;
+	private static string _lastHelp = _LAST_HELP_PLACEHOLDER;
 
 	private static int _insertIndex = 0;
 
-	private static StringBuilder _buffer = new StringBuilder();
+	private static readonly StringBuilder _buffer = new();
 
 	private const string _COMMAND_LINE_PREFIX = "> ";
 
-	private static CommandHistory _commandHistory = new CommandHistory();
+	private static readonly CommandHistory _commandHistory = new();
 
-	private static AutoComplete _autoComplete = new AutoComplete();
+	private static readonly AutoComplete _autoComplete = new();
 
 	public static void Render(Document document)
 	{
 		Renderer.Render(document);
 
-		if (LastHelp is { })
+		if (_lastHelp is { })
 		{
 			Console.Write("Help:\n");
 
-			foreach (var c in LastHelp)
+			foreach (var c in _lastHelp)
 			{
 				Console.Write(c);
 			}
@@ -43,24 +43,24 @@ public class SmartConsole
 	{
 		var command = new Command(commandReference, rawCommand, null) { AvailableKeys = availableKeys };
 
-		LastHelp = $"{error}\n    ";
+		_lastHelp = $"{error}\n    ";
 
 		if (command.AvailableKeys is { })
 		{
-			LastHelp += $"Available keys:\n";
+			_lastHelp += $"Available keys:\n";
 
 			foreach (var key in command.AvailableKeys)
 			{
-				LastHelp += $"        {key}";
+				_lastHelp += $"        {key}";
 
 				if (InstanceMap.Instance.TryGetInstances(key, out _, out var type) &&
 					type.GetCustomAttribute<CommandInformationAttribute>() is var attribute &&
 					attribute is not null)
 				{
-					LastHelp += $":  {attribute.Information}";
+					_lastHelp += $":  {attribute.Information}";
 				}
 
-				LastHelp += ",\n";
+				_lastHelp += ",\n";
 			}
 		}
 		else if (command.Reference is { })
@@ -69,23 +69,23 @@ public class SmartConsole
 
 			var method = command.GetMethod(type);
 
-			var parameters = command.GetParameters(method);
+			var parameters = Command.GetParameters(method);
 
 			if (method.GetCustomAttribute<CommandInformationAttribute>()?.Information is var info && info is not null)
 			{
-				LastHelp += $"Summary:\n        {info}\n    ";
+				_lastHelp += $"Summary:\n        {info}\n    ";
 			}
 
-			LastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n";
+			_lastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n";
 		}
 
 		if (command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd() is var sanitedCommand &&
 			!string.IsNullOrWhiteSpace(sanitedCommand))
 		{
-			LastHelp += $"    in '{sanitedCommand}'";
+			_lastHelp += $"    in '{sanitedCommand}'";
 		}
 
-		LastHelp = LastHelp.Trim();
+		_lastHelp = _lastHelp.Trim();
 	}
 
 	public static void ShowResults(IEnumerable<object?> results)
@@ -96,16 +96,16 @@ public class SmartConsole
 		{
 			var formattedResults = results.Select(r => JsonConvert.SerializeObject(r, Formatting.Indented));
 
-			LastHelp = $"Execution result:\n";
+			_lastHelp = $"Execution result:\n";
 
-			formattedResults.ForEach(r => LastHelp += $"{r},\n");
+			formattedResults.ForEach(r => _lastHelp += $"{r},\n");
 		}
 		else
 		{
-			LastHelp = _LAST_HELP_PLACEHOLDER;
+			_lastHelp = _LAST_HELP_PLACEHOLDER;
 		}
 
-		LastHelp = LastHelp.TrimEnd(',', '\n');
+		_lastHelp = _lastHelp.TrimEnd(',', '\n');
 	}
 
 	public static string ReadInputString()
@@ -214,7 +214,7 @@ public class SmartConsole
 
 			result = GetHintCore(rawCommand, out availableKeys, out _);
 
-			partialKey ??= value.Substring(value.LastIndexOf(' ') + 1);
+			partialKey ??= value[(value.LastIndexOf(' ') + 1)..];
 		}
 
 		if (!_autoComplete.Cycling)
@@ -294,7 +294,7 @@ public class SmartConsole
 	{
 		return partialKey is null &&
 			!string.IsNullOrWhiteSpace(value) &&
-			!value.Substring(0, value.Length).EndsWith(' ');
+			!value.EndsWith(' ');
 	}
 
 	private static bool GetPreviousHistoryItem()

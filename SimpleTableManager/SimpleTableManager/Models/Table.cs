@@ -22,9 +22,11 @@ namespace SimpleTableManager.Models
 
 		public Cell CornerCell { get; set; }
 
+		[JsonIgnore]
 		public Dictionary<int, List<Cell>> Columns =>
 			Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);
 
+		[JsonIgnore]
 		public Dictionary<int, List<Cell>> Rows =>
 			Shared.IndexArray(Size.Height).ToDictionary(y => y, y => this[0, y, Size.Width - 1, y]);
 

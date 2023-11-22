@@ -2,7 +2,7 @@
 {
 	public class CellBorders
 	{
-		private static Dictionary<CellBorderType, CellBorder> _BORDERS = new Dictionary<CellBorderType, CellBorder>();
+		private static Dictionary<CellBorderType, CellBorder> _BORDERS = new();
 
 		public static void FromJson(string path)
 		{

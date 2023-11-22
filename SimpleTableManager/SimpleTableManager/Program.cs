@@ -5,7 +5,7 @@ namespace SimpleTableManager
 {
 	internal class Program
 	{
-		private static void Main(string[] args)
+		private static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
 			Console.InputEncoding = System.Text.Encoding.Unicode;
@@ -46,7 +46,9 @@ namespace SimpleTableManager
 			// result = fn.Execute(out _).ToList();
 
 			// Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
-			document.GetActiveTable()[1, 1].IsSelected = true;
+			// document.GetActiveTable()[0, 0].IsSelected = true;
+			// document.GetActiveTable()[0,0].IncreaseLayerIndex();
+			// app.SetRenderingMode(RenderingMode.Layer);
 
 			//document.GetActiveTable()[1,1].SetContent2("string", "con", "alma", "körte", "szilva");
 

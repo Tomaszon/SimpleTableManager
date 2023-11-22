@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Localization;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models
@@ -9,6 +6,7 @@ namespace SimpleTableManager.Models
 	[CommandInformation("Cell related commands")]
 	public partial class Cell// : INotifyPropertyChanged
 	{
+		//TODO cant read property during deserialization
 		public Table Table { get; set; }
 
 		/// <summary>
@@ -47,16 +45,31 @@ namespace SimpleTableManager.Models
 				);
 		}
 
+		[JsonIgnore]
 		public Type? ContentType => ContentFunction?.GetReturnType();
 
 		public IEnumerable<object> GetContents()
 		{
-			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+			try
+			{
+				return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+			}
+			catch
+			{
+				return new object[] { "Content function error" };
+			}
 		}
 
 		public IEnumerable<string> GetFormattedContents()
 		{
-			return ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
+			try
+			{
+				return ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
+			}
+			catch
+			{
+				return new string[] { "Content format error" };
+			}
 		}
 
 		public IFunction? ContentFunction { get; set; }
@@ -75,23 +88,22 @@ namespace SimpleTableManager.Models
 
 		public int LayerIndex { get; set; } = 0;
 
+		[JsonIgnore]
 		public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
 
+		[JsonIgnore]
 		public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
 		// public event PropertyChangedEventHandler PropertyChanged;
-
-		// [JsonConstructor]
-		// private Cell()
-		// {
-
-		// }
 
 		public Cell(Table table, params string[] contents)
 		{
 			Table = table;
 
-			SetContent(contents);
+			if (contents is not null)
+			{
+				SetContent(contents);
+			}
 		}
 
 		// public void ClearContent()

@@ -4,7 +4,7 @@ public class CommandHistory
 {
 	private int _index = 0;
 
-	private List<string> _history = new List<string>();
+	private readonly List<string> _history = new();
 
 	public bool TryGetPreviousHistoryItem([NotNullWhen(true)] out string? command)
 	{

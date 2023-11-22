@@ -33,13 +33,14 @@
 			"height": "setRowHeight"
 		},
 		"cell": {
-			"content": "setCellContent",
-			"type": "setCellType"
+			"content": "setCellContent"
+			// "type": "setCellType"
 		},
 		"view": "setViewOptions",
 		"view-columns": "setViewOptionsColumns",
 		"view-rows": "setViewOptionsRows",
-		"name": "setName"
+		"name": "setName",
+		"size": "setSize"
 	},
 	"select": {
 		"cell": "selectCell",

@@ -18,7 +18,7 @@ namespace SimpleTableManager.Services
 
 		public static void FromJson(string path)
 		{
-			Current = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path))!;
+			Current = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path))!;
 		}
 
 		public static Settings Current { get; private set; } = new Settings();
@@ -36,5 +36,7 @@ namespace SimpleTableManager.Services
 		public string DefaultWorkDirectory { get; set; } = "";
 
 		public uint CommandHistorySize { get; set; }
+
+		public Size DefaultTableSize { get; set; } = new Size(10, 5);
 	}
 }

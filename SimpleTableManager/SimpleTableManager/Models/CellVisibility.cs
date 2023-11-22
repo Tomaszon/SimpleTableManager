@@ -6,8 +6,10 @@ namespace SimpleTableManager.Models
 
 		public bool IsColumnHidden { get; set; }
 
+		[JsonIgnore]
 		public bool IsHidden => IsRowHidden || IsColumnHidden;
 
+		[JsonIgnore]
 		public bool IsVisible => !IsHidden;
 	}
 }

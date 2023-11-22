@@ -8,7 +8,7 @@ public class AutoComplete
 
 	private int _index = 0;
 
-	private List<string> _keys = new List<string>();
+	private readonly List<string> _keys = new();
 
 	public void SetKeys(IEnumerable<string>? keys)
 	{

@@ -28,9 +28,7 @@ namespace SimpleTableManager.Services
 				return value;
 			}
 
-			var method = GetParseMethod(dataType, out var targetDataType);
-
-			if (method is null)
+			if (GetParseMethod(dataType, out var targetDataType) is var method && method is null)
 			{
 				throw new Exception($"Type '{FormatTypeName(targetDataType)}' does not have 'Parse' method");
 			}
@@ -161,7 +159,7 @@ namespace SimpleTableManager.Services
 			return type.IsGenericType ? $"{type.Name}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.Name;
 		}
 
-		public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments) 
+		public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments)
 		where TType : IParsable<TType>
 		{
 			var namedArgs = arguments.Where(a => a.Contains(NAMED_ARG_SEPARATOR) == true);

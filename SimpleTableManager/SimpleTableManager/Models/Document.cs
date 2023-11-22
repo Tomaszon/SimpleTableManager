@@ -18,7 +18,7 @@ namespace SimpleTableManager.Models
 		{
 			Metadata = new Metadata();
 			Tables.Clear();
-			AddTable(new Size(10, 5));
+			AddTable(Settings.Current.DefaultTableSize);
 		}
 
 		public Table GetActiveTable()

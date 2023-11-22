@@ -33,7 +33,7 @@ namespace SimpleTableManager.Models
 		[CommandReference]
 		public void AddTable(Size size, string? name = null)
 		{
-			name = name ?? $"Table{Tables.Count}";
+			name ??= $"Table{Tables.Count}";
 
 			if (Tables.Any(t => t.Name == name))
 			{
@@ -77,7 +77,12 @@ namespace SimpleTableManager.Models
 
 				Metadata.Path = fileName;
 
-				new JsonSerializer().Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t' }, this);
+				var serializer = new JsonSerializer
+				{
+					TypeNameHandling = TypeNameHandling.Auto,
+				};
+
+				serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
 			}
 			catch (Exception ex)
 			{
@@ -102,11 +107,17 @@ namespace SimpleTableManager.Models
 				using var f = File.Open(fileName, FileMode.Open);
 				using var sr = new StreamReader(f);
 
-				var content = sr.ReadToEnd();
+				var serializer = new JsonSerializer
+				{
+					TypeNameHandling = TypeNameHandling.Auto,
+					ContractResolver = new ClearPropertyContractResolver(),
+				};
 
-				JsonConvert.PopulateObject(content, this, new JsonSerializerSettings() { ContractResolver = new ClearPropertyContractResolver() });
+				serializer.Populate(new JsonTextReader(sr), this);
 
 				Metadata.Path = fileName;
+
+				Save("test2");
 			}
 			catch (Exception ex)
 			{

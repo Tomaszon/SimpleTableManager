@@ -1,37 +1,38 @@
 using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+[CommandInformation("Basic application related commands")]
+public class App
 {
-	[CommandInformation("Basic application related commands")]
-	public class App
+	private static readonly string[] _options = new[] { "y", "n" };
+
+	[CommandReference]
+	public static void Exit()
 	{
-		[CommandReference]
-		public void Exit()
+		var answer = Shared.ReadLineWhile("Are you sure y/n", _options);
+
+		if (answer.ToLower().Equals("y"))
 		{
-			var answer = Shared.ReadLineWhile("Are you sure y/n", new[] { "y", "n" });
+			Console.WriteLine("Good bye!");
 
-			if (answer.ToLower() == "y")
-			{
-				Console.WriteLine("Good bye!");
+			Console.ReadKey();
 
-				Console.ReadKey();
-
-				Environment.Exit(0);
-			}
+			Environment.Exit(0);
 		}
+	}
 
-		[CommandReference]
-		[CommandInformation("Refreshes the view")]
-		public void Refresh()
-		{
-			Console.ResetColor();
-			Console.Clear();
-		}
+	[CommandReference]
+	[CommandInformation("Refreshes the view")]
+	public static void Refresh()
+	{
+		Console.ResetColor();
+		Console.Clear();
+	}
 
-		[CommandReference]
-		public void SetRenderingMode(RenderingMode renderingMode)
-		{
-			Renderer.RendererSettings.RenderingMode = renderingMode;
-		}
+	[CommandReference]
+	public static void SetRenderingMode(RenderingMode renderingMode)
+	{
+		Renderer.RendererSettings.RenderingMode = renderingMode;
 	}
 }

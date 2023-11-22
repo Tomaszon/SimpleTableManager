@@ -383,7 +383,7 @@ namespace SimpleTableManager.Services
 
 			if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.Layer)
 			{
-				contentsToRender = cell.LayerIndex == 0 ? new List<string>() : new List<string>() { cell.LayerIndex.ToString() };
+				contentsToRender = new List<string>() { cell.LayerIndex.ToString() };
 				horizontalAlignmentToRender = HorizontalAlignment.Center;
 				verticalAlignmentToRender = VerticalAlignment.Center;
 			}
@@ -428,7 +428,14 @@ namespace SimpleTableManager.Services
 					}
 				}
 
-				ChangeToCellContentColors(cell);
+				if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.Layer)
+				{
+					ChangeToIndexContentColors(cell);
+				}
+				else
+				{
+					ChangeToCellContentColors(cell);
+				}
 
 				Console.Write(content);
 			});
@@ -467,6 +474,16 @@ namespace SimpleTableManager.Services
 		private static int GetStartIndexForCenteredContent(int contentAreaSize, int contentLength, int padding1, int padding2)
 		{
 			return Shared.Min(Shared.Max((contentAreaSize - contentLength) / 2, padding1), contentAreaSize - padding2 - contentLength);
+		}
+
+		private static void ChangeToIndexContentColors(Cell cell)
+		{
+			ChangeToCellContentColors(cell);
+			
+			if (cell.LayerIndex == 0)
+			{
+				Console.ForegroundColor = ConsoleColor.DarkGray;
+			}
 		}
 
 		private static void ChangeToCellContentColors(Cell cell)

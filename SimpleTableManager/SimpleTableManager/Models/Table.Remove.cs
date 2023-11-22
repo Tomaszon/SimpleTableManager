@@ -8,8 +8,10 @@ namespace SimpleTableManager.Models
 		public void RemoveRowAt(int index)
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+			Shared.Validate(() => Size.Height > 1, "Can not decrease table height under 1 row!");
 
 			Content.RemoveRange(index * Size.Width, Size.Width);
+			Sider.RemoveAt(index);
 
 			if (ViewOptions.EndPosition.Y == Size.Height - 1)
 			{
@@ -35,11 +37,13 @@ namespace SimpleTableManager.Models
 		public void RemoveColumnAt(int index)
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Width - 1, $"Index is not in the needed range: [0, {Size.Width - 1}]");
+			Shared.Validate(() => Size.Width > 1, "Can not decrease table width under 1 column!");
 
 			for (int y = 0; y < Size.Height; y++)
 			{
 				Content.RemoveAt(Size.Width * y - y + index);
 			}
+			Header.RemoveAt(index);
 
 			if (ViewOptions.EndPosition.X == Size.Width - 1)
 			{

@@ -19,17 +19,17 @@ namespace SimpleTableManager.Services.Functions
 			};
 		}
 
-		private int And(IEnumerable<int> array)
+		private static int And(IEnumerable<int> array)
 		{
 			return array.Aggregate(~0, (a, c) => a &= c);
 		}
 
-		private int Or(IEnumerable<int> array)
+		private static int Or(IEnumerable<int> array)
 		{
 			return array.Aggregate(0, (a, c) => a |= c);
 		}
 
-		private int DivRem(int a, int b)
+		private static int DivRem(int a, int b)
 		{
 			System.Math.DivRem(a, b, out var rem);
 

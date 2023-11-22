@@ -31,14 +31,14 @@ namespace SimpleTableManager.Services.Functions
 
 		private string Concat()
 		{
-			return string.Concat(string.Concat(Arguments), string.Concat(ReferenceArguments));
+			// return string.Concat(string.Concat(Arguments), string.Concat(ReferenceArguments));
+			return string.Concat(Arguments);
 		}
 
 		private string Join(string separator)
 		{
-			var value = string.Join(separator, string.Join(separator, Arguments), string.Join(separator, ReferenceArguments));
-
-			return value.Substring(0, value.Length - separator.Length);
+			//var value = string.Join(separator, string.Join(separator, Arguments), string.Join(separator, ReferenceArguments));
+			return string.Join(separator, Arguments);
 		}
 	}
 }

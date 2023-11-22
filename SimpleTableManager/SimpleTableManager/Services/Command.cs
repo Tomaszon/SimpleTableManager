@@ -111,12 +111,14 @@ namespace SimpleTableManager.Services
 
 		public static Dictionary<string, MethodInfo> GetMethods(Type type)
 		{
-			return type.GetMethods(BindingFlags.Public | BindingFlags.Instance).Select(m =>
-				(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
+			return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+				.Union(type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+				.Select(m =>
+					(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
 					e.attribute is not null).ToDictionary(k => k.attribute!.MethodReference.ToLower(), v => v.method);
 		}
 
-		public List<CommandParameter> GetParameters(MethodInfo method)
+		public static List<CommandParameter> GetParameters(MethodInfo method)
 		{
 			return method.GetParameters().Select(p =>
 			{

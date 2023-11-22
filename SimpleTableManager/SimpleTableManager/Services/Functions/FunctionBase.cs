@@ -6,12 +6,15 @@ namespace SimpleTableManager.Services.Functions
 	public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		where TOpertor : struct, Enum
 	{
-		public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
+		// //TODO use for json deserialization?
+		// public Type ActualType => GetType();
+
+		// public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
 
 		//TODO make it work, but how? reference cell or fixed position? how to decide?
-		public IEnumerable<TIn> ReferenceArguments =>
+		// public IEnumerable<TIn> ReferenceArguments =>
 			//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
-			Enumerable.Empty<TIn>();
+			// Enumerable.Empty<TIn>();
 
 		public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
 
@@ -27,30 +30,16 @@ namespace SimpleTableManager.Services.Functions
 
 		IEnumerable<object> IFunction.Execute()
 		{
-			try
-			{
-				return Execute().Cast<object>();
-			}
-			catch
-			{
-				return new object[] { "Content function error" };
-			}
+			return Execute().Cast<object>();
 		}
 
 		public IEnumerable<string> ExecuteAndFormat()
 		{
-			try
-			{
-				var format = GetNamedArgument<string>(ArgumentName.Format);
+			var format = GetNamedArgument<string>(ArgumentName.Format);
 
-				var formatter = new ContentFormatter(format);
+			var formatter = new ContentFormatter(format);
 
-				return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
-			}
-			catch
-			{
-				return new string[] { "Content format error" };
-			}
+			return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
 		}
 
 		public Type? GetReturnType()
@@ -67,11 +56,8 @@ namespace SimpleTableManager.Services.Functions
 
 		public string GetError()
 		{
-			//TODO optimize
-			//TODO fix, exception not being thrown
 			try
 			{
-				Execute();
 				ExecuteAndFormat();
 
 				return "None";

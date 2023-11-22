@@ -16,15 +16,17 @@ namespace SimpleTableManager.Services.Functions
 
 				NumericFunctionOperator.Abs => Arguments.Select(a => TIn.Abs(a)).Cast<TOut>(),
 
-				NumericFunctionOperator.Sum => Sum(Arguments.Union(ReferenceArguments)).Wrap<TOut>(),
+				NumericFunctionOperator.Sum => Sum(Arguments/*.Union(ReferenceArguments)*/).Wrap<TOut>(),
 
 				NumericFunctionOperator.Sub => Sub(Arguments).Wrap<TOut>(),
 
-				NumericFunctionOperator.Avg => Avg(Arguments.Union(ReferenceArguments)).Wrap<TOut>(),
+				NumericFunctionOperator.Avg => Avg(Arguments/*.Union(ReferenceArguments)*/).Wrap<TOut>(),
 
-				NumericFunctionOperator.Min => new[] { Min(Arguments), Min(ReferenceArguments) }.Min().Wrap<TOut>(),
+				NumericFunctionOperator.Min => Min(Arguments).Wrap<TOut>(),
+				//new[] { Min(Arguments), Min(ReferenceArguments) }.Min().Wrap<TOut>(),
 
-				NumericFunctionOperator.Max => new[] { Max(Arguments), Max(ReferenceArguments) }.Max().Wrap<TOut>(),
+				NumericFunctionOperator.Max => Max(Arguments).Wrap<TOut>(),
+				//new[] { Max(Arguments), Max(ReferenceArguments) }.Max().Wrap<TOut>(),
 
 				NumericFunctionOperator.Mul => Multiply(Arguments).Wrap<TOut>(),
 
@@ -34,39 +36,39 @@ namespace SimpleTableManager.Services.Functions
 			};
 		}
 
-		private TIn Avg(IEnumerable<TIn> array)
+		private static TIn Avg(IEnumerable<TIn> array)
 		{
-			return Sum(array) / TIn.Parse((array.Count()).ToString(), NumberStyles.Integer, null);
+			return Sum(array) / TIn.Parse(array.Count().ToString(), NumberStyles.Integer, null);
 		}
 
-		private TIn Multiply(IEnumerable<TIn> array)
+		private static TIn Multiply(IEnumerable<TIn> array)
 		{
 			return array.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c);
 		}
 
-		protected TIn Divide(IEnumerable<TIn> array)
+		protected static TIn Divide(IEnumerable<TIn> array)
 		{
 			return array.Skip(1).Aggregate(array.First(), (a, c) => a /= c);
 		}
 
-		protected TIn Sum(IEnumerable<TIn> array)
+		protected static TIn Sum(IEnumerable<TIn> array)
 		{
 			return array.Aggregate(TIn.AdditiveIdentity, (a, c) => a += c);
 		}
 
-		protected TIn Sub(IEnumerable<TIn> array)
+		protected static TIn Sub(IEnumerable<TIn> array)
 		{
 			return array.Skip(1).Aggregate(array.First(), (a, c) => a -= c);
 		}
 
-		private TIn Min(IEnumerable<TIn> array)
+		private static TIn Min(IEnumerable<TIn> array)
 		{
-			return array.Count() > 0 ? array.Min() : TIn.MaxValue;
+			return array.Any() ? array.Min() : TIn.MaxValue;
 		}
 
-		private TIn Max(IEnumerable<TIn> array)
+		private static TIn Max(IEnumerable<TIn> array)
 		{
-			return array.Count() > 0 ? array.Max() : TIn.MinValue;
+			return array.Any() ? array.Max() : TIn.MinValue;
 		}
 	}
 }

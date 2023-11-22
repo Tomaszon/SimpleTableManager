@@ -16,14 +16,14 @@
 			ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<object>());
 		}
 
-		public void Remove<T>(Func<T> func)
+		public void Remove<T>()
 		{
 			ArrayMap.Remove(typeof(T));
 		}
 
 		public IEnumerable<object> GetInstances(string typeName, out Type type)
 		{
-			var result = ArrayMap.First(p => p.Key.Name.ToLower() == typeName.ToLower());
+			var result = ArrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
 
 			type = result.Key;
 

@@ -5,7 +5,7 @@ namespace SimpleTableManager.Models
 
 	public static class BorderCharacters
 	{
-		private static List<BorderCharacter> _CHARACTERS = new List<BorderCharacter>();
+		private static List<BorderCharacter> _CHARACTERS = new();
 
 		public static void FromJson(string path)
 		{
@@ -36,22 +36,22 @@ namespace SimpleTableManager.Models
 
 			if (up is { })
 			{
-				result |= (up.Value.HasFlag(BorderType.DownDouble) ? BorderType.UpDouble : BorderType.Up);
+				result |= up.Value.HasFlag(BorderType.DownDouble) ? BorderType.UpDouble : BorderType.Up;
 			}
 
 			if (down is { })
 			{
-				result |= (down.Value.HasFlag(BorderType.UpDouble) ? BorderType.DownDouble : BorderType.Down);
+				result |= down.Value.HasFlag(BorderType.UpDouble) ? BorderType.DownDouble : BorderType.Down;
 			}
 
 			if (left is { })
 			{
-				result |= (left.Value.HasFlag(BorderType.RightDouble) ? BorderType.LeftDouble : BorderType.Left);
+				result |= left.Value.HasFlag(BorderType.RightDouble) ? BorderType.LeftDouble : BorderType.Left;
 			}
 
 			if (right is { })
 			{
-				result |= (right.Value.HasFlag(BorderType.LeftDouble) ? BorderType.RightDouble : BorderType.Right);
+				result |= right.Value.HasFlag(BorderType.LeftDouble) ? BorderType.RightDouble : BorderType.Right;
 			}
 
 			return (BorderType)((int)result & ~(int)BorderType.None);
