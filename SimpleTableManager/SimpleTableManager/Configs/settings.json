@@ -38,7 +38,7 @@
 	"MaxTableHeightPower": 16,
 	"MaxTableCountPower": 3,
 	"DefaultTableSize": {
-		"Width": 5,
-		"Height": 4
+		"Width": 2,
+		"Height": 2
 	}
 }

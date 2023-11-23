@@ -6,8 +6,7 @@ namespace SimpleTableManager.Models
 	[CommandInformation("Cell related commands")]
 	public partial class Cell// : INotifyPropertyChanged
 	{
-		//TODO cant read property during deserialization
-		public Table Table { get; set; }
+		public Table Table { get; set; } = default!;
 
 		/// <summary>
 		/// Manually set size not including the borders
@@ -95,6 +94,9 @@ namespace SimpleTableManager.Models
 		public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
 		// public event PropertyChangedEventHandler PropertyChanged;
+
+		[JsonConstructor]
+		public Cell() { }
 
 		public Cell(Table table, params string[] contents)
 		{

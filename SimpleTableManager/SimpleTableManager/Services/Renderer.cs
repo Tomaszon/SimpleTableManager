@@ -478,12 +478,16 @@ namespace SimpleTableManager.Services
 
 		private static void ChangeToIndexContentColors(Cell cell)
 		{
-			ChangeToCellContentColors(cell);
-			
-			if (cell.LayerIndex == 0)
-			{
-				Console.ForegroundColor = ConsoleColor.DarkGray;
-			}
+			Console.ForegroundColor = cell.IsSelected ?
+				Settings.Current.SelectedContentColor.Foreground : 
+					cell.LayerIndex == 0 ?
+						Settings.Current.NotAvailableContentColor.Foreground : 
+							cell.ContentColor.Foreground;
+			Console.BackgroundColor = cell.IsSelected ?
+				Settings.Current.SelectedContentColor.Background : 
+					cell.LayerIndex == 0 ?
+						Settings.Current.NotAvailableContentColor.Background :
+							cell.ContentColor.Background;
 		}
 
 		private static void ChangeToCellContentColors(Cell cell)

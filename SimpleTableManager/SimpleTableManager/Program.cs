@@ -16,7 +16,7 @@ namespace SimpleTableManager
 			CellBorders.FromJson(@".\Configs\cellBorders.json");
 
 			var app = new App();
-			var document = new Document();
+			var document = new Document(Settings.Current.DefaultTableSize);
 
 			InstanceMap.Instance.Add(() => app);
 			InstanceMap.Instance.Add(() => document);

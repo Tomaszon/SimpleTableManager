@@ -9,7 +9,7 @@ namespace SimpleTableManager.Models
 		{
 			Shared.Validate(() => index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
-			Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+			Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
 
 			for (int x = 0; x < Size.Width; x++)
 			{

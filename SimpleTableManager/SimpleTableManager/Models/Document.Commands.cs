@@ -75,19 +75,17 @@ namespace SimpleTableManager.Models
 				using var f = File.Create(fileName);
 				using var sw = new StreamWriter(f);
 
-				Metadata.Path = fileName;
-
 				var serializer = new JsonSerializer
 				{
 					TypeNameHandling = TypeNameHandling.Auto,
 				};
 
 				serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
+
+				Metadata.Path = fileName;
 			}
 			catch (Exception ex)
 			{
-				Metadata.ClearFileData();
-
 				if (File.Exists(fileName))
 				{
 					File.Delete(fileName);
@@ -116,8 +114,6 @@ namespace SimpleTableManager.Models
 				serializer.Populate(new JsonTextReader(sr), this);
 
 				Metadata.Path = fileName;
-
-				Save("test2");
 			}
 			catch (Exception ex)
 			{

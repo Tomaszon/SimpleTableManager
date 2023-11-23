@@ -4,21 +4,11 @@
 	{
 		public string Title { get; set; } = "Document0";
 
+		[JsonIgnore]
 		public string? Path { get; set; }
 
 		public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
 
 		public Metadata() { }
-
-		public Metadata(string title, string path)
-		{
-			Title = title;
-			Path = path;
-		}
-
-		public void ClearFileData()
-		{
-			Path = null;
-		}
 	}
 }

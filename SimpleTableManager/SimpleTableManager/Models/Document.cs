@@ -9,9 +9,11 @@ namespace SimpleTableManager.Models
 
 		public List<Table> Tables { get; set; } = new List<Table>();
 
-		public Document()
+		public Document(Size tableSize)
 		{
-			Clear();
+			Metadata = new Metadata();
+			Tables.Clear();
+			AddTable(tableSize);
 		}
 
 		public void Clear()

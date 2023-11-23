@@ -6,7 +6,7 @@ namespace SimpleTableManager.Models
 	[JsonObject(IsReference = true)]
 	public partial class Table
 	{
-		public string Name { get; set; }
+		public string Name { get; set; } = default!;
 
 		public Size Size { get; set; } = new Size(0, 0);
 
@@ -20,7 +20,7 @@ namespace SimpleTableManager.Models
 
 		public List<IndexCell> Sider { get; set; } = new List<IndexCell>();
 
-		public Cell CornerCell { get; set; }
+		public Cell CornerCell { get; set; } = default!;
 
 		[JsonIgnore]
 		public Dictionary<int, List<Cell>> Columns =>
@@ -50,6 +50,8 @@ namespace SimpleTableManager.Models
 
 		public List<Cell> this[Position position1, Position position2] => this[position1.X, position1.Y, position2.X, position2.Y];
 
+		[JsonConstructor]
+		public Table() { }
 
 		public Table(string name, int columnCount, int rowCount)
 		{
@@ -84,9 +86,9 @@ namespace SimpleTableManager.Models
 
 		public Size GetTableSize()
 		{
-			var sumWidth = Shared.IndexArray(Size.Width).Where(x => 
+			var sumWidth = Shared.IndexArray(Size.Width).Where(x =>
 				!IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1);
-			var sumHeight = Shared.IndexArray(Size.Height).Where(y => 
+			var sumHeight = Shared.IndexArray(Size.Height).Where(y =>
 				!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1);
 
 			return new Size(GetSiderWidth() + sumWidth, GetHeaderHeight() + sumHeight);
@@ -114,7 +116,7 @@ namespace SimpleTableManager.Models
 
 		public Position GetHeaderCellPosition(Size tableOffset, int x)
 		{
-			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => 
+			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x =>
 				!IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
 
 			return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height);
@@ -122,7 +124,7 @@ namespace SimpleTableManager.Models
 
 		public Position GetSiderCellPosition(Size tableOffset, int y)
 		{
-			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => 
+			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y =>
 				!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
 			return new Position(tableOffset.Width, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);
@@ -130,10 +132,10 @@ namespace SimpleTableManager.Models
 
 		public Position GetContentCellPosition(Size tableOffset, int x, int y)
 		{
-			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x => 
+			var sumWidth = x > 0 ? Shared.IndexArray(x).Where(x =>
 				!IsColumnHidden(x) && IsColumnInView(x)).Sum(x => GetColumnWidth(x) - 1) : 0;
 
-			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y => 
+			var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y =>
 				!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
 			return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);

@@ -6,9 +6,6 @@ namespace SimpleTableManager.Services.Functions
 	public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		where TOpertor : struct, Enum
 	{
-		// //TODO use for json deserialization?
-		// public Type ActualType => GetType();
-
 		// public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
 
 		//TODO make it work, but how? reference cell or fixed position? how to decide?

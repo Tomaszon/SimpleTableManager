@@ -14,6 +14,8 @@ namespace SimpleTableManager.Services
 
 		public ConsoleColorSet SelectedBorderColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
 
+		public ConsoleColorSet NotAvailableContentColor {get;set;} = (ConsoleColor.DarkGray, ConsoleColor.Black);
+
 		public bool ModernTableBorder { get; set; } = false;
 
 		public static void FromJson(string path)
