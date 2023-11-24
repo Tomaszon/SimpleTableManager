@@ -1,126 +1,124 @@
 using SimpleTableManager.Services;
-using System.Reflection.Emit;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+public partial class Document
 {
-	public partial class Document
+	[CommandReference]
+	public void SetTitle(string title)
 	{
-		[CommandReference]
-		public void SetTitle(string title)
+		Metadata.Title = title;
+	}
+
+	[CommandReference("activateTableAt")]
+	public void ActivateTable(int index)
+	{
+		Shared.Validate(() => index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
+
+		Tables.ForEach(t => t.IsActive = false);
+		Tables[index].IsActive = true;
+	}
+
+	[CommandReference]
+	public void ActivateTable(string name)
+	{
+		var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name)!);
+
+		Shared.Validate(() => index != -1, $"No table found with name {name}");
+
+		ActivateTable(index);
+	}
+
+	[CommandReference]
+	public void AddTable(Size size, string? name = null)
+	{
+		name ??= $"Table{Tables.Count}";
+
+		if (Tables.Any(t => t.Name == name))
 		{
-			Metadata.Title = title;
+			throw new ArgumentException($"Can not create table with duplicate name '{name}'");
 		}
-
-		[CommandReference("activateTableAt")]
-		public void ActivateTable(int index)
+		else
 		{
-			Shared.Validate(() => index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
+			Tables.Add(new Table(name, size.Width, size.Height));
 
-			Tables.ForEach(t => t.IsActive = false);
-			Tables[index].IsActive = true;
+			ActivateTable(Tables.Count - 1);
 		}
+	}
 
-		[CommandReference]
-		public void ActivateTable(string name)
+	[CommandReference]
+	public void Save()
+	{
+		if (Metadata.Path is null)
 		{
-			var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name)!);
-
-			Shared.Validate(() => index != -1, $"No table found with name {name}");
-
-			ActivateTable(index);
+			throw new IOException($"Specify a file name to save to with 'save as'");
 		}
-
-		[CommandReference]
-		public void AddTable(Size size, string? name = null)
+		else
 		{
-			name ??= $"Table{Tables.Count}";
-
-			if (Tables.Any(t => t.Name == name))
-			{
-				throw new ArgumentException($"Can not create table with duplicate name '{name}'");
-			}
-			else
-			{
-				Tables.Add(new Table(name, size.Width, size.Height));
-
-				ActivateTable(Tables.Count - 1);
-			}
+			Save(Metadata.Path, true);
 		}
+	}
 
-		[CommandReference]
-		public void Save()
+	[CommandReference("saveAs")]
+	public void Save(string fileName, bool overwrite = false)
+	{
+		fileName = GetSaveFilePath(fileName);
+
+		try
 		{
-			if (Metadata.Path is null)
+			if (File.Exists(fileName) && !overwrite)
 			{
-				throw new IOException($"Specify a file name to save to with 'save as'");
+				throw new IOException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
 			}
-			else
+
+			using var f = File.Create(fileName);
+			using var sw = new StreamWriter(f);
+
+			var serializer = new JsonSerializer
 			{
-				Save(Metadata.Path, true);
-			}
+				TypeNameHandling = TypeNameHandling.Auto,
+			};
+
+			serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
+
+			Metadata.Path = fileName;
 		}
-
-		[CommandReference("saveAs")]
-		public void Save(string fileName, bool overwrite = false)
+		catch (Exception ex)
 		{
-			fileName = GetSaveFilePath(fileName);
-
-			try
+			if (File.Exists(fileName))
 			{
-				if (File.Exists(fileName) && !overwrite)
-				{
-					throw new IOException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
-				}
-
-				using var f = File.Create(fileName);
-				using var sw = new StreamWriter(f);
-
-				var serializer = new JsonSerializer
-				{
-					TypeNameHandling = TypeNameHandling.Auto,
-				};
-
-				serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
-
-				Metadata.Path = fileName;
+				File.Delete(fileName);
 			}
-			catch (Exception ex)
-			{
-				if (File.Exists(fileName))
-				{
-					File.Delete(fileName);
-				}
 
-				throw new OperationCanceledException("Can not save document", ex);
-			}
+			throw new OperationCanceledException("Can not save document", ex);
 		}
+	}
 
-		[CommandReference]
-		public void Load(string fileName)
+	[CommandReference]
+	public void Load(string fileName)
+	{
+		fileName = GetSaveFilePath(fileName);
+
+		try
 		{
-			fileName = GetSaveFilePath(fileName);
+			using var f = File.Open(fileName, FileMode.Open);
+			using var sr = new StreamReader(f);
 
-			try
+			var serializer = new JsonSerializer
 			{
-				using var f = File.Open(fileName, FileMode.Open);
-				using var sr = new StreamReader(f);
+				TypeNameHandling = TypeNameHandling.Auto,
+				ContractResolver = new ClearPropertyContractResolver(),
+			};
 
-				var serializer = new JsonSerializer
-				{
-					TypeNameHandling = TypeNameHandling.Auto,
-					ContractResolver = new ClearPropertyContractResolver(),
-				};
+			serializer.Populate(new JsonTextReader(sr), this);
 
-				serializer.Populate(new JsonTextReader(sr), this);
+			Metadata.Path = fileName;
+		}
+		catch (Exception ex)
+		{
+			Clear();
 
-				Metadata.Path = fileName;
-			}
-			catch (Exception ex)
-			{
-				Clear();
-
-				throw new OperationCanceledException("Can not load document", ex);
-			}
+			throw new OperationCanceledException("Can not load document", ex);
 		}
 	}
 }

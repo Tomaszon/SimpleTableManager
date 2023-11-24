@@ -1,38 +1,37 @@
-namespace SimpleTableManager.Services
+namespace SimpleTableManager.Services;
+
+public class ContentFormatter : IFormatProvider, ICustomFormatter
 {
-	public class ContentFormatter : IFormatProvider, ICustomFormatter
+	private readonly string? _format;
+
+	public ContentFormatter(string? format)
 	{
-		private readonly string? _format;
+		_format = format;
+	}
 
-		public ContentFormatter(string? format)
+	public object? GetFormat(Type? formatType)
+	{
+		return this;
+	}
+
+	public string Format(string? format, object? arg, IFormatProvider? formatProvider)
+	{
+		if (arg is IFormattable p)
 		{
-			_format = format;
+			return p.ToString(_format, null);
 		}
-
-		public object? GetFormat(Type? formatType)
+		else if (arg is bool b)
 		{
-			return this;
-		}
-
-		public string Format(string? format, object? arg, IFormatProvider? formatProvider)
-		{
-			if (arg is IFormattable p)
+			return _format switch
 			{
-				return p.ToString(_format, null);
-			}
-			else if (arg is bool b)
-			{
-				return _format switch
-				{
-					"YN" => b ? "Y" : "N",
-					"YesNo" => b ? "Yes" : "No",
-					"" => b.ToString(),
+				"YN" => b ? "Y" : "N",
+				"YesNo" => b ? "Yes" : "No",
+				"" => b.ToString(),
 
-					_ => throw new FormatException()
-				};
-			}
-
-			return arg!.ToString()!;
+				_ => throw new FormatException()
+			};
 		}
+
+		return arg!.ToString()!;
 	}
 }

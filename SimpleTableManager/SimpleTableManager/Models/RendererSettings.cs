@@ -1,7 +1,6 @@
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+public class RendererSettings
 {
-	public class RendererSettings
-	{
-		public RenderingMode RenderingMode { get; set; }
-	}
+	public RenderingMode RenderingMode { get; set; }
 }

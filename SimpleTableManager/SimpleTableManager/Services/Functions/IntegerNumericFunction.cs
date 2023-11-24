@@ -1,39 +1,38 @@
-namespace SimpleTableManager.Services.Functions
+namespace SimpleTableManager.Services.Functions;
+
+[NamedArgument(ArgumentName.Divider, 2)]
+public class IntegerNumericFunction : NumericFunctionBase<int, int>
 {
-	[NamedArgument(ArgumentName.Divider, 2)]
-	public class IntegerNumericFunction : NumericFunctionBase<int, int>
+	public override IEnumerable<int> Execute()
 	{
-		public override IEnumerable<int> Execute()
+		var divider = GetNamedArgument<int>(ArgumentName.Divider);
+
+		return Operator switch
 		{
-			var divider = GetNamedArgument<int>(ArgumentName.Divider);
+			NumericFunctionOperator.Rem => Arguments.Select(p => DivRem(p, divider)),
 
-			return Operator switch
-			{
-				NumericFunctionOperator.Rem => Arguments.Select(p => DivRem(p, divider)),
+			NumericFunctionOperator.And => And(Arguments).Wrap(),
 
-				NumericFunctionOperator.And => And(Arguments).Wrap(),
+			NumericFunctionOperator.Or => Or(Arguments).Wrap(),
 
-				NumericFunctionOperator.Or => Or(Arguments).Wrap(),
+			_ => base.Execute()
+		};
+	}
 
-				_ => base.Execute()
-			};
-		}
+	private static int And(IEnumerable<int> array)
+	{
+		return array.Aggregate(~0, (a, c) => a &= c);
+	}
 
-		private static int And(IEnumerable<int> array)
-		{
-			return array.Aggregate(~0, (a, c) => a &= c);
-		}
+	private static int Or(IEnumerable<int> array)
+	{
+		return array.Aggregate(0, (a, c) => a |= c);
+	}
 
-		private static int Or(IEnumerable<int> array)
-		{
-			return array.Aggregate(0, (a, c) => a |= c);
-		}
+	private static int DivRem(int a, int b)
+	{
+		Math.DivRem(a, b, out var rem);
 
-		private static int DivRem(int a, int b)
-		{
-			System.Math.DivRem(a, b, out var rem);
-
-			return rem;
-		}
+		return rem;
 	}
 }

@@ -1,15 +1,14 @@
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+public class CellVisibility
 {
-	public class CellVisibility
-	{
-		public bool IsRowHidden { get; set; }
+	public bool IsRowHidden { get; set; }
 
-		public bool IsColumnHidden { get; set; }
+	public bool IsColumnHidden { get; set; }
 
-		[JsonIgnore]
-		public bool IsHidden => IsRowHidden || IsColumnHidden;
+	[JsonIgnore]
+	public bool IsHidden => IsRowHidden || IsColumnHidden;
 
-		[JsonIgnore]
-		public bool IsVisible => !IsHidden;
-	}
+	[JsonIgnore]
+	public bool IsVisible => !IsHidden;
 }

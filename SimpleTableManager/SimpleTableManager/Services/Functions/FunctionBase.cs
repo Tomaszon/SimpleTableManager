@@ -1,88 +1,84 @@
-using Microsoft.Extensions.Localization;
-using SimpleTableManager.Models;
+namespace SimpleTableManager.Services.Functions;
 
-namespace SimpleTableManager.Services.Functions
+public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
+	where TOpertor : struct, Enum
 {
-	public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
-		where TOpertor : struct, Enum
+	// public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
+
+	//TODO make it work, but how? reference cell or fixed position? how to decide?
+	// public IEnumerable<TIn> ReferenceArguments =>
+		//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
+		// Enumerable.Empty<TIn>();
+
+	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
+
+	public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
+
+	IEnumerable<object> IFunction.Arguments => Arguments.Cast<object>();
+
+	public TOpertor Operator { get; set; }
+
+	Enum IFunction.Operator => Operator;
+
+	public abstract IEnumerable<TOut> Execute();
+
+	IEnumerable<object> IFunction.Execute()
 	{
-		// public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
+		return Execute().Cast<object>();
+	}
 
-		//TODO make it work, but how? reference cell or fixed position? how to decide?
-		// public IEnumerable<TIn> ReferenceArguments =>
-			//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
-			// Enumerable.Empty<TIn>();
+	public IEnumerable<string> ExecuteAndFormat()
+	{
+		var format = GetNamedArgument<string>(ArgumentName.Format);
 
-		public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
+		var formatter = new ContentFormatter(format);
 
-		public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
+		return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
+	}
 
-		IEnumerable<object> IFunction.Arguments => Arguments.Cast<object>();
-
-		public TOpertor Operator { get; set; }
-
-		Enum IFunction.Operator => Operator;
-
-		public abstract IEnumerable<TOut> Execute();
-
-		IEnumerable<object> IFunction.Execute()
+	public Type? GetReturnType()
+	{
+		try
 		{
-			return Execute().Cast<object>();
+			return Execute().First()!.GetType();
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	public string GetError()
+	{
+		try
+		{
+			ExecuteAndFormat();
+
+			return "None";
+		}
+		catch (Exception ex)
+		{
+			return ex.Message;
+		}
+	}
+
+	public TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
+	{
+		if (NamedArguments.TryGetValue(key, out var s))
+		{
+			return TParse.Parse(s, null);
 		}
 
-		public IEnumerable<string> ExecuteAndFormat()
+		if (GetType().GetCustomAttributes<NamedArgumentAttribute>().SingleOrDefault(p => p.Key == key) is var a && a is { })
 		{
-			var format = GetNamedArgument<string>(ArgumentName.Format);
-
-			var formatter = new ContentFormatter(format);
-
-			return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
+			return (TParse)a.Value;
 		}
 
-		public Type? GetReturnType()
-		{
-			try
-			{
-				return Execute().First()!.GetType();
-			}
-			catch
-			{
-				return null;
-			}
-		}
+		return default;
+	}
 
-		public string GetError()
-		{
-			try
-			{
-				ExecuteAndFormat();
-
-				return "None";
-			}
-			catch (Exception ex)
-			{
-				return ex.Message;
-			}
-		}
-
-		public TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
-		{
-			if (NamedArguments.TryGetValue(key, out var s))
-			{
-				return TParse.Parse(s, null);
-			}
-
-			if (GetType().GetCustomAttributes<NamedArgumentAttribute>().SingleOrDefault(p => p.Key == key) is var a && a is { })
-			{
-				return (TParse)a.Value;
-			}
-
-			return default;
-		}
-
-		public Exception GetInvalidOperatorException()
-		{
-			return new InvalidOperationException($"Operator '{Operator}' is not supported for function type '{GetType().Name}'");
-		}
+	public Exception GetInvalidOperatorException()
+	{
+		return new InvalidOperationException($"Operator '{Operator}' is not supported for function type '{GetType().Name}'");
 	}
 }

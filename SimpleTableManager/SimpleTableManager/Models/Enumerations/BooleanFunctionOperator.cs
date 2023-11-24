@@ -1,11 +1,10 @@
-namespace SimpleTableManager.Models.Enumerations
+namespace SimpleTableManager.Models.Enumerations;
+
+[JsonConverter(typeof(StringEnumConverter))]
+public enum BooleanFunctionOperator
 {
-	[JsonConverter(typeof(StringEnumConverter))]
-	public enum BooleanFunctionOperator
-	{
-		Const,
-		Not,
-		And,
-		Or
-	}
+	Const,
+	Not,
+	And,
+	Or
 }

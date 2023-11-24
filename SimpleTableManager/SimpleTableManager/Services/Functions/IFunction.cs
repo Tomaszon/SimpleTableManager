@@ -1,23 +1,20 @@
-using Microsoft.Extensions.Localization;
+namespace SimpleTableManager.Services.Functions;
 
-namespace SimpleTableManager.Services.Functions
+public interface IFunction
 {
-	public interface IFunction
-	{
-		Dictionary<ArgumentName, string> NamedArguments { get; }
+	Dictionary<ArgumentName, string> NamedArguments { get; }
 
-		IEnumerable<object> Arguments { get; }
+	IEnumerable<object> Arguments { get; }
 
-		Enum Operator { get; }
+	Enum Operator { get; }
 
-		IEnumerable<object> Execute();
+	IEnumerable<object> Execute();
 
-		IEnumerable<string> ExecuteAndFormat();
+	IEnumerable<string> ExecuteAndFormat();
 
-		Type? GetReturnType();
+	Type? GetReturnType();
 
-		TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
+	TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
 
-		string GetError();
-	}
+	string GetError();
 }

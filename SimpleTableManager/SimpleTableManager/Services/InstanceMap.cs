@@ -1,76 +1,75 @@
-﻿namespace SimpleTableManager.Services
+﻿namespace SimpleTableManager.Services;
+
+public class InstanceMap
 {
-	public class InstanceMap
+	Dictionary<Type, Func<IEnumerable<object>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<object>>>();
+
+	public static InstanceMap Instance { get; } = new InstanceMap();
+
+	public void Add<T>(Func<IEnumerable<T>> func)
 	{
-		Dictionary<Type, Func<IEnumerable<object>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<object>>>();
+		ArrayMap.Add(typeof(T), () => func.Invoke().Cast<object>());
+	}
 
-		public static InstanceMap Instance { get; } = new InstanceMap();
+	public void Add<T>(Func<T> func)
+	{
+		ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<object>());
+	}
 
-		public void Add<T>(Func<IEnumerable<T>> func)
+	public void Remove<T>()
+	{
+		ArrayMap.Remove(typeof(T));
+	}
+
+	public IEnumerable<object> GetInstances(string typeName, out Type type)
+	{
+		var result = ArrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
+
+		type = result.Key;
+
+		return result.Value.Invoke();
+	}
+
+	public IEnumerable<T?> GetInstances<T>()
+	{
+		return GetInstances(typeof(T)).Select(e => (T?)e);
+	}
+
+	public IEnumerable<object?> GetInstances(Type type)
+	{
+		return ArrayMap[type].Invoke();
+	}
+
+	public bool TryGetInstances<T>([NotNullWhen(true)] out IEnumerable<T?>? instances)
+	{
+		try
 		{
-			ArrayMap.Add(typeof(T), () => func.Invoke().Cast<object>());
+			instances = GetInstances<T>();
+
+			return true;
 		}
-
-		public void Add<T>(Func<T> func)
+		catch
 		{
-			ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<object>());
+			instances = null;
+
+			return false;
 		}
+	}
 
-		public void Remove<T>()
+	public bool TryGetInstances(string typeName, [NotNullWhen(true)] out IEnumerable<object?>? instances, [NotNullWhen(true)] out Type? type)
+	{
+		try
 		{
-			ArrayMap.Remove(typeof(T));
+			instances = GetInstances(typeName, out type);
+
+			return true;
 		}
-
-		public IEnumerable<object> GetInstances(string typeName, out Type type)
+		catch
 		{
-			var result = ArrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
+			instances = null;
+			type = null;
 
-			type = result.Key;
-
-			return result.Value.Invoke();
-		}
-
-		public IEnumerable<T?> GetInstances<T>()
-		{
-			return GetInstances(typeof(T)).Select(e => (T?)e);
-		}
-
-		public IEnumerable<object?> GetInstances(Type type)
-		{
-			return ArrayMap[type].Invoke();
-		}
-
-		public bool TryGetInstances<T>([NotNullWhen(true)] out IEnumerable<T?>? instances)
-		{
-			try
-			{
-				instances = GetInstances<T>();
-
-				return true;
-			}
-			catch
-			{
-				instances = null;
-
-				return false;
-			}
-		}
-
-		public bool TryGetInstances(string typeName, [NotNullWhen(true)] out IEnumerable<object?>? instances, [NotNullWhen(true)] out Type? type)
-		{
-			try
-			{
-				instances = GetInstances(typeName, out type);
-
-				return true;
-			}
-			catch
-			{
-				instances = null;
-				type = null;
-
-				return false;
-			}
+			return false;
 		}
 	}
 }

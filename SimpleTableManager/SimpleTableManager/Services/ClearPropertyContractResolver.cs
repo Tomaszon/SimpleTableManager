@@ -2,38 +2,37 @@ using System.Collections;
 
 using Newtonsoft.Json.Serialization;
 
-namespace SimpleTableManager.Services
-{
+namespace SimpleTableManager.Services;
+
     public class ClearPropertyContractResolver : DefaultContractResolver
+{
+	protected override JsonArrayContract CreateArrayContract(Type objectType)
 	{
-		protected override JsonArrayContract CreateArrayContract(Type objectType)
+		var contract = base.CreateArrayContract(objectType);
+
+		contract.OnDeserializingCallbacks.Add((o, c) =>
 		{
-			var contract = base.CreateArrayContract(objectType);
-
-			contract.OnDeserializingCallbacks.Add((o, c) =>
+			if (o is IList array && array is not null)
 			{
-				if (o is IList array && array is not null)
-				{
-					array.Clear();
-				}
-			});
+				array.Clear();
+			}
+		});
 
-			return contract;
-		}
+		return contract;
+	}
 
-		protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
+	protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
+	{
+		var contract = base.CreateDictionaryContract(objectType);
+
+		contract.OnDeserializingCallbacks.Add((o, c) =>
 		{
-			var contract = base.CreateDictionaryContract(objectType);
-
-			contract.OnDeserializingCallbacks.Add((o, c) =>
+			if (o is IDictionary dictionary && dictionary is not null)
 			{
-				if (o is IDictionary dictionary && dictionary is not null)
-				{
-					dictionary.Clear();
-				}
-			});
+				dictionary.Clear();
+			}
+		});
 
-			return contract;
-		}
+		return contract;
 	}
 }

@@ -1,36 +1,35 @@
 ﻿using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+[CommandInformation("Loading, saving and other document related commands")]
+public partial class Document
 {
-	[CommandInformation("Loading, saving and other document related commands")]
-	public partial class Document
+	public Metadata Metadata { get; set; } = new Metadata();
+
+	public List<Table> Tables { get; set; } = new List<Table>();
+
+	public Document(Size tableSize)
 	{
-		public Metadata Metadata { get; set; } = new Metadata();
+		Metadata = new Metadata();
+		Tables.Clear();
+		AddTable(tableSize);
+	}
 
-		public List<Table> Tables { get; set; } = new List<Table>();
+	public void Clear()
+	{
+		Metadata = new Metadata();
+		Tables.Clear();
+		AddTable(Settings.Current.DefaultTableSize);
+	}
 
-		public Document(Size tableSize)
-		{
-			Metadata = new Metadata();
-			Tables.Clear();
-			AddTable(tableSize);
-		}
+	public Table GetActiveTable()
+	{
+		return Tables.Single(t => t.IsActive);
+	}
 
-		public void Clear()
-		{
-			Metadata = new Metadata();
-			Tables.Clear();
-			AddTable(Settings.Current.DefaultTableSize);
-		}
-
-		public Table GetActiveTable()
-		{
-			return Tables.Single(t => t.IsActive);
-		}
-
-		private static string GetSaveFilePath(string fileName)
-		{
-			return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.json");
-		}
+	private static string GetSaveFilePath(string fileName)
+	{
+		return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.json");
 	}
 }

@@ -1,11 +1,10 @@
-﻿namespace SimpleTableManager.Models
+﻿namespace SimpleTableManager.Models;
+
+public class BorderCharacter
 {
-	public class BorderCharacter
-	{
-		public char Retro { get; set; }
+	public char Retro { get; set; }
 
-		public char Modern { get; set; }
+	public char Modern { get; set; }
 
-		public BorderType Type { get; set; }
-	}
+	public BorderType Type { get; set; }
 }

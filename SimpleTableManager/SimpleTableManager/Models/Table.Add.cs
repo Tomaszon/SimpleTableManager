@@ -1,93 +1,92 @@
 ﻿using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+public partial class Table
 {
-	public partial class Table
+	[CommandReference]
+	public void AddRowAt(int index)
 	{
-		[CommandReference]
-		public void AddRowAt(int index)
+		Shared.Validate(() => index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
+
+		Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
+
+		for (int x = 0; x < Size.Width; x++)
 		{
-			Shared.Validate(() => index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
+			var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
+			//cell.PropertyChanged += CellPropertyChanged;
 
-			Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
-
-			for (int x = 0; x < Size.Width; x++)
-			{
-				var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-				//cell.PropertyChanged += CellPropertyChanged;
-
-				Content.Insert(index * Size.Width + x, cell);
-			}
-
-			if (ViewOptions.EndPosition.Y == Size.Height - 1)
-			{
-				ViewOptions.IncreaseHeight();
-			}
-
-			Size.Height++;
+			Content.Insert(index * Size.Width + x, cell);
 		}
 
-		[CommandReference]
-		public void AddRowAfter(int after)
+		if (ViewOptions.EndPosition.Y == Size.Height - 1)
 		{
-			Shared.Validate(() => after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
-
-			AddRowAt(after + 1);
+			ViewOptions.IncreaseHeight();
 		}
 
-		[CommandReference]
-		public void AddRowFirst()
+		Size.Height++;
+	}
+
+	[CommandReference]
+	public void AddRowAfter(int after)
+	{
+		Shared.Validate(() => after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+
+		AddRowAt(after + 1);
+	}
+
+	[CommandReference]
+	public void AddRowFirst()
+	{
+		AddRowAt(0);
+	}
+
+	[CommandReference]
+	public void AddRowLast()
+	{
+		AddRowAt(Size.Height);
+	}
+
+	[CommandReference]
+	public void AddColumnAt(int index)
+	{
+		Shared.Validate(() => index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
+
+		Header.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+
+		for (int y = 0; y < Size.Height; y++)
 		{
-			AddRowAt(0);
+			var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
+			//cell.PropertyChanged += CellPropertyChanged;
+
+			Content.Insert(Size.Width * y + y + index, cell);
 		}
 
-		[CommandReference]
-		public void AddRowLast()
+		if (ViewOptions.EndPosition.X == Size.Width - 1)
 		{
-			AddRowAt(Size.Height);
+			ViewOptions.IncreaseWidth();
 		}
 
-		[CommandReference]
-		public void AddColumnAt(int index)
-		{
-			Shared.Validate(() => index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
+		Size.Width++;
+	}
 
-			Header.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+	[CommandReference]
+	public void AddColumnAfter(int after)
+	{
+		Shared.Validate(() => after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
 
-			for (int y = 0; y < Size.Height; y++)
-			{
-				var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-				//cell.PropertyChanged += CellPropertyChanged;
+		AddColumnAt(after + 1);
+	}
 
-				Content.Insert(Size.Width * y + y + index, cell);
-			}
+	[CommandReference]
+	public void AddColumnFirst()
+	{
+		AddColumnAt(0);
+	}
 
-			if (ViewOptions.EndPosition.X == Size.Width - 1)
-			{
-				ViewOptions.IncreaseWidth();
-			}
-
-			Size.Width++;
-		}
-
-		[CommandReference]
-		public void AddColumnAfter(int after)
-		{
-			Shared.Validate(() => after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
-
-			AddColumnAt(after + 1);
-		}
-
-		[CommandReference]
-		public void AddColumnFirst()
-		{
-			AddColumnAt(0);
-		}
-
-		[CommandReference]
-		public void AddColumnLast()
-		{
-			AddColumnAt(Size.Width);
-		}
+	[CommandReference]
+	public void AddColumnLast()
+	{
+		AddColumnAt(Size.Width);
 	}
 }

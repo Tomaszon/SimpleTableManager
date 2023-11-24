@@ -1,14 +1,13 @@
-﻿namespace SimpleTableManager.Models
+﻿namespace SimpleTableManager.Models;
+
+public class Metadata
 {
-	public class Metadata
-	{
-		public string Title { get; set; } = "Document0";
+	public string Title { get; set; } = "Document0";
 
-		[JsonIgnore]
-		public string? Path { get; set; }
+	[JsonIgnore]
+	public string? Path { get; set; }
 
-		public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
+	public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
 
-		public Metadata() { }
-	}
+	public Metadata() { }
 }

@@ -1,11 +1,10 @@
-namespace SimpleTableManager.Models.Enumerations
+namespace SimpleTableManager.Models.Enumerations;
+
+[JsonConverter(typeof(StringEnumConverter))]
+public enum CharacterFunctionOperator
 {
-	[JsonConverter(typeof(StringEnumConverter))]
-	public enum CharacterFunctionOperator
-	{
-		Const,
-		Concat,
-		Join,
-		Repeat
-	}
+	Const,
+	Concat,
+	Join,
+	Repeat
 }
