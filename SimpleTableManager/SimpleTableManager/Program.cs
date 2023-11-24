@@ -172,6 +172,12 @@ namespace SimpleTableManager
 				{
 					SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
 				}
+				catch (Exception ex) when (ex is InvalidOperationException || ex is FormatException)
+				{
+					Console.WriteLine(ex.Message);
+					Console.Write("Press any key to continue");
+					Console.ReadKey();
+				}
 				catch (Exception ex)
 				{
 					Console.WriteLine($"{ex.Message} -> {ex}");

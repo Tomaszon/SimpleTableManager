@@ -2,11 +2,9 @@
 
 namespace SimpleTableManager.Models;
 
-public partial class Position : IParsable<Position>
+[ParseFormat("x,y", "\\d,\\d")]
+public class Position : IParsable<Position>
 {
-	[GeneratedRegex("\\d,\\d")]
-	private static partial Regex GetParseRegex();
-
 	public int X { get; set; }
 
 	public int Y { get; set; }
@@ -50,7 +48,6 @@ public partial class Position : IParsable<Position>
 		y = Y;
 	}
 
-	[ParseFormat("x,y")]
 	public static Position Parse(string value, IFormatProvider? _)
 	{
 		var values = value.Split(',');
@@ -63,7 +60,9 @@ public partial class Position : IParsable<Position>
 
 	public static bool TryParse([NotNullWhen(true)] string? value, IFormatProvider? _, [MaybeNullWhen(false)] out Position position)
 	{
-		if (value is null || !GetParseRegex().IsMatch(value))
+		var regex = typeof(Position).GetCustomAttribute<ParseFormatAttribute>()!.Regex;
+
+		if (value is null || !Regex.IsMatch(value, regex))
 		{
 			position = null;
 

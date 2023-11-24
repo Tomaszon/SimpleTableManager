@@ -1,15 +1,17 @@
 namespace SimpleTableManager.Models.Attributes
 {
 	//TODO multiple formats?
-	//TODO move to class
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class ParseFormatAttribute : Attribute
 	{
 		public string Format { get; set; }
 
-		public ParseFormatAttribute(string format)
+		public string Regex { get; set; }
+
+		public ParseFormatAttribute(string formatInfo, string regex)
 		{
-			Format = format;
+			Format = formatInfo;
+			Regex = regex;
 		}
 	}
 }

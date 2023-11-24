@@ -2,11 +2,9 @@
 
 namespace SimpleTableManager.Models;
 
-public partial class Size : IParsable<Size>
+[ParseFormat("width,height", "\\d,\\d")]
+public class Size : IParsable<Size>
 {
-	[GeneratedRegex("\\d,\\d")]
-	private static partial Regex GetParseRegex();
-
 	public int Width { get; set; }
 
 	public int Height { get; set; }
@@ -35,7 +33,6 @@ public partial class Size : IParsable<Size>
 		h = Height;
 	}
 
-	[ParseFormat("width,height")]
 	public static Size Parse(string value, IFormatProvider? _)
 	{
 		var values = value.Split(',');
@@ -48,7 +45,9 @@ public partial class Size : IParsable<Size>
 
 	public static bool TryParse([NotNullWhen(true)] string? value, IFormatProvider? _, [MaybeNullWhen(false)] out Size size)
 	{
-		if (value is null || !GetParseRegex().IsMatch(value))
+		var regex = typeof(Position).GetCustomAttribute<ParseFormatAttribute>()!.Regex;
+
+		if (value is null || !Regex.IsMatch(value, regex))
 		{
 			size = null;
 

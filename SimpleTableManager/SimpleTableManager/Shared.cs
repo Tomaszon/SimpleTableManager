@@ -51,7 +51,7 @@ namespace SimpleTableManager.Services
 			}
 			catch (Exception ex)
 			{
-				var attribute = method.GetCustomAttribute<ParseFormatAttribute>();
+				var attribute = targetDataType.GetCustomAttribute<ParseFormatAttribute>();
 
 				throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}", ex);
 			}

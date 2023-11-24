@@ -130,8 +130,8 @@ namespace SimpleTableManager.Services
 					DefaultValue = isArray ?
 						Array.CreateInstance(p.ParameterType.GetElementType()!, 0) : p.DefaultValue,
 					IsOptional = p.IsOptional || isArray,
-					ParseFormat = Shared.GetParseMethod(isArray ? p.ParameterType.GetElementType()! :
-						p.ParameterType, out _).GetCustomAttribute<ParseFormatAttribute>()?.Format
+					ParseFormat = (isArray ? p.ParameterType.GetElementType()! :
+						p.ParameterType).GetCustomAttribute<ParseFormatAttribute>()?.Format
 				};
 			}).ToList();
 		}
