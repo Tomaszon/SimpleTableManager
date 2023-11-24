@@ -287,7 +287,7 @@ public class SmartConsole
 
 	private static string Get2ndLevelHelpCommand(string value)
 	{
-		return !value.Contains(' ') ? Shared.HELP_COMMAND : $"{value.Substring(0, value.LastIndexOf(' '))} {Shared.HELP_COMMAND}";
+		return !value.Contains(' ') ? Shared.HELP_COMMAND : $"{value[..value.LastIndexOf(' ')]} {Shared.HELP_COMMAND}";
 	}
 
 	private static bool IsSpaceAppendNeeded(string value, string? partialKey)
@@ -336,7 +336,7 @@ public class SmartConsole
 			Shared.StepCursor(-clearLength, 0);
 			_insertIndex--;
 
-			var rest = _buffer.ToString().Substring(_insertIndex);
+			var rest = _buffer.ToString()[_insertIndex..];
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
@@ -360,7 +360,7 @@ public class SmartConsole
 			Console.Write(new string(' ', clearLength));
 			Shared.StepCursor(-clearLength, 0);
 
-			var rest = _buffer.ToString().Substring(_insertIndex);
+			var rest = _buffer.ToString()[_insertIndex..];
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
@@ -496,7 +496,7 @@ public class SmartConsole
 			Console.Write(c);
 			_buffer.Insert(_insertIndex, c);
 			_insertIndex++;
-			var rest = _buffer.ToString().Substring(_insertIndex);
+			var rest = _buffer.ToString()[_insertIndex..];
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}

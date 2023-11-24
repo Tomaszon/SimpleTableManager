@@ -52,28 +52,28 @@ namespace SimpleTableManager.Models
 		}
 
 		[CommandReference]
-		public void SetViewOptions(int x1, int y1, int x2, int y2)
+		public void SetViewOptions(Position from, Position to)
 		{
-			Shared.Validate(() => x1 >= 0 && x1 <= x2, $"Index x1 is not in the needed range: [0, {x2}]");
-			Shared.Validate(() => x2 < Size.Width, $"Index x2 is not in the needed range: [{x1}, {Size.Width - 1}]");
+			Shared.Validate(() => from.X >= 0 && from.X <= to.X, $"Index x1 is not in the needed range: [0, {to.X}]");
+			Shared.Validate(() => to.X < Size.Width, $"Index x2 is not in the needed range: [{from.X}, {Size.Width - 1}]");
 
-			Shared.Validate(() => y1 >= 0 && y1 <= y2, $"Index y1 is not in the needed range: [0, {y2}]");
-			Shared.Validate(() => y2 < Size.Height, $"Index y2 is not in the needed range: [{y1}, {Size.Height - 1}]");
+			Shared.Validate(() => from.Y >= 0 && from.Y <= to.Y, $"Index y1 is not in the needed range: [0, {to.Y}]");
+			Shared.Validate(() => to.Y < Size.Height, $"Index y2 is not in the needed range: [{from.Y}, {Size.Height - 1}]");
 
-			ViewOptions.StartPosition = new Position(x1, y1);
-			ViewOptions.EndPosition = new Position(x2, y2);
+			ViewOptions.StartPosition = from;
+			ViewOptions.EndPosition = to;
 		}
 
 		[CommandReference]
 		public void SetViewOptionsColumns(int x1, int x2)
 		{
-			SetViewOptions(x1, ViewOptions.StartPosition.Y, x2, ViewOptions.EndPosition.Y);
+			SetViewOptions(new Position(x1, ViewOptions.StartPosition.Y), new Position(x2, ViewOptions.EndPosition.Y));
 		}
 
 		[CommandReference]
 		public void SetViewOptionsRows(int y1, int y2)
 		{
-			SetViewOptions(ViewOptions.StartPosition.X, y1, ViewOptions.EndPosition.X, y2);
+			SetViewOptions(new Position(ViewOptions.StartPosition.X, y1), new Position(ViewOptions.EndPosition.X, y2));
 		}
 
 		[CommandReference]

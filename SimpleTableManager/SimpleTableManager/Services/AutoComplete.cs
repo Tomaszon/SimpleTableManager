@@ -60,7 +60,7 @@ public class AutoComplete
 
 	public string TrimValueForCycling(string value)
 	{
-		return value.Substring(0, value.Length - _autoCompleteLength);
+		return value[..^_autoCompleteLength];
 	}
 
 	public void Reset()
