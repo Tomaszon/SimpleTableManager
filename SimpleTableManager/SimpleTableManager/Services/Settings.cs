@@ -14,7 +14,7 @@ public class Settings
 
 	public ConsoleColorSet SelectedBorderColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
 
-	public ConsoleColorSet NotAvailableContentColor {get;set;} = (ConsoleColor.DarkGray, ConsoleColor.Black);
+	public ConsoleColorSet NotAvailableContentColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
 
 	public bool ModernTableBorder { get; set; } = false;
 
@@ -40,4 +40,6 @@ public class Settings
 	public uint CommandHistorySize { get; set; }
 
 	public Size DefaultTableSize { get; set; } = new Size(10, 5);
+
+	public bool Autosave { get; set; }
 }

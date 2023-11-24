@@ -34,11 +34,9 @@
 	"TmpBackgroundCharacter": "?",
 	"DefaultWorkDirectory": "C:\\users\\offic\\downloads",
 	"CommandHistorySize": 5,
-	"MaxTableWidthPower": 16,
-	"MaxTableHeightPower": 16,
-	"MaxTableCountPower": 3,
 	"DefaultTableSize": {
 		"Width": 2,
 		"Height": 2
-	}
+	},
+	"Autosave": true
 }

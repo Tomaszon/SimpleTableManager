@@ -23,9 +23,16 @@ public partial class Document
 		AddTable(Settings.Current.DefaultTableSize);
 	}
 
+	public Table GetActiveTable(out int index)
+	{
+		var table = Tables.Single(t => t.IsActive);
+		index = Tables.IndexOf(table);
+		return table;
+	}
+
 	public Table GetActiveTable()
 	{
-		return Tables.Single(t => t.IsActive);
+		return GetActiveTable(out _);
 	}
 
 	private static string GetSaveFilePath(string fileName)

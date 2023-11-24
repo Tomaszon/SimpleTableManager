@@ -11,7 +11,7 @@ public static class Renderer
 
 	public static void Render(Document document)
 	{
-		var table = document.GetActiveTable();
+		var table = document.GetActiveTable(out var tableIndex);
 
 		if (table is not null)
 		{
@@ -21,7 +21,7 @@ public static class Renderer
 
 			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
-			RenderInfos(document.Metadata, table, tableOffset);
+			RenderMetadata(document.Metadata, table, tableOffset, tableIndex, document.Tables.Count);
 
 			RenderTempCell(table, tableOffset, tableSize);
 
@@ -437,18 +437,48 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderInfos(Metadata metadata, Table table, Size tableOffset)
+	private static void RenderMetadata(Metadata metadata, Table table, Size tableOffset, int tableIndex, int tableCount)
 	{
 		ChangeToTextColors();
 
-		Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 4);
-		Console.WriteLine($"Document title: {metadata.Title}");
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
+		Console.WriteLine($"Document: {metadata.Title}");
 
-		Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 3);
-		Console.WriteLine(metadata.Path is not null ? $"Document path: {metadata.Path}" : "Unsaved document");
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 7);
+		Console.Write("Path:     ");
+		Console.WriteLine(metadata.Path is not null ? $"{metadata.Path}" : "-");
 
-		Console.SetCursorPosition(tableOffset.Width + 1, tableOffset.Height - 1);
-		Console.WriteLine($"Table name: {table.Name}");
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 6);
+		Console.Write("Size:     ");
+		Console.WriteLine(metadata.Size is not null ? $"{metadata.Size} bytes" : "-");
+
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 5);
+		Console.Write("Created:  ");
+		Console.WriteLine(metadata.CreateTime is not null ? $"{metadata.CreateTime}" : "-");
+
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 3);
+		Console.Write("Autosave: ");
+		Console.WriteLine(Settings.Current.Autosave ? "On" : "Off");
+
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
+		Console.Write($"Table:    {table.Name}    ");
+
+		if (tableIndex > 0 && tableIndex < tableCount - 1)
+		{
+			Console.WriteLine($"0 ◀ {tableIndex} ▶ {tableCount - 1}");
+		}
+		else if (tableIndex == 0 && tableIndex < tableCount - 1)
+		{
+			Console.WriteLine($"{tableIndex} ▶ {tableCount - 1}");
+		}
+		else if (tableIndex > 0 && tableIndex == tableCount - 1)
+		{
+			Console.WriteLine($"0 ◀ {tableIndex}");
+		}
+		else
+		{
+			Console.WriteLine();
+		}
 	}
 
 	private static bool IsCellContentDrawNeeded(IEnumerable<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)

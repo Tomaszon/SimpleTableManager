@@ -51,7 +51,7 @@ public partial class Document
 	{
 		if (Metadata.Path is null)
 		{
-			throw new IOException($"Specify a file name to save to with 'save as'");
+			throw new InvalidOperationException($"Specify a file name to save to with 'save as'");
 		}
 		else
 		{
@@ -63,7 +63,7 @@ public partial class Document
 	public void Save(string fileName, bool overwrite = false)
 	{
 		fileName = GetSaveFilePath(fileName);
-
+		
 		try
 		{
 			if (File.Exists(fileName) && !overwrite)
@@ -79,9 +79,11 @@ public partial class Document
 				TypeNameHandling = TypeNameHandling.Auto,
 			};
 
+			Metadata.CreateTime ??= DateTime.Now;
+
 			serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
 
-			Metadata.Path = fileName;
+			GetMetaInfos(fileName);
 		}
 		catch (Exception ex)
 		{
@@ -112,7 +114,7 @@ public partial class Document
 
 			serializer.Populate(new JsonTextReader(sr), this);
 
-			Metadata.Path = fileName;
+			GetMetaInfos(fileName);
 		}
 		catch (Exception ex)
 		{
@@ -120,5 +122,12 @@ public partial class Document
 
 			throw new OperationCanceledException("Can not load document", ex);
 		}
+	}
+
+	public void GetMetaInfos(string path)
+	{
+		var fileInfo = new FileInfo(path);
+		Metadata.Path = path;
+		Metadata.Size = fileInfo.Length;
 	}
 }

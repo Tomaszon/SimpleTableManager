@@ -185,6 +185,16 @@ public class Program
 				Console.ReadKey();
 			}
 
+			if (Settings.Current.Autosave)
+			{
+				var doc = InstanceMap.Instance.GetInstance<Document>();
+
+				if (doc?.Metadata.Path is not null)
+				{
+					doc.Save();
+				}
+			}
+
 			Console.Clear();
 		}
 		while (true);

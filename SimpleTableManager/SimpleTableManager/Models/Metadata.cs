@@ -7,6 +7,11 @@ public class Metadata
 	[JsonIgnore]
 	public string? Path { get; set; }
 
+	[JsonIgnore]
+	public long? Size { get; set; }
+
+	public DateTime? CreateTime { get; set; }
+
 	public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
 
 	public Metadata() { }

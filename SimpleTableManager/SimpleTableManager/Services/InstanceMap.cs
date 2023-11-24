@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager.Services;
+﻿using System.Runtime.CompilerServices;
+
+namespace SimpleTableManager.Services;
 
 public class InstanceMap
 {
@@ -28,6 +30,11 @@ public class InstanceMap
 		type = result.Key;
 
 		return result.Value.Invoke();
+	}
+
+	public T? GetInstance<T>()
+	{
+		return GetInstances<T>().SingleOrDefault();
 	}
 
 	public IEnumerable<T?> GetInstances<T>()
