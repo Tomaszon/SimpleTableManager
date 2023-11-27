@@ -34,7 +34,7 @@ public static class CommandTree
 	{
 		if (obj is ExpandoObject o)
 		{
-			if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
+			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
 			{
 				throw new HelpRequestedException(rawCommand, o.Select(e => e.Key).ToList(), null);
 			}
@@ -70,7 +70,7 @@ public static class CommandTree
 		}
 		else
 		{
-			if (keys.FirstOrDefault() == Shared.HELP_COMMAND)
+			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
 			{
 				throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!));
 			}

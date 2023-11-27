@@ -4,8 +4,10 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services;
 
-public class SmartConsole
+public partial class SmartConsole
 {
+	public const string HELP_COMMAND = "help";
+
 	private static readonly string _LAST_HELP_PLACEHOLDER = "Enter command to execute";
 
 	private static string _lastHelp = _LAST_HELP_PLACEHOLDER;
@@ -37,6 +39,20 @@ public class SmartConsole
 		}
 
 		Console.Write(_COMMAND_LINE_PREFIX);
+	}
+
+	public static string ReadLineWhile(string message, IEnumerable<object> validValues)
+	{
+		do
+		{
+			Console.WriteLine(message);
+
+			if (Console.ReadLine() is string answer && validValues.Select(v => v.ToString()).Contains(answer, StringComparer.OrdinalIgnoreCase))
+			{
+				return answer;
+			}
+		}
+		while (true);
 	}
 
 	public static void ShowHelp(string rawCommand, List<string>? availableKeys, CommandReference? commandReference, string error)
@@ -79,7 +95,7 @@ public class SmartConsole
 			_lastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n";
 		}
 
-		if (command.RawCommand.Replace(Shared.HELP_COMMAND, "").TrimEnd() is var sanitedCommand &&
+		if (command.RawCommand.Replace(HELP_COMMAND, "").TrimEnd() is var sanitedCommand &&
 			!string.IsNullOrWhiteSpace(sanitedCommand))
 		{
 			_lastHelp += $"    in '{sanitedCommand}'";
@@ -282,12 +298,12 @@ public class SmartConsole
 
 	private static string Get1stLevelHelpCommand(string value)
 	{
-		return string.IsNullOrWhiteSpace(value) ? Shared.HELP_COMMAND : $"{value} {Shared.HELP_COMMAND}";
+		return string.IsNullOrWhiteSpace(value) ? HELP_COMMAND : $"{value} {HELP_COMMAND}";
 	}
 
 	private static string Get2ndLevelHelpCommand(string value)
 	{
-		return !value.Contains(' ') ? Shared.HELP_COMMAND : $"{value[..value.LastIndexOf(' ')]} {Shared.HELP_COMMAND}";
+		return !value.Contains(' ') ? HELP_COMMAND : $"{value[..value.LastIndexOf(' ')]} {HELP_COMMAND}";
 	}
 
 	private static bool IsSpaceAppendNeeded(string value, string? partialKey)
@@ -523,13 +539,5 @@ public class SmartConsole
 		_insertIndex = 0;
 
 		return true;
-	}
-
-	public enum GetHintResult
-	{
-		Hint,
-		Complete,
-		PartialKey,
-		UnknownKey
 	}
 }

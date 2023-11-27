@@ -21,7 +21,7 @@ public static class Renderer
 
 			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
-			RenderMetadata(document.Metadata, table, tableOffset, tableIndex, document.Tables.Count);
+			RenderDocumentInfos(document, table, tableOffset, tableIndex, document.Tables.Count);
 
 			RenderTempCell(table, tableOffset, tableSize);
 
@@ -437,12 +437,14 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderMetadata(Metadata metadata, Table table, Size tableOffset, int tableIndex, int tableCount)
+	private static void RenderDocumentInfos(Document document, Table table, Size tableOffset, int tableIndex, int tableCount)
 	{
+		var metadata = document.Metadata;
+
 		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
-		Console.WriteLine($"Document: {metadata.Title}");
+		Console.WriteLine($"Document: {metadata.Title}{(document.Saved ? "" : " *")}");
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 7);
 		Console.Write("Path:     ");
@@ -458,22 +460,30 @@ public static class Renderer
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 3);
 		Console.Write("Autosave: ");
-		Console.WriteLine(Settings.Current.Autosave ? "On" : "Off");
+
+		if (metadata.Path is null)
+		{
+			Console.WriteLine("-");
+		}
+		else
+		{
+			Console.WriteLine(Settings.Current.Autosave ? "On" : "Off");
+		}
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
 		Console.Write($"Table:    {table.Name}    ");
 
 		if (tableIndex > 0 && tableIndex < tableCount - 1)
 		{
-			Console.WriteLine($"0 ◀ {tableIndex} ▶ {tableCount - 1}");
+			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
 		}
 		else if (tableIndex == 0 && tableIndex < tableCount - 1)
 		{
-			Console.WriteLine($"{tableIndex} ▶ {tableCount - 1}");
+			Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
 		}
 		else if (tableIndex > 0 && tableIndex == tableCount - 1)
 		{
-			Console.WriteLine($"0 ◀ {tableIndex}");
+			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
 		}
 		else
 		{

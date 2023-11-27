@@ -1,10 +1,11 @@
-﻿using SimpleTableManager.Services;
+﻿using System.Runtime.Serialization;
+using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Cell selection and table related commands")]
 [JsonObject(IsReference = true)]
-public partial class Table
+public partial class Table : ICommandExecuter
 {
 	public string Name { get; set; } = default!;
 
@@ -50,6 +51,8 @@ public partial class Table
 
 	public List<Cell> this[Position position1, Position position2] => this[position1.X, position1.Y, position2.X, position2.Y];
 
+	public event Action? CommandExecuted;
+
 	[JsonConstructor]
 	public Table() { }
 
@@ -62,6 +65,15 @@ public partial class Table
 		Shared.IndexArray(rowCount).ForEach(y => AddRowLast());
 
 		ResetViewOptions();
+	}
+	public void OnCommandExecuted()
+	{
+		CommandExecuted?.Invoke();
+	}
+
+	public void OnDeserialized(StreamingContext _)
+	{
+		Content.ForEach(c => c.CommandExecuted += OnCommandExecuted);
 	}
 
 	public int GetRowHeight(int index)

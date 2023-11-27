@@ -1,10 +1,11 @@
-﻿using SimpleTableManager.Services;
+﻿using System.Runtime.Serialization;
+using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Cell related commands")]
-public partial class Cell// : INotifyPropertyChanged
+public partial class Cell : ICommandExecuter
 {
 	public Table Table { get; set; } = default!;
 
@@ -93,7 +94,7 @@ public partial class Cell// : INotifyPropertyChanged
 	[JsonIgnore]
 	public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
-	// public event PropertyChangedEventHandler PropertyChanged;
+	public event Action? CommandExecuted;
 
 	[JsonConstructor]
 	public Cell() { }
@@ -126,18 +127,5 @@ public partial class Cell// : INotifyPropertyChanged
 	// public void RemoveLastArgument()
 	// {
 	// 	ContentFunction.RemoveLastArgument();
-	// }
-
-	private void SetFunction<T>(Enum functionOperator, params string[] arguments)
-		where T : IParsable<T>
-	{
-		var args = Shared.SeparateNamedArguments<T>(arguments);
-
-		ContentFunction = FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
-	}
-
-	// private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-	// {
-	// 	PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	// }
 }

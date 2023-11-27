@@ -10,7 +10,7 @@ public class App
 	[CommandReference]
 	public static void Exit()
 	{
-		var answer = Shared.ReadLineWhile("Are you sure y/n", _options);
+		var answer = SmartConsole.ReadLineWhile("Are you sure y/n", _options);
 
 		if (answer.ToLower().Equals("y"))
 		{

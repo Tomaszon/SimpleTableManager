@@ -1,19 +1,44 @@
-﻿using SimpleTableManager.Services;
+﻿using System.Runtime.Serialization;
+
+using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Loading, saving and other document related commands")]
-public partial class Document
+public partial class Document : ICommandExecuter
 {
+	[JsonIgnore]
+	public bool Saved { get; set; }
+
 	public Metadata Metadata { get; set; } = new Metadata();
 
 	public List<Table> Tables { get; set; } = new List<Table>();
+
+	public event Action? CommandExecuted;
 
 	public Document(Size tableSize)
 	{
 		Metadata = new Metadata();
 		Tables.Clear();
 		AddTable(tableSize);
+	}
+
+	public void OnCommandExecuted()
+	{
+		if (Settings.Current.Autosave && Metadata.Path is not null)
+		{
+			Save();
+		}
+		else
+		{
+			Saved = false;
+		}
+	}
+
+	public void OnDeserialized(StreamingContext _)
+	{
+		Tables.ForEach(t => t.CommandExecuted += OnCommandExecuted);
+		CommandExecuted += OnCommandExecuted;
 	}
 
 	public void Clear()

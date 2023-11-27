@@ -56,7 +56,7 @@ public class Command
 				else
 				{
 					var value = i < Arguments?.Count ?
-						Shared.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
+						ContentParser.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
 					parsedArguments.Add(value);
 				}
@@ -85,7 +85,7 @@ public class Command
 
 			var typedArray = Array.CreateInstance(type, rest.Count);
 
-			Array.Copy(rest.Select(a => Shared.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
+			Array.Copy(rest.Select(a => ContentParser.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
 
 			return typedArray;
 		}

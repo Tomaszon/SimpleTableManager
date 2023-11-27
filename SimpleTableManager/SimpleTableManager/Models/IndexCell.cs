@@ -27,6 +27,9 @@ public class IndexCell : Cell
 
 	public void RemoveEllipses()
 	{
-		SetContent(Index.ToString());
+		if (ContentFunction?.Execute().First().ToString() != Index.ToString())
+		{
+			SetContent(Index.ToString());
+		}
 	}
 }

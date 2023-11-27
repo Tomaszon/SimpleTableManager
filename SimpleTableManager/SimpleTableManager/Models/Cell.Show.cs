@@ -2,7 +2,7 @@ namespace SimpleTableManager.Models;
 
 public partial class Cell
 {
-	[CommandReference]
+	[CommandReference(QueryCommand = true)]
 	public object ShowDetails()
 	{
 		return new
@@ -25,7 +25,7 @@ public partial class Cell
 		};
 	}
 
-	[CommandReference]
+	[CommandReference(QueryCommand = false)]
 	public object ShowContentFunction()
 	{
 		

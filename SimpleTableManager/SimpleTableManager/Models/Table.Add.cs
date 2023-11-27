@@ -57,9 +57,10 @@ public partial class Table
 		for (int y = 0; y < Size.Height; y++)
 		{
 			var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-			//cell.PropertyChanged += CellPropertyChanged;
 
 			Content.Insert(Size.Width * y + y + index, cell);
+			
+			cell.CommandExecuted += OnCommandExecuted;
 		}
 
 		if (ViewOptions.EndPosition.X == Size.Width - 1)

@@ -40,7 +40,11 @@ public partial class Document
 		}
 		else
 		{
-			Tables.Add(new Table(name, size.Width, size.Height));
+			var table = new Table(name, size.Width, size.Height);
+
+			Tables.Add(table);
+
+			table.CommandExecuted += OnCommandExecuted;
 
 			ActivateTable(Tables.Count - 1);
 		}
@@ -84,6 +88,8 @@ public partial class Document
 			serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
 
 			GetMetaInfos(fileName);
+
+			Saved = true;
 		}
 		catch (Exception ex)
 		{
