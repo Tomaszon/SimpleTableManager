@@ -35,6 +35,7 @@ public partial class Document : ICommandExecuter
 		}
 	}
 
+	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
 		Tables.ForEach(t => t.CommandExecuted += OnCommandExecuted);

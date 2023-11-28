@@ -444,7 +444,7 @@ public static class Renderer
 		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
-		Console.WriteLine($"Document: {metadata.Title}{(document.Saved ? "" : " *")}");
+		Console.WriteLine($"Document: {metadata.Title}{(document.Saved ? " - Saved" : "")}");
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 7);
 		Console.Write("Path:     ");

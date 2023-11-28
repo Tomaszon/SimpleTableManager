@@ -13,10 +13,7 @@ public partial class Table
 
 		for (int x = 0; x < Size.Width; x++)
 		{
-			var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-			//cell.PropertyChanged += CellPropertyChanged;
-
-			Content.Insert(index * Size.Width + x, cell);
+			AddNewContentCellAt(index * Size.Width + x);
 		}
 
 		if (ViewOptions.EndPosition.Y == Size.Height - 1)
@@ -56,11 +53,7 @@ public partial class Table
 
 		for (int y = 0; y < Size.Height; y++)
 		{
-			var cell = new Cell(this) { ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor) };
-
-			Content.Insert(Size.Width * y + y + index, cell);
-			
-			cell.CommandExecuted += OnCommandExecuted;
+			AddNewContentCellAt(Size.Width * y + y + index);
 		}
 
 		if (ViewOptions.EndPosition.X == Size.Width - 1)

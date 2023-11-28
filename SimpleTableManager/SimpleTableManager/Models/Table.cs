@@ -71,9 +71,22 @@ public partial class Table : ICommandExecuter
 		CommandExecuted?.Invoke();
 	}
 
+	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
 		Content.ForEach(c => c.CommandExecuted += OnCommandExecuted);
+	}
+
+	private void AddNewContentCellAt(int index)
+	{
+		var cell = new Cell(this)
+		{
+			ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor)
+		};
+
+		Content.Insert(index, cell);
+
+		cell.CommandExecuted += OnCommandExecuted;
 	}
 
 	public int GetRowHeight(int index)

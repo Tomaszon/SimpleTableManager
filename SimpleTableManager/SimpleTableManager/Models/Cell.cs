@@ -109,6 +109,11 @@ public partial class Cell : ICommandExecuter
 		}
 	}
 
+	public void OnCommandExecuted() { }
+
+	[OnDeserialized]
+	public void OnDeserialized(StreamingContext _) { }
+
 	// public void ClearContent()
 	// {
 	// 	ContentFunction2 = ObjectFunction.Empty();

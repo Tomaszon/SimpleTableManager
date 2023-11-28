@@ -6,8 +6,7 @@ public interface ICommandExecuter
 {
 	event Action? CommandExecuted;
 
-	void OnCommandExecuted() { }
+	void OnCommandExecuted();
 
-	[OnDeserialized]
-	void OnDeserialized(StreamingContext _) { }
+	// void OnDeserialized(StreamingContext context);
 }
