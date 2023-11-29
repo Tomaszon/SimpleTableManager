@@ -27,6 +27,7 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 				"YN" => b ? "Y" : "N",
 				"YesNo" => b ? "Yes" : "No",
 				"" => b.ToString(),
+				null => b.ToString(),
 
 				_ => throw new FormatException()
 			};
