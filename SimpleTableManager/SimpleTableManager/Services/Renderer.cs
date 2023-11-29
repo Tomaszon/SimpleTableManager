@@ -443,23 +443,26 @@ public static class Renderer
 
 		ChangeToTextColors();
 
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 9);
 		Console.Write($"Document: {metadata.Title} - ");
 
-		if (document.IsSaved)
+		switch (document.IsSaved)
 		{
-			ChangeToOkLabelColors();
-
-			Console.WriteLine("Saved");
-		}
-		else
-		{
-			ChangeToNotOkLabelColors();
-
-			Console.WriteLine("Unsaved");
+			case true:
+				ChangeToOkLabelColors();
+				Console.WriteLine("Saved");
+				break;
+				
+			case false:
+				ChangeToNotOkLabelColors();
+				Console.WriteLine("Unsaved");
+				break;
 		}
 
 		ChangeToTextColors();
+
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
+		Console.WriteLine($"Author:   {metadata.Author}");
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 7);
 		Console.Write("Path:     ");
@@ -489,7 +492,7 @@ public static class Renderer
 		else
 		{
 			ChangeToNotOkLabelColors();
-			
+
 			Console.WriteLine("Off");
 		}
 

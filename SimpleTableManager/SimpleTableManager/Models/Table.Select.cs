@@ -13,7 +13,7 @@ public partial class Table
 	[CommandReference]
 	public void SelectCells(params Position[] positions)
 	{
-		Shared.Validate<TargetParameterCountException>(() => positions.Length > 0, "One or more positions needed!");
+		ThrowIfNot<TargetParameterCountException>(positions.Length > 0, "One or more positions needed!");
 
 		positions.ForEach(p => this[p].IsSelected = true);
 	}

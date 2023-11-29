@@ -28,7 +28,6 @@ public partial class Cell
 	[CommandReference(StateModifier = false)]
 	public object ShowContentFunction()
 	{
-		
 		return ContentFunction is null ? "None" : new
 		{
 			Type = ContentFunction.GetType().Name,

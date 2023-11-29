@@ -13,7 +13,7 @@ public partial class Document
 	[CommandReference("activateTableAt")]
 	public void ActivateTable(int index)
 	{
-		Shared.Validate(() => index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
+		ThrowIfNot(index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
 
 		Tables.ForEach(t => t.IsActive = false);
 		Tables[index].IsActive = true;
@@ -24,7 +24,7 @@ public partial class Document
 	{
 		var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name)!);
 
-		Shared.Validate(() => index != -1, $"No table found with name {name}");
+		ThrowIf(index == -1, $"No table found with name {name}");
 
 		ActivateTable(index);
 	}
@@ -34,33 +34,23 @@ public partial class Document
 	{
 		name ??= $"Table{Tables.Count}";
 
-		if (Tables.Any(t => t.Name == name))
-		{
-			throw new InvalidOperationException($"Can not create table with duplicate name '{name}'");
-		}
-		else
-		{
-			var table = new Table(name, size.Width, size.Height);
+		ThrowIf(Tables.Any(t => t.Name == name), $"Can not create table with duplicate name '{name}'");
 
-			Tables.Add(table);
+		var table = new Table(name, size.Width, size.Height);
 
-			table.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+		Tables.Add(table);
 
-			ActivateTable(Tables.Count - 1);
-		}
+		table.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+
+		ActivateTable(Tables.Count - 1);
 	}
 
 	[CommandReference(StateModifier = false)]
 	public void Save()
 	{
-		if (Metadata.Path is null)
-		{
-			throw new InvalidOperationException($"Specify a file name to save to with 'save as'");
-		}
-		else
-		{
-			Save(Metadata.Path, true);
-		}
+		ThrowIf(Metadata.Path is null, $"Specify a file name to save to with 'save-as'");
+		
+		Save(Metadata.Path, true);
 	}
 
 	[CommandReference("saveAs", StateModifier = false)]
@@ -87,8 +77,6 @@ public partial class Document
 
 			serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
 
-			GetMetaInfos(fileName);
-
 			IsSaved = true;
 		}
 		catch (Exception ex)
@@ -100,15 +88,14 @@ public partial class Document
 
 			throw new OperationCanceledException("Can not save document", ex);
 		}
+
+		GetMetaInfos(fileName);
 	}
 
 	[CommandReference(StateModifier = false)]
 	public void Load(string fileName, bool confirm = false)
 	{
-		if (!IsSaved && !confirm)
-		{
-			throw new InvalidOperationException($"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force file load");
-		}
+		ThrowIf(IsSaved == false && !confirm, $"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force file load");
 
 		fileName = GetSaveFilePath(fileName);
 
@@ -125,8 +112,6 @@ public partial class Document
 
 			serializer.Populate(new JsonTextReader(sr), this);
 
-			GetMetaInfos(fileName);
-
 			IsSaved = true;
 		}
 		catch (Exception ex)
@@ -135,6 +120,8 @@ public partial class Document
 
 			throw new OperationCanceledException("Can not load document", ex);
 		}
+
+		GetMetaInfos(fileName);
 	}
 
 	public void GetMetaInfos(string path)

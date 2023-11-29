@@ -7,7 +7,7 @@ public partial class Table
 	[CommandReference]
 	public void AddRowAt(int index)
 	{
-		Shared.Validate(() => index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
+		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
 		Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
 
@@ -27,7 +27,7 @@ public partial class Table
 	[CommandReference]
 	public void AddRowAfter(int after)
 	{
-		Shared.Validate(() => after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+		ThrowIfNot(after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
 
 		AddRowAt(after + 1);
 	}
@@ -47,7 +47,7 @@ public partial class Table
 	[CommandReference]
 	public void AddColumnAt(int index)
 	{
-		Shared.Validate(() => index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
+		ThrowIfNot(index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
 		Header.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
@@ -67,7 +67,7 @@ public partial class Table
 	[CommandReference]
 	public void AddColumnAfter(int after)
 	{
-		Shared.Validate(() => after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
+		ThrowIfNot(after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
 
 		AddColumnAt(after + 1);
 	}

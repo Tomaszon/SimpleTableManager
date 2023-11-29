@@ -1,7 +1,11 @@
-﻿namespace SimpleTableManager.Models;
+﻿using SimpleTableManager.Services;
+
+namespace SimpleTableManager.Models;
 
 public class Metadata
 {
+	public string Author { get; set; } = Settings.Current.Author;
+
 	public string Title { get; set; } = "Document0";
 
 	[JsonIgnore]

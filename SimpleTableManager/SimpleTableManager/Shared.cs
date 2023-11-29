@@ -16,19 +16,6 @@ public static class Shared
 		return (namedArgsDic, regularArgs);
 	}
 
-	public static void Validate(Func<bool> validator, string error)
-	{
-		Validate<InvalidOperationException>(validator, error);
-	}
-
-	public static void Validate<T>(Func<bool> validator, string error) where T : Exception
-	{
-		if (!validator())
-		{
-			throw (T)Activator.CreateInstance(typeof(T), error)!;
-		}
-	}
-
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)
 	{
 		return Enumerable.Repeat(from, size).Select((value, index) => value + index * step).ToList();
@@ -56,6 +43,9 @@ public static class Shared
 
 	public static bool IsHandled(this Exception ex)
 	{
-		return ex is FormatException || ex is InvalidOperationException;
+		return ex is FormatException ||
+			ex is InvalidOperationException ||
+			ex is TargetParameterCountException ||
+			ex is ArgumentException;
 	}
 }

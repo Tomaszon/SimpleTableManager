@@ -8,7 +8,7 @@ namespace SimpleTableManager.Models;
 public partial class Document : CommandExecuterBase
 {
 	[JsonIgnore]
-	public bool IsSaved { get; set; }
+	public bool? IsSaved { get; set; }
 
 	public Metadata Metadata { get; set; } = new Metadata();
 

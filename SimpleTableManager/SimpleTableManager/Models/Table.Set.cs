@@ -13,7 +13,7 @@ public partial class Table
 	[CommandReference]
 	public void SetSize(Size size)
 	{
-		Shared.Validate(() => size.Width > 0 && size.Height > 0, "Can not decrease table size under 1 column or 1 row!");
+		ThrowIfNot(size.Width > 0 && size.Height > 0, "Can not decrease table size under 1 column or 1 row!");
 
 		while (Size.Width != size.Width)
 		{
@@ -54,11 +54,11 @@ public partial class Table
 	[CommandReference]
 	public void SetViewOptions(Position from, Position to)
 	{
-		Shared.Validate(() => from.X >= 0 && from.X <= to.X, $"Index x1 is not in the needed range: [0, {to.X}]");
-		Shared.Validate(() => to.X < Size.Width, $"Index x2 is not in the needed range: [{from.X}, {Size.Width - 1}]");
+		ThrowIfNot(from.X >= 0 && from.X <= to.X, $"Index x1 is not in the needed range: [0, {to.X}]");
+		ThrowIfNot(to.X < Size.Width, $"Index x2 is not in the needed range: [{from.X}, {Size.Width - 1}]");
 
-		Shared.Validate(() => from.Y >= 0 && from.Y <= to.Y, $"Index y1 is not in the needed range: [0, {to.Y}]");
-		Shared.Validate(() => to.Y < Size.Height, $"Index y2 is not in the needed range: [{from.Y}, {Size.Height - 1}]");
+		ThrowIfNot(from.Y >= 0 && from.Y <= to.Y, $"Index y1 is not in the needed range: [0, {to.Y}]");
+		ThrowIfNot(to.Y < Size.Height, $"Index y2 is not in the needed range: [{from.Y}, {Size.Height - 1}]");
 
 		ViewOptions.StartPosition = from;
 		ViewOptions.EndPosition = to;
