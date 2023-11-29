@@ -5,7 +5,7 @@ namespace SimpleTableManager.Models;
 
 [CommandInformation("Cell selection and table related commands")]
 [JsonObject(IsReference = true)]
-public partial class Table : ICommandExecuter
+public partial class Table : CommandExecuterBase
 {
 	public string Name { get; set; } = default!;
 
@@ -51,8 +51,6 @@ public partial class Table : ICommandExecuter
 
 	public List<Cell> this[Position position1, Position position2] => this[position1.X, position1.Y, position2.X, position2.Y];
 
-	public event Action? CommandExecuted;
-
 	[JsonConstructor]
 	public Table() { }
 
@@ -66,15 +64,15 @@ public partial class Table : ICommandExecuter
 
 		ResetViewOptions();
 	}
-	public void OnCommandExecuted()
+	public override void OnStateModifierCommandExecuted()
 	{
-		CommandExecuted?.Invoke();
+		InvokeStateModifierCommandExecutedEvent();
 	}
 
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
-		Content.ForEach(c => c.CommandExecuted += OnCommandExecuted);
+		Content.ForEach(c => c.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
 	}
 
 	private void AddNewContentCellAt(int index)
@@ -86,7 +84,7 @@ public partial class Table : ICommandExecuter
 
 		Content.Insert(index, cell);
 
-		cell.CommandExecuted += OnCommandExecuted;
+		cell.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
 	public int GetRowHeight(int index)

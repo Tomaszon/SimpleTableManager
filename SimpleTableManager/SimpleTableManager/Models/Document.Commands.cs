@@ -36,7 +36,7 @@ public partial class Document
 
 		if (Tables.Any(t => t.Name == name))
 		{
-			throw new ArgumentException($"Can not create table with duplicate name '{name}'");
+			throw new InvalidOperationException($"Can not create table with duplicate name '{name}'");
 		}
 		else
 		{
@@ -44,13 +44,13 @@ public partial class Document
 
 			Tables.Add(table);
 
-			table.CommandExecuted += OnCommandExecuted;
+			table.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 
 			ActivateTable(Tables.Count - 1);
 		}
 	}
 
-	[CommandReference]
+	[CommandReference(StateModifier = false)]
 	public void Save()
 	{
 		if (Metadata.Path is null)
@@ -63,18 +63,18 @@ public partial class Document
 		}
 	}
 
-	[CommandReference("saveAs")]
+	[CommandReference("saveAs", StateModifier = false)]
 	public void Save(string fileName, bool overwrite = false)
 	{
 		fileName = GetSaveFilePath(fileName);
-		
+
+		if (File.Exists(fileName) && !overwrite)
+		{
+			throw new InvalidOperationException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
+		}
+
 		try
 		{
-			if (File.Exists(fileName) && !overwrite)
-			{
-				throw new IOException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
-			}
-
 			using var f = File.Create(fileName);
 			using var sw = new StreamWriter(f);
 
@@ -89,7 +89,7 @@ public partial class Document
 
 			GetMetaInfos(fileName);
 
-			Saved = true;
+			IsSaved = true;
 		}
 		catch (Exception ex)
 		{
@@ -102,9 +102,14 @@ public partial class Document
 		}
 	}
 
-	[CommandReference]
-	public void Load(string fileName)
+	[CommandReference(StateModifier = false)]
+	public void Load(string fileName, bool confirm = false)
 	{
+		if (!IsSaved && !confirm)
+		{
+			throw new InvalidOperationException($"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force file load");
+		}
+
 		fileName = GetSaveFilePath(fileName);
 
 		try
@@ -121,6 +126,8 @@ public partial class Document
 			serializer.Populate(new JsonTextReader(sr), this);
 
 			GetMetaInfos(fileName);
+
+			IsSaved = true;
 		}
 		catch (Exception ex)
 		{

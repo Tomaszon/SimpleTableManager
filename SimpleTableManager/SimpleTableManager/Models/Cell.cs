@@ -5,7 +5,7 @@ using SimpleTableManager.Services.Functions;
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Cell related commands")]
-public partial class Cell : ICommandExecuter
+public partial class Cell : CommandExecuterBase
 {
 	public Table Table { get; set; } = default!;
 
@@ -94,8 +94,6 @@ public partial class Cell : ICommandExecuter
 	[JsonIgnore]
 	public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
-	public event Action? CommandExecuted;
-
 	[JsonConstructor]
 	public Cell() { }
 
@@ -108,11 +106,6 @@ public partial class Cell : ICommandExecuter
 			SetContent(contents);
 		}
 	}
-
-	public void OnCommandExecuted() { }
-
-	[OnDeserialized]
-	public void OnDeserialized(StreamingContext _) { }
 
 	// public void ClearContent()
 	// {

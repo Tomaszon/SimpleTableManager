@@ -26,7 +26,7 @@ public class Command
 		return new Command(reference, rawCommand, arguments);
 	}
 
-	public List<object?> Execute(IEnumerable<object> instances)
+	public List<object?> Execute(IEnumerable<ICommandExecuter> instances)
 	{
 		List<object?> results = new();
 
@@ -65,6 +65,11 @@ public class Command
 			try
 			{
 				results.Add(method.Invoke(instance, parsedArguments.ToArray()));
+
+				if (method.GetCustomAttribute<CommandReferenceAttribute>()!.StateModifier)
+				{
+					instance.InvokeStateModifierCommandExecutedEvent();
+				}
 			}
 			catch (Exception ex)
 			{

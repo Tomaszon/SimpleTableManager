@@ -444,7 +444,22 @@ public static class Renderer
 		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
-		Console.WriteLine($"Document: {metadata.Title}{(document.Saved ? " - Saved" : "")}");
+		Console.Write($"Document: {metadata.Title} - ");
+
+		if (document.IsSaved)
+		{
+			ChangeToOkLabelColors();
+
+			Console.WriteLine("Saved");
+		}
+		else
+		{
+			ChangeToNotOkLabelColors();
+
+			Console.WriteLine("Unsaved");
+		}
+
+		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 7);
 		Console.Write("Path:     ");
@@ -465,10 +480,20 @@ public static class Renderer
 		{
 			Console.WriteLine("-");
 		}
+		else if (Settings.Current.Autosave)
+		{
+			ChangeToOkLabelColors();
+
+			Console.WriteLine("On");
+		}
 		else
 		{
-			Console.WriteLine(Settings.Current.Autosave ? "On" : "Off");
+			ChangeToNotOkLabelColors();
+			
+			Console.WriteLine("Off");
 		}
+
+		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
 		Console.Write($"Table:    {table.Name}    ");
@@ -497,6 +522,7 @@ public static class Renderer
 		{
 			VerticalAlignment.Top => padding.Top,
 			VerticalAlignment.Center => GetStartIndexForCenteredContent(height, contents.Count(), padding.Top, padding.Bottom),
+
 			_ => height - contents.Count() - padding.Bottom
 		};
 
@@ -555,6 +581,18 @@ public static class Renderer
 	{
 		Console.ForegroundColor = Settings.Current.TextColor.Foreground;
 		Console.BackgroundColor = Settings.Current.TextColor.Background;
+	}
+
+	private static void ChangeToOkLabelColors()
+	{
+		Console.ForegroundColor = Settings.Current.OkLabelColor.Foreground;
+		Console.BackgroundColor = Settings.Current.OkLabelColor.Background;
+	}
+
+	private static void ChangeToNotOkLabelColors()
+	{
+		Console.ForegroundColor = Settings.Current.NotOkLabelColor.Foreground;
+		Console.BackgroundColor = Settings.Current.NotOkLabelColor.Background;
 	}
 
 	public static void ChangeToDefaultBorderColors()

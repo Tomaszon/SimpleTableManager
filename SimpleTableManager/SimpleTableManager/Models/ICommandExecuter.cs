@@ -4,9 +4,19 @@ namespace SimpleTableManager.Models;
 
 public interface ICommandExecuter
 {
-	event Action? CommandExecuted;
+	void InvokeStateModifierCommandExecutedEvent();
 
-	void OnCommandExecuted();
+	event Action? StateModifierCommandExecuted;
+}
 
-	// void OnDeserialized(StreamingContext context);
+public abstract class CommandExecuterBase : ICommandExecuter
+{
+	public event Action? StateModifierCommandExecuted;
+
+	public virtual void OnStateModifierCommandExecuted() { }
+
+	public void InvokeStateModifierCommandExecutedEvent()
+	{
+		StateModifierCommandExecuted?.Invoke();
+	}
 }

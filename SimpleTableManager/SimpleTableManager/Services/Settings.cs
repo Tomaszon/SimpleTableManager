@@ -16,6 +16,10 @@ public class Settings
 
 	public ConsoleColorSet NotAvailableContentColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
 
+	public ConsoleColorSet OkLabelColor { get; set; } = (ConsoleColor.Green, ConsoleColor.Black);
+
+	public ConsoleColorSet NotOkLabelColor { get; set; } = (ConsoleColor.Red, ConsoleColor.Black);
+
 	public bool ModernTableBorder { get; set; } = false;
 
 	public static void FromJson(string path)

@@ -155,7 +155,6 @@ public partial class SmartConsole
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
-			ConsoleKey.Spacebar => AutoHint(),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
@@ -175,25 +174,6 @@ public partial class SmartConsole
 			}
 			InsertStringToBuffer(nextKey);
 		}
-
-		return true;
-	}
-
-	private static bool AutoHint()
-	{
-		if (!_autoComplete.Cycling)
-		{
-			var nextKey = GetHint(default, out var keyCount, out _, out var pacl, out var pkl);
-
-			if (keyCount == 1)
-			{
-				MoveCursorToTheRight();
-				DeleteCharsToLeft(pacl + pkl);
-				InsertStringToBuffer(nextKey);
-			}
-		}
-
-		ManualInsertCharToBuffer(' ');
 
 		return true;
 	}

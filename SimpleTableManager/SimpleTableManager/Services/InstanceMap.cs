@@ -1,29 +1,30 @@
 ﻿using System.Runtime.CompilerServices;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services;
 
 public class InstanceMap
 {
-	Dictionary<Type, Func<IEnumerable<object>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<object>>>();
+	Dictionary<Type, Func<IEnumerable<ICommandExecuter>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<ICommandExecuter>>>();
 
 	public static InstanceMap Instance { get; } = new InstanceMap();
 
-	public void Add<T>(Func<IEnumerable<T>> func)
+	public void Add<T>(Func<IEnumerable<T>> func) where T : ICommandExecuter
 	{
-		ArrayMap.Add(typeof(T), () => func.Invoke().Cast<object>());
+		ArrayMap.Add(typeof(T), () => func.Invoke().Cast<ICommandExecuter>());
 	}
 
-	public void Add<T>(Func<T> func)
+	public void Add<T>(Func<T> func) where T : ICommandExecuter
 	{
-		ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<object>());
+		ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<ICommandExecuter>());
 	}
 
-	public void Remove<T>()
+	public void Remove<T>() where T : ICommandExecuter
 	{
 		ArrayMap.Remove(typeof(T));
 	}
 
-	public IEnumerable<object> GetInstances(string typeName, out Type type)
+	public IEnumerable<ICommandExecuter> GetInstances(string typeName, out Type type)
 	{
 		var result = ArrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
 
@@ -32,22 +33,23 @@ public class InstanceMap
 		return result.Value.Invoke();
 	}
 
-	public T? GetInstance<T>()
+	public T? GetInstance<T>() where T : ICommandExecuter
 	{
 		return GetInstances<T>().SingleOrDefault();
 	}
 
-	public IEnumerable<T?> GetInstances<T>()
+	public IEnumerable<T?> GetInstances<T>() where T : ICommandExecuter
 	{
 		return GetInstances(typeof(T)).Select(e => (T?)e);
 	}
 
-	public IEnumerable<object?> GetInstances(Type type)
+	public IEnumerable<ICommandExecuter?> GetInstances(Type type)
 	{
 		return ArrayMap[type].Invoke();
 	}
 
 	public bool TryGetInstances<T>([NotNullWhen(true)] out IEnumerable<T?>? instances)
+	where T : ICommandExecuter
 	{
 		try
 		{
@@ -63,7 +65,7 @@ public class InstanceMap
 		}
 	}
 
-	public bool TryGetInstances(string typeName, [NotNullWhen(true)] out IEnumerable<object?>? instances, [NotNullWhen(true)] out Type? type)
+	public bool TryGetInstances(string typeName, [NotNullWhen(true)] out IEnumerable<ICommandExecuter?>? instances, [NotNullWhen(true)] out Type? type)
 	{
 		try
 		{

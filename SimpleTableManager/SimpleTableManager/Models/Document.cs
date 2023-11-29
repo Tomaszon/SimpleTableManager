@@ -5,25 +5,24 @@ using SimpleTableManager.Services;
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Loading, saving and other document related commands")]
-public partial class Document : ICommandExecuter
+public partial class Document : CommandExecuterBase
 {
 	[JsonIgnore]
-	public bool Saved { get; set; }
+	public bool IsSaved { get; set; }
 
 	public Metadata Metadata { get; set; } = new Metadata();
 
 	public List<Table> Tables { get; set; } = new List<Table>();
-
-	public event Action? CommandExecuted;
 
 	public Document(Size tableSize)
 	{
 		Metadata = new Metadata();
 		Tables.Clear();
 		AddTable(tableSize);
+		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
-	public void OnCommandExecuted()
+	public override void OnStateModifierCommandExecuted()
 	{
 		if (Settings.Current.Autosave && Metadata.Path is not null)
 		{
@@ -31,15 +30,15 @@ public partial class Document : ICommandExecuter
 		}
 		else
 		{
-			Saved = false;
+			IsSaved = false;
 		}
 	}
 
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
-		Tables.ForEach(t => t.CommandExecuted += OnCommandExecuted);
-		CommandExecuted += OnCommandExecuted;
+		Tables.ForEach(t => t.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
+		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
 	public void Clear()

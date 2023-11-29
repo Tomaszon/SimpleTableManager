@@ -2,6 +2,7 @@
 	"refresh": "refresh",
 	"exit|quit": "exit",
 	"set": {
-		"rendering-mode": "setRenderingMode"
+		"rendering-mode": "setRenderingMode",
+		"autosave": "setAutosave"
 	}
 }

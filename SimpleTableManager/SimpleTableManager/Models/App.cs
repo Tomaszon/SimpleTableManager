@@ -1,13 +1,24 @@
+using System.Runtime.Serialization;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Basic application related commands")]
-public class App
+public class App : ICommandExecuter
 {
 	private static readonly string[] _options = new[] { "y", "n" };
 
-	[CommandReference]
+	public event Action? StateModifierCommandExecuted;
+
+	public void InvokeStateModifierCommandExecutedEvent() { }
+
+	[CommandReference(StateModifier = false)]
+	public static void SetAutosave(bool autosave)
+	{
+		Settings.Current.Autosave = autosave;
+	}
+
+	[CommandReference(StateModifier = false)]
 	public static void Exit()
 	{
 		var answer = SmartConsole.ReadLineWhile("Are you sure y/n", _options);
@@ -22,7 +33,7 @@ public class App
 		}
 	}
 
-	[CommandReference]
+	[CommandReference(StateModifier = false)]
 	[CommandInformation("Refreshes the view")]
 	public static void Refresh()
 	{
@@ -30,7 +41,7 @@ public class App
 		Console.Clear();
 	}
 
-	[CommandReference]
+	[CommandReference(StateModifier = false)]
 	public static void SetRenderingMode(RenderingMode renderingMode)
 	{
 		Renderer.RendererSettings.RenderingMode = renderingMode;

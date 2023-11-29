@@ -11,8 +11,6 @@ public partial class Cell
 		var args = Shared.SeparateNamedArguments<T>(arguments);
 
 		ContentFunction = FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
-
-		CommandExecuted?.Invoke();
 	}
 
 	[CommandReference]
@@ -25,8 +23,6 @@ public partial class Cell
 		ContentFunction = contents?.Length > 0 ?
 			ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", null, args.Item2) :
 			null;
-
-		CommandExecuted?.Invoke();
 	}
 
 	[CommandReference]

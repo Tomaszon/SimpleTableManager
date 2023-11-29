@@ -7,7 +7,7 @@ public class CommandReferenceAttribute : Attribute
 {
 	public string MethodReference { get; set; }
 
-	public bool QueryCommand { get; set; }
+	public bool StateModifier { get; set; } = true;
 
 	public CommandReferenceAttribute([CallerMemberName] string reference = null!)
 	{
