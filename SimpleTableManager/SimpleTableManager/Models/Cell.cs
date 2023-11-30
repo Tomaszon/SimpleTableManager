@@ -101,7 +101,7 @@ public partial class Cell : CommandExecuterBase
 	{
 		Table = table;
 
-		if (contents is not null)
+		if (contents?.Length > 0)
 		{
 			SetContent(contents);
 		}

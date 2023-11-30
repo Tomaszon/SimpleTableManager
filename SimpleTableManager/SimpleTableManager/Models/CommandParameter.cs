@@ -29,7 +29,7 @@ public class CommandParameter
 		var typeName = $"  type={Shared.FormatTypeName(Type)}";
 		var values = Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "";
 		var nullable = IsNullable ? "  nullable=true" : "";
-		var optional = IsOptional ? $"  default={Newtonsoft.Json.JsonConvert.SerializeObject(DefaultValue)}" : "";
+		var optional = IsOptional ? $"  default={JsonConvert.SerializeObject(DefaultValue)}" : "";
 		var format = ParseFormat is not null ? $"  {(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "";
 
 

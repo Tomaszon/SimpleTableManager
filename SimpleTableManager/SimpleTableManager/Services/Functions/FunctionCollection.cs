@@ -30,7 +30,10 @@ public static class FunctionCollection
 
 		var operatorPoperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
 
-		var op = Enum.Parse(operatorPoperty.PropertyType, functionOperator, true);
+		if(!Enum.TryParse(operatorPoperty.PropertyType, functionOperator, true, out var op))
+		{
+			throw new ArgumentException($"Operator '{functionOperator}' is not valid! Values={string.Join('|', Enum.GetNames(operatorPoperty.PropertyType))}");
+		}
 
 		operatorPoperty.SetValue(instance, op);
 

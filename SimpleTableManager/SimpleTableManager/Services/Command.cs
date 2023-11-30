@@ -38,7 +38,7 @@ public class Command
 			if (parameters.Count(p => !p.IsOptional) > Arguments?.Count ||
 				parameters.All(p => !p.IsArray) && parameters.Count < Arguments?.Count)
 			{
-				throw new ParameterCountException(RawCommand, Reference);
+				throw new ArgumentCountException(RawCommand, Reference);
 			}
 
 			List<object?> parsedArguments = new();

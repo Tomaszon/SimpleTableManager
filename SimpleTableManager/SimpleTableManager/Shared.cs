@@ -46,6 +46,7 @@ public static class Shared
 		return ex is FormatException ||
 			ex is InvalidOperationException ||
 			ex is TargetParameterCountException ||
-			ex is ArgumentException;
+			ex is ArgumentException ||
+			ex is ArgumentCountException;
 	}
 }

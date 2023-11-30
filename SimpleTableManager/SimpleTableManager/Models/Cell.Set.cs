@@ -16,13 +16,13 @@ public partial class Cell
 	[CommandReference]
 	public void SetContent(params string[] contents)
 	{
+		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
+
 		var args = Shared.SeparateNamedArguments<string>(contents);
 
 		args.Item1.TryGetValue(ArgumentName.Type, out var typeName);
 
-		ContentFunction = contents?.Length > 0 ?
-			ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", null, args.Item2) :
-			null;
+		ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", null, args.Item2);
 	}
 
 	[CommandReference]

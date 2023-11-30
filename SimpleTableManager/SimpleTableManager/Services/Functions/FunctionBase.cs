@@ -7,8 +7,8 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	//TODO make it work, but how? reference cell or fixed position? how to decide?
 	// public IEnumerable<TIn> ReferenceArguments =>
-		//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
-		// Enumerable.Empty<TIn>();
+	//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
+	// Enumerable.Empty<TIn>();
 
 	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
 
@@ -36,6 +36,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
 	}
 
+	//TODO revisit, consider solution like GetInType
 	public Type? GetReturnType()
 	{
 		try
@@ -60,6 +61,11 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		{
 			return ex.Message;
 		}
+	}
+
+	public Type GetInType()
+	{
+		return typeof(TIn);
 	}
 
 	public TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>

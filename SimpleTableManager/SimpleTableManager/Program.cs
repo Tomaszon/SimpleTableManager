@@ -156,7 +156,7 @@ public class Program
 
 				SmartConsole.ShowResults(results);
 			}
-			catch (ParameterCountException ex)
+			catch (ArgumentCountException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
 			}

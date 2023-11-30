@@ -6,7 +6,7 @@
 			"int": "setIntegerContentFunction",
 			"decimal": "setDecimalContentFunction",
 			"bool": "setBooleanContentFunction",
-			"char" : "setCharacterContentFunction",
+			"char": "setCharacterContentFunction",
 			"datetime": "setDateTimeContentFunction",
 			"date": "setDateContentFunction",
 			"time": "setTimeContentFunction"
@@ -16,13 +16,20 @@
 		"padding": "setPadding",
 		"horizontal-padding": "setHorizontalPadding",
 		"vertical-padding": "setVerticalPadding",
-		"type": "setType",
+		// "type": "setType",
 		"border-color": "setBorderColor",
 		"content-color": "setContentColor",
 		"layer-index": {
 			"min": "setLayerIndexToMin",
 			"max": "setLayerIndexToMax"
 		}
+	},
+	"reset": {
+		"content": "resetContent"
+	},
+	"modify": {
+		"content-function-operator": "modifyContentFunctionOperator",
+		"content-function-arguments": "modifyContentFunctionArguments"
 	},
 	"show": {
 		"details": "showDetails",
