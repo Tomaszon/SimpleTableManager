@@ -36,17 +36,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
 	}
 
-	//TODO revisit, consider solution like GetInType
-	public Type? GetReturnType()
+	public virtual Type GetOutType()
 	{
-		try
-		{
-			return Execute().First()!.GetType();
-		}
-		catch
-		{
-			return null;
-		}
+		return typeof(TOut);
 	}
 
 	public string GetError()

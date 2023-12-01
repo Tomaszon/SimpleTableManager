@@ -12,7 +12,7 @@ public interface IFunction
 
 	IEnumerable<string> ExecuteAndFormat();
 
-	Type? GetReturnType();
+	Type GetOutType();
 
 	TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
 

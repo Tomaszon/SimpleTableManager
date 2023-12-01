@@ -2,7 +2,13 @@
 
 public static class Shared
 {
-	public const string NAMED_ARG_SEPARATOR = ":=";
+	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
+	{
+		{ "int", "int32" },
+		{ "bool", "boolean" }
+	};
+
+	public static string NAMED_ARG_SEPARATOR { get; } = ":=";
 
 	public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments)
 	where TType : IParsable<TType>
@@ -38,7 +44,7 @@ public static class Shared
 
 	public static string FormatTypeName(Type type)
 	{
-		return type.IsGenericType ? $"{type.Name}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.Name;
+		return type.IsGenericType ? $"{type.GetFriendlyName()}({string.Join(',', type.GenericTypeArguments.Select(t => FormatTypeName(t)))})" : type.GetFriendlyName();
 	}
 
 	public static bool IsHandled(this Exception ex)

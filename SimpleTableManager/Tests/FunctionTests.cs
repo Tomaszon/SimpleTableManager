@@ -19,7 +19,7 @@ namespace SimpleTableManager.Tests
 
 		private static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
 		{
-			return FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), namedArguments, args.Cast<object>());
+			return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(), namedArguments, args.Cast<object>());
 		}
 
 		private static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)

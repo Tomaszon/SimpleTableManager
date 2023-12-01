@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager.Extensions;
+﻿using SimpleTableManager.Services;
+
+namespace SimpleTableManager.Extensions;
 
 public static class Extensions
 {
@@ -47,5 +49,12 @@ public static class Extensions
 	public static IEnumerable<T> Wrap<T>(this T value)
 	{
 		return new[] { value };
+	}
+
+	public static string GetFriendlyName(this Type type)
+	{
+		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p => p.Value.Equals(type.Name.ToLower()));
+
+		return pair.Key is null ? type.Name : pair.Key.First().ToString().ToUpper() + new string(pair.Key.Skip(1).ToArray());
 	}
 }

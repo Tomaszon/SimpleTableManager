@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using SimpleTableManager.Models;
+﻿using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services;
 

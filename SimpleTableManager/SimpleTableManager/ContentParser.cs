@@ -2,16 +2,9 @@ namespace SimpleTableManager.Services;
 
 public static class ContentParser
 {
-	public static Type GetTypeByName(string name, string? nameSpace = null)
+	public static Type GetTypeByFriendlyName(string name, string? nameSpace = null)
 	{
-		Dictionary<string, string> nameMap = new()
-		{
-			{ "int", "int32" },
-			{ "long", "int64" },
-			{ "bool", "boolean" }
-		};
-
-		var type = nameMap.TryGetValue(name.ToLower(), out var mapped) ? mapped : name.ToLower();
+		var type = Shared.FRIENDLY_TYPE_NAMES.TryGetValue(name.ToLower(), out var mapped) ? mapped : name.ToLower();
 
 		return Type.GetType($"{nameSpace ?? "system"}.{type}", true, true)!;
 	}
@@ -48,7 +41,7 @@ public static class ContentParser
 		{
 			var attribute = targetDataType.GetCustomAttribute<ParseFormatAttribute>();
 
-			throw new FormatException($"Can not format value '{value}' to type '{dataType.Name}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}", ex);
+			throw new FormatException($"Can not format value '{value}' to type '{dataType.GetFriendlyName()}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}", ex);
 		}
 	}
 
@@ -92,7 +85,7 @@ public static class ContentParser
 			return value;
 		}
 
-		var type = GetTypeByName(dataTypeName);
+		var type = GetTypeByFriendlyName(dataTypeName);
 
 		return ParseStringValue(type, value);
 	}

@@ -34,7 +34,6 @@
 		},
 		"cell": {
 			"content": "setCellContent"
-			// "type": "setCellType"
 		},
 		"view": "setViewOptions",
 		"view-columns": "setViewOptionsColumns",

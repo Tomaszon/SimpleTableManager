@@ -14,7 +14,7 @@ public static class FunctionCollection
 	{
 		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
 
-		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == ContentParser.GetTypeByName(typeName));
+		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == ContentParser.GetTypeByFriendlyName(typeName));
 
 		var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
 

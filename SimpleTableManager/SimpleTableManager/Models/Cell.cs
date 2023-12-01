@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models;
@@ -44,9 +43,6 @@ public partial class Cell : CommandExecuterBase
 				Shared.Max(contentSize.Height + 2 + ContentPadding.Top + ContentPadding.Bottom, GivenSize.Height + 2)
 			);
 	}
-
-	[JsonIgnore]
-	public Type? ContentType => ContentFunction?.GetReturnType();
 
 	public IEnumerable<object> GetContents()
 	{

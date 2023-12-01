@@ -1,3 +1,4 @@
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument(ArgumentName.Separator, " ")]
@@ -26,6 +27,17 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 			StringFunctionOperator.Blow => Arguments.SelectMany(p => p.ToArray()).Cast<object>(),
 
 			_ => throw GetInvalidOperatorException()
+		};
+	}
+
+	public override Type GetOutType()
+	{
+		return Operator switch
+		{
+			StringFunctionOperator.Len => typeof(int),
+			StringFunctionOperator.Blow => typeof(char),
+
+			_ => typeof(string)
 		};
 	}
 

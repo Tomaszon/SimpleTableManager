@@ -10,7 +10,7 @@ public partial class Cell
 	{
 		var args = Shared.SeparateNamedArguments<T>(arguments);
 
-		ContentFunction = FunctionCollection.GetFunction(typeof(T).Name, functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
+		ContentFunction = FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
 	}
 
 	[CommandReference]
@@ -71,6 +71,25 @@ public partial class Cell
 	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, params string[] arguments)
 	{
 		SetFunction<TimeOnly>(functionOperator, arguments);
+	}
+
+	[CommandReference]
+	public void SetContentFunctionOperator(string @operator)
+	{
+		ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
+
+		//TODO find a way to list possible values
+		ContentFunction = FunctionCollection.GetFunction(ContentFunction.GetInType().Name, @operator, ContentFunction.NamedArguments, ContentFunction.Arguments);
+	}
+
+	[CommandReference]
+	public void SetContentFunctionArguments(params string[] arguments)
+	{
+		ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
+
+		(var namedArgs, var args) = Shared.SeparateNamedArguments<string>(arguments);
+
+		ContentFunction = FunctionCollection.GetFunction(ContentFunction.GetInType().Name, ContentFunction.Operator.ToString(), namedArgs.Count > 0 ? namedArgs : ContentFunction.NamedArguments, args.Any() ? args.Cast<object>() : ContentFunction.Arguments);
 	}
 
 	[CommandReference]

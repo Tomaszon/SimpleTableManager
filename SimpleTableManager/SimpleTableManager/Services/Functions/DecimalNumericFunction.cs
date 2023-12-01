@@ -18,4 +18,15 @@ public class DecimalNumericFunction : NumericFunctionBase<decimal, object>
 			_ => base.Execute()
 		};
 	}
+
+	public override Type GetOutType()
+	{
+		return Operator switch
+		{
+			NumericFunctionOperator.Floor => typeof(int),
+			NumericFunctionOperator.Ceiling => typeof(int),
+
+			_ => typeof(decimal)
+		};
+	}
 }

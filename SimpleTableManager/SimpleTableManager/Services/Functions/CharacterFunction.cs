@@ -1,3 +1,4 @@
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument(ArgumentName.Separator, "")]
@@ -20,6 +21,16 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, o
 			CharacterFunctionOperator.Repeat => Arguments.Select(c => new string(c, count)),
 
 			_ => throw GetInvalidOperatorException()
+		};
+	}
+
+	public override Type GetOutType()
+	{
+		return Operator switch
+		{
+			CharacterFunctionOperator.Const => typeof(char),
+
+			_ => typeof(string)
 		};
 	}
 }

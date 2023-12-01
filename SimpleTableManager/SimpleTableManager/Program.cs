@@ -56,12 +56,6 @@ public class Program
 
 		// Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result, Formatting.Indented));
 
-		// document.GetActiveTable()[1, 0].ContentType = typeof(decimal);
-		// document.GetActiveTable()[1, 0].SetContent(5, 2);
-
-		// document.GetActiveTable()[2, 0].ContentType = typeof(decimal);
-		// document.GetActiveTable()[2, 0].SetContent(4);
-
 		// var cell11 = document.GetActiveTable()[1, 1];
 		// cell11.SetContentColor(ConsoleColor.Red, ConsoleColor.Yellow);
 		// cell11.SetBorderColor(ConsoleColor.Red, ConsoleColor.Yellow);
@@ -78,12 +72,6 @@ public class Program
 		// cell32.SetBorderColor(ConsoleColor.Magenta);
 
 		// document.GetActiveTable()[4, 0].SetContent(ObjectFunctionOperator.Const, "szilva");
-
-		// document.GetActiveTable()[5, 0].ContentType = typeof(decimal);
-		// document.GetActiveTable()[5, 0].ContentFunction = FunctionCollection.GetFunction(StringFunctionOperator.Len, new[]
-		// {
-		// 	new ObjectFunction(new Position(4, 0))
-		// });
 
 		// document.GetActiveTable()[6, 0].SetContent("const", "alma", "körte");
 

@@ -1,3 +1,5 @@
+using SimpleTableManager.Services;
+
 namespace SimpleTableManager.Models;
 
 public partial class Cell
@@ -12,11 +14,8 @@ public partial class Cell
 			BorderColor = BorderColor.ToString(),
 			Content = new
 			{
-				Type = ContentType?.Name ?? "None",
 				Function = ContentFunction is not null ?
 					$"{ContentFunction.GetType().Name}:{ContentFunction?.Operator}" : null,
-				Error = ContentFunction is not null ? ContentFunction.GetError() : "None",
-				Value = GetContents(),
 				Padding = ContentPadding.ToString(),
 				Alignment = ContentAlignment.ToString(),
 				Color = ContentColor.ToString(),
@@ -30,11 +29,11 @@ public partial class Cell
 	{
 		return ContentFunction is null ? "None" : new
 		{
-			Type = ContentFunction.GetType().Name,
+			Type = ContentFunction.GetType(),
 			ContentFunction.Operator,
 			ContentFunction.NamedArguments,
 			ContentFunction.Arguments,
-			ReturnType = ContentFunction.GetReturnType()?.Name ?? "None",
+			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()
 		};
 	}
