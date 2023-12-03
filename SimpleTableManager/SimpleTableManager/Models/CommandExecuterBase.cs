@@ -1,8 +1,6 @@
-using System.ComponentModel;
-
 namespace SimpleTableManager.Models;
 
-public abstract class CommandExecuterBase : ICommandExecuter
+public abstract class CommandExecuterBase : IStateModifierCommandExecuter
 {
 	public event Action? StateModifierCommandExecuted;
 

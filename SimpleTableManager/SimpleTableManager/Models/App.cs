@@ -1,16 +1,11 @@
-using System.Runtime.Serialization;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
 
 [CommandInformation("Basic application related commands")]
-public class App : ICommandExecuter
+public class App : CommandExecuterBase
 {
 	private static readonly string[] _options = new[] { "y", "n" };
-
-	public event Action? StateModifierCommandExecuted;
-
-	public void InvokeStateModifierCommandExecutedEvent() { }
 
 	[CommandReference(StateModifier = false)]
 	public static void SetAutosave(bool autosave)

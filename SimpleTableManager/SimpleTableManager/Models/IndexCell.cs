@@ -17,12 +17,12 @@ public class IndexCell : Cell
 
 	public void AppendHigherEllipsis(int width)
 	{
-		SetContent($"{GetContents().ElementAt(0)} {HigherArrow} {width - 1}");
+		SetContent($"{GetFormattedContents().ElementAt(0)} {HigherArrow} {width - 1}");
 	}
 
 	public void AppendLowerEllipsis()
 	{
-		SetContent($"0 {LowerArrow} {GetContents().ElementAt(0)}");
+		SetContent($"0 {LowerArrow} {GetFormattedContents().ElementAt(0)}");
 	}
 
 	public void RemoveEllipses()

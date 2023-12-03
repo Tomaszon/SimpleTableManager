@@ -87,7 +87,7 @@ public static class Renderer
 
 		DrawCellContent(placeHolderCell, placeHolderCellPosition, size, true, false);
 
-		Task.Delay(250).Wait();
+		Task.Delay(500).Wait();
 	}
 
 	private static string[] GetTmpBackground(Size size)

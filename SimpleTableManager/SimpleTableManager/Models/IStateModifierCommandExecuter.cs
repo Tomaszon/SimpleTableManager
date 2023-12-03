@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Models;
 
-public interface ICommandExecuter
+public interface IStateModifierCommandExecuter
 {
 	void InvokeStateModifierCommandExecutedEvent();
 

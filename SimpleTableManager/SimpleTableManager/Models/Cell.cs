@@ -1,4 +1,6 @@
-﻿using SimpleTableManager.Services;
+﻿using System.Runtime.Serialization;
+
+using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models;
@@ -44,29 +46,27 @@ public partial class Cell : CommandExecuterBase
 			);
 	}
 
-	public IEnumerable<object> GetContents()
+	public IEnumerable<string> GetFormattedContents()
 	{
-		try
+		if (_cachedFormattedContent.Any())
 		{
-			return ContentFunction?.Execute() ?? Enumerable.Empty<object>();//Table.ExecuteCellFunctionWithParameters
+			return _cachedFormattedContent;
 		}
-		catch
+		else
 		{
-			return new object[] { "Content function error" };
+			try
+			{
+				return _cachedFormattedContent = ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
+			}
+			catch
+			{
+				return _cachedFormattedContent = new string[] { "Content function error" };
+			}
 		}
 	}
 
-	public IEnumerable<string> GetFormattedContents()
-	{
-		try
-		{
-			return ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
-		}
-		catch
-		{
-			return new string[] { "Content format error" };
-		}
-	}
+	[JsonIgnore]
+	private IEnumerable<string> _cachedFormattedContent = Enumerable.Empty<string>();
 
 	public IFunction? ContentFunction { get; set; }
 
@@ -101,25 +101,18 @@ public partial class Cell : CommandExecuterBase
 		{
 			SetContent(contents);
 		}
+
+		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
-	// public void ClearContent()
-	// {
-	// 	ContentFunction2 = ObjectFunction.Empty();
-	// }
+	[OnDeserialized]
+	public void OnDeserialized(StreamingContext _)
+	{
+		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+	}
 
-	// public void AddArgumentFirst(params object[] contents)
-	// {
-	// 	ContentFunction.InsertArguments(0, contents);
-	// }
-
-	// public void AddArgumentLast(params object[] contents)
-	// {
-	// 	ContentFunction.AddArguments(contents);
-	// }
-
-	// public void RemoveLastArgument()
-	// {
-	// 	ContentFunction.RemoveLastArgument();
-	// }
+	public override void OnStateModifierCommandExecuted()
+	{
+		_cachedFormattedContent = Enumerable.Empty<string>();
+	}
 }

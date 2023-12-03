@@ -26,7 +26,7 @@ public class Command
 		return new Command(reference, rawCommand, arguments);
 	}
 
-	public List<object?> Execute(IEnumerable<ICommandExecuter> instances)
+	public List<object?> Execute(IEnumerable<IStateModifierCommandExecuter> instances)
 	{
 		List<object?> results = new();
 
