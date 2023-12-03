@@ -5,8 +5,13 @@ namespace SimpleTableManager.Models;
 public partial class Table
 {
 	[CommandReference]
-	public void SelectCell(Position position)
+	public void SelectCell(Position position, bool deselectCurrent = false)
 	{
+		if(deselectCurrent)
+		{
+			DeselectAll();
+		}
+
 		this[position].IsSelected = true;
 	}
 
@@ -19,20 +24,35 @@ public partial class Table
 	}
 
 	[CommandReference]
-	public void SelectCellRange(Position positionFrom, Position positionTo)
+	public void SelectCellRange(Position positionFrom, Position positionTo, bool deselectCurrent = false)
 	{
+		if(deselectCurrent)
+		{
+			DeselectAll();
+		}
+
 		this[positionFrom, positionTo].ForEach(c => c.IsSelected = true);
 	}
 
 	[CommandReference]
-	public void SelectColumn(int x)
+	public void SelectColumn(int x, bool deselectCurrent = false)
 	{
+		if(deselectCurrent)
+		{
+			DeselectAll();
+		}
+
 		Columns[x].ForEach(c => c.IsSelected = true);
 	}
 
 	[CommandReference]
-	public void SelectRow(int y)
+	public void SelectRow(int y, bool deselectCurrent = false)
 	{
+		if(deselectCurrent)
+		{
+			DeselectAll();
+		}
+
 		Rows[y].ForEach(c => c.IsSelected = true);
 	}
 

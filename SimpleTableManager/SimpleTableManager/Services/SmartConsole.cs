@@ -146,8 +146,8 @@ public partial class SmartConsole
 			ConsoleKey.Enter => AcceptCommand(),
 
 			ConsoleKey.Tab => IterateHint(k.Modifiers),
-			ConsoleKey.Backspace => ManualDeleteCharToLeft(),
-			ConsoleKey.Delete => ManualDeleteCharToRight(),
+			ConsoleKey.Backspace => DeleteCharsToLeft(k.Modifiers),
+			ConsoleKey.Delete => DeleteCharsToRight(k.Modifiers),
 			ConsoleKey.UpArrow => GetPreviousHistoryItem(),
 			ConsoleKey.DownArrow => GetNextHistoryItem(),
 			ConsoleKey.RightArrow => MoveCursorRight(k.Modifiers),
@@ -340,11 +340,21 @@ public partial class SmartConsole
 		return true;
 	}
 
-	private static bool ManualDeleteCharToLeft()
+	private static bool DeleteCharsToLeft(ConsoleModifiers modifiers)
 	{
 		_autoComplete.Reset();
 
-		return DeleteCharToLeft();
+		DeleteCharToLeft();
+
+		if (modifiers == ConsoleModifiers.Control)
+		{
+			while (!IsLeftWordBorder())
+			{
+				DeleteCharToLeft();
+			}
+		}
+
+		return true;
 	}
 
 	private static bool DeleteCharToRight()
@@ -364,11 +374,21 @@ public partial class SmartConsole
 		return true;
 	}
 
-	private static bool ManualDeleteCharToRight()
+	private static bool DeleteCharsToRight(ConsoleModifiers modifiers)
 	{
 		_autoComplete.Reset();
 
-		return DeleteCharToRight();
+		DeleteCharToRight();
+
+		if (modifiers == ConsoleModifiers.Control)
+		{
+			while (!IsRightWordBorder())
+			{
+				DeleteCharToRight();
+			}
+		}
+
+		return true;
 	}
 
 	private static bool MoveCursorLeft(ConsoleModifiers modifiers = default)
