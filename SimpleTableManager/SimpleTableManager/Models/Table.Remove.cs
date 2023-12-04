@@ -1,6 +1,4 @@
-﻿using SimpleTableManager.Services;
-
-namespace SimpleTableManager.Models;
+﻿namespace SimpleTableManager.Models;
 
 public partial class Table
 {
@@ -13,12 +11,12 @@ public partial class Table
 		Content.RemoveRange(index * Size.Width, Size.Width);
 		Sider.RemoveAt(index);
 
-		if (ViewOptions.EndPosition.Y == Size.Height - 1)
+		Size.Height--;
+
+		if (ViewOptions.EndPosition.Y == Size.Height)
 		{
 			ViewOptions.DecreaseHeight();
 		}
-
-		Size.Height--;
 	}
 
 	[CommandReference]
@@ -45,12 +43,12 @@ public partial class Table
 		}
 		Header.RemoveAt(index);
 
-		if (ViewOptions.EndPosition.X == Size.Width - 1)
+		Size.Width--;
+
+		if (ViewOptions.EndPosition.X == Size.Width)
 		{
 			ViewOptions.DecreaseWidth();
 		}
-
-		Size.Width--;
 	}
 
 	[CommandReference]

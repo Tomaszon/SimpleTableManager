@@ -9,19 +9,19 @@ public partial class Table
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
-		Sider.Add(new IndexCell(this, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
+		Sider.Add(new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
 
 		for (int x = 0; x < Size.Width; x++)
 		{
 			AddNewContentCellAt(index * Size.Width + x);
 		}
 
-		if (ViewOptions.EndPosition.Y == Size.Height - 1)
+		Size.Height++;
+
+		if (ViewOptions.EndPosition.Y == Size.Height - 2)
 		{
 			ViewOptions.IncreaseHeight();
 		}
-
-		Size.Height++;
 	}
 
 	[CommandReference]
@@ -49,19 +49,19 @@ public partial class Table
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
-		Header.Add(new IndexCell(this, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+		Header.Add(new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
 		for (int y = 0; y < Size.Height; y++)
 		{
 			AddNewContentCellAt(Size.Width * y + y + index);
 		}
 
-		if (ViewOptions.EndPosition.X == Size.Width - 1)
+		Size.Width++;
+
+		if (ViewOptions.EndPosition.X == Size.Width - 2)
 		{
 			ViewOptions.IncreaseWidth();
 		}
-
-		Size.Width++;
 	}
 
 	[CommandReference]

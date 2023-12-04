@@ -2,34 +2,68 @@
 
 public class IndexCell : Cell
 {
+	public IndexCellType IndexCellType { get; set; }
+
 	public char LowerArrow { get; set; }
 
 	public char HigherArrow { get; set; }
 
 	public int Index { get; set; }
 
-	public IndexCell(Table table, int index, char lowerArrow, char higherArrow) : base(table, index.ToString())
+	public IndexCell(Table table, IndexCellType indexCellType, int index, char lowerArrow, char higherArrow) : base(table, index.ToString())
 	{
+		IndexCellType = indexCellType;
 		Index = index;
 		LowerArrow = lowerArrow;
 		HigherArrow = higherArrow;
+
+		table.ViewChanged += OnViewChanged;
 	}
 
-	public void AppendHigherEllipsis(int width)
+	public void OnViewChanged(int? firstHeaderIndex, int? lastHeaderIndex, int? firstSiderIndex, int? lastSiderIndex)
 	{
-		SetContent($"{GetFormattedContents().ElementAt(0)} {HigherArrow} {width - 1}");
+		if (IndexCellType == IndexCellType.Header)
+		{
+			OnViewChangedCore(firstHeaderIndex, lastHeaderIndex, Table.Size.Width - 1);
+		}
+		else
+		{
+			OnViewChangedCore(firstSiderIndex, lastSiderIndex, Table.Size.Height - 1);
+		}
+	}
+
+	private void OnViewChangedCore(int? first, int? last, int maxIndex)
+	{
+		RemoveEllipses();
+
+		if (first is not null && Index == first && Index > 0)
+		{
+			AppendLowerEllipsis();
+		}
+		if (last is not null && Index == last && Index < maxIndex)
+		{
+			AppendHigherEllipsis(maxIndex);
+		}
+	}
+
+	public void AppendHigherEllipsis(int lastIndex)
+	{
+		SetContent($"{GetFormattedContents().ElementAt(0)} {HigherArrow} {lastIndex}");
+
+		OnStateModifierCommandExecuted();
 	}
 
 	public void AppendLowerEllipsis()
 	{
 		SetContent($"0 {LowerArrow} {GetFormattedContents().ElementAt(0)}");
+
+		OnStateModifierCommandExecuted();
 	}
 
 	public void RemoveEllipses()
 	{
-		if (ContentFunction?.Execute().First().ToString() != Index.ToString())
-		{
-			SetContent(Index.ToString());
-		}
+		SetContent(Index.ToString());
+
+		OnStateModifierCommandExecuted();
 	}
 }

@@ -62,18 +62,24 @@ public partial class Table
 
 		ViewOptions.StartPosition = from;
 		ViewOptions.EndPosition = to;
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandReference]
 	public void SetViewOptionsColumns(int x1, int x2)
 	{
 		SetViewOptions(new Position(x1, ViewOptions.StartPosition.Y), new Position(x2, ViewOptions.EndPosition.Y));
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandReference]
 	public void SetViewOptionsRows(int y1, int y2)
 	{
 		SetViewOptions(new Position(ViewOptions.StartPosition.X, y1), new Position(ViewOptions.EndPosition.X, y2));
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandReference]

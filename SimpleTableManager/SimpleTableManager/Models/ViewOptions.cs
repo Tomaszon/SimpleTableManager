@@ -2,6 +2,8 @@
 
 public class ViewOptions
 {
+	public event Action? ViewChanged;
+
 	public Position StartPosition { get; set; }
 
 	public Position EndPosition { get; set; }
@@ -15,33 +17,36 @@ public class ViewOptions
 		EndPosition = new Position(x2, y2);
 	}
 
+	public void InvokeViewChangedEvent()
+	{
+		ViewChanged?.Invoke();
+	}
+
 	public void IncreaseWidth()
 	{
 		EndPosition.X++;
+
+		ViewChanged?.Invoke();
 	}
 
 	public void DecreaseWidth()
 	{
-		if (EndPosition.X < 1)
-		{
-			throw new InvalidOperationException("Can not decrease view width under 1 column!\n    Increase window width!");
-		}
-
 		EndPosition.X = EndPosition.X - 1;
+
+		ViewChanged?.Invoke();
 	}
 
 	public void IncreaseHeight()
 	{
 		EndPosition.Y++;
+
+		ViewChanged?.Invoke();
 	}
 
 	public void DecreaseHeight()
 	{
-		if (EndPosition.Y < 1)
-		{
-			throw new InvalidOperationException("Can not decrease view height under 1 row!\n    Increase window heigh!");
-		}
-
 		EndPosition.Y = EndPosition.Y - 1;
+
+		ViewChanged?.Invoke();
 	}
 }

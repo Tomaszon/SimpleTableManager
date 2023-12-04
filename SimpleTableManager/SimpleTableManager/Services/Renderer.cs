@@ -13,61 +13,59 @@ public static class Renderer
 	{
 		var table = document.GetActiveTable(out var tableIndex);
 
-		if (table is not null)
-		{
-			ChangeToTextColors();
+		ChangeToTextColors();
 
-			var tableSize = MaximizeTableView(table);
+		var tableSize = ShrinkTableViewToConsoleSize(table);
 
-			var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
+		var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
-			RenderDocumentInfos(document, table, tableOffset, tableIndex, document.Tables.Count);
+		RenderDocumentInfos(document, table, tableOffset, tableIndex, document.Tables.Count);
 
-			RenderTempCell(table, tableOffset, tableSize);
+		RenderTempCell(table, tableOffset, tableSize);
 
-			RenderContent(table, tableOffset);
+		RenderContent(table, tableOffset);
 
-			RenderHeader(table, tableOffset);
+		RenderHeader(table, tableOffset);
 
-			RenderSider(table, tableOffset);
+		RenderSider(table, tableOffset);
 
-			RenderCornerCell(table, tableOffset);
+		RenderCornerCell(table, tableOffset);
 
-			Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
+		Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
 
-			ChangeToTextColors();
-		}
+		ChangeToTextColors();
 	}
 
-	private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell? firstCell, IndexCell? lastCell, int size)
-	{
-		collection.ForEach(s => s.RemoveEllipses());
+	// private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell? firstCell, IndexCell? lastCell, int size)
+	// {
+	// 	collection.ForEach(s => s.RemoveEllipses());
 
-		if (firstCell is not null && firstCell.Index > 0)
-		{
-			firstCell.AppendLowerEllipsis();
-		}
-		if (lastCell is not null && lastCell.Index < size - 1)
-		{
-			lastCell.AppendHigherEllipsis(size);
-		}
-	}
+	// 	if (firstCell is not null && firstCell.Index > 0)
+	// 	{
+	// 		firstCell.AppendLowerEllipsis();
+	// 	}
+	// 	if (lastCell is not null && lastCell.Index < size - 1)
+	// 	{
+	// 		lastCell.AppendHigherEllipsis(size);
+	// 	}
+	// }
 
-	private static Size MaximizeTableView(Table table)
+	private static Size ShrinkTableViewToConsoleSize(Table table)
 	{
 		while (true)
 		{
-			SetEllipsesToIndexCells(table.Sider, table.GetFirstVisibleSiderInView(), table.GetLastVisibleSiderInView(), table.Size.Height);
+			// SetEllipsesToIndexCells(table.Sider, table.GetFirstVisibleSiderInView(), table.GetLastVisibleSiderInView(), table.Size.Height);
 
-			SetEllipsesToIndexCells(table.Header, table.GetFirstVisibleHeaderInView(), table.GetLastVisibleHeaderInView(), table.Size.Width);
+			// SetEllipsesToIndexCells(table.Header, table.GetFirstVisibleHeaderInView(), table.GetLastVisibleHeaderInView(), table.Size.Width);
 
 			var size = table.GetTableSize();
 
-			if (Console.WindowWidth - size.Width < 0)
+			//TODO resolve in a better way, -4 is for the arrow and an index (if it will be needed)
+			if (Console.WindowWidth - size.Width - 4 < 0)
 			{
 				table.ViewOptions.DecreaseWidth();
 			}
-			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - _FREE_LINES_ABOW_TABLE - size.Height < 0)
+			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - _FREE_LINES_ABOW_TABLE - size.Height - 4 < 0)
 			{
 				table.ViewOptions.DecreaseHeight();
 			}
@@ -452,7 +450,7 @@ public static class Renderer
 				ChangeToOkLabelColors();
 				Console.WriteLine("Saved");
 				break;
-				
+
 			case false:
 				ChangeToNotOkLabelColors();
 				Console.WriteLine("Unsaved");

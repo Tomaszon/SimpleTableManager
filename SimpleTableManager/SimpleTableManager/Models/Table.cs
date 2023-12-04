@@ -7,6 +7,8 @@ namespace SimpleTableManager.Models;
 [JsonObject(IsReference = true)]
 public partial class Table : CommandExecuterBase
 {
+	public event Action<int?, int?, int?, int?>? ViewChanged;
+
 	public string Name { get; set; } = default!;
 
 	public Size Size { get; set; } = new Size(0, 0);
@@ -63,16 +65,31 @@ public partial class Table : CommandExecuterBase
 		Shared.IndexArray(rowCount).ForEach(y => AddRowLast());
 
 		ResetViewOptions();
+
+		ViewOptions.ViewChanged += OnViewChanged;
 	}
+
 	public override void OnStateModifierCommandExecuted()
 	{
 		InvokeStateModifierCommandExecutedEvent();
+	}
+
+	public void OnViewChanged()
+	{
+		var fhi = GetFirstVisibleHeaderInView()?.Index;
+		var lhi = GetLastVisibleHeaderInView()?.Index;
+		var fsi = GetFirstVisibleSiderInView()?.Index;
+		var lsi = GetLastVisibleSiderInView()?.Index;
+
+		ViewChanged?.Invoke(fhi, lhi, fsi, lsi);
 	}
 
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
 		Content.ForEach(c => c.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
+
+		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
 	private void AddNewContentCellAt(int index)
