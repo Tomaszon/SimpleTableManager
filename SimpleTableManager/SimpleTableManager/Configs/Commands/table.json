@@ -61,15 +61,26 @@
 		"view": "resetViewOptions"
 	},
 	"hide": {
-		"column": "hideColumn",
-		"row": "hideRow"
+		"row": {
+			"at": "hideRowAt"
+		},
+		"column": {
+			"at": "hideColumnAt"
+		}
 	},
 	"show": {
-		"column": "showColumn",
-		"row": "showRow",
+		"row": {
+			"at": "showRowAt",
+			"all": "showAllRows"
+		},
+		"column": {
+			"at": "showColumnAt",
+			"all": "showAllColumns"
+		},
 		"cell": {
 			"details|info": "showCellDetails",
-			"function": "showCellContentFunction"
+			"function": "showCellContentFunction",
+			"all": "showAllCells"
 		}
 	}
 }

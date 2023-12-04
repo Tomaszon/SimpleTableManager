@@ -36,28 +36,10 @@ public static class Renderer
 		ChangeToTextColors();
 	}
 
-	// private static void SetEllipsesToIndexCells(List<IndexCell> collection, IndexCell? firstCell, IndexCell? lastCell, int size)
-	// {
-	// 	collection.ForEach(s => s.RemoveEllipses());
-
-	// 	if (firstCell is not null && firstCell.Index > 0)
-	// 	{
-	// 		firstCell.AppendLowerEllipsis();
-	// 	}
-	// 	if (lastCell is not null && lastCell.Index < size - 1)
-	// 	{
-	// 		lastCell.AppendHigherEllipsis(size);
-	// 	}
-	// }
-
 	private static Size ShrinkTableViewToConsoleSize(Table table)
 	{
 		while (true)
 		{
-			// SetEllipsesToIndexCells(table.Sider, table.GetFirstVisibleSiderInView(), table.GetLastVisibleSiderInView(), table.Size.Height);
-
-			// SetEllipsesToIndexCells(table.Header, table.GetFirstVisibleHeaderInView(), table.GetLastVisibleHeaderInView(), table.Size.Width);
-
 			var size = table.GetTableSize();
 
 			//TODO resolve in a better way, -4 is for the arrow and an index (if it will be needed)

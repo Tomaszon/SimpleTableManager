@@ -30,6 +30,8 @@ public class IndexCell : Cell
 		{
 			OnViewChangedCore(firstSiderIndex, lastSiderIndex, Table.Size.Height - 1);
 		}
+
+		OnStateModifierCommandExecuted();
 	}
 
 	private void OnViewChangedCore(int? first, int? last, int maxIndex)
@@ -48,22 +50,20 @@ public class IndexCell : Cell
 
 	public void AppendHigherEllipsis(int lastIndex)
 	{
-		SetContent($"{GetFormattedContents().ElementAt(0)} {HigherArrow} {lastIndex}");
+		var content = ContentFunction!.ExecuteAndFormat().First();
 
-		OnStateModifierCommandExecuted();
+		SetContent($"{content} {HigherArrow} {lastIndex}");
 	}
 
 	public void AppendLowerEllipsis()
 	{
-		SetContent($"0 {LowerArrow} {GetFormattedContents().ElementAt(0)}");
+		var content = ContentFunction!.ExecuteAndFormat().First();
 
-		OnStateModifierCommandExecuted();
+		SetContent($"0 {LowerArrow} {content}");
 	}
 
 	public void RemoveEllipses()
 	{
 		SetContent(Index.ToString());
-
-		OnStateModifierCommandExecuted();
 	}
 }

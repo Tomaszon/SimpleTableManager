@@ -13,8 +13,16 @@ public class ViewOptions
 
 	public ViewOptions(int x1, int y1, int x2, int y2)
 	{
+		Set(x1, y1, x2, y2);
+	}
+
+	[MemberNotNull(nameof(StartPosition)), MemberNotNull(nameof(EndPosition))]
+	public void Set(int x1, int y1, int x2, int y2)
+	{
 		StartPosition = new Position(x1, y1);
-		EndPosition = new Position(x2, y2);
+		EndPosition = new Position(x2, y2);		
+		
+		ViewChanged?.Invoke();
 	}
 
 	public void InvokeViewChangedEvent()
