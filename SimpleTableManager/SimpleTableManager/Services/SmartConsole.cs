@@ -1,3 +1,4 @@
+using System.Formats.Asn1;
 using System.Text;
 
 using SimpleTableManager.Models;
@@ -438,17 +439,17 @@ public partial class SmartConsole
 	private static bool IsRightWordBorder()
 	{
 		var charAtIndex = CharAtIndex();
-		var charBeforeIndex = CharAtIndex(-1);
+		var charAfterIndex = CharAtIndex(1);
 
-		return !CanCursorMoveRight() || charAtIndex == ' ' && charBeforeIndex != ' ';
+		return !CanCursorMoveRight() || charAtIndex == ' ' && charAfterIndex != ' ';
 	}
 
 	private static bool IsLeftWordBorder()
-	{
-		var charAtIndex = CharAtIndex();
+	{ 
 		var charBeforeIndex = CharAtIndex(-1);
+		var charBeforeThat = CharAtIndex(-2);
 
-		return !CanCursorMoveLeft() || charAtIndex != ' ' && charBeforeIndex == ' ';
+		return !CanCursorMoveLeft() || charBeforeIndex == ' ' && charBeforeThat != ' ';
 	}
 
 	private static bool CanCursorMoveLeft()
