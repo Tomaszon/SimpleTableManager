@@ -25,6 +25,8 @@ public partial class SmartConsole
 
 	public static void Render(Document document)
 	{
+		Console.Clear();
+
 		Renderer.Render(document);
 
 		if (_lastHelp is { })
@@ -129,18 +131,29 @@ public partial class SmartConsole
 	{
 		ClearBuffer();
 
-		while (ReadInputChar()) ;
+		bool saveToHistory;
+
+		while (ReadInputChar(out saveToHistory)) ;
 
 		var command = _buffer.ToString().Trim();
 
-		_commandHistory.Add(command);
+		if (saveToHistory)
+		{
+			_commandHistory.Add(command);
+		}
+		else
+		{
+			_commandHistory.ResetCycle();
+		}
 
 		return command;
 	}
 
-	private static bool ReadInputChar()
+	private static bool ReadInputChar(out bool saveToHistory)
 	{
 		var k = Console.ReadKey(true);
+
+		saveToHistory = true;
 
 		return k.Key switch
 		{
@@ -156,9 +169,21 @@ public partial class SmartConsole
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
+			ConsoleKey.F5 => RefreshApp(out saveToHistory),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
+	}
+
+	private static bool RefreshApp(out bool saveToHistory)
+	{
+		ClearBuffer();
+
+		"app refresh".ForEach(c => ManualInsertCharToBuffer(c));
+
+		saveToHistory = false;
+
+		return AcceptCommand();
 	}
 
 	private static bool IterateHint(ConsoleModifiers modifiers)
@@ -445,7 +470,7 @@ public partial class SmartConsole
 	}
 
 	private static bool IsLeftWordBorder()
-	{ 
+	{
 		var charBeforeIndex = CharAtIndex(-1);
 		var charBeforeThat = CharAtIndex(-2);
 

@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class ViewOptions
+public class ViewOptions : ValidatorBase
 {
 	public event Action? ViewChanged;
 
@@ -20,8 +20,8 @@ public class ViewOptions
 	public void Set(int x1, int y1, int x2, int y2)
 	{
 		StartPosition = new Position(x1, y1);
-		EndPosition = new Position(x2, y2);		
-		
+		EndPosition = new Position(x2, y2);
+
 		ViewChanged?.Invoke();
 	}
 
@@ -39,6 +39,8 @@ public class ViewOptions
 
 	public void DecreaseWidth()
 	{
+		ThrowIf<InvalidOperationException>(EndPosition.X <= StartPosition.X, "Can not decrease view width under 0 columns!");
+		
 		EndPosition.X = EndPosition.X - 1;
 
 		ViewChanged?.Invoke();
@@ -53,6 +55,8 @@ public class ViewOptions
 
 	public void DecreaseHeight()
 	{
+		ThrowIf<InvalidOperationException>(EndPosition.Y <= StartPosition.Y, "Can not decrease view height under 0 rows!");
+
 		EndPosition.Y = EndPosition.Y - 1;
 
 		ViewChanged?.Invoke();

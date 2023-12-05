@@ -6,7 +6,7 @@ public static class Renderer
 {
 	public static RendererSettings RendererSettings { get; set; } = new RendererSettings();
 
-	private const int _FREE_LINES_BELOW_TABLE = 16;
+	private const int _FREE_LINES_BELOW_TABLE = 10;
 	private const int _FREE_LINES_ABOW_TABLE = 10;
 
 	public static void Render(Document document)
@@ -42,12 +42,11 @@ public static class Renderer
 		{
 			var size = table.GetTableSize();
 
-			//TODO resolve in a better way, -4 is for the arrow and an index (if it will be needed)
-			if (Console.WindowWidth - size.Width - 4 < 0)
+			if (Console.WindowWidth - size.Width < 0)
 			{
 				table.ViewOptions.DecreaseWidth();
 			}
-			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - _FREE_LINES_ABOW_TABLE - size.Height - 4 < 0)
+			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - _FREE_LINES_ABOW_TABLE - size.Height < 0)
 			{
 				table.ViewOptions.DecreaseHeight();
 			}
