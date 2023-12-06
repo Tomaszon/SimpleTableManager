@@ -1,4 +1,3 @@
-using System.Formats.Asn1;
 using System.Text;
 
 using SimpleTableManager.Models;
@@ -170,9 +169,29 @@ public partial class SmartConsole
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
 			ConsoleKey.F5 => RefreshApp(out saveToHistory),
+			ConsoleKey.F1 => GetHelp(out saveToHistory),
+			ConsoleKey.S => k.Modifiers == ConsoleModifiers.Control ? SaveDocument(out saveToHistory) : ManualInsertCharToBuffer(k.KeyChar),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
+	}
+
+	private static bool SaveDocument(out bool saveToHistory)
+	{
+		var document = InstanceMap.Instance.GetInstance<Document>()!;
+
+		document.Save();
+
+		return RefreshApp(out saveToHistory);
+	}
+
+	private static bool GetHelp(out bool saveToHistory)
+	{
+		" help".ForEach(c => ManualInsertCharToBuffer(c));
+
+		saveToHistory = false;
+
+		return AcceptCommand();
 	}
 
 	private static bool RefreshApp(out bool saveToHistory)
@@ -246,7 +265,7 @@ public partial class SmartConsole
 
 		if (result == GetHintResult.Hint)
 		{
-			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers.HasFlag(ConsoleModifiers.Shift), out prevoiusAutoCompleteLength, out keyCount);
+			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers == ConsoleModifiers.Shift, out prevoiusAutoCompleteLength, out keyCount);
 
 			isSpaceAppendNeeded = IsSpaceAppendNeeded(value, partialKey);
 
@@ -419,21 +438,27 @@ public partial class SmartConsole
 
 	private static bool MoveCursorLeft(ConsoleModifiers modifiers = default)
 	{
-		if (modifiers.HasFlag(ConsoleModifiers.Control))
+		switch (modifiers)
 		{
-			do
-			{
-				MoveCursorLeft();
-			}
-			while (!IsLeftWordBorder());
-		}
-		else
-		{
-			if (_insertIndex > 0)
-			{
-				Shared.StepCursor(-1, 0);
-				_insertIndex--;
-			}
+			case ConsoleModifiers.Control:
+				{
+					do
+					{
+						MoveCursorLeft();
+					}
+					while (!IsLeftWordBorder());
+				}
+				break;
+
+			default:
+				{
+					if (_insertIndex > 0)
+					{
+						Shared.StepCursor(-1, 0);
+						_insertIndex--;
+					}
+				}
+				break;
 		}
 
 		return true;
@@ -441,21 +466,27 @@ public partial class SmartConsole
 
 	private static bool MoveCursorRight(ConsoleModifiers modifiers = default)
 	{
-		if (modifiers.HasFlag(ConsoleModifiers.Control))
+		switch (modifiers)
 		{
-			do
-			{
-				MoveCursorRight();
-			}
-			while (!IsRightWordBorder());
-		}
-		else
-		{
-			if (_insertIndex < _buffer.Length)
-			{
-				Shared.StepCursor(1, 0);
-				_insertIndex++;
-			}
+			case ConsoleModifiers.Control:
+				{
+					do
+					{
+						MoveCursorRight();
+					}
+					while (!IsRightWordBorder());
+				}
+				break;
+
+			default:
+				{
+					if (_insertIndex < _buffer.Length)
+					{
+						Shared.StepCursor(1, 0);
+						_insertIndex++;
+					}
+				}
+				break;
 		}
 
 		return true;

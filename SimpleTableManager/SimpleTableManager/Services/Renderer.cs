@@ -423,18 +423,18 @@ public static class Renderer
 		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 9);
-		Console.Write($"Document: {metadata.Title} - ");
+		Console.Write($"Document: {metadata.Title}");
 
 		switch (document.IsSaved)
 		{
 			case true:
 				ChangeToOkLabelColors();
-				Console.WriteLine("Saved");
+				Console.WriteLine(" - Saved");
 				break;
 
 			case false:
 				ChangeToNotOkLabelColors();
-				Console.WriteLine("Unsaved");
+				Console.WriteLine(" - Unsaved");
 				break;
 		}
 
