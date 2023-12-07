@@ -45,6 +45,8 @@ public partial class Document
 		ActivateTable(Tables.Count - 1);
 	}
 
+	[CommandInformation("Saves the document overwriting the previous save file")]
+	[CommandShortcut("saveDocument")]
 	[CommandReference(StateModifier = false)]
 	public void Save()
 	{

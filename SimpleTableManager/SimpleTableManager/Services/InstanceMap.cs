@@ -4,28 +4,30 @@ namespace SimpleTableManager.Services;
 
 public class InstanceMap
 {
-	Dictionary<Type, Func<IEnumerable<IStateModifierCommandExecuter>>> ArrayMap { get; set; } = new Dictionary<Type, Func<IEnumerable<IStateModifierCommandExecuter>>>();
+	private readonly Dictionary<Type, Func<IEnumerable<IStateModifierCommandExecuter>>> _arrayMap = new();
 
 	public static InstanceMap Instance { get; } = new InstanceMap();
 
+	public IEnumerable<Type> GetTypes() => _arrayMap.Select(p => p.Key);
+
 	public void Add<T>(Func<IEnumerable<T>> func) where T : IStateModifierCommandExecuter
 	{
-		ArrayMap.Add(typeof(T), () => func.Invoke().Cast<IStateModifierCommandExecuter>());
+		_arrayMap.Add(typeof(T), () => func.Invoke().Cast<IStateModifierCommandExecuter>());
 	}
 
 	public void Add<T>(Func<T> func) where T : IStateModifierCommandExecuter
 	{
-		ArrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<IStateModifierCommandExecuter>());
+		_arrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<IStateModifierCommandExecuter>());
 	}
 
 	public void Remove<T>() where T : IStateModifierCommandExecuter
 	{
-		ArrayMap.Remove(typeof(T));
+		_arrayMap.Remove(typeof(T));
 	}
 
 	public IEnumerable<IStateModifierCommandExecuter> GetInstances(string typeName, out Type type)
 	{
-		var result = ArrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
+		var result = _arrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
 
 		type = result.Key;
 
@@ -44,7 +46,7 @@ public class InstanceMap
 
 	public IEnumerable<IStateModifierCommandExecuter?> GetInstances(Type type)
 	{
-		return ArrayMap[type].Invoke();
+		return _arrayMap[type].Invoke();
 	}
 
 	public bool TryGetInstances<T>([NotNullWhen(true)] out IEnumerable<T?>? instances)

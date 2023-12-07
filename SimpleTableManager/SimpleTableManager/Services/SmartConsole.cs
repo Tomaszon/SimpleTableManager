@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Text;
 
 using SimpleTableManager.Models;
@@ -94,13 +95,23 @@ public partial class SmartConsole
 				_lastHelp += $"Summary:\n        {info}\n    ";
 			}
 
-			_lastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n";
+			_lastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    ";
+
+			if (method.GetCustomAttribute<CommandShortcutAttribute>()?.Key is var key && key is not null)
+			{
+				if (CommandShortcuts.TryGetShortcut(key, out var shortcut))
+				{
+
+					_lastHelp += $"Shortcut:\n        {shortcut.Value.Item1} + {shortcut.Value.Item2}\n    ";
+
+				}
+			}
 		}
 
 		if (command.RawCommand.Replace(HELP_COMMAND, "").TrimEnd() is var sanitedCommand &&
 			!string.IsNullOrWhiteSpace(sanitedCommand))
 		{
-			_lastHelp += $"    in '{sanitedCommand}'";
+			_lastHelp += $"in '{sanitedCommand}'";
 		}
 
 		_lastHelp = _lastHelp.Trim();
@@ -152,6 +163,35 @@ public partial class SmartConsole
 	{
 		var k = Console.ReadKey(true);
 
+		saveToHistory = false;
+
+		if (CommandShortcuts.TryGetAction(k, out var action))
+		{
+			(var type, var methods) = InstanceMap.Instance.GetTypes()
+				.Select(t => (type: t, methods: CommandShortcuts.GetMethods(t)))
+				.SingleOrDefault(p => p.methods.ContainsKey(action));
+
+			if (type is null)
+			{
+				throw new InvalidOperationException($"Invalid value for shortcut '{k.Modifiers} + {k.Key}'");
+			}
+
+			var method = methods[action];
+
+			var instances = InstanceMap.Instance.GetInstances(type);
+
+			try
+			{
+				instances.ForEach(i => method.Invoke(i, null));
+			}
+			catch (Exception ex)
+			{
+				throw ex.InnerException!;
+			}
+
+			return RefreshApp(out _);
+		}
+
 		saveToHistory = true;
 
 		return k.Key switch
@@ -170,19 +210,9 @@ public partial class SmartConsole
 			ConsoleKey.Escape => Escape(),
 			ConsoleKey.F5 => RefreshApp(out saveToHistory),
 			ConsoleKey.F1 => GetHelp(out saveToHistory),
-			ConsoleKey.S => k.Modifiers == ConsoleModifiers.Control ? SaveDocument(out saveToHistory) : ManualInsertCharToBuffer(k.KeyChar),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
-	}
-
-	private static bool SaveDocument(out bool saveToHistory)
-	{
-		var document = InstanceMap.Instance.GetInstance<Document>()!;
-
-		document.Save();
-
-		return RefreshApp(out saveToHistory);
 	}
 
 	private static bool GetHelp(out bool saveToHistory)

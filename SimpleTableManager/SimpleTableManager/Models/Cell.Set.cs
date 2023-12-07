@@ -128,15 +128,6 @@ public partial class Cell
 		ContentPadding = new ContentPadding(ContentPadding.Top, ContentPadding.Bottom, left, right);
 	}
 
-	// [CommandReference]
-	// public void SetType(string typeName)
-	// {
-	// TODO make it work with functions, but how?
-	//fix asd
-	// var type = Shared.GetTypeByName(typeName);
-	// SetContent(GetContents().Select(c => Shared.ParseStringValue(type, c.ToString())));
-	// }
-
 	[CommandReference]
 	public void SetBorderColor(ConsoleColor foreground, ConsoleColor? background = null)
 	{

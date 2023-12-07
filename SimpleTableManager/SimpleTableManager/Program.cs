@@ -14,6 +14,7 @@ public class Program
 		CommandTree.FromJsonFolder(@".\Configs\Commands");
 		Settings.FromJson(@".\Configs\settings.json");
 		CellBorders.FromJson(@".\Configs\cellBorders.json");
+		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
 
 		var app = new App();
 		var document = new Document(Settings.Current.DefaultTableSize);

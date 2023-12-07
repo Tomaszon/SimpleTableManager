@@ -1,0 +1,5 @@
+{
+	"Control, Shift + A": "deselectAllCells",
+	"Control + A": "selectAllCells",
+	"Control + S": "saveDocument"
+}

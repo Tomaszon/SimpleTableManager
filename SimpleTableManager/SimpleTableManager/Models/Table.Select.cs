@@ -57,6 +57,7 @@ public partial class Table
 	}
 
 	[CommandReference]
+	[CommandShortcut("selectAllCells")]
 	public void SelectAll()
 	{
 		Content.ForEach(c => c.IsSelected = true);

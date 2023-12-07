@@ -1,6 +1,4 @@
-﻿using SimpleTableManager.Services;
-
-namespace SimpleTableManager.Models;
+﻿namespace SimpleTableManager.Models;
 
 public partial class Table
 {
@@ -37,6 +35,7 @@ public partial class Table
 	}
 
 	[CommandReference]
+	[CommandShortcut("deselectAllCells")]
 	public void DeselectAll()
 	{
 		Content.ForEach(c => c.IsSelected = false);
