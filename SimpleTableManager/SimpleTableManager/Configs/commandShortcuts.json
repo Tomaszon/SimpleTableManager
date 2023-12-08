@@ -1,4 +1,5 @@
 {
+	"F5": "refresh",
 	"Control, Shift + A": "deselectAllCells",
 	"Control + A": "selectAllCells",
 	"Control + S": "saveDocument"

@@ -137,13 +137,20 @@ public class Program
 			{
 				SmartConsole.Render(document);
 
-				var rawCommand = SmartConsole.ReadInputString();
+				var rawCommand = SmartConsole.ReadInput(out var manualCommandInput);
 
-				var command = Command.FromString(rawCommand);
+				if (manualCommandInput)
+				{
+					var command = Command.FromString(rawCommand);
 
-				var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out _));
+					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out _));
 
-				SmartConsole.ShowResults(results);
+					SmartConsole.ShowResults(results);
+				}
+				else
+				{
+					SmartConsole.ShowResults(Enumerable.Empty<object>());
+				}
 			}
 			catch (ArgumentCountException ex)
 			{
@@ -173,8 +180,6 @@ public class Program
 				Console.Write("Press any key to continue");
 				Console.ReadKey();
 			}
-
-			Console.Clear();
 		}
 		while (true);
 	}

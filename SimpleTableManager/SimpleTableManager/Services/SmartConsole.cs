@@ -137,13 +137,13 @@ public partial class SmartConsole
 		_lastHelp = _lastHelp.TrimEnd(',', '\n');
 	}
 
-	public static string ReadInputString()
+	public static string ReadInput(out bool manualCommandInput)
 	{
 		ClearBuffer();
 
 		bool saveToHistory;
 
-		while (ReadInputChar(out saveToHistory)) ;
+		while (ReadInputKey(out saveToHistory, out manualCommandInput)) ;
 
 		var command = _buffer.ToString().Trim();
 
@@ -159,10 +159,24 @@ public partial class SmartConsole
 		return command;
 	}
 
-	private static bool ReadInputChar(out bool saveToHistory)
+	private static bool ReadInputKey(out bool saveToHistory, out bool manualCommandInput)
 	{
 		var k = Console.ReadKey(true);
 
+		if (TryReadCommandShortcut(k, out saveToHistory))
+		{
+			manualCommandInput = false;
+
+			return false;
+		}
+
+		manualCommandInput = true;
+
+		return ReadInputChar(k, out saveToHistory);
+	}
+
+	private static bool TryReadCommandShortcut(ConsoleKeyInfo k, out bool saveToHistory)
+	{
 		saveToHistory = false;
 
 		if (CommandShortcuts.TryGetAction(k, out var action))
@@ -189,9 +203,14 @@ public partial class SmartConsole
 				throw ex.InnerException!;
 			}
 
-			return RefreshApp(out _);
+			return true;
 		}
 
+		return false;
+	}
+
+	private static bool ReadInputChar(ConsoleKeyInfo k, out bool saveToHistory)
+	{
 		saveToHistory = true;
 
 		return k.Key switch
@@ -208,7 +227,6 @@ public partial class SmartConsole
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
-			ConsoleKey.F5 => RefreshApp(out saveToHistory),
 			ConsoleKey.F1 => GetHelp(out saveToHistory),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
@@ -217,18 +235,7 @@ public partial class SmartConsole
 
 	private static bool GetHelp(out bool saveToHistory)
 	{
-		" help".ForEach(c => ManualInsertCharToBuffer(c));
-
-		saveToHistory = false;
-
-		return AcceptCommand();
-	}
-
-	private static bool RefreshApp(out bool saveToHistory)
-	{
-		ClearBuffer();
-
-		"app refresh".ForEach(c => ManualInsertCharToBuffer(c));
+		$" {HELP_COMMAND}".ForEach(c => ManualInsertCharToBuffer(c));
 
 		saveToHistory = false;
 

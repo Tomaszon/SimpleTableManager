@@ -11,8 +11,10 @@ public static class CommandShortcuts
 		_SHORTCUTS = tmp.ToDictionary(k =>
 		{
 			var e = k.Key.Split('+');
-
-			return (Enum.Parse<ConsoleModifiers>(e[0]), Enum.Parse<ConsoleKey>(e[1]));
+			
+			return e.Length > 1 ? 
+				(Enum.Parse<ConsoleModifiers>(e[0]), Enum.Parse<ConsoleKey>(e[1])) : 
+				(ConsoleModifiers.None, Enum.Parse<ConsoleKey>(e[0]));
 		}, v => v.Value);
 	}
 
@@ -24,7 +26,6 @@ public static class CommandShortcuts
 
 		return shortcut is not null;
 	}
-
 
 	public static bool TryGetAction(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out string? action)
 	{
