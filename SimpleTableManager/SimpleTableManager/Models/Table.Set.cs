@@ -42,13 +42,13 @@ public partial class Table
 	[CommandReference]
 	public void SetColumnWidth(int index, int width)
 	{
-		Columns[index].ForEach(c => c.GivenSize = new Size(width, c.GivenSize.Height));
+		Columns[index].ForEach(c => c.GivenSize = new(width, c.GivenSize.Height));
 	}
 
 	[CommandReference]
 	public void SetRowHeight(int index, int height)
 	{
-		Rows[index].ForEach(c => c.GivenSize = new Size(c.GivenSize.Width, height));
+		Rows[index].ForEach(c => c.GivenSize = new(c.GivenSize.Width, height));
 	}
 
 	[CommandReference]

@@ -6,7 +6,7 @@ public class InstanceMap
 {
 	private readonly Dictionary<Type, Func<IEnumerable<IStateModifierCommandExecuter>>> _arrayMap = new();
 
-	public static InstanceMap Instance { get; } = new InstanceMap();
+	public static InstanceMap Instance { get; } = new();
 
 	public IEnumerable<Type> GetTypes() => _arrayMap.Select(p => p.Key);
 
@@ -44,7 +44,7 @@ public class InstanceMap
 		return GetInstances(typeof(T)).Select(e => (T?)e);
 	}
 
-	public IEnumerable<IStateModifierCommandExecuter?> GetInstances(Type type)
+	public IEnumerable<IStateModifierCommandExecuter> GetInstances(Type type)
 	{
 		return _arrayMap[type].Invoke();
 	}

@@ -27,7 +27,7 @@ public class Settings
 		Current = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path))!;
 	}
 
-	public static Settings Current { get; private set; } = new Settings();
+	public static Settings Current { get; private set; } = new();
 
 	public char IndexCellLeftArrow { get; set; }
 
@@ -41,9 +41,11 @@ public class Settings
 
 	public string DefaultWorkDirectory { get; set; } = "";
 
-	public uint CommandHistorySize { get; set; }
+	public uint CommandHistoryLength { get; set; }
 
-	public Size DefaultTableSize { get; set; } = new Size(10, 5);
+	public uint EditHistoryLength { get; set; }
+
+	public Size DefaultTableSize { get; set; } = new(10, 5);
 
 	public bool Autosave { get; set; }
 

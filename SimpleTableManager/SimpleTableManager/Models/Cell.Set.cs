@@ -109,7 +109,7 @@ public partial class Cell
 	{
 		ThrowIf(top < 0 || bottom < 0 || left < 0 || right < 0, "Padding can not be less then 0!");
 
-		ContentPadding = new ContentPadding(top, bottom, left, right);
+		ContentPadding = new(top, bottom, left, right);
 	}
 
 	[CommandReference]
@@ -117,7 +117,7 @@ public partial class Cell
 	{
 		ThrowIf(top < 0 || bottom < 0, "Padding can not be less then 0!");
 
-		ContentPadding = new ContentPadding(top, bottom, ContentPadding.Left, ContentPadding.Right);
+		ContentPadding = new(top, bottom, ContentPadding.Left, ContentPadding.Right);
 	}
 
 	[CommandReference]
@@ -125,7 +125,7 @@ public partial class Cell
 	{
 		ThrowIf(left < 0 || right < 0, "Padding can not be less then 0!");
 
-		ContentPadding = new ContentPadding(ContentPadding.Top, ContentPadding.Bottom, left, right);
+		ContentPadding = new(ContentPadding.Top, ContentPadding.Bottom, left, right);
 	}
 
 	[CommandReference]

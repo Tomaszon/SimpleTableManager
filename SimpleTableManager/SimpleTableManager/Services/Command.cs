@@ -26,55 +26,55 @@ public class Command
 		return new Command(reference, rawCommand, arguments);
 	}
 
-	public List<object?> Execute(IEnumerable<IStateModifierCommandExecuter> instances)
+	public List<object?> Execute(IEnumerable<IStateModifierCommandExecuter> instances, Type type)
 	{
 		List<object?> results = new();
 
-		foreach (var instance in instances)
+		var method = GetMethod(type);
+		var parameters = GetParameters(method);
+
+		if (parameters.Count(p => !p.IsOptional) > Arguments?.Count ||
+			parameters.All(p => !p.IsArray) && parameters.Count < Arguments?.Count)
 		{
-			var method = GetMethod(instance.GetType());
-			var parameters = GetParameters(method);
+			throw new ArgumentCountException(RawCommand, Reference);
+		}
 
-			if (parameters.Count(p => !p.IsOptional) > Arguments?.Count ||
-				parameters.All(p => !p.IsArray) && parameters.Count < Arguments?.Count)
+		List<object?> parsedArguments = new();
+
+		for (var i = 0; i < parameters.Count; i++)
+		{
+			var paramType = parameters[i].Type;
+
+			if (paramType.IsArray)
 			{
-				throw new ArgumentCountException(RawCommand, Reference);
+				var values = ParseArrayValues(parameters, i, paramType);
+
+				parsedArguments.Add(values);
 			}
-
-			List<object?> parsedArguments = new();
-
-			for (var i = 0; i < parameters.Count; i++)
+			else
 			{
-				var paramType = parameters[i].Type;
+				var value = i < Arguments?.Count ?
+					ContentParser.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
-				if (paramType.IsArray)
-				{
-					var values = ParseArrayValues(parameters, i, paramType);
-
-					parsedArguments.Add(values);
-				}
-				else
-				{
-					var value = i < Arguments?.Count ?
-						ContentParser.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
-
-					parsedArguments.Add(value);
-				}
+				parsedArguments.Add(value);
 			}
+		}
 
-			try
+		try
+		{
+			instances.ForEach(i =>
 			{
-				results.Add(method.Invoke(instance, parsedArguments.ToArray()));
+				results.Add(method.Invoke(i, parsedArguments.ToArray()));
 
 				if (method.GetCustomAttribute<CommandReferenceAttribute>()!.StateModifier)
 				{
-					instance.InvokeStateModifierCommandExecutedEvent();
+					i.InvokeStateModifierCommandExecutedEvent();
 				}
-			}
-			catch (Exception ex)
-			{
-				throw ex.InnerException ?? ex;
-			}
+			});
+		}
+		catch (Exception ex)
+		{
+			throw ex.InnerException ?? ex;
 		}
 
 		return results;

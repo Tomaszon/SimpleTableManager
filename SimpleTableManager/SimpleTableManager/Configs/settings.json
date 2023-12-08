@@ -33,7 +33,8 @@
 	"IndexCellDownArrow": "▼",
 	"TmpBackgroundCharacter": "?",
 	"DefaultWorkDirectory": "C:\\users\\offic\\downloads",
-	"CommandHistorySize": 5,
+	"CommandHistoryLength": 5,
+	"EditHistoryLength": 5,
 	"DefaultTableSize": {
 		"Width": 2,
 		"Height": 2

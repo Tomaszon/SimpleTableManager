@@ -16,13 +16,12 @@ public class Program
 		CellBorders.FromJson(@".\Configs\cellBorders.json");
 		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
 
-		var app = new App();
-		var document = new Document(Settings.Current.DefaultTableSize);
+		var app = new App(new Document(Settings.Current.DefaultTableSize));
 
 		InstanceMap.Instance.Add(() => app);
-		InstanceMap.Instance.Add(() => document);
-		InstanceMap.Instance.Add(() => document.GetActiveTable());
-		InstanceMap.Instance.Add(() => document.GetActiveTable().GetSelectedCells());
+		InstanceMap.Instance.Add(() => app.Document);
+		InstanceMap.Instance.Add(() => app.Document.GetActiveTable());
+		InstanceMap.Instance.Add(() => app.Document.GetActiveTable().GetSelectedCells());
 
 		#region test
 
@@ -135,7 +134,7 @@ public class Program
 		{
 			try
 			{
-				SmartConsole.Render(document);
+				SmartConsole.Render(app.Document);
 
 				var rawCommand = SmartConsole.ReadInput(out var manualCommandInput);
 
@@ -143,7 +142,7 @@ public class Program
 				{
 					var command = Command.FromString(rawCommand);
 
-					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out _));
+					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out var type), type);
 
 					SmartConsole.ShowResults(results);
 				}

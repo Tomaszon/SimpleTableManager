@@ -19,7 +19,7 @@ public partial class SmartConsole
 
 	private const string _COMMAND_LINE_PREFIX = "> ";
 
-	private static readonly CommandHistory _commandHistory = new();
+	private static readonly HistoryList _commandHistory = new(Settings.Current.CommandHistoryLength);
 
 	private static readonly AutoComplete _autoComplete = new();
 
@@ -194,14 +194,26 @@ public partial class SmartConsole
 
 			var instances = InstanceMap.Instance.GetInstances(type);
 
-			try
-			{
-				instances.ForEach(i => method.Invoke(i, null));
-			}
-			catch (Exception ex)
-			{
-				throw ex.InnerException!;
-			}
+			var command = new Command(new CommandReference(type.Name, method.Name), "", null);
+
+			command.Execute(instances, type);
+
+			// try
+			// {
+			// 	instances.ForEach(i =>
+			// 	{
+			// 		method.Invoke(i, null);
+
+			// 		if (method.GetCustomAttribute<CommandReferenceAttribute>()!.StateModifier)
+			// 		{
+			// 			i.InvokeStateModifierCommandExecutedEvent();
+			// 		}
+			// 	});
+			// }
+			// catch (Exception ex)
+			// {
+			// 	throw ex.InnerException ?? ex;
+			// }
 
 			return true;
 		}

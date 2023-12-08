@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
@@ -11,17 +12,17 @@ public partial class Table : CommandExecuterBase
 
 	public string Name { get; set; } = default!;
 
-	public Size Size { get; set; } = new Size(0, 0);
+	public Size Size { get; set; } = new(0, 0);
 
 	public bool IsActive { get; set; }
 
-	public ViewOptions ViewOptions { get; set; } = new ViewOptions(0, 0, 0, 0);
+	public ViewOptions ViewOptions { get; set; } = new(0, 0, 0, 0);
 
-	public List<Cell> Content { get; set; } = new List<Cell>();
+	public List<Cell> Content { get; set; } = new();
 
-	public List<IndexCell> Header { get; set; } = new List<IndexCell>();
+	public List<IndexCell> Header { get; set; } = new();
 
-	public List<IndexCell> Sider { get; set; } = new List<IndexCell>();
+	public List<IndexCell> Sider { get; set; } = new();
 
 	public Cell CornerCell { get; set; } = default!;
 
@@ -60,7 +61,7 @@ public partial class Table : CommandExecuterBase
 	{
 		Name = name;
 
-		CornerCell = new Cell(this, @"y \ x");
+		CornerCell = new(this, @"y \ x");
 		Shared.IndexArray(columnCount).ForEach(x => AddColumnLast());
 		Shared.IndexArray(rowCount).ForEach(y => AddRowLast());
 
@@ -96,7 +97,7 @@ public partial class Table : CommandExecuterBase
 	{
 		var cell = new Cell(this)
 		{
-			ContentColor = new ConsoleColorSet(Settings.Current.DefaultContentColor)
+			ContentColor = new(Settings.Current.DefaultContentColor)
 		};
 
 		Content.Insert(index, cell);

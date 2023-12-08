@@ -2,5 +2,7 @@
 	"F5": "refresh",
 	"Control, Shift + A": "deselectAllCells",
 	"Control + A": "selectAllCells",
-	"Control + S": "saveDocument"
+	"Control + S": "saveDocument",
+	"Control + Z": "undoChange",
+	"Control + Y": "redoChange"
 }

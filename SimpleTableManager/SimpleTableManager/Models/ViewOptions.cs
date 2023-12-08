@@ -19,8 +19,8 @@ public class ViewOptions : ValidatorBase
 	[MemberNotNull(nameof(StartPosition)), MemberNotNull(nameof(EndPosition))]
 	public void Set(int x1, int y1, int x2, int y2)
 	{
-		StartPosition = new Position(x1, y1);
-		EndPosition = new Position(x2, y2);
+		StartPosition = new(x1, y1);
+		EndPosition = new(x2, y2);
 
 		ViewChanged?.Invoke();
 	}

@@ -4,7 +4,7 @@ namespace SimpleTableManager.Services;
 
 public static class Renderer
 {
-	public static RendererSettings RendererSettings { get; set; } = new RendererSettings();
+	public static RendererSettings RendererSettings { get; set; } = new();
 
 	private const int _FREE_LINES_BELOW_TABLE = 10;
 	private const int _FREE_LINES_ABOW_TABLE = 10;
@@ -59,7 +59,7 @@ public static class Renderer
 
 	private static void RenderTempCell(Table table, Size tableOffset, Size size)
 	{
-		var placeHolderCell = new Cell(table, GetTmpBackground(size)) { ContentColor = new ConsoleColorSet(Settings.Current.TextColor) };
+		var placeHolderCell = new Cell(table, GetTmpBackground(size)) { ContentColor = new(Settings.Current.TextColor) };
 		var placeHolderCellPosition = new Position(tableOffset);
 
 		DrawCellBorders(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));

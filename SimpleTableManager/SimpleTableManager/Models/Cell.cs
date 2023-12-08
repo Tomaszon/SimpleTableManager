@@ -13,7 +13,7 @@ public partial class Cell : CommandExecuterBase
 	/// <summary>
 	/// Manually set size not including the borders
 	/// </summary>
-	public Size GivenSize { get; set; } = new Size(7, 1);
+	public Size GivenSize { get; set; } = new(7, 1);
 
 	/// <summary>
 	/// Size not including the borders
@@ -60,7 +60,7 @@ public partial class Cell : CommandExecuterBase
 			}
 			catch
 			{
-				return _cachedFormattedContent = new string[] { "Content function error" };
+				return _cachedFormattedContent = new[] { "Content function error" };
 			}
 		}
 	}
@@ -72,15 +72,15 @@ public partial class Cell : CommandExecuterBase
 
 	public bool IsSelected { get; set; }
 
-	public CellVisibility Visibility { get; set; } = new CellVisibility();
+	public CellVisibility Visibility { get; set; } = new();
 
-	public ContentPadding ContentPadding { get; set; } = new ContentPadding();
+	public ContentPadding ContentPadding { get; set; } = new();
 
 	public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);
 
-	public ConsoleColorSet ContentColor { get; set; } = new ConsoleColorSet(Settings.Current.DefaultContentColor);
+	public ConsoleColorSet ContentColor { get; set; } = new(Settings.Current.DefaultContentColor);
 
-	public ConsoleColorSet BorderColor { get; set; } = new ConsoleColorSet(Settings.Current.DefaultBorderColor);
+	public ConsoleColorSet BorderColor { get; set; } = new(Settings.Current.DefaultBorderColor);
 
 	public int LayerIndex { get; set; } = 0;
 

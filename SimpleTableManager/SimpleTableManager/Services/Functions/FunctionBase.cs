@@ -10,7 +10,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
 	// Enumerable.Empty<TIn>();
 
-	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new Dictionary<ArgumentName, string>();
+	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new();
 
 	public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
 

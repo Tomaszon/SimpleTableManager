@@ -16,7 +16,7 @@ public class Metadata
 
 	public DateTime? CreateTime { get; set; }
 
-	public Dictionary<string, string> CustomProperties { get; set; } = new Dictionary<string, string>();
+	public Dictionary<string, string> CustomProperties { get; set; } = new();
 
 	public Metadata() { }
 }

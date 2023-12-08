@@ -51,7 +51,7 @@ public partial class Document
 	public void Save()
 	{
 		ThrowIf(Metadata.Path is null, $"Specify a file name to save to with 'save-as'");
-		
+
 		Save(Metadata.Path, true);
 	}
 
@@ -70,14 +70,9 @@ public partial class Document
 			using var f = File.Create(fileName);
 			using var sw = new StreamWriter(f);
 
-			var serializer = new JsonSerializer
-			{
-				TypeNameHandling = TypeNameHandling.Auto,
-			};
-
 			Metadata.CreateTime ??= DateTime.Now;
 
-			serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
+			Serialize(sw);
 
 			IsSaved = true;
 		}
@@ -106,13 +101,7 @@ public partial class Document
 			using var f = File.Open(fileName, FileMode.Open);
 			using var sr = new StreamReader(f);
 
-			var serializer = new JsonSerializer
-			{
-				TypeNameHandling = TypeNameHandling.Auto,
-				ContractResolver = new ClearPropertyContractResolver(),
-			};
-
-			serializer.Populate(new JsonTextReader(sr), this);
+			Deserialize(sr);
 
 			IsSaved = true;
 		}
@@ -124,6 +113,27 @@ public partial class Document
 		}
 
 		GetMetaInfos(fileName);
+	}
+
+	public void Serialize(StreamWriter sw)
+	{
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = TypeNameHandling.Auto,
+		};
+
+		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
+	}
+
+	public void Deserialize(StreamReader sr)
+	{
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = TypeNameHandling.Auto,
+			ContractResolver = new ClearPropertyContractResolver(),
+		};
+
+		serializer.Populate(new JsonTextReader(sr), this);
 	}
 
 	public void GetMetaInfos(string path)

@@ -10,16 +10,15 @@ public partial class Document : CommandExecuterBase
 	[JsonIgnore]
 	public bool? IsSaved { get; set; }
 
-	public Metadata Metadata { get; set; } = new Metadata();
+	public Metadata Metadata { get; set; }
 
-	public List<Table> Tables { get; set; } = new List<Table>();
+	public List<Table> Tables { get; set; } = new();
 
 	public Document(Size tableSize)
 	{
-		Metadata = new Metadata();
+		Metadata = new();
 		Tables.Clear();
 		AddTable(tableSize);
-		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
 	public override void OnStateModifierCommandExecuted()
@@ -32,13 +31,14 @@ public partial class Document : CommandExecuterBase
 		{
 			IsSaved = false;
 		}
+
+		InvokeStateModifierCommandExecutedEvent();
 	}
 
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
 		Tables.ForEach(t => t.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
-		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
 	public void Clear()
