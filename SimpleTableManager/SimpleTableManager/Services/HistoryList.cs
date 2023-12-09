@@ -10,10 +10,13 @@ public class HistoryList
 
 	private readonly int _indexResetOffset;
 
-	public HistoryList(uint length, int indexResetOffset = 0)
+	private readonly bool _cleanAfterInsert;
+
+	public HistoryList(uint length, bool cleanAfterInsert = false, int indexResetOffset = 0)
 	{
 		_length = length;
 		_indexResetOffset = indexResetOffset;
+		_cleanAfterInsert = cleanAfterInsert;
 	}
 
 	public bool TryGetPreviousHistoryItem([NotNullWhen(true)] out string? element)
@@ -48,7 +51,18 @@ public class HistoryList
 
 	public void Add(string element)
 	{
-		//TODO configurable clean after current index for edit history
+		var currentIndex = _index;
+
+		if(_cleanAfterInsert)
+		{
+			ResetCycle();
+
+			while(_history.Count - 1 > currentIndex)
+			{
+				_history.RemoveAt(_history.Count - 1);
+			}
+		}
+
 		_history.Add(element);
 
 		if (_history.Count > _length)

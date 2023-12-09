@@ -5,7 +5,7 @@ namespace SimpleTableManager.Models;
 [CommandInformation("Basic application related commands")]
 public class App : CommandExecuterBase
 {
-	public HistoryList EditHistory { get; set; } = new(Settings.Current.EditHistoryLength, -1);
+	public HistoryList EditHistory { get; set; } = new(Settings.Current.EditHistoryLength, true, -1);
 
 	public Document Document { get; set; }
 
