@@ -101,7 +101,7 @@ public class App : CommandExecuterBase
 
 	[CommandReference(StateModifier = false)]
 	[CommandInformation("Refreshes the view")]
-	[CommandShortcut("refresh")]
+	[CommandShortcut]
 	public static void Refresh()
 	{
 		Console.ResetColor();

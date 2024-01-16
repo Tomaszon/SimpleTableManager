@@ -30,9 +30,35 @@ public partial class Document
 	}
 
 	[CommandReference]
-	public void AddTable(Size size, string? name = null)
+	[CommandShortcut]
+	public void ActivateNextTable()
+	{
+		GetActiveTable(out var index);
+
+		if (index < Tables.Count - 1)
+		{
+			ActivateTable(index + 1);
+		}
+	}
+
+	[CommandReference]
+	[CommandShortcut]
+	public void ActivatePreviousTable()
+	{
+		GetActiveTable(out var index);
+
+		if (index > 0)
+		{
+			ActivateTable(index - 1);
+		}
+	}
+
+	[CommandReference]
+	[CommandShortcut]
+	public void AddNewTable(Size? size = null, string? name = null)
 	{
 		name ??= $"Table{Tables.Count}";
+		size ??= Settings.Current.DefaultTableSize;
 
 		ThrowIf(Tables.Any(t => t.Name == name), $"Can not create table with duplicate name '{name}'");
 
@@ -113,33 +139,5 @@ public partial class Document
 		}
 
 		GetMetaInfos(fileName);
-	}
-
-	public void Serialize(StreamWriter sw)
-	{
-		var serializer = new JsonSerializer
-		{
-			TypeNameHandling = TypeNameHandling.Auto,
-		};
-
-		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
-	}
-
-	public void Deserialize(StreamReader sr)
-	{
-		var serializer = new JsonSerializer
-		{
-			TypeNameHandling = TypeNameHandling.Auto,
-			ContractResolver = new ClearPropertyContractResolver(),
-		};
-
-		serializer.Populate(new JsonTextReader(sr), this);
-	}
-
-	public void GetMetaInfos(string path)
-	{
-		var fileInfo = new FileInfo(path);
-		Metadata.Path = path;
-		Metadata.Size = fileInfo.Length;
 	}
 }

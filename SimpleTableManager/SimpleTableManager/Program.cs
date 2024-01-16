@@ -136,6 +136,8 @@ public class Program
 			{
 				SmartConsole.Render(app.Document);
 
+				SmartConsole.Play(Note.Ok);
+
 				var rawCommand = SmartConsole.ReadInput(out var manualCommandInput);
 
 				if (manualCommandInput)
@@ -150,33 +152,49 @@ public class Program
 				{
 					SmartConsole.ShowResults(Enumerable.Empty<object>());
 				}
+
+				SmartConsole.Play(Note.Ok);
 			}
 			catch (ArgumentCountException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
+
+				SmartConsole.Play(Note.Error);
 			}
 			catch (IncompleteCommandException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
+
+				SmartConsole.Play(Note.Error);
 			}
 			catch (PartialKeyException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, null, ex.Message);
+
+				SmartConsole.Play(Note.Question);
 			}
 			catch (HelpRequestedException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
+
+				SmartConsole.Play(Note.Question);
 			}
 			catch (Exception ex) when (ex.IsHandled())
 			{
 				Console.WriteLine(ex.Message);
 				Console.Write("Press any key to continue");
+
+				SmartConsole.Play(Note.Error);
+
 				Console.ReadKey();
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine($"{ex.Message} -> {ex}");
 				Console.Write("Press any key to continue");
+
+				SmartConsole.Play(Note.Critical);
+
 				Console.ReadKey();
 			}
 		}

@@ -87,10 +87,4 @@ public partial class Table
 	{
 		this[position].SetContent(contents);
 	}
-
-	// [CommandReference]
-	// public void SetCellType(Position position, string typeName)
-	// {
-	// 	this[position].SetType(typeName);
-	// }
 }

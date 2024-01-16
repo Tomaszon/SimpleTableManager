@@ -1,4 +1,3 @@
-using System.Data.Common;
 using System.Text;
 
 using SimpleTableManager.Models;
@@ -645,5 +644,31 @@ public partial class SmartConsole
 		_insertIndex = 0;
 
 		return true;
+	}
+
+
+	public static void Play(Note note)
+	{
+		if (!Settings.Current.Audio)
+		{
+			return;
+		}
+
+		var frequency = note switch
+		{
+			Note.Ok => 800,
+			Note.Question => 1300,
+
+			_ => 300
+		};
+
+		var count = note switch
+		{
+			Note.Critical => 2,
+
+			_ => 1
+		};
+
+		Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, 5000));
 	}
 }

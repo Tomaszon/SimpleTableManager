@@ -50,4 +50,6 @@ public class Settings
 	public bool Autosave { get; set; }
 
 	public string Author { get; set; } = "";
+
+	public bool Audio { get; set; }
 }

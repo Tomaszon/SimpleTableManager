@@ -4,5 +4,9 @@
 	"Control + A": "selectAllCells",
 	"Control + S": "saveDocument",
 	"Control + Z": "undoChange",
-	"Control + Y": "redoChange"
+	"Control + Y": "redoChange",
+	"Control, Shift + Delete": "resetCellContent",
+	"Control + N": "addNewTable",
+	"Control + PageUp": "activatePreviousTable",
+	"Control + PageDown": "activateNextTable"
 }

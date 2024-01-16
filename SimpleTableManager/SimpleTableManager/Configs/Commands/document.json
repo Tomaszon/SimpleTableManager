@@ -1,6 +1,6 @@
 {
 	"add": {
-		"table": "addTable"
+		"table": "addNewTable"
 	},
 	"remove": {
 		"table": "removeTable"
@@ -8,7 +8,9 @@
 	"activate": {
 		"table": {
 			"named": "activateTable",
-			"at": "activateTableAt"
+			"at": "activateTableAt",
+			"next": "activateNextTable",
+			"previous": "activatePreviousTable"
 		}
 	},
 	"set": {

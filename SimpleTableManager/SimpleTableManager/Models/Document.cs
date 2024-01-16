@@ -18,7 +18,7 @@ public partial class Document : CommandExecuterBase
 	{
 		Metadata = new();
 		Tables.Clear();
-		AddTable(tableSize);
+		AddNewTable(tableSize);
 	}
 
 	public override void OnStateModifierCommandExecuted()
@@ -45,7 +45,7 @@ public partial class Document : CommandExecuterBase
 	{
 		Metadata = new Metadata();
 		Tables.Clear();
-		AddTable(Settings.Current.DefaultTableSize);
+		AddNewTable(Settings.Current.DefaultTableSize);
 	}
 
 	public Table GetActiveTable(out int index)
@@ -63,5 +63,33 @@ public partial class Document : CommandExecuterBase
 	private static string GetSaveFilePath(string fileName)
 	{
 		return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.json");
+	}
+
+	public void Serialize(StreamWriter sw)
+	{
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = TypeNameHandling.Auto,
+		};
+
+		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
+	}
+
+	public void Deserialize(StreamReader sr)
+	{
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = TypeNameHandling.Auto,
+			ContractResolver = new ClearPropertyContractResolver(),
+		};
+
+		serializer.Populate(new JsonTextReader(sr), this);
+	}
+
+	public void GetMetaInfos(string path)
+	{
+		var fileInfo = new FileInfo(path);
+		Metadata.Path = path;
+		Metadata.Size = fileInfo.Length;
 	}
 }
