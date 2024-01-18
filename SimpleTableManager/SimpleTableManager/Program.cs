@@ -138,20 +138,13 @@ public class Program
 
 				SmartConsole.Play(Note.Ok);
 
-				var rawCommand = SmartConsole.ReadInput(out var manualCommandInput);
+				var rawCommand = SmartConsole.ReadInput(out var command);
 
-				if (manualCommandInput)
-				{
-					var command = Command.FromString(rawCommand);
+				command ??= Command.FromString(rawCommand);
 
-					var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out var type), type);
+				var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out var type), type);
 
-					SmartConsole.ShowResults(results);
-				}
-				else
-				{
-					SmartConsole.ShowResults(Enumerable.Empty<object>());
-				}
+				SmartConsole.ShowResults(results);
 
 				SmartConsole.Play(Note.Ok);
 			}

@@ -1,10 +1,9 @@
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models;
 
 public partial class Cell
 {
 	[CommandReference(StateModifier = false)]
+	[CommandShortcut("showCellDetails")]
 	public object ShowDetails()
 	{
 		return new
@@ -20,6 +19,7 @@ public partial class Cell
 				Alignment = ContentAlignment.ToString(),
 				Color = ContentColor.ToString(),
 			},
+			Comment,
 			Visibility.IsHidden
 		};
 	}

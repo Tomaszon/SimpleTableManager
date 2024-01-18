@@ -170,4 +170,10 @@ public partial class Cell
 		LayerIndex = Table.GetMinCellLayerIndex();
 		DecreaseLayerIndex();
 	}
+
+	[CommandReference(StateModifier = false)]
+	public void SetComment(string comment)
+	{
+		Comment = comment;
+	}
 }

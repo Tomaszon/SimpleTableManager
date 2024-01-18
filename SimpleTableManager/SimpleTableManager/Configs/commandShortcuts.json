@@ -1,4 +1,5 @@
 {
+	"F1": "help",
 	"F5": "refresh",
 	"Control, Shift + A": "deselectAllCells",
 	"Control + A": "selectAllCells",
@@ -8,5 +9,6 @@
 	"Control, Shift + Delete": "resetCellContent",
 	"Control + N": "addNewTable",
 	"Control + PageUp": "activatePreviousTable",
-	"Control + PageDown": "activateNextTable"
+	"Control + PageDown": "activateNextTable",
+	"F2": "showCellDetails"
 }

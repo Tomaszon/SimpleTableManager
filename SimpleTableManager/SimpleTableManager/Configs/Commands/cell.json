@@ -1,6 +1,7 @@
 {
 	"set": {
 		"content": "setContent",
+		"comment": "setComment",
 		"content-function": {
 			"string": "setStringContentFunction",
 			"int": "setIntegerContentFunction",
@@ -26,7 +27,8 @@
 		}
 	},
 	"reset": {
-		"content": "resetContent"
+		"content": "resetContent",
+		"comment": "resetComment"
 	},
 	"show": {
 		"details": "showDetails",

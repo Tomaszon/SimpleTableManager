@@ -100,9 +100,7 @@ public partial class SmartConsole
 			{
 				if (CommandShortcuts.TryGetShortcut(key, out var shortcut))
 				{
-
-					_lastHelp += $"Shortcut:\n        {shortcut.Value.Item1} + {shortcut.Value.Item2}\n    ";
-
+					_lastHelp += $"Shortcut:\n        {(shortcut.Value.Item1 != ConsoleModifiers.None ? $"{shortcut.Value.Item1} + {shortcut.Value.Item2}" : shortcut.Value.Item2)}\n    ";
 				}
 			}
 		}
@@ -136,86 +134,72 @@ public partial class SmartConsole
 		_lastHelp = _lastHelp.TrimEnd(',', '\n');
 	}
 
-	public static string ReadInput(out bool manualCommandInput)
+	public static string ReadInput(out Command? command)
 	{
 		ClearBuffer();
 
 		bool saveToHistory;
 
-		while (ReadInputKey(out saveToHistory, out manualCommandInput)) ;
+		while (ReadInputKey(out saveToHistory, out command)) ;
 
-		var command = _buffer.ToString().Trim();
+		var rawCommand = _buffer.ToString().Trim();
 
 		if (saveToHistory)
 		{
-			_commandHistory.Add(command);
+			_commandHistory.Add(rawCommand);
 		}
 		else
 		{
 			_commandHistory.ResetCycle();
 		}
 
-		return command;
+		return rawCommand;
 	}
 
-	private static bool ReadInputKey(out bool saveToHistory, out bool manualCommandInput)
+	private static bool ReadInputKey(out bool saveToHistory, out Command? command)
 	{
 		var k = Console.ReadKey(true);
 
-		if (TryReadCommandShortcut(k, out saveToHistory))
+		if (TryReadCommandShortcut(k, out saveToHistory, out command))
 		{
-			manualCommandInput = false;
-
 			return false;
 		}
-
-		manualCommandInput = true;
 
 		return ReadInputChar(k, out saveToHistory);
 	}
 
-	private static bool TryReadCommandShortcut(ConsoleKeyInfo k, out bool saveToHistory)
+	private static bool TryReadCommandShortcut(ConsoleKeyInfo k, out bool saveToHistory, out Command? command)
 	{
 		saveToHistory = false;
 
 		if (CommandShortcuts.TryGetAction(k, out var action))
 		{
-			(var type, var methods) = InstanceMap.Instance.GetTypes()
-				.Select(t => (type: t, methods: CommandShortcuts.GetMethods(t)))
-				.SingleOrDefault(p => p.methods.ContainsKey(action));
-
-			if (type is null)
+			if (action == HELP_COMMAND)
 			{
-				throw new InvalidOperationException($"Invalid value for shortcut '{k.Modifiers} + {k.Key}'");
+				command = null;
+
+				GetHelp(out saveToHistory);
 			}
+			else
+			{
+				(var type, var methods) = InstanceMap.Instance.GetTypes()
+					.Select(t => (type: t, methods: CommandShortcuts.GetMethods(t)))
+					.SingleOrDefault(p => p.methods.ContainsKey(action));
 
-			var method = methods[action];
+				if (type is null)
+				{
+					throw new InvalidOperationException($"Invalid value for shortcut '{k.Modifiers} + {k.Key}'");
+				}
 
-			var instances = InstanceMap.Instance.GetInstances(type);
+				var method = methods[action];
 
-			var command = new Command(new CommandReference(type.Name, method.Name), "", null);
-
-			command.Execute(instances, type);
-
-			// try
-			// {
-			// 	instances.ForEach(i =>
-			// 	{
-			// 		method.Invoke(i, null);
-
-			// 		if (method.GetCustomAttribute<CommandReferenceAttribute>()!.StateModifier)
-			// 		{
-			// 			i.InvokeStateModifierCommandExecutedEvent();
-			// 		}
-			// 	});
-			// }
-			// catch (Exception ex)
-			// {
-			// 	throw ex.InnerException ?? ex;
-			// }
+				command = new Command(new CommandReference(type.Name, method.Name), "", null);
+			}
 
 			return true;
 		}
+
+		command = null;
 
 		return false;
 	}
@@ -238,7 +222,6 @@ public partial class SmartConsole
 			ConsoleKey.Home => MoveCursorToTheLeft(),
 			ConsoleKey.End => MoveCursorToTheRight(),
 			ConsoleKey.Escape => Escape(),
-			ConsoleKey.F1 => GetHelp(out saveToHistory),
 
 			_ => ManualInsertCharToBuffer(k.KeyChar)
 		};
@@ -669,6 +652,6 @@ public partial class SmartConsole
 			_ => 1
 		};
 
-		Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, 5000));
+		Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, 300));
 	}
 }

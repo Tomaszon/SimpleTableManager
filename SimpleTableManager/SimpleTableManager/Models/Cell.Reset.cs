@@ -8,5 +8,11 @@ namespace SimpleTableManager.Models
 		{
 			ContentFunction = null;
 		}
+
+		[CommandReference]
+		public void ResetComment()
+		{
+			Comment = null;
+		}
 	}
 }
