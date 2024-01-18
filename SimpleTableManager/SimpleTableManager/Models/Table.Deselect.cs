@@ -34,8 +34,7 @@ public partial class Table
 		Rows[y].ForEach(c => c.IsSelected = false);
 	}
 
-	[CommandReference]
-	[CommandShortcut("deselectAllCells")]
+	[CommandReference, CommandShortcut("deselectAllCells")]
 	public void DeselectAll()
 	{
 		Content.ForEach(c => c.IsSelected = false);

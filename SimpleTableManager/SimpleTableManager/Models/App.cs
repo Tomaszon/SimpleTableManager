@@ -37,8 +37,7 @@ public class App : CommandExecuterBase
 		EditHistory.Add(content);
 	}
 
-	[CommandReference]
-	[CommandShortcut("redoChange")]
+	[CommandReference, CommandShortcut("redoChange")]
 	public void Redo()
 	{
 		if (EditHistory.TryGetNextHistoryItem(out var state))
@@ -58,8 +57,7 @@ public class App : CommandExecuterBase
 		}
 	}
 
-	[CommandReference]
-	[CommandShortcut("undoChange")]
+	[CommandReference, CommandShortcut("undoChange")]
 	public void Undo()
 	{
 		if (EditHistory.TryGetPreviousHistoryItem(out var state))
@@ -93,15 +91,15 @@ public class App : CommandExecuterBase
 		{
 			Console.WriteLine("Good bye!");
 
+			SmartConsole.PlayShutdown();
+
 			Console.ReadKey();
 
 			Environment.Exit(0);
 		}
 	}
 
-	[CommandReference(StateModifier = false)]
-	[CommandInformation("Refreshes the view")]
-	[CommandShortcut]
+	[CommandReference(StateModifier = false), CommandShortcut, CommandInformation("Refreshes the view")]
 	public static void Refresh()
 	{
 		Console.ResetColor();

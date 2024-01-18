@@ -629,21 +629,23 @@ public partial class SmartConsole
 		return true;
 	}
 
-
-	public static void Play(Note note)
+	public static void PlayStartup()
 	{
-		if (!Settings.Current.Audio)
-		{
-			return;
-		}
+		Play(GetFrequency(Note.Question), 250, 2);
+		Play(GetFrequency(Note.Error), 250, 1);
+		Play(GetFrequency(Note.Ok), 250, 1);
+	}
 
-		var frequency = note switch
-		{
-			Note.Ok => 800,
-			Note.Question => 1300,
+	public static void PlayShutdown()
+	{
+		Play(GetFrequency(Note.Question), 250, 2);
+		Play(GetFrequency(Note.Error), 250, 1);
+		Play(GetFrequency(Note.Ok), 250, 1);
+	}
 
-			_ => 300
-		};
+	public static void PlayNote(Note note)
+	{
+		var frequency = GetFrequency(note);
 
 		var count = note switch
 		{
@@ -652,6 +654,27 @@ public partial class SmartConsole
 			_ => 1
 		};
 
-		Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, 300));
+		Play(frequency, 250, count);
+	}
+
+	private static void Play(int frequency, int length, int count)
+	{
+		if (!Settings.Current.Audio)
+		{
+			return;
+		}
+
+		Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, length));
+	}
+
+	private static int GetFrequency(Note note)
+	{
+		return note switch
+		{
+			Note.Ok => 800,
+			Note.Question => 1300,
+
+			_ => 300
+		};
 	}
 }

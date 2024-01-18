@@ -2,8 +2,7 @@ namespace SimpleTableManager.Models;
 
 public partial class Cell
 {
-	[CommandReference(StateModifier = false)]
-	[CommandShortcut("showCellDetails")]
+	[CommandReference(StateModifier = false), CommandShortcut("showCellDetails")]
 	public object ShowDetails()
 	{
 		return new

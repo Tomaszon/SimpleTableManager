@@ -41,6 +41,14 @@
 		"name": "setName",
 		"size": "setSize"
 	},
+	"move": {
+		"selection": {
+			"left": "moveSelectionLeft",
+			"right": "moveSelectionRight",
+			"up": "moveSelectionUp",
+			"down": "moveSelectionDown"
+		}
+	},
 	"select": {
 		"cell": "selectCell",
 		"cells": "selectCells",

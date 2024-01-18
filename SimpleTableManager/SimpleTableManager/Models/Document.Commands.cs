@@ -29,8 +29,7 @@ public partial class Document
 		ActivateTable(index);
 	}
 
-	[CommandReference]
-	[CommandShortcut]
+	[CommandReference, CommandShortcut]
 	public void ActivateNextTable()
 	{
 		GetActiveTable(out var index);
@@ -41,8 +40,7 @@ public partial class Document
 		}
 	}
 
-	[CommandReference]
-	[CommandShortcut]
+	[CommandReference, CommandShortcut]
 	public void ActivatePreviousTable()
 	{
 		GetActiveTable(out var index);
@@ -53,8 +51,7 @@ public partial class Document
 		}
 	}
 
-	[CommandReference]
-	[CommandShortcut]
+	[CommandReference, CommandShortcut]
 	public void AddNewTable(Size? size = null, string? name = null)
 	{
 		name ??= $"Table{Tables.Count}";
@@ -72,8 +69,7 @@ public partial class Document
 	}
 
 	[CommandInformation("Saves the document overwriting the previous save file")]
-	[CommandShortcut("saveDocument")]
-	[CommandReference(StateModifier = false)]
+	[CommandShortcut("saveDocument"), CommandReference(StateModifier = false)]
 	public void Save()
 	{
 		ThrowIf(Metadata.Path is null, $"Specify a file name to save to with 'save-as'");

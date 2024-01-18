@@ -7,6 +7,8 @@ public class Program
 {
 	private static void Main()
 	{
+		SmartConsole.PlayStartup();
+
 		Console.OutputEncoding = System.Text.Encoding.Unicode;
 		Console.InputEncoding = System.Text.Encoding.Unicode;
 
@@ -136,7 +138,7 @@ public class Program
 			{
 				SmartConsole.Render(app.Document);
 
-				SmartConsole.Play(Note.Ok);
+				SmartConsole.PlayNote(Note.Ok);
 
 				var rawCommand = SmartConsole.ReadInput(out var command);
 
@@ -146,38 +148,38 @@ public class Program
 
 				SmartConsole.ShowResults(results);
 
-				SmartConsole.Play(Note.Ok);
+				SmartConsole.PlayNote(Note.Ok);
 			}
 			catch (ArgumentCountException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
 
-				SmartConsole.Play(Note.Error);
+				SmartConsole.PlayNote(Note.Error);
 			}
 			catch (IncompleteCommandException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
 
-				SmartConsole.Play(Note.Error);
+				SmartConsole.PlayNote(Note.Error);
 			}
 			catch (PartialKeyException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, null, ex.Message);
 
-				SmartConsole.Play(Note.Question);
+				SmartConsole.PlayNote(Note.Question);
 			}
 			catch (HelpRequestedException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
 
-				SmartConsole.Play(Note.Question);
+				SmartConsole.PlayNote(Note.Question);
 			}
 			catch (Exception ex) when (ex.IsHandled())
 			{
 				Console.WriteLine(ex.Message);
 				Console.Write("Press any key to continue");
 
-				SmartConsole.Play(Note.Error);
+				SmartConsole.PlayNote(Note.Error);
 
 				Console.ReadKey();
 			}
@@ -186,7 +188,7 @@ public class Program
 				Console.WriteLine($"{ex.Message} -> {ex}");
 				Console.Write("Press any key to continue");
 
-				SmartConsole.Play(Note.Critical);
+				SmartConsole.PlayNote(Note.Critical);
 
 				Console.ReadKey();
 			}

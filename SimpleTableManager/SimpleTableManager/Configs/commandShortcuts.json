@@ -1,5 +1,6 @@
 {
 	"F1": "help",
+	"F2": "showCellDetails",
 	"F5": "refresh",
 	"Control, Shift + A": "deselectAllCells",
 	"Control + A": "selectAllCells",
@@ -10,5 +11,8 @@
 	"Control + N": "addNewTable",
 	"Control + PageUp": "activatePreviousTable",
 	"Control + PageDown": "activateNextTable",
-	"F2": "showCellDetails"
+	"Control, Shift + LeftArrow": "moveSelectionLeft",
+	"Control, Shift + RightArrow": "moveSelectionRight",
+	"Control, Shift + UpArrow": "moveSelectionUp",
+	"Control, Shift + DownArrow": "moveSelectionDown"
 }
