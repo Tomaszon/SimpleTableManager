@@ -631,9 +631,9 @@ public partial class SmartConsole
 
 	public static void PlayStartup()
 	{
-		Play(GetFrequency(Note.Question), 250, 2);
 		Play(GetFrequency(Note.Error), 250, 1);
 		Play(GetFrequency(Note.Ok), 250, 1);
+		Play(GetFrequency(Note.Question), 250, 2);
 	}
 
 	public static void PlayShutdown()

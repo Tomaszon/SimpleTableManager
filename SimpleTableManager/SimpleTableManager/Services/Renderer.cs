@@ -354,9 +354,23 @@ public static class Renderer
 		var horizontalAlignmentToRender = cell.ContentAlignment.Horizontal;
 		var verticalAlignmentToRender = cell.ContentAlignment.Vertical;
 
-		if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.Layer)
+		if (!ignoreRenderingMode)
 		{
-			contentsToRender = new List<string>() { cell.LayerIndex.ToString() };
+			switch (RendererSettings.RenderingMode)
+			{
+				case RenderingMode.Layer:
+					{
+						contentsToRender = new List<string>() { cell.LayerIndex.ToString() };
+					}
+					break;
+
+				case RenderingMode.Comment:
+					{
+						contentsToRender = cell.Comment?.Wrap() ?? Enumerable.Empty<string>();
+					}
+					break;
+			}
+
 			horizontalAlignmentToRender = HorizontalAlignment.Center;
 			verticalAlignmentToRender = VerticalAlignment.Center;
 		}
@@ -401,13 +415,20 @@ public static class Renderer
 				}
 			}
 
-			if (!ignoreRenderingMode && RendererSettings.RenderingMode == RenderingMode.Layer)
+			ChangeToCellContentColors(cell);
+			
+			if (!ignoreRenderingMode)
 			{
-				ChangeToLayerIndexContentColors(cell);
-			}
-			else
-			{
-				ChangeToCellContentColors(cell);
+				switch (RendererSettings.RenderingMode)
+				{
+					case RenderingMode.Layer:
+						ChangeToLayerIndexContentColors(cell);
+					break;
+
+					case RenderingMode.Comment:
+						ChangeToCommentContentColors(cell);
+						break;
+				}
 			}
 
 			ShowIndexCellSelection(showSelection);
@@ -527,6 +548,16 @@ public static class Renderer
 			Console.ForegroundColor = Settings.Current.SelectedContentColor.Foreground;
 			Console.BackgroundColor = Settings.Current.SelectedContentColor.Background;
 		}
+	}
+
+	private static void ChangeToCommentContentColors(Cell cell)
+	{
+		Console.ForegroundColor = cell.IsSelected ?
+			Settings.Current.SelectedContentColor.Foreground :
+			Settings.Current.NotAvailableContentColor.Foreground;
+		Console.BackgroundColor = cell.IsSelected ?
+			Settings.Current.SelectedContentColor.Background :
+			Settings.Current.NotAvailableContentColor.Background;
 	}
 
 	private static void ChangeToLayerIndexContentColors(Cell cell)

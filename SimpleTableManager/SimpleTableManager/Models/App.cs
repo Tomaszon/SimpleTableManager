@@ -53,7 +53,6 @@ public class App : CommandExecuterBase
 			m.Position = 0;
 
 			Document.Deserialize(sr);
-
 		}
 	}
 

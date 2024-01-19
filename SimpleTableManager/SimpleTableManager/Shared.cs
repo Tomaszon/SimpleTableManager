@@ -55,4 +55,61 @@ public static class Shared
 			ex is ArgumentException ||
 			ex is ArgumentCountException;
 	}
+
+	public static void SerializeObject(StreamWriter sw, object? source, TypeNameHandling typeNameHandling = TypeNameHandling.All)
+	{
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = typeNameHandling,
+		};
+
+		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, source);
+	}
+
+	public static void DeserializeObject(StreamReader sr, object target)
+	{
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = TypeNameHandling.Auto,
+			ContractResolver = new ClearPropertyContractResolver(),
+		};
+
+		serializer.Populate(new JsonTextReader(sr), target);
+	}
+
+	public static string SerializeObject(object? source)
+	{
+		using var m = new MemoryStream();
+		using var sw = new StreamWriter(m);
+		using var sr = new StreamReader(m);
+
+		SerializeObject(sw, source);
+
+		sw.Flush();
+
+		m.Position = 0;
+
+		return sr.ReadToEnd();
+	}
+
+	public static object? DeserializeObject(string state)
+	{
+		using var m = new MemoryStream();
+		using var sw = new StreamWriter(m);
+		using var sr = new StreamReader(m);
+
+		sw.Write(state);
+
+		sw.Flush();
+
+		m.Position = 0;
+
+		var serializer = new JsonSerializer
+		{
+			TypeNameHandling = TypeNameHandling.Auto,
+			ContractResolver = new ClearPropertyContractResolver(),
+		};
+
+		return serializer.Deserialize(new JsonTextReader(sr));
+	}
 }

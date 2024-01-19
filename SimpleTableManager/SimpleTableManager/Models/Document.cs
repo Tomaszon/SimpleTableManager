@@ -67,23 +67,12 @@ public partial class Document : CommandExecuterBase
 
 	public void Serialize(StreamWriter sw)
 	{
-		var serializer = new JsonSerializer
-		{
-			TypeNameHandling = TypeNameHandling.Auto,
-		};
-
-		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, this);
+		Shared.SerializeObject(sw, this, TypeNameHandling.Auto);
 	}
 
 	public void Deserialize(StreamReader sr)
 	{
-		var serializer = new JsonSerializer
-		{
-			TypeNameHandling = TypeNameHandling.Auto,
-			ContractResolver = new ClearPropertyContractResolver(),
-		};
-
-		serializer.Populate(new JsonTextReader(sr), this);
+		Shared.DeserializeObject(sr, this);
 	}
 
 	public void GetMetaInfos(string path)

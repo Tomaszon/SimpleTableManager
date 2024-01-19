@@ -7,7 +7,6 @@ public class Program
 {
 	private static void Main()
 	{
-		SmartConsole.PlayStartup();
 
 		Console.OutputEncoding = System.Text.Encoding.Unicode;
 		Console.InputEncoding = System.Text.Encoding.Unicode;
@@ -25,6 +24,8 @@ public class Program
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable());
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable().GetSelectedCells());
 
+		SmartConsole.PlayStartup();
+		
 		#region test
 
 		// var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });

@@ -4,5 +4,6 @@ namespace SimpleTableManager.Models.Enumerations;
 public enum RenderingMode
 {
 	Content,
+	Comment,
 	Layer
 }
