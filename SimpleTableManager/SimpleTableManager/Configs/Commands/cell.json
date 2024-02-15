@@ -41,9 +41,11 @@
 		"layer-index": "decreaseLayerIndex"
 	},
 	"copy": {
-		"content": "copyContent"
+		"content": "copyContent",
+		"format": "copyFormat"
 	},
 	"paste": {
-		"content": "pasteContent"
+		"content": "pasteContent",
+		"format": "pasteFormat"
 	}
 }

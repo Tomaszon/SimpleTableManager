@@ -8,12 +8,39 @@ namespace SimpleTableManager.Models;
 [CommandInformation("Cell related commands")]
 public partial class Cell : CommandExecuterBase
 {
+	[JsonIgnore]
+	private IEnumerable<string> _cachedFormattedContent = Enumerable.Empty<string>();
+
 	public Table Table { get; set; } = default!;
 
 	/// <summary>
 	/// Manually set size not including the borders
 	/// </summary>
 	public Size GivenSize { get; set; } = new(7, 1);
+
+	public IFunction? ContentFunction { get; set; }
+
+	public bool IsSelected { get; set; }
+
+	public CellVisibility Visibility { get; set; } = new();
+
+	public ContentPadding ContentPadding { get; set; } = new();
+
+	public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);
+
+	public ConsoleColorSet ContentColor { get; set; } = new(Settings.Current.DefaultContentColor);
+
+	public ConsoleColorSet BorderColor { get; set; } = new(Settings.Current.DefaultBorderColor);
+
+	public int LayerIndex { get; set; } = 0;
+
+	public string? Comment { get; set; }
+
+	[JsonIgnore]
+	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
+
+	[JsonIgnore]
+	public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
 	/// <summary>
 	/// Size not including the borders
@@ -64,33 +91,6 @@ public partial class Cell : CommandExecuterBase
 			}
 		}
 	}
-
-	[JsonIgnore]
-	private IEnumerable<string> _cachedFormattedContent = Enumerable.Empty<string>();
-
-	public IFunction? ContentFunction { get; set; }
-
-	public bool IsSelected { get; set; }
-
-	public CellVisibility Visibility { get; set; } = new();
-
-	public ContentPadding ContentPadding { get; set; } = new();
-
-	public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);
-
-	public ConsoleColorSet ContentColor { get; set; } = new(Settings.Current.DefaultContentColor);
-
-	public ConsoleColorSet BorderColor { get; set; } = new(Settings.Current.DefaultBorderColor);
-
-	public int LayerIndex { get; set; } = 0;
-
-	public string? Comment { get; set; }
-
-	[JsonIgnore]
-	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
-
-	[JsonIgnore]
-	public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
 	[JsonConstructor]
 	public Cell() { }

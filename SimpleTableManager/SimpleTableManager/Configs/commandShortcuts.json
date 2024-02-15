@@ -15,6 +15,7 @@
 	"Control, Shift + RightArrow": "moveSelectionRight",
 	"Control, Shift + UpArrow": "moveSelectionUp",
 	"Control, Shift + DownArrow": "moveSelectionDown",
-	"Control, Shift + X": "copyCellContent",
+	"Control, Shift + B": "copyCellContent",
+	"Control, Shift + X": "cutCellContent",
 	"Control, Shift + V": "pasteCellContent"
 }

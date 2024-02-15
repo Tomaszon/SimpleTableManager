@@ -14,13 +14,12 @@ public static class GlobalContainer
 	}
 
 	public static T? TryGet<T>(string key)
-	where T: class
 	{
 		if (_dictionary.TryGetValue(key, out var state))
 		{
 			return (T?)Shared.DeserializeObject(state);
 		}
 
-		return null;
+		return default;
 	}
 }
