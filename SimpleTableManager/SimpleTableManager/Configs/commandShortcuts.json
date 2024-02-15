@@ -7,7 +7,7 @@
 	"Control + S": "saveDocument",
 	"Control + Z": "undoChange",
 	"Control + Y": "redoChange",
-	"Control, Shift + Delete": "resetCellContent",
+	"Control + Delete": "resetCellContent",
 	"Control + N": "addNewTable",
 	"Control + PageUp": "activatePreviousTable",
 	"Control + PageDown": "activateNextTable",
@@ -15,7 +15,9 @@
 	"Control, Shift + RightArrow": "moveSelectionRight",
 	"Control, Shift + UpArrow": "moveSelectionUp",
 	"Control, Shift + DownArrow": "moveSelectionDown",
-	"Control, Shift + B": "copyCellContent",
+	"Control, Shift + C": "copyCellContent",
 	"Control, Shift + X": "cutCellContent",
-	"Control, Shift + V": "pasteCellContent"
+	"Control, Shift + V": "pasteCellContent",
+	"Control, Alt + C": "copyCellFormat",
+	"Control, Alt + V": "pasteCellFormat"
 }

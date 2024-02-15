@@ -7,7 +7,7 @@ public class Program
 {
 	private static void Main()
 	{
-
+		Console.TreatControlCAsInput = true;
 		Console.OutputEncoding = System.Text.Encoding.Unicode;
 		Console.InputEncoding = System.Text.Encoding.Unicode;
 
