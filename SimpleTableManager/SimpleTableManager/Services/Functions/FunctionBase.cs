@@ -1,3 +1,5 @@
+using SimpleTableManager.Extensions;
+
 namespace SimpleTableManager.Services.Functions;
 
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
@@ -60,7 +62,8 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		return typeof(TIn);
 	}
 
-	public TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>
+	public TParse? GetNamedArgument<TParse>(ArgumentName key)
+		where TParse : IParsable<TParse>
 	{
 		if (NamedArguments.TryGetValue(key, out var s))
 		{
@@ -69,7 +72,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute>().SingleOrDefault(p => p.Key == key) is var a && a is { })
 		{
-			return (TParse)a.Value;
+			return a.Value.ToType<TParse>();
 		}
 
 		return default;

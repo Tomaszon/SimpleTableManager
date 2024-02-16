@@ -5,11 +5,11 @@ public class NamedArgumentAttribute : Attribute
 {
 	public ArgumentName Key { get; set; }
 
-	public object Value { get; set; }
+	public IConvertible Value { get; set; }
 
 	public NamedArgumentAttribute(ArgumentName key, object value)
 	{
 		Key = key;
-		Value = value;
+		Value = (IConvertible)value;
 	}
 }

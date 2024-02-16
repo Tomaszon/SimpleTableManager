@@ -3,8 +3,9 @@ using System.Numerics;
 
 namespace SimpleTableManager.Services.Functions;
 
+[NamedArgument(ArgumentName.Power, 1), NamedArgument(ArgumentName.Base, 2)]
 public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
-	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, TOut
+	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, IConvertible, TOut
 {
 	public override IEnumerable<TOut> Execute()
 	{
@@ -14,7 +15,7 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 
 			NumericFunctionOperator.Neg => Arguments.Select(a => -a).Cast<TOut>(),
 
-			NumericFunctionOperator.Abs => Arguments.Select(a => TIn.Abs(a)).Cast<TOut>(),
+			NumericFunctionOperator.Abs => Arguments.Select(TIn.Abs).Cast<TOut>(),
 
 			NumericFunctionOperator.Sum => Sum(Arguments/*.Union(ReferenceArguments)*/).Wrap<TOut>(),
 
@@ -32,8 +33,38 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 
 			NumericFunctionOperator.Div => Divide(Arguments).Wrap<TOut>(),
 
+			NumericFunctionOperator.Pow => Power(Arguments, GetNamedArgument<int>(ArgumentName.Power)),
+
+			NumericFunctionOperator.Sqrt => Sqrt(Arguments),
+
+			NumericFunctionOperator.Log2 => LogN(Arguments, 2.ToType<TIn>()),
+
+			NumericFunctionOperator.Log10 => LogN(Arguments, 10.ToType<TIn>()),
+
+			NumericFunctionOperator.LogE => LogN(Arguments, double.E.ToType<TIn>()),
+
+			NumericFunctionOperator.LogN => LogN(Arguments, GetNamedArgument<TIn>(ArgumentName.Base)),
+
 			_ => throw GetInvalidOperatorException()
 		};
+	}
+
+	private static IEnumerable<TOut> LogN(IEnumerable<TIn> array, TIn @base)
+	{
+		return array.Select(p =>
+			Math.Log(p.ToDouble(null), @base.ToDouble(null)).ToType<TOut>());
+	}
+
+	private static IEnumerable<TOut> Sqrt(IEnumerable<TIn> array)
+	{
+		return array.Select(p =>
+			Math.Sqrt(p.ToDouble(null)).ToType<TOut>());
+	}
+
+	private static IEnumerable<TOut> Power(IEnumerable<TIn> array, int power)
+	{
+		return array.Select(p =>
+			Shared.IndexArray(power).Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= p).ToType<TOut>());
 	}
 
 	private static TIn Avg(IEnumerable<TIn> array)

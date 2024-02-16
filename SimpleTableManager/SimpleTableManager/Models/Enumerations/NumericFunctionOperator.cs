@@ -18,5 +18,11 @@ public enum NumericFunctionOperator
 	Div,
 	Rem,
 	And,
-	Or
+	Or,
+	Pow,
+	Sqrt,
+	Log2,
+	Log10,
+	LogE,
+	LogN
 }

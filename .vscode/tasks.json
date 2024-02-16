@@ -63,6 +63,9 @@
 			"label": "stmBuild",
 			"command": "dotnet",
 			"type": "process",
+			"dependsOn": [
+				"stmClean"
+			],
 			"args": [
 				"build",
 				"${workspaceFolder}/SimpleTableManager/SimpleTableManager/SimpleTableManager.csproj",
@@ -76,6 +79,9 @@
 			"label": "testsBuild",
 			"command": "dotnet",
 			"type": "process",
+			"dependsOn": [
+				"testsClean"
+			],
 			"args": [
 				"build",
 				"${workspaceFolder}/SimpleTableManager/Tests/SimpleTableManager.Tests.csproj",

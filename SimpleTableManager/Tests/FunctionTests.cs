@@ -1,3 +1,6 @@
+using System.Runtime.Intrinsics.X86;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Legacy;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
@@ -57,11 +60,49 @@ namespace SimpleTableManager.Tests
 		[TestCase(NumericFunctionOperator.Max, new[] { 1, 5, 3 }, 5)]
 		[TestCase(NumericFunctionOperator.Abs, new[] { -1 }, 1)]
 		[TestCase(NumericFunctionOperator.Rem, new[] { 10, 3 }, new[] { 0, 1 })]
+		[TestCase(NumericFunctionOperator.Sqrt, new[] { 4, 9, 16 }, new[] { 2, 3, 4 })]
+		[TestCase(NumericFunctionOperator.LogN, new[] { 2, 4, 8 }, new[] { 1, 2, 3 })]
+		[TestCase(NumericFunctionOperator.Log2, new[] { 2, 4, 8 }, new[] { 1, 2, 3 })]
+		[TestCase(NumericFunctionOperator.Log10, new[] { 10, 100, 1 }, new[] { 1, 2, 0 })]
 		public void IntegerTest(NumericFunctionOperator operation, int[] values, params int[] results)
 		{
 			var fn = CreateFunction(operation, values);
 
 			CheckResults(fn.Execute(), results);
+		}
+
+		[Test]
+		public void DecimalTest1()
+		{
+			var fn = CreateFunction(NumericFunctionOperator.Sum, new[] { 4m, 3m });
+
+			CheckResults(fn.Execute(), 7m.Wrap());
+		}
+
+		// [Test]
+		// public void DecimalTest2()
+		// {
+		// 	var fn = CreateFunction(NumericFunctionOperator.Sqrt, new[] { 4m, 9m, 12m });
+
+		// 	CheckResults(fn.Execute(), new[] { 2m, 3m, Convert.ToDecimal(Math.Sqrt(Convert.ToDouble(12m))) });
+		// }
+
+		// [Test]
+		// public void DecimalTest3()
+		// {
+		// 	var fn = CreateFunction(NumericFunctionOperator.LogN, new[] { 2m, 4m, 10m });
+
+		// 	CheckResults(fn.Execute(), new[] { 1m, 2m, Convert.ToDecimal(Math.Log2(10d)) });
+		// }
+
+		[Test]
+		public void DecimalTest4()
+		{
+			var e = Convert.ToDecimal(double.E);
+
+			var fn = CreateFunction(NumericFunctionOperator.LogE, new[] { e, e * e });
+
+			CheckResults(fn.Execute(), new[] { 1m, 2m });
 		}
 
 		[Test]

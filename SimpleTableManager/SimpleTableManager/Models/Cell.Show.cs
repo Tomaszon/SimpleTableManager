@@ -31,7 +31,7 @@ public partial class Cell
 	{
 		return ContentFunction is null ? "None" : new
 		{
-			Type = ContentFunction.GetType(),
+			Type = ContentFunction.GetType().Name,
 			ContentFunction.Operator,
 			ContentFunction.NamedArguments,
 			ContentFunction.Arguments,

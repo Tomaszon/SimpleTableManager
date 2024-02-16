@@ -4,6 +4,11 @@ namespace SimpleTableManager.Extensions;
 
 public static class Extensions
 {
+	public static TOut ToType<TOut>(this IConvertible convertible)
+	{
+		return (TOut)convertible.ToType(typeof(TOut), null);
+	}
+
 	public static string PadLeftRight(this string value, int totalWidth)
 	{
 		int leftPadding = (totalWidth - value.Length) / 2;

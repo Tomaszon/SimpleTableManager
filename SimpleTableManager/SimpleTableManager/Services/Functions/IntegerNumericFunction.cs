@@ -6,6 +6,7 @@ public class IntegerNumericFunction : NumericFunctionBase<int, int>
 	public override IEnumerable<int> Execute()
 	{
 		var divider = GetNamedArgument<int>(ArgumentName.Divider);
+		var @base = GetNamedArgument<int>(ArgumentName.Base);
 
 		return Operator switch
 		{

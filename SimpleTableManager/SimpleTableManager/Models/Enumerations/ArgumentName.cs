@@ -9,5 +9,7 @@ public enum ArgumentName
 	Decimals,
 	Trim,
 	Count,
+	Power,
+	Base,
 	Format
 }
