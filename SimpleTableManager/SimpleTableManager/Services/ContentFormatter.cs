@@ -14,10 +14,27 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 		return this;
 	}
 
-	public string Format(string? format, object? arg, IFormatProvider? formatProvider)
+	public string Format(string? _, object? arg, IFormatProvider? formatProvider)
 	{
+		if (string.IsNullOrEmpty(_format) || _format.Equals("null", StringComparison.OrdinalIgnoreCase))
+		{
+			return arg!.ToString()!;
+		}
+
 		if (arg is IFormattable p)
 		{
+			if (arg is decimal d)
+			{
+				return _format switch
+				{
+					"%" => $"{d * 100:0}%",
+					//TODO
+					// "diagram" => string.Join("\r\n", Enumerable.Repeat('x', (int)decimal.Round(Math.Max(Math.Min(d, 1), 0) * 5))),
+
+					_ => p.ToString(_format, null)
+				};
+			}
+
 			return p.ToString(_format, null);
 		}
 		else if (arg is bool b)
@@ -26,8 +43,6 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 			{
 				"YN" => b ? "Y" : "N",
 				"YesNo" => b ? "Yes" : "No",
-				"" => b.ToString(),
-				null => b.ToString(),
 
 				_ => throw new FormatException()
 			};

@@ -28,7 +28,8 @@
 	},
 	"reset": {
 		"content": "resetContent",
-		"comment": "resetComment"
+		"comment": "resetComment",
+		"format": "resetFormat"
 	},
 	"show": {
 		"details": "showDetails",

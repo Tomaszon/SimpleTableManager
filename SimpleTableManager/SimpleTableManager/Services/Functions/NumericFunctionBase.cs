@@ -19,19 +19,19 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 
 			NumericFunctionOperator.Sum => Sum(Arguments/*.Union(ReferenceArguments)*/).Wrap<TOut>(),
 
-			NumericFunctionOperator.Sub => Sub(Arguments).Wrap<TOut>(),
+			NumericFunctionOperator.Sub => Sub(Arguments).Wrap(),
 
-			NumericFunctionOperator.Avg => Avg(Arguments/*.Union(ReferenceArguments)*/).Wrap<TOut>(),
+			NumericFunctionOperator.Avg => Avg(Arguments/*.Union(ReferenceArguments)*/).Wrap(),
 
-			NumericFunctionOperator.Min => Min(Arguments).Wrap<TOut>(),
+			NumericFunctionOperator.Min => Min(Arguments).Wrap(),
 			//new[] { Min(Arguments), Min(ReferenceArguments) }.Min().Wrap<TOut>(),
 
-			NumericFunctionOperator.Max => Max(Arguments).Wrap<TOut>(),
+			NumericFunctionOperator.Max => Max(Arguments).Wrap(),
 			//new[] { Max(Arguments), Max(ReferenceArguments) }.Max().Wrap<TOut>(),
 
-			NumericFunctionOperator.Mul => Multiply(Arguments).Wrap<TOut>(),
+			NumericFunctionOperator.Mul => Multiply(Arguments).Wrap(),
 
-			NumericFunctionOperator.Div => Divide(Arguments).Wrap<TOut>(),
+			NumericFunctionOperator.Div => Divide(Arguments).Wrap(),
 
 			NumericFunctionOperator.Pow => Power(Arguments, GetNamedArgument<int>(ArgumentName.Power)),
 
@@ -67,19 +67,19 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 			Shared.IndexArray(power).Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= p).ToType<TOut>());
 	}
 
-	private static TIn Avg(IEnumerable<TIn> array)
+	private static TOut Avg(IEnumerable<TIn> array)
 	{
-		return Sum(array) / TIn.Parse(array.Count().ToString(), NumberStyles.Integer, null);
+		return  (Sum(array) / array.Count().ToType<TIn>()).ToType<TOut>();
 	}
 
-	private static TIn Multiply(IEnumerable<TIn> array)
+	private static TOut Multiply(IEnumerable<TIn> array)
 	{
-		return array.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c);
+		return array.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c).ToType<TOut>();
 	}
 
-	protected static TIn Divide(IEnumerable<TIn> array)
+	protected static TOut Divide(IEnumerable<TIn> array)
 	{
-		return array.Skip(1).Aggregate(array.First(), (a, c) => a /= c);
+		return array.Skip(1).Aggregate(array.First(), (a, c) => a /= c).ToType<TOut>();
 	}
 
 	protected static TIn Sum(IEnumerable<TIn> array)
@@ -87,18 +87,18 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 		return array.Aggregate(TIn.AdditiveIdentity, (a, c) => a += c);
 	}
 
-	protected static TIn Sub(IEnumerable<TIn> array)
+	protected static TOut Sub(IEnumerable<TIn> array)
 	{
-		return array.Skip(1).Aggregate(array.First(), (a, c) => a -= c);
+		return array.Skip(1).Aggregate(array.First(), (a, c) => a -= c).ToType<TOut>();
 	}
 
-	private static TIn Min(IEnumerable<TIn> array)
+	private static TOut Min(IEnumerable<TIn> array)
 	{
-		return array.Any() ? array.Min() : TIn.MaxValue;
+		return (array.Any() ? array.Min() : TIn.MaxValue).ToType<TOut>();
 	}
 
-	private static TIn Max(IEnumerable<TIn> array)
+	private static TOut Max(IEnumerable<TIn> array)
 	{
-		return array.Any() ? array.Max() : TIn.MinValue;
+		return (array.Any() ? array.Max() : TIn.MinValue).ToType<TOut>();
 	}
 }

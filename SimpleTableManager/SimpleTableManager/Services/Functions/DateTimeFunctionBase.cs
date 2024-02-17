@@ -11,7 +11,7 @@ public abstract class DateTimeFunctionBase<TIn, TOut> : FunctionBase<DateTimeFun
 		{
 			DateTimeFunctionOperator.Const => Arguments.Cast<TOut>(),
 			DateTimeFunctionOperator.Sum => Sum().Wrap(),
-			DateTimeFunctionOperator.Now => Now().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.Now => Now().Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};

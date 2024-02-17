@@ -35,7 +35,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 		var formatter = new ContentFormatter(format);
 
-		return Execute().Select(c => string.Format(formatter, "{0}", c)).ToList();
+		return Execute().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n")).ToList();
 	}
 
 	public virtual Type GetOutType()

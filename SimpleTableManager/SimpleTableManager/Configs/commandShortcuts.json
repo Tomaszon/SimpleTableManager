@@ -8,6 +8,7 @@
 	"Control + Z": "undoChange",
 	"Control + Y": "redoChange",
 	"Control + Delete": "resetCellContent",
+	"Control, Shift + Delete": "resetCellFormat",
 	"Control + N": "addNewTable",
 	"Control + PageUp": "activatePreviousTable",
 	"Control + PageDown": "activateNextTable",

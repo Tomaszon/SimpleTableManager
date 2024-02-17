@@ -23,7 +23,7 @@ public static class ContentParser
 
 		try
 		{
-			if (dataType.IsEnum)
+			if (dataType.Name == "Nullable`1" && dataType.GenericTypeArguments[0].IsEnum || dataType.IsEnum)
 			{
 				if (int.TryParse(value, out _))
 				{
