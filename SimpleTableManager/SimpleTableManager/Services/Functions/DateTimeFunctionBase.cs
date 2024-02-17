@@ -1,9 +1,9 @@
 namespace SimpleTableManager.Services.Functions;
 
-public abstract class DateTimeFunctionBase<TIn, TOut, TNow> : FunctionBase<DateTimeFunctionOperator, TIn, TOut>
-where TNow: struct
+public abstract class DateTimeFunctionBase<TIn, TOut> : FunctionBase<DateTimeFunctionOperator, TIn, TOut>
+	where TOut : struct
 {
-	protected TNow? NowProperty { get; set; }
+	protected TOut? NowProperty { get; set; }
 
 	public override IEnumerable<TOut> Execute()
 	{
@@ -19,5 +19,5 @@ where TNow: struct
 
 	protected abstract TOut Sum();
 
-	protected abstract TNow Now();
+	protected abstract TOut Now();
 }

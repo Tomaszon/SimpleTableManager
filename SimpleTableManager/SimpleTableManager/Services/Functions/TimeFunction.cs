@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Services.Functions;
 
-public class TimeFunction : DateTimeFunctionBase<TimeOnly, TimeOnly, TimeOnly>
+public class TimeFunction : DateTimeFunctionBase<TimeOnly, TimeOnly>
 {
 	protected override TimeOnly Sum()
 	{

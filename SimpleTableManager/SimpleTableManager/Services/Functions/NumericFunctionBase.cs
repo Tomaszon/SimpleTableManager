@@ -11,7 +11,7 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Const => Arguments.ToArray().Cast<TOut>(),
+			NumericFunctionOperator.Const => Arguments.Cast<TOut>(),
 
 			NumericFunctionOperator.Neg => Arguments.Select(a => -a).Cast<TOut>(),
 
