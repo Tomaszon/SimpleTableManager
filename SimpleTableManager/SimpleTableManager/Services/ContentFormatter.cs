@@ -29,7 +29,12 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 				{
 					"%" => $"{d * 100:0}%",
 					//TODO
-					// "diagram" => string.Join("\r\n", Enumerable.Repeat('x', (int)decimal.Round(Math.Max(Math.Min(d, 1), 0) * 5))),
+					"chart5v" => GetChart(d, 5),
+					"chart10v" => GetChart(d, 10),
+					"chart5h" => GetChart(d, 5, true),
+					"chart5hl" => GetChart(d, 5, true, true),
+					"chart10h" => GetChart(d, 10, true),
+					"chart10hl" => GetChart(d, 10, true, true),
 
 					_ => p.ToString(_format, null)
 				};
@@ -49,5 +54,26 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 		}
 
 		return arg!.ToString()!;
+	}
+
+	private static string GetChart(decimal value, int size, bool horizontal = false, bool label = false)
+	{
+		var f = (int)decimal.Round(Math.Max(Math.Min(value, 1), 0) * size);
+		var e = size - f;
+
+		if (horizontal)
+		{
+			return
+				(label ? value.ToString() : "") +
+				string.Join("", Enumerable.Repeat('░', e)) +
+				string.Join("", Enumerable.Repeat('█', f));
+		}
+		else
+		{
+			return
+				string.Join("\r\n", Enumerable.Repeat('░', e)) +
+				"\r\n" +
+				string.Join("\r\n", Enumerable.Repeat('█', f));
+		}
 	}
 }

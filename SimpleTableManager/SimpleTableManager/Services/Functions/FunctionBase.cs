@@ -1,4 +1,5 @@
 using SimpleTableManager.Extensions;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
@@ -35,7 +36,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 		var formatter = new ContentFormatter(format);
 
-		return Execute().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n")).ToList();
+		return Execute().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n", StringSplitOptions.RemoveEmptyEntries)).ToList();
 	}
 
 	public virtual Type GetOutType()
