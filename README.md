@@ -1,6 +1,6 @@
 # SimpleTableManager
 
-A console based document editing software
+A console-based document editing software.
 
 It is neet. It is fun.
 
@@ -40,13 +40,13 @@ It is neet. It is fun.
 - Copy/paste format
 
 ## Functions
-In STM every cell that has value its calculated from a function. If its not given by default a string function will be created.
+In STM every cell that has value is calculated from a function. If its not given by default a string function will be created.
 
-Some functions return a single others multiple values, depending on the operator
+Some functions return a single, others multiple values, depending on the operator.
 
-Some funtions support additional 'named' arguments, that control the behavior of operation or formatting
+Some functions support additional 'named' arguments, that control the behavior of operation or formatting.
 
-### Supported types and fucntion operators
+### Supported types and function operators
 - Boolean
 	- Constant
 	- Not
@@ -69,7 +69,7 @@ Some funtions support additional 'named' arguments, that control the behavior of
 	- Negation
 	- Absolute value
 	- Summation
-	- Subtracion
+	- Subtraction
 	- Average
 	- Minimum/maximum
 	- Floor
@@ -97,7 +97,7 @@ STM has a basic CLI interface where commands can be typed in by hand or with the
 
 The autohelp will iterate through the available command on the given command level. By pressing 'Space' a command level change can be applied.
 
-By typing 'help' or by pressing the configured shortcut (F1 by default) a help can be requested that describes the function and parameters with possible values.
+By typing 'help' or by pressing the configured shortcut (F1 by default) help can be requested that describes the function and parameters with possible values.
 
 <p align="center">
    <img alt="help" src="https://github.com/Tomaszon/SimpleTableManager/blob/master/help.png"/>
@@ -110,20 +110,20 @@ If the given command returns information, instead of modifying some data, that w
 </p>
 
 ## Basic settings
-You can customize text and border foreground/background colors for display and selection
+You can customize text and border foreground/background colors for display and selection.
 
-Two border styles supported 'Modern' and 'Classic'
+Two border styles supported 'Modern' and 'Classic'.
 
-Author and autosave options can be changed
+Author and autosave options can be changed.
 
 And it supports beep-boop on windows. Thats important too!
 
 ## Shortcuts
-STM supports keyboard shortcuts for some artions, for example quick save, display refresh, undo, redo
+STM supports keyboard shortcuts for some actions, for example quick save, display refresh, undo, redo.
 
-These shortcuts can be easily configured
+These shortcuts can be easily configured.
 
-Note: some shortcuts may interfere with terminal shortcuts
+Note: some shortcuts may interfere with terminal shortcuts.
 
 ### More cool stuff to come!
 
