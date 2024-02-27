@@ -40,7 +40,7 @@
 		"Type": "HorizontalDouble, Down"
 	},
 	{
-		"Retro": "|",
+		"Retro": "‖",
 		"Modern": "║",
 		"Type": "VerticalDouble"
 	},
