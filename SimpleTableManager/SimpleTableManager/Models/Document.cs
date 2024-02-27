@@ -60,11 +60,6 @@ public partial class Document : CommandExecuterBase
 		return GetActiveTable(out _);
 	}
 
-	private static string GetSaveFilePath(string fileName)
-	{
-		return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.json");
-	}
-
 	public void Serialize(StreamWriter sw)
 	{
 		Shared.SerializeObject(sw, this, TypeNameHandling.Auto);

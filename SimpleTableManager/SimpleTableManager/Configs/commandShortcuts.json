@@ -20,5 +20,7 @@
 	"Control, Shift + X": "cutCellContent",
 	"Control, Shift + V": "pasteCellContent",
 	"Control, Alt + C": "copyCellFormat",
-	"Control, Alt + V": "pasteCellFormat"
+	"Control, Alt + V": "pasteCellFormat",
+	"Control + E": "exportDocument",
+	"Control, Shift + E": "exportTable"
 }

@@ -112,4 +112,10 @@ public static class Shared
 
 		return serializer.Deserialize(new JsonTextReader(sr));
 	}
+
+	
+	public static string GetWorkFilePath(string fileName, string extension)
+	{
+		return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.{extension}");
+	}
 }

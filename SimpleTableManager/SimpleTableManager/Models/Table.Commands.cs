@@ -1,3 +1,6 @@
+using System.Text;
+using SimpleTableManager.Services;
+
 namespace SimpleTableManager.Models;
 
 public partial class Table
@@ -79,5 +82,47 @@ public partial class Table
 	public object ShowCellContentFunction(Position position)
 	{
 		return this[position].ShowContentFunction();
+	}
+
+	[CommandReference(StateModifier = false)]
+	[CommandShortcut("exportTable"), CommandInformation("Exports table as a CSV file")]
+	public void Export(bool overwrite = false)
+	{
+		var fileName = Shared.GetWorkFilePath(Name, "csv");
+
+		Export(fileName, overwrite);
+	}
+
+	public void Export(string fileName, bool overwrite)
+	{
+		ThrowIf<InvalidOperationException>(File.Exists(fileName) && !overwrite, $"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
+
+		try
+		{
+			using var f = File.Create(fileName);
+			using var sw = new StreamWriter(f);
+
+			Rows.ForEach(r =>
+			{
+				var contents = r.Value.Select(c =>
+				{
+					var contents = c.GetFormattedContents().ToList();
+					var formatted = string.Join("\r\n", contents).Trim();
+
+					return contents.Count > 1 || formatted.Contains(',') ? $"\"{formatted}\"" : formatted;
+				}).ToList();
+
+				sw.WriteLine(string.Join(",", contents));
+			});
+		}
+		catch (Exception ex)
+		{
+			if (File.Exists(fileName))
+			{
+				File.Delete(fileName);
+			}
+
+			throw new OperationCanceledException("Can not save document", ex);
+		}
 	}
 }

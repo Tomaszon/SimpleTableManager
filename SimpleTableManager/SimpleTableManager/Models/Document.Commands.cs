@@ -80,7 +80,7 @@ public partial class Document
 	[CommandReference("saveAs", StateModifier = false)]
 	public void Save(string fileName, bool overwrite = false)
 	{
-		fileName = GetSaveFilePath(fileName);
+		fileName = Shared.GetWorkFilePath(fileName, "json");
 
 		if (File.Exists(fileName) && !overwrite)
 		{
@@ -116,7 +116,7 @@ public partial class Document
 	{
 		ThrowIf(IsSaved == false && !confirm, $"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force file load");
 
-		fileName = GetSaveFilePath(fileName);
+		fileName = Shared.GetWorkFilePath(fileName, "json");
 
 		try
 		{
@@ -135,5 +135,20 @@ public partial class Document
 		}
 
 		GetMetaInfos(fileName);
+	}
+
+	[CommandReference(StateModifier = false)]
+	[CommandShortcut("exportDocument"), CommandInformation("Exports each table as a CSV file")]
+	public void Export(bool overwrite = false)
+	{
+		Tables.ForEach(t =>
+		{
+			var fileName = Shared.GetWorkFilePath($"{Metadata.Title}.{t.Name}", "csv");
+
+			ThrowIf<InvalidOperationException>(File.Exists(fileName) && !overwrite, $"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
+		});
+
+		Tables.ForEach(t => 
+			t.Export(Shared.GetWorkFilePath($"{Metadata.Title}.{t.Name}", "csv"), overwrite));
 	}
 }
