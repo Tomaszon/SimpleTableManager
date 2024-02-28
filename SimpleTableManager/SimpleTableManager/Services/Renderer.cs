@@ -351,8 +351,8 @@ public static class Renderer
 		var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
 
 		var contentsToRender = cell.GetFormattedContents();
-		var horizontalAlignmentToRender = cell.ContentAlignment.Horizontal;
-		var verticalAlignmentToRender = cell.ContentAlignment.Vertical;
+		var hAlignment = cell.ContentAlignment.Horizontal;
+		var vAlignment = cell.ContentAlignment.Vertical;
 
 		if (!ignoreRenderingMode)
 		{
@@ -361,18 +361,20 @@ public static class Renderer
 				case RenderingMode.Layer:
 					{
 						contentsToRender = new List<string>() { cell.LayerIndex.ToString() };
+						hAlignment = HorizontalAlignment.Center;
+						vAlignment = VerticalAlignment.Center;
 					}
 					break;
 
 				case RenderingMode.Comment:
 					{
 						contentsToRender = cell.Comment?.Wrap() ?? Enumerable.Empty<string>();
+						hAlignment = HorizontalAlignment.Center;
+						vAlignment = VerticalAlignment.Center;
 					}
 					break;
 			}
 
-			horizontalAlignmentToRender = HorizontalAlignment.Center;
-			verticalAlignmentToRender = VerticalAlignment.Center;
 		}
 
 		Shared.IndexArray(sizeWithoutBorders.Height).ForEach(i =>
@@ -381,13 +383,13 @@ public static class Renderer
 
 			var content = new string(' ', sizeWithoutBorders.Width);
 
-			if (IsCellContentDrawNeeded(contentsToRender, verticalAlignmentToRender, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
+			if (IsCellContentDrawNeeded(contentsToRender, vAlignment, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
 			{
 				content = contentsToRender.ElementAt(contentIndex);
 
 				if (!string.IsNullOrWhiteSpace(content))
 				{
-					switch (horizontalAlignmentToRender)
+					switch (hAlignment)
 					{
 						case HorizontalAlignment.Left:
 							{
@@ -416,14 +418,14 @@ public static class Renderer
 			}
 
 			ChangeToCellContentColors(cell);
-			
+
 			if (!ignoreRenderingMode)
 			{
 				switch (RendererSettings.RenderingMode)
 				{
 					case RenderingMode.Layer:
 						ChangeToLayerIndexContentColors(cell);
-					break;
+						break;
 
 					case RenderingMode.Comment:
 						ChangeToCommentContentColors(cell);

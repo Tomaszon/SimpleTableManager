@@ -64,7 +64,7 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 		if (horizontal)
 		{
 			return
-				(label ? value.ToString() : "") +
+				(label ? $"{value:0.00} " : "") +
 				string.Join("", Enumerable.Repeat('░', e)) +
 				string.Join("", Enumerable.Repeat('█', f));
 		}
