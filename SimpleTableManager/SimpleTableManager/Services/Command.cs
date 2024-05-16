@@ -135,8 +135,8 @@ public class Command
 				DefaultValue = isArray ?
 					Array.CreateInstance(p.ParameterType.GetElementType()!, 0) : p.DefaultValue,
 				IsOptional = p.IsOptional || isArray,
-				ParseFormat = (isArray ? p.ParameterType.GetElementType()! :
-					p.ParameterType).GetCustomAttribute<ParseFormatAttribute>()?.Format
+				ParseFormats = (isArray ? p.ParameterType.GetElementType()! :
+					p.ParameterType).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format)
 			};
 		}).ToList();
 	}

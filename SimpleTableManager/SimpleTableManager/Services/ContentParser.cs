@@ -39,9 +39,9 @@ public static class ContentParser
 		}
 		catch (Exception ex)
 		{
-			var attribute = targetDataType.GetCustomAttribute<ParseFormatAttribute>();
+			var attributes = targetDataType.GetCustomAttributes<ParseFormatAttribute>();
 
-			throw new FormatException($"Can not format value '{value}' to type '{dataType.GetFriendlyName()}'{(attribute is not null ? $" Required format: '{attribute.Format}'" : "")}", ex);
+			throw new FormatException($"Can not format value '{value}' to type '{dataType.GetFriendlyName()}'{(attributes.Any() ? $" Required formats: '{string.Join("' '", attributes.Select(a => a.Format))}'" : "")}", ex);
 		}
 	}
 

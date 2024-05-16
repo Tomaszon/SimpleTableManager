@@ -16,7 +16,7 @@ public class CommandParameter
 
 	public bool IsNullable => Type.IsAssignableFrom(null);
 
-	public string? ParseFormat { get; set; }
+	public IEnumerable<string> ParseFormats { get; set; } = new List<string>();
 
 	public CommandParameter(Type type, string name)
 	{
@@ -30,9 +30,9 @@ public class CommandParameter
 		var values = Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "";
 		var nullable = IsNullable ? "  nullable=true" : "";
 		var optional = IsOptional ? $"  default={JsonConvert.SerializeObject(DefaultValue)}" : "";
-		var format = ParseFormat is not null ? $"  {(IsArray ? "elementFormat" : "format")}={ParseFormat}" : "";
+		var formats = ParseFormats.Any() ? $"  {(IsArray ? "elementFormat" : "formats")}={string.Join("' '", ParseFormats)}" : "";
 
 
-		return $"{{{Name}:{typeName}{values}{nullable}{optional}{format}}}";
+		return $"{{{Name}:{typeName}{values}{nullable}{optional}{formats}}}";
 	}
 }
