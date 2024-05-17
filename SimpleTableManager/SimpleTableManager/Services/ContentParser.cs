@@ -4,9 +4,9 @@ public static class ContentParser
 {
 	public static Type GetTypeByFriendlyName(string name, string? nameSpace = null)
 	{
-		var type = Shared.FRIENDLY_TYPE_NAMES.TryGetValue(name.ToLower(), out var mapped) ? mapped : name.ToLower();
+		var type = Shared.FRIENDLY_TYPE_NAMES.TryGetValue(name.ToLower(), out var mapped) ? mapped : $"{nameof(System)}.{name}".ToLower();
 
-		return Type.GetType($"{nameSpace ?? "system"}.{type}", true, true)!;
+		return Type.GetType(type, true, true)!;
 	}
 
 	public static object ParseStringValue(Type dataType, string value)

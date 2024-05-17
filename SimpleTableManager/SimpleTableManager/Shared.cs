@@ -4,8 +4,9 @@ public static class Shared
 {
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
-		{ "int", "int32" },
-		{ "bool", "boolean" }
+		{ "int", $"{nameof(System)}.int32" },
+		{ "bool", $"{nameof(System)}.boolean" },
+		{ "shape", $"{nameof(SimpleTableManager)}.{nameof(Models)}.shape" }
 	};
 
 	public static string NAMED_ARG_SEPARATOR { get; } = ":=";
@@ -113,7 +114,7 @@ public static class Shared
 		return serializer.Deserialize(new JsonTextReader(sr));
 	}
 
-	
+
 	public static string GetWorkFilePath(string fileName, string extension)
 	{
 		return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.{extension}");

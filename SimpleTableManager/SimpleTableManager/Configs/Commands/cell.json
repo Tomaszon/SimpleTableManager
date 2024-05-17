@@ -3,6 +3,7 @@
 		"content": "setContent",
 		"comment": "setComment",
 		"content-function": {
+			"area": "setAreaContentFunction",
 			"string": "setStringContentFunction",
 			"int": "setIntegerContentFunction",
 			"decimal": "setDecimalContentFunction",

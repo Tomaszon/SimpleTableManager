@@ -7,7 +7,7 @@ where T : class, IParsable<T>
 {
 	public static T ParseWrapper(string value, Func<string[], T> func)
 	{
-		var regexes = typeof(Position).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Regex);
+		var regexes = typeof(T).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Regex);
 
 		foreach (var regex in regexes)
 		{

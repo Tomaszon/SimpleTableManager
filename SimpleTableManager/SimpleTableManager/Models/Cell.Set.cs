@@ -26,6 +26,12 @@ public partial class Cell
 	}
 
 	[CommandReference]
+	public void SetAreaContentFunction(AreaFunctionOperator functionOperator, params string[] arguments)
+	{
+		SetFunction<Shape>(functionOperator, arguments);
+	}
+
+	[CommandReference]
 	public void SetStringContentFunction(StringFunctionOperator functionOperator, params string[] arguments)
 	{
 		SetFunction<string>(functionOperator, arguments);
