@@ -1,38 +1,15 @@
 using System.Runtime.Intrinsics.X86;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Legacy;
+using SimpleTableManager.Models;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Tests
 {
 	[SuppressMessage("Usage", "CA1861")]
-	public class FunctionTests
+	public class FunctionTests : TestBase
 	{
-		[OneTimeSetUp]
-		public void Setup()
-		{
-			Settings.FromJson(@".\Configs\settings.json");
-		}
-
-		private static IFunction CreateFunction<T>(Enum functionOperator, T[] args)
-		{
-			return CreateFunction(functionOperator, null, args);
-		}
-
-		private static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
-		{
-			return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(), namedArguments, args.Cast<object>());
-		}
-
-		private static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)
-		{
-			for (int i = 0; i < result.Count(); i++)
-			{
-				Assert.That(result.ElementAt(i), Is.EqualTo(expectedValues.ElementAt(i)));
-			}
-		}
-
 		[Test]
 		[TestCase(BooleanFunctionOperator.And, new[] { true, false }, false)]
 		[TestCase(BooleanFunctionOperator.Or, new[] { false, true }, true)]

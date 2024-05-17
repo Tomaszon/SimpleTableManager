@@ -2,8 +2,8 @@
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("width,height", "\\d,\\d")]
-public class Size : IParsable<Size>
+[ParseFormat("width,height", "\\d,\\d"), ParseFormat("width;height", "\\d;\\d")]
+public class Size : ParsableBase<Size>, IParsable<Size>
 {
 	public int Width { get; set; }
 
@@ -35,36 +35,12 @@ public class Size : IParsable<Size>
 
 	public static Size Parse(string value, IFormatProvider? _)
 	{
-		var values = value.Split(',');
-
-		var w = int.Parse(values[0].Trim());
-		var h = int.Parse(values[1].Trim());
-
-		return new Size(w, h);
-	}
-
-	public static bool TryParse([NotNullWhen(true)] string? value, IFormatProvider? _, [MaybeNullWhen(false)] out Size size)
-	{
-		var regex = typeof(Position).GetCustomAttribute<ParseFormatAttribute>()!.Regex;
-
-		if (value is null || !Regex.IsMatch(value, regex))
+		return ParseWrapper(value, args =>
 		{
-			size = null;
+			var w = int.Parse(args[0].Trim());
+			var h = int.Parse(args[1].Trim());
 
-			return false;
-		}
-
-		try
-		{
-			size = Parse(value, null);
-
-			return true;
-		}
-		catch
-		{
-			size = null;
-
-			return false;
-		}
+			return new Size(w, h);
+		});
 	}
 }

@@ -1,6 +1,5 @@
 namespace SimpleTableManager.Models.Attributes;
 
-//TODO multiple formats?
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class ParseFormatAttribute : Attribute
 {
