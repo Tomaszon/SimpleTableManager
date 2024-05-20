@@ -10,11 +10,21 @@ public static class FunctionCollection
 			t.Namespace == typeof(IFunction).Namespace && !t.IsAbstract && !t.IsInterface && !t.IsGenericType && !t.IsNested).ToList();
 	}
 
+	public static IFunction GetFunction<T>(string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<object> arguments)
+	{
+		return GetFunction(typeof(T), functionOperator, namedArguments, arguments);
+	}
+
 	public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<object> arguments)
 	{
-		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
+		return GetFunction(ContentParser.GetTypeByFriendlyName(typeName), functionOperator, namedArguments, arguments);
+	}
 
-		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == ContentParser.GetTypeByFriendlyName(typeName));
+	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<object> arguments)
+	{
+		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == argType);
+
+		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
 
 		var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
 
@@ -30,7 +40,7 @@ public static class FunctionCollection
 
 		var operatorPoperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
 
-		if(!Enum.TryParse(operatorPoperty.PropertyType, functionOperator, true, out var op))
+		if (!Enum.TryParse(operatorPoperty.PropertyType, functionOperator, true, out var op))
 		{
 			throw new ArgumentException($"Operator '{functionOperator}' is not valid! Values={string.Join('|', Enum.GetNames(operatorPoperty.PropertyType))}");
 		}
