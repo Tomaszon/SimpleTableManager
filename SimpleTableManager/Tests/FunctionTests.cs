@@ -1,6 +1,11 @@
 using System.Runtime.Intrinsics.X86;
+
+using Microsoft.VisualBasic;
+
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Legacy;
+
+using SimpleTableManager.Extensions;
 using SimpleTableManager.Models;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
@@ -150,6 +155,17 @@ namespace SimpleTableManager.Tests
 			var formattedResult = string.Format(new ContentFormatter(f), "{0}", result);
 
 			CheckResults(formattedResult.Wrap(), expectedResult.Wrap());
+		}
+
+		[Test]
+		[TestCase(AreaFunctionOperator.Rectangle, new[] { "2", "2,3", "1;5" }, new object[] { 4, 6, 5 })]
+		[TestCase(AreaFunctionOperator.Ellipse, new[] { "2", "2;3" }, new object[] { 12.57, 18.85 })]
+		[TestCase(AreaFunctionOperator.IsoscaleTriangle, new[] { "2", "1,1.41", "2;1" }, new object[] { 1.73, .5, 0.97 })]
+		public void AreaTest(AreaFunctionOperator functionOperator, string[] shapes, object[] results)
+		{
+			var fn = CreateFunction(functionOperator, shapes.Select(s => Shape.Parse(s, null)).ToArray());
+
+			CheckResults(fn.Execute().Cast<decimal>().Select(d => Math.Round(d, 2)).Cast<object>(), results);
 		}
 	}
 }
