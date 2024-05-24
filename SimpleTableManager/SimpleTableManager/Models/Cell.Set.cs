@@ -164,6 +164,12 @@ public partial class Cell
 	}
 
 	[CommandReference]
+	public void SetLayerIndex(int value)
+	{
+		LayerIndex = value;
+	}
+
+	[CommandReference]
 	public void SetLayerIndexToMax()
 	{
 		LayerIndex = Table.GetMaxCellLayerIndex();

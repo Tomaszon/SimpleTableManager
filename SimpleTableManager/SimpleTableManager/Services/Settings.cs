@@ -8,9 +8,15 @@ public class Settings
 
 	public ConsoleColorSet DefaultContentColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
 
+	//UNDONE
+	public ConsoleColorSet DefaultBackgroundColor {get;set;} = (ConsoleColor.Gray, ConsoleColor.Black);
+
 	public ConsoleColorSet DefaultBorderColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
 
 	public ConsoleColorSet SelectedContentColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
+
+	//UNDONE
+	public ConsoleColorSet SelectedBackgroundColor {get;set;} = (ConsoleColor.Gray, ConsoleColor.Black);
 
 	public ConsoleColorSet SelectedBorderColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
 
@@ -22,13 +28,6 @@ public class Settings
 
 	public bool ModernTableBorder { get; set; } = false;
 
-	public static void FromJson(string path)
-	{
-		Current = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path))!;
-	}
-
-	public static Settings Current { get; private set; } = new();
-
 	public char IndexCellLeftArrow { get; set; }
 
 	public char IndexCellRightArrow { get; set; }
@@ -38,6 +37,8 @@ public class Settings
 	public char IndexCellDownArrow { get; set; }
 
 	public char TmpBackgroundCharacter { get; set; }
+
+	public char CellBackgroundCharacter {get; set; }
 
 	public string DefaultWorkDirectory { get; set; } = "";
 
@@ -52,4 +53,11 @@ public class Settings
 	public string Author { get; set; } = "";
 
 	public bool Audio { get; set; }
+
+	public static Settings Current { get; private set; } = new();
+
+	public static void FromJson(string path)
+	{
+		Current = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path))!;
+	}
 }

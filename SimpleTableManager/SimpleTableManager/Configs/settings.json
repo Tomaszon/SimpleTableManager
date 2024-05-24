@@ -32,6 +32,7 @@
 	"IndexCellUpArrow": "▲",
 	"IndexCellDownArrow": "▼",
 	"TmpBackgroundCharacter": "?",
+	"CellBackgroundCharacter": "·",
 	"DefaultWorkDirectory": "C:\\users\\offic\\downloads",
 	"CommandHistoryLength": 5,
 	"EditHistoryLength": 5,

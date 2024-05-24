@@ -24,7 +24,8 @@
 		"content-color": "setContentColor",
 		"layer-index": {
 			"min": "setLayerIndexToMin",
-			"max": "setLayerIndexToMax"
+			"max": "setLayerIndexToMax",
+			"to": "setLayerIndex"
 		}
 	},
 	"reset": {

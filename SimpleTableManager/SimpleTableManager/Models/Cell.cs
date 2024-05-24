@@ -24,6 +24,7 @@ public partial class Cell : CommandExecuterBase
 
 	public CellVisibility Visibility { get; set; } = new();
 
+	//TODO not rendered properly
 	public ContentPadding ContentPadding { get; set; } = new();
 
 	public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);

@@ -381,7 +381,9 @@ public static class Renderer
 		{
 			Console.SetCursorPosition(position.X + 1, position.Y + 1 + i);
 
-			var content = new string(' ', sizeWithoutBorders.Width);
+			var content = "";
+			var leftPaddingSize = sizeWithoutBorders.Width;
+			var rightPaddingSize = 0;
 
 			if (IsCellContentDrawNeeded(contentsToRender, vAlignment, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
 			{
@@ -393,8 +395,8 @@ public static class Renderer
 					{
 						case HorizontalAlignment.Left:
 							{
-								content = content.AppendLeft(' ', cell.ContentPadding.Left);
-								content = content.PadRight(sizeWithoutBorders.Width);
+								leftPaddingSize = cell.ContentPadding.Left;
+								rightPaddingSize = content.Length + leftPaddingSize > sizeWithoutBorders.Width ? 0 : sizeWithoutBorders.Width - content.Length - leftPaddingSize;
 							}
 							break;
 
@@ -402,20 +404,24 @@ public static class Renderer
 							{
 								var startIndex = GetStartIndexForCenteredContent(sizeWithoutBorders.Width, content.Length, cell.ContentPadding.Left, cell.ContentPadding.Right);
 
-								content = content.AppendLeft(' ', startIndex);
-								content = content.PadRight(sizeWithoutBorders.Width);
+								leftPaddingSize = startIndex;
+								rightPaddingSize = content.Length + leftPaddingSize > sizeWithoutBorders.Width ? 0 : sizeWithoutBorders.Width - content.Length - leftPaddingSize;
 							}
 							break;
 
 						case HorizontalAlignment.Right:
 							{
-								content = content.AppendRight(' ', cell.ContentPadding.Right);
-								content = content.PadLeft(sizeWithoutBorders.Width);
+								rightPaddingSize = cell.ContentPadding.Right;
+								leftPaddingSize = content.Length + rightPaddingSize > sizeWithoutBorders.Width ? 0 : sizeWithoutBorders.Width - content.Length - rightPaddingSize;
 							}
 							break;
 					}
 				}
 			}
+
+			ChangeToCommentContentColors(cell);
+			ShowIndexCellSelection(showSelection);
+			Console.Write(new string(Settings.Current.CellBackgroundCharacter, leftPaddingSize));
 
 			ChangeToCellContentColors(cell);
 
@@ -434,8 +440,11 @@ public static class Renderer
 			}
 
 			ShowIndexCellSelection(showSelection);
-
 			Console.Write(content);
+
+			ChangeToCommentContentColors(cell);
+			ShowIndexCellSelection(showSelection);
+			Console.Write(new string(Settings.Current.CellBackgroundCharacter, rightPaddingSize));
 		});
 	}
 
