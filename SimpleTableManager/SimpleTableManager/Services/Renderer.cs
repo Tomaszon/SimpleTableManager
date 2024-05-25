@@ -7,11 +7,15 @@ public static class Renderer
 	public static RendererSettings RendererSettings { get; set; } = new();
 
 	private const int _FREE_LINES_BELOW_TABLE = 10;
-	private const int _FREE_LINES_ABOW_TABLE = 10;
+	private const int _FREE_LINES_ABOW_TABLE = 12;
 
 	public static void Render(Document document)
 	{
 		var table = document.GetActiveTable(out var tableIndex);
+
+		var cells = table.GetSelectedCells();
+
+		var singleCell = cells.Count() > 1 ? null : cells.FirstOrDefault();
 
 		ChangeToTextColors();
 
@@ -19,7 +23,7 @@ public static class Renderer
 
 		var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
 
-		RenderDocumentInfos(document, table, tableOffset, tableIndex, document.Tables.Count);
+		RenderInfos(document, table, singleCell, tableOffset, tableIndex, document.Tables.Count);
 
 		RenderTempCell(table, tableOffset, tableSize);
 
@@ -448,47 +452,34 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderDocumentInfos(Document document, Table table, Size tableOffset, int tableIndex, int tableCount)
+	private static void RenderInfos(Document document, Table table, Cell? cell, Size tableOffset, int tableIndex, int tableCount)
 	{
 		var metadata = document.Metadata;
 
+		//IDEA position to center
+		var infosHorizontalOffset = (int)(tableOffset.Width * .75);
+
 		ChangeToTextColors();
 
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 9);
-		Console.Write($"Document: {metadata.Title}");
+		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 10);
+		Console.Write($"Title:    {metadata.Title}");
 
 		switch (document.IsSaved)
 		{
 			case true:
 				ChangeToOkLabelColors();
-				Console.WriteLine(" - Saved");
+				Console.Write("   (Saved)");
 				break;
 
 			case false:
 				ChangeToNotOkLabelColors();
-				Console.WriteLine(" - Unsaved");
+				Console.Write("   (Unsaved)");
 				break;
 		}
 
 		ChangeToTextColors();
 
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 8);
-		Console.WriteLine($"Author:   {metadata.Author}");
-
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 7);
-		Console.Write("Path:     ");
-		Console.WriteLine(metadata.Path is not null ? $"{metadata.Path}" : "-");
-
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 6);
-		Console.Write("Size:     ");
-		Console.WriteLine(metadata.Size is not null ? $"{metadata.Size} bytes" : "-");
-
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 5);
-		Console.Write("Created:  ");
-		Console.WriteLine(metadata.CreateTime is not null ? $"{metadata.CreateTime}" : "-");
-
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 3);
-		Console.Write("Autosave: ");
+		Console.Write("    Autosave:    ");
 
 		if (metadata.Path is null)
 		{
@@ -508,6 +499,34 @@ public static class Renderer
 		}
 
 		ChangeToTextColors();
+
+		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 9);
+		Console.Write($"Author:   {metadata.Author}");
+
+		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 8);
+		Console.Write("Created:    ");
+		Console.Write(metadata.CreateTime is not null ? $"{metadata.CreateTime}" : "-");
+		Console.Write("    Size:    ");
+		Console.WriteLine(metadata.Size is not null ? $"{metadata.Size} bytes" : "-");
+
+		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 7);
+		Console.Write("Path:     ");
+		Console.WriteLine(metadata.Path is not null ? $"{metadata.Path}" : "-");
+
+		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 5);
+
+		//IDEA
+		Console.Write("Cell:");
+		if (cell is null)
+		{
+			Console.WriteLine("Select one cell to show details");
+		}
+		else
+		{
+			//EXPERIMENTAL dynamic type handling
+			dynamic details = cell.ShowDetails();
+			Console.Write($"Function:    {details.Content.Function}    Comment:    {details.Comment}    Layer index: {details.LayerIndex}");
+		}
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
 		Console.Write($"Table:    {table.Name}    ");
