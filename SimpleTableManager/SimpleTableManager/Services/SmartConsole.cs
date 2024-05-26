@@ -16,7 +16,7 @@ public partial class SmartConsole
 
 	private static readonly StringBuilder _buffer = new();
 
-	private const string _COMMAND_LINE_PREFIX = "> ";
+	private const string _COMMAND_LINE_PREFIX = "STM > ";
 
 	private static readonly HistoryList _commandHistory = new(Settings.Current.CommandHistoryLength);
 

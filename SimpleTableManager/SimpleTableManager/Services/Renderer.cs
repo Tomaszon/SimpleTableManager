@@ -7,7 +7,7 @@ public static class Renderer
 	public static RendererSettings RendererSettings { get; set; } = new();
 
 	private const int _FREE_LINES_BELOW_TABLE = 10;
-	private const int _FREE_LINES_ABOW_TABLE = 12;
+	private const int _FREE_LINES_ABOW_TABLE = 15;
 
 	public static void Render(Document document)
 	{
@@ -454,79 +454,44 @@ public static class Renderer
 
 	private static void RenderInfos(Document document, Table table, Cell? cell, Size tableOffset, int tableIndex, int tableCount)
 	{
-		var metadata = document.Metadata;
-
-		//IDEA position to center
-		var infosHorizontalOffset = (int)(tableOffset.Width * .75);
-
-		ChangeToTextColors();
-
-		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 10);
-		Console.Write($"Title:    {metadata.Title}");
-
-		switch (document.IsSaved)
-		{
-			case true:
-				ChangeToOkLabelColors();
-				Console.Write("   (Saved)");
-				break;
-
-			case false:
-				ChangeToNotOkLabelColors();
-				Console.Write("   (Unsaved)");
-				break;
-		}
-
-		ChangeToTextColors();
-
-		Console.Write("    Autosave:    ");
-
-		if (metadata.Path is null)
-		{
-			Console.WriteLine("-");
-		}
-		else if (Settings.Current.Autosave)
-		{
-			ChangeToOkLabelColors();
-
-			Console.WriteLine("On");
-		}
-		else
-		{
-			ChangeToNotOkLabelColors();
-
-			Console.WriteLine("Off");
-		}
-
-		ChangeToTextColors();
-
-		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 9);
-		Console.Write($"Author:   {metadata.Author}");
-
-		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 8);
-		Console.Write("Created:    ");
-		Console.Write(metadata.CreateTime is not null ? $"{metadata.CreateTime}" : "-");
-		Console.Write("    Size:    ");
-		Console.WriteLine(metadata.Size is not null ? $"{metadata.Size} bytes" : "-");
-
-		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 7);
-		Console.Write("Path:     ");
-		Console.WriteLine(metadata.Path is not null ? $"{metadata.Path}" : "-");
-
-		Console.SetCursorPosition(infosHorizontalOffset, tableOffset.Height - 5);
-
 		//IDEA
-		Console.Write("Cell:");
-		if (cell is null)
-		{
-			Console.WriteLine("Select one cell to show details");
-		}
-		else
-		{
-			//EXPERIMENTAL dynamic type handling
-			dynamic details = cell.ShowDetails();
-			Console.Write($"Function:    {details.Content.Function}    Comment:    {details.Comment}    Layer index: {details.LayerIndex}");
-		}
+		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 0);
+		Console.Write(" ____ _____ _   _");
+		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 1);
+		Console.Write("/ ___|__ __| \\ / |");
+		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 2);
+		Console.Write("\\___ \\ | | |  v  |");
+		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 3);
+		Console.Write("|____/ |_| |_| |_|");
+
+		var infoTable = new Table("", 2, 3);
+		infoTable[0, 0].SetContent("Title:");
+		infoTable[1, 0].SetContent($"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
+		infoTable[0, 1].SetContent("Created:", "Size:");
+		infoTable[1, 1].SetContent(document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
+
+		infoTable[0, 2].SetContent("Path:");
+		infoTable[1, 2].SetContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
+
+		infoTable.Content.ForEach(cell =>
+			cell.SetHorizontalAlignment(HorizontalAlignment.Left));
+
+		RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, 3));
+
+		// //IDEA
+		// Console.Write("Cell:");
+		// if (cell is null)
+		// {
+		// 	Console.WriteLine("Select one cell to show details");
+		// }
+		// else
+		// {
+		// 	//EXPERIMENTAL dynamic type handling
+		// 	dynamic details = cell.ShowDetails();
+		// 	Console.Write($"Function:    {details.Content.Function}    Comment:    {details.Comment}    Layer index: {details.LayerIndex}");
+		// }
+
+		ChangeToTextColors();
 
 		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
 		Console.Write($"Table:    {table.Name}    ");
