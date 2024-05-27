@@ -5,6 +5,7 @@ namespace SimpleTableManager;
 
 public class Program
 {
+	// private async static Task Main()
 	private static void Main()
 	{
 		Console.TreatControlCAsInput = true;
@@ -19,13 +20,15 @@ public class Program
 
 		var app = new App(new Document(Settings.Current.DefaultTableSize));
 
+		// await RenderAsync(app);
+
 		InstanceMap.Instance.Add(() => app);
 		InstanceMap.Instance.Add(() => app.Document);
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable());
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable().GetSelectedCells());
 
 		SmartConsole.PlayStartup();
-		
+
 		#region test
 
 		// var function = FunctionCollection.GetFunction(NumericFunctionOperator.Sum, new[] { new FunctionParameter(5), new FunctionParameter(4) });
@@ -198,4 +201,23 @@ public class Program
 	}
 	//	table set content avg 3 4
 	//	table set content sum(avg(3 5 1,1) 9 2,1 avg(3,1 9))
+
+	// private static async Task RenderAsync(App app)
+	// {
+	// 	SmartConsole.Render(app.Document);
+
+	// 	var prevWindowSize = new Size(Console.WindowWidth, Console.WindowHeight);
+
+	// 	do
+	// 	{
+	// 		if (Console.WindowWidth != prevWindowSize.Width || Console.WindowHeight != prevWindowSize.Height)
+	// 		{
+	// 			SmartConsole.Render(app.Document);
+	// 			prevWindowSize = new Size(Console.WindowWidth, Console.WindowHeight);
+	// 		}
+
+	// 		await Task.Delay(1000);
+	// 	}
+	// 	while (true);
+	// }
 }

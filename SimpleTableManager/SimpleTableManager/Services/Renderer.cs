@@ -7,7 +7,14 @@ public static class Renderer
 	public static RendererSettings RendererSettings { get; set; } = new();
 
 	private const int _FREE_LINES_BELOW_TABLE = 10;
-	private const int _FREE_LINES_ABOW_TABLE = 15;
+
+	private const int MINIMUM_LINES_FOR_LOGO = 55;
+
+	private const int MINIMUM_LINES_FOR_INFOTABLE = 50;
+
+	private static int TableVerticalOffset;
+
+	private static int InfotableVerticalOffset;
 
 	public static void Render(Document document)
 	{
@@ -19,11 +26,17 @@ public static class Renderer
 
 		ChangeToTextColors();
 
+		InfotableVerticalOffset = Console.WindowHeight > MINIMUM_LINES_FOR_LOGO ? 3 : -1;
+
+		TableVerticalOffset = Console.WindowHeight > MINIMUM_LINES_FOR_LOGO ? 15 : Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE ? 11 : 2;
+
 		var tableSize = ShrinkTableViewToConsoleSize(table);
 
-		var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, _FREE_LINES_ABOW_TABLE);
+		var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, TableVerticalOffset);
 
-		RenderInfos(document, table, singleCell, tableOffset, tableIndex, document.Tables.Count);
+		RenderDocumentInfos(document, singleCell);
+
+		RenderTableInfos(table, tableOffset, tableIndex, document.Tables.Count);
 
 		RenderTempCell(table, tableOffset, tableSize);
 
@@ -40,6 +53,31 @@ public static class Renderer
 		ChangeToTextColors();
 	}
 
+	private static void RenderTableInfos(Table table, Size tableOffset, int tableIndex, int tableCount)
+	{
+		ChangeToTextColors();
+
+		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
+		Console.Write($"Table:    {table.Name}    ");
+
+		if (tableIndex > 0 && tableIndex < tableCount - 1)
+		{
+			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
+		}
+		else if (tableIndex == 0 && tableIndex < tableCount - 1)
+		{
+			Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
+		}
+		else if (tableIndex > 0 && tableIndex == tableCount - 1)
+		{
+			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
+		}
+		else
+		{
+			Console.WriteLine();
+		}
+	}
+
 	private static Size ShrinkTableViewToConsoleSize(Table table)
 	{
 		while (true)
@@ -50,7 +88,7 @@ public static class Renderer
 			{
 				table.ViewOptions.DecreaseWidth();
 			}
-			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - _FREE_LINES_ABOW_TABLE - size.Height < 0)
+			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - TableVerticalOffset - size.Height < 0)
 			{
 				table.ViewOptions.DecreaseHeight();
 			}
@@ -452,31 +490,37 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderInfos(Document document, Table table, Cell? cell, Size tableOffset, int tableIndex, int tableCount)
+	private static void RenderDocumentInfos(Document document, Cell? cell)
 	{
 		//IDEA
-		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 0);
-		Console.Write(" ____ _____ _   _");
-		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 1);
-		Console.Write("/ ___|__ __| \\ / |");
-		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 2);
-		Console.Write("\\___ \\ | | |  v  |");
-		Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 3);
-		Console.Write("|____/ |_| |_| |_|");
+		if (Console.WindowHeight > MINIMUM_LINES_FOR_LOGO)
+		{
+			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 0);
+			Console.Write(" ____ _____ _   _");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 1);
+			Console.Write("/ ___|__ __| \\ / |");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 2);
+			Console.Write("\\___ \\ | | |  v  |");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 3);
+			Console.Write("|____/ |_| |_| |_|");
+		}
 
-		var infoTable = new Table("", 2, 3);
-		infoTable[0, 0].SetContent("Title:");
-		infoTable[1, 0].SetContent($"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
-		infoTable[0, 1].SetContent("Created:", "Size:");
-		infoTable[1, 1].SetContent(document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
+		if (Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE)
+		{
+			var infoTable = new Table("", 2, 3);
+			infoTable[0, 0].SetContent("Title:");
+			infoTable[1, 0].SetContent($"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
+			infoTable[0, 1].SetContent("Created:", "Size:");
+			infoTable[1, 1].SetContent(document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
 
-		infoTable[0, 2].SetContent("Path:");
-		infoTable[1, 2].SetContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
+			infoTable[0, 2].SetContent("Path:");
+			infoTable[1, 2].SetContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
 
-		infoTable.Content.ForEach(cell =>
-			cell.SetHorizontalAlignment(HorizontalAlignment.Left));
+			infoTable.Content.ForEach(cell =>
+				cell.SetHorizontalAlignment(HorizontalAlignment.Left));
 
-		RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, 3));
+			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset));
+		}
 
 		// //IDEA
 		// Console.Write("Cell:");
@@ -490,28 +534,6 @@ public static class Renderer
 		// 	dynamic details = cell.ShowDetails();
 		// 	Console.Write($"Function:    {details.Content.Function}    Comment:    {details.Comment}    Layer index: {details.LayerIndex}");
 		// }
-
-		ChangeToTextColors();
-
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
-		Console.Write($"Table:    {table.Name}    ");
-
-		if (tableIndex > 0 && tableIndex < tableCount - 1)
-		{
-			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
-		}
-		else if (tableIndex == 0 && tableIndex < tableCount - 1)
-		{
-			Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
-		}
-		else if (tableIndex > 0 && tableIndex == tableCount - 1)
-		{
-			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
-		}
-		else
-		{
-			Console.WriteLine();
-		}
 	}
 
 	private static bool IsCellContentDrawNeeded(IEnumerable<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)

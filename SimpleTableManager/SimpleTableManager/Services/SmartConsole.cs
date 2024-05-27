@@ -249,6 +249,12 @@ public partial class SmartConsole
 				InsertCharToBuffer(' ');
 			}
 			InsertStringToBuffer(nextKey);
+
+			PlayNote(Note.Question);
+		}
+		else
+		{
+			PlayNote(Note.Error);
 		}
 
 		return true;
