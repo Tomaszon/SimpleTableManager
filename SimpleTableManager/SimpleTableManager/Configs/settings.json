@@ -1,4 +1,10 @@
 {
+	"Logo":[
+		" ____ _____ _   _",
+		"/ ___|__ __| \\ / |",
+		"\\___ \\ | | |  v  |",
+		"|____/ |_| |_| |_| {version}"
+	],
 	//"TextForegroundColor": "Green",
 	//"TextBackgroundColor": "Black",
 	//"DefaultCellForegroundColor": "Black",

@@ -8,9 +8,9 @@ public static class Renderer
 
 	private const int _FREE_LINES_BELOW_TABLE = 10;
 
-	private const int MINIMUM_LINES_FOR_LOGO = 55;
+	private const int MINIMUM_LINES_FOR_LOGO = 50;
 
-	private const int MINIMUM_LINES_FOR_INFOTABLE = 50;
+	private const int MINIMUM_LINES_FOR_INFOTABLE = 45;
 
 	private static int TableVerticalOffset;
 
@@ -33,6 +33,8 @@ public static class Renderer
 		var tableSize = ShrinkTableViewToConsoleSize(table);
 
 		var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, TableVerticalOffset);
+
+		RenderLogo();
 
 		RenderDocumentInfos(document, singleCell);
 
@@ -490,21 +492,24 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderDocumentInfos(Document document, Cell? cell)
+	private static void RenderLogo()
 	{
-		//IDEA
 		if (Console.WindowHeight > MINIMUM_LINES_FOR_LOGO)
 		{
-			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 0);
-			Console.Write(" ____ _____ _   _");
-			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 1);
-			Console.Write("/ ___|__ __| \\ / |");
-			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 2);
-			Console.Write("\\___ \\ | | |  v  |");
-			Console.SetCursorPosition(Console.WindowWidth / 2 - 8, 3);
-			Console.Write("|____/ |_| |_| |_|");
-		}
+			var version = Assembly.GetExecutingAssembly().GetName().Version;
 
+			var maxLength = Settings.Current.Logo.Max(s => s.Replace("{version}", "").Length);
+
+			for (int i = 0; i < Settings.Current.Logo.Length; i++)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, i);
+				Console.Write(Settings.Current.Logo[i].Replace("{version}", $"v.{version}"));
+			}
+		}
+	}
+
+	private static void RenderDocumentInfos(Document document, Cell? cell)
+	{
 		if (Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE)
 		{
 			var infoTable = new Table("", 2, 3);

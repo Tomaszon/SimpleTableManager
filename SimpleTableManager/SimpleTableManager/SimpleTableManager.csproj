@@ -6,6 +6,25 @@
 		<LangVersion>11.0</LangVersion>
 		<nullable>enable</nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Version>
+			0.1.$([MSBuild]::Add(
+					$([MSBuild]::Multiply(
+						$([MSBuild]::Subtract(
+							$([MSBuild]::Add(
+								$([MSBuild]::Multiply(
+									$([MSBuild]::Subtract(
+										$([System.DateTime]::UtcNow.Year),
+										2000)),
+									12)),
+								$([System.DateTime]::UtcNow.Month))),
+							1)),
+						100)),
+					$([System.DateTime]::UtcNow.Day))).$([MSBuild]::Add(
+					$([MSBuild]::Multiply(
+						$([System.DateTime]::UtcNow.Hour), 
+						100)),
+					$([System.DateTime]::UtcNow.Minute)))
+		</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
