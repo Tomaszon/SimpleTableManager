@@ -38,7 +38,7 @@ public class Settings
 
 	public char TmpBackgroundCharacter { get; set; }
 
-	public char CellBackgroundCharacter { get; set; }
+	public char DefaultCellBackgroundCharacter { get; set; }
 
 	public string DefaultWorkDirectory { get; set; } = "";
 

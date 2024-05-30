@@ -35,6 +35,8 @@ public partial class Cell : CommandExecuterBase
 
 	public ConsoleColorSet BorderColor { get; set; } = new(Settings.Current.DefaultBorderColor);
 
+	public char BackgroundCharacter { get; set; } = Settings.Current.DefaultCellBackgroundCharacter;
+
 	public int LayerIndex { get; set; } = 0;
 
 	public string? Comment { get; set; }

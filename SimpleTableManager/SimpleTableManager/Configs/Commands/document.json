@@ -19,5 +19,7 @@
 	"save": "save",
 	"save-as": "saveAs",
 	"load": "load",
-	"export": "export"
+	"export": "export",
+	//UNDONE
+	"new": "new"
 }

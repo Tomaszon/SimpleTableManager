@@ -42,7 +42,7 @@ public static class Renderer
 
 		RenderTempCell(table, tableOffset, tableSize);
 
-		RenderContent(table, tableOffset);
+		RenderContent(table, tableOffset, false);
 
 		RenderHeader(table, tableOffset);
 
@@ -194,7 +194,7 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderContent(Table table, Size tableOffset)
+	private static void RenderContent(Table table, Size tableOffset, bool ignoreRenderingMode)
 	{
 		Shared.IndexArray(table.Size.Height).ForEach(y =>
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
@@ -213,7 +213,7 @@ public static class Renderer
 
 					DrawCellBorders(cell, position, size, border);
 
-					DrawCellContent(cell, position, size, false, false);
+					DrawCellContent(cell, position, size, ignoreRenderingMode, false);
 				}
 			}));
 	}
@@ -418,7 +418,6 @@ public static class Renderer
 					}
 					break;
 			}
-
 		}
 
 		Shared.IndexArray(sizeWithoutBorders.Height).ForEach(i =>
@@ -465,7 +464,7 @@ public static class Renderer
 
 			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
-			Console.Write(new string(Settings.Current.CellBackgroundCharacter, leftPaddingSize));
+			Console.Write(new string(cell.BackgroundCharacter, leftPaddingSize));
 
 			ChangeToCellContentColors(cell);
 
@@ -488,7 +487,7 @@ public static class Renderer
 
 			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
-			Console.Write(new string(Settings.Current.CellBackgroundCharacter, rightPaddingSize));
+			Console.Write(new string(cell.BackgroundCharacter, rightPaddingSize));
 		});
 	}
 
@@ -521,10 +520,12 @@ public static class Renderer
 			infoTable[0, 2].SetContent("Path:");
 			infoTable[1, 2].SetContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
 
-			infoTable.Content.ForEach(cell =>
-				cell.SetHorizontalAlignment(HorizontalAlignment.Left));
+			infoTable.Content.ForEach(cell =>{
+				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
+				cell.BackgroundCharacter = ' ';
+			});
 
-			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset));
+			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset), true);
 		}
 
 		// //IDEA

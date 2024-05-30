@@ -23,6 +23,7 @@
 		"border-color": "setBorderColor",
 		"background-color": "setBackgroundColor",
 		"content-color": "setContentColor",
+		"background-character": "setBackgroundCharacter",
 		"layer-index": {
 			"min": "setLayerIndexToMin",
 			"max": "setLayerIndexToMax",

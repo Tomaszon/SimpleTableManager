@@ -158,6 +158,12 @@ public partial class Cell
 	}
 
 	[CommandReference]
+	public void SetBackgroundCharacter(char character = ' ')
+	{
+		BackgroundCharacter = character;
+	}
+
+	[CommandReference]
 	public void IncreaseLayerIndex()
 	{
 		LayerIndex = (int)Math.Min(int.MaxValue, (long)LayerIndex + 1);
