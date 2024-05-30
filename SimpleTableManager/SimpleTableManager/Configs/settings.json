@@ -29,6 +29,10 @@
 		"Foreground": "Black",
 		"Background": "DarkGreen"
 	},
+	"SelectedBackgroundColor": {
+		"Foreground": "Black",
+		"Background": "DarkGreen"
+	},
 	"SelectedBorderColor": {
 		"Foreground": "White"
 	},
@@ -48,5 +52,5 @@
 	},
 	"Autosave": true,
 	"Author": "Tomaszon",
-	"Audio": true
+	"Audio": false
 }

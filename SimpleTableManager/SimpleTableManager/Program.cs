@@ -12,13 +12,11 @@ public class Program
 		Console.OutputEncoding = System.Text.Encoding.Unicode;
 		Console.InputEncoding = System.Text.Encoding.Unicode;
 
-		BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
-		CommandTree.FromJsonFolder(@".\Configs\Commands");
 		Settings.FromJson(@".\Configs\settings.json");
-		CellBorders.FromJson(@".\Configs\cellBorders.json");
-		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
 
 		var app = new App(new Document(Settings.Current.DefaultTableSize));
+
+		app.Reconfig();
 
 		// await RenderAsync(app);
 

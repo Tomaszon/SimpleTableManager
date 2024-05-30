@@ -463,7 +463,7 @@ public static class Renderer
 				}
 			}
 
-			ChangeToCommentContentColors(cell);
+			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
 			Console.Write(new string(Settings.Current.CellBackgroundCharacter, leftPaddingSize));
 
@@ -486,7 +486,7 @@ public static class Renderer
 			ShowIndexCellSelection(showSelection);
 			Console.Write(content);
 
-			ChangeToCommentContentColors(cell);
+			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
 			Console.Write(new string(Settings.Current.CellBackgroundCharacter, rightPaddingSize));
 		});
@@ -602,6 +602,14 @@ public static class Renderer
 			Settings.Current.SelectedContentColor.Foreground : cell.ContentColor.Foreground;
 		Console.BackgroundColor = cell.IsSelected ?
 			Settings.Current.SelectedContentColor.Background : cell.ContentColor.Background;
+	}
+
+	private static void ChangeToCellBackgroundColors(Cell cell)
+	{
+		Console.ForegroundColor = cell.IsSelected ?
+			Settings.Current.SelectedBackgroundColor.Foreground : cell.BackgroundColor.Foreground;
+		Console.BackgroundColor = cell.IsSelected ?
+			Settings.Current.SelectedBackgroundColor.Background : cell.BackgroundColor.Background;
 	}
 
 	private static void ChangeToCellBorderColors(Cell cell)

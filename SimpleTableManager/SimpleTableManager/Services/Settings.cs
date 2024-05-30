@@ -10,15 +10,13 @@ public class Settings
 
 	public ConsoleColorSet DefaultContentColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
 
-	//UNDONE
-	public ConsoleColorSet DefaultBackgroundColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
+	public ConsoleColorSet DefaultBackgroundColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
 
 	public ConsoleColorSet DefaultBorderColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
 
 	public ConsoleColorSet SelectedContentColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
 
-	//UNDONE
-	public ConsoleColorSet SelectedBackgroundColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
+	public ConsoleColorSet SelectedBackgroundColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
 
 	public ConsoleColorSet SelectedBorderColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
 

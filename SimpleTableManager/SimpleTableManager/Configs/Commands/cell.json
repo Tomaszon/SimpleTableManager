@@ -21,6 +21,7 @@
 		"horizontal-padding": "setHorizontalPadding",
 		"vertical-padding": "setVerticalPadding",
 		"border-color": "setBorderColor",
+		"background-color": "setBackgroundColor",
 		"content-color": "setContentColor",
 		"layer-index": {
 			"min": "setLayerIndexToMin",

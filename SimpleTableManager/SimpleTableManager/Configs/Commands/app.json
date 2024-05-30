@@ -6,5 +6,6 @@
 		"autosave": "setAutosave"
 	},
 	"undo": "undo",
-	"redo": "redo"
+	"redo": "redo",
+	"reconfig": "reconfig"
 }

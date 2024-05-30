@@ -146,6 +146,12 @@ public partial class Cell
 	}
 
 	[CommandReference]
+	public void SetBackgroundColor(ConsoleColor foreground, ConsoleColor? background = null)
+	{
+		BackgroundColor = (foreground, background);
+	}
+
+	[CommandReference]
 	public void SetContentColor(ConsoleColor foreground, ConsoleColor? background = null)
 	{
 		ContentColor = (foreground, background);

@@ -10,6 +10,8 @@ public static class CommandTree
 
 	public static void FromJsonFolder(string folderPath)
 	{
+		Commands.Clear();
+
 		foreach (var f in Directory.GetFiles(folderPath))
 		{
 			Commands.Add(Path.GetFileNameWithoutExtension(f), JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(f)));

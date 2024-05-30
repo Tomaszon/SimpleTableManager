@@ -20,6 +20,16 @@ public class App : CommandExecuterBase
 		OnStateModifierCommandExecuted();
 	}
 
+	[CommandReference]
+	public void Reconfig()
+	{
+		BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
+		CommandTree.FromJsonFolder(@".\Configs\Commands");
+		Settings.FromJson(@".\Configs\settings.json");
+		CellBorders.FromJson(@".\Configs\cellBorders.json");
+		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
+	}
+
 	public override void OnStateModifierCommandExecuted()
 	{
 		using var m = new MemoryStream();

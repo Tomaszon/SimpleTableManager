@@ -11,17 +11,17 @@ public class TestBase
 		Settings.FromJson(@".\Configs\settings.json");
 	}
 
-	public static IFunction CreateFunction<T>(Enum functionOperator, T[] args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, T[] args)
 	{
 		return CreateFunction(functionOperator, null, args);
 	}
 
-	public static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
 	{
 		return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(), namedArguments, args.Cast<object>());
 	}
 
-	public static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)
+	protected static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)
 	{
 		for (int i = 0; i < result.Count(); i++)
 		{

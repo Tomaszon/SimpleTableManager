@@ -31,6 +31,8 @@ public partial class Cell : CommandExecuterBase
 
 	public ConsoleColorSet ContentColor { get; set; } = new(Settings.Current.DefaultContentColor);
 
+	public ConsoleColorSet BackgroundColor {get;set;} = new (Settings.Current.DefaultBackgroundColor);
+
 	public ConsoleColorSet BorderColor { get; set; } = new(Settings.Current.DefaultBorderColor);
 
 	public int LayerIndex { get; set; } = 0;
