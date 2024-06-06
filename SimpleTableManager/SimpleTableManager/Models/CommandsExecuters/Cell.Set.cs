@@ -26,6 +26,12 @@ public partial class Cell
 	}
 
 	[CommandReference]
+	public void SetRectangleContentFunction(Shape2dOperator functionOperator, params string[] arguments)
+	{
+		SetFunction<Rectangle>(functionOperator, arguments);
+	}
+
+	[CommandReference]
 	public void SetAreaContentFunction(AreaFunctionOperator functionOperator, params string[] arguments)
 	{
 		SetFunction<Shape>(functionOperator, arguments);

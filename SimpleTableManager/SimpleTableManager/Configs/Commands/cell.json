@@ -11,7 +11,8 @@
 			"char": "setCharacterContentFunction",
 			"datetime": "setDateTimeContentFunction",
 			"date": "setDateContentFunction",
-			"time": "setTimeContentFunction"
+			"time": "setTimeContentFunction",
+			"rectangle": "setRectangleContentFunction"
 		},
 		"content-function-operator": "setContentFunctionOperator",
 		"content-function-arguments": "setContentFunctionArguments",

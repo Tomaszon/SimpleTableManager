@@ -22,6 +22,7 @@ public static class FunctionCollection
 
 	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<object> arguments)
 	{
+		//IDEA use argument to search for function (useful for interface typed parameters)
 		var functionType = Functions.Single(f => GetRootClass(f).GenericTypeArguments[1] == argType);
 
 		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
