@@ -1,6 +1,6 @@
 using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Basic application related commands")]
 public class App : CommandExecuterBase

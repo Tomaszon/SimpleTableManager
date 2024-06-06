@@ -2,7 +2,7 @@
 
 using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Cell selection and table related commands")]
 [JsonObject(IsReference = true)]

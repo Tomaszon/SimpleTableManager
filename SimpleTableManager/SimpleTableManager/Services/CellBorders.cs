@@ -1,6 +1,8 @@
-﻿namespace SimpleTableManager.Models;
+﻿using SimpleTableManager.Models;
 
-public class CellBorders
+namespace SimpleTableManager.Services;
+
+public static class CellBorders
 {
 	private static Dictionary<CellBorderType, CellBorder> _BORDERS = new();
 

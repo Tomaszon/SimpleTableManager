@@ -1,6 +1,6 @@
 ﻿using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Table
 {

@@ -1,6 +1,6 @@
-﻿using SimpleTableManager.Services;
+﻿using SimpleTableManager.Models;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Services;
 
 public static class BorderCharacters
 {

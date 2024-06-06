@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.CommandExecuters;
 
 public abstract class CommandExecuterBase : ValidatorBase, IStateModifierCommandExecuter
 {

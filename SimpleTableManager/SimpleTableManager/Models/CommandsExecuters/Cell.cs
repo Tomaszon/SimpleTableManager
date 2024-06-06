@@ -3,7 +3,7 @@
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Cell related commands")]
 public partial class Cell : CommandExecuterBase

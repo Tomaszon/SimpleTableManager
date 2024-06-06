@@ -2,7 +2,7 @@
 
 using SimpleTableManager.Services;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Loading, saving and other document related commands")]
 public partial class Document : CommandExecuterBase
