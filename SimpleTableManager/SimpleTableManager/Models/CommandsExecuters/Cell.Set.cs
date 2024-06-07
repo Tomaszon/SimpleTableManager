@@ -31,6 +31,12 @@ public partial class Cell
 		SetFunction<Rectangle>(functionOperator, arguments);
 	}
 
+		[CommandReference]
+	public void SetEllipseContentFunction(Shape2dOperator functionOperator, params string[] arguments)
+	{
+		SetFunction<Ellipse>(functionOperator, arguments);
+	}
+
 	[CommandReference]
 	public void SetAreaContentFunction(AreaFunctionOperator functionOperator, params string[] arguments)
 	{

@@ -26,18 +26,18 @@ public class AreaFunction : FunctionBase<AreaFunctionOperator, Shape, decimal>
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public class FunctionMappingTypeAttribute: Attribute
+public class FunctionMappingTypeAttribute : Attribute
 {
-	public Type Type {get;}
+	public Type MappingType { get; }
 
-	public FunctionMappingTypeAttribute(Type type)
+	public FunctionMappingTypeAttribute(Type mappingType)
 	{
-		Type = type;
+		MappingType = mappingType;
 	}
 }
 
 [FunctionMappingType(typeof(Rectangle))]
-// public class RectangleFunction : FunctionBase<Shape2dOperator, Rectangle, decimal>
+[FunctionMappingType(typeof(Ellipse))]
 public class Shape2dFunction : FunctionBase<Shape2dOperator, IShape2d, decimal>
 {
 	public override IEnumerable<decimal> Execute()

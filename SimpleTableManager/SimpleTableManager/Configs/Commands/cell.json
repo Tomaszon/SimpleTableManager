@@ -12,7 +12,8 @@
 			"datetime": "setDateTimeContentFunction",
 			"date": "setDateContentFunction",
 			"time": "setTimeContentFunction",
-			"rectangle": "setRectangleContentFunction"
+			"rectangle": "setRectangleContentFunction",
+			"ellipse": "setEllipseContentFunction"
 		},
 		"content-function-operator": "setContentFunctionOperator",
 		"content-function-arguments": "setContentFunctionArguments",

@@ -1,5 +1,6 @@
 namespace SimpleTableManager.Services.Functions;
 
+[FunctionMappingType(typeof(bool))]
 public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
 {
 	public override IEnumerable<bool> Execute()
