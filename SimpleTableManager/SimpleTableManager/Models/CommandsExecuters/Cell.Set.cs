@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Services;
+﻿using System.Collections;
+using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -22,7 +23,7 @@ public partial class Cell
 
 		args.Item1.TryGetValue(ArgumentName.Type, out var typeName);
 
-		ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", null, args.Item2);
+		ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", args.Item1, args.Item2);
 	}
 
 	[CommandFunction]
@@ -41,12 +42,6 @@ public partial class Cell
 	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, params string[] arguments)
 	{
 		SetFunction<RightTriangle>(functionOperator, arguments);
-	}
-
-	[CommandFunction]
-	public void SetAreaContentFunction(AreaFunctionOperator functionOperator, params string[] arguments)
-	{
-		SetFunction<Shape>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
@@ -103,7 +98,7 @@ public partial class Cell
 		ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
 
 		//TODO find a way to list possible values
-		ContentFunction = FunctionCollection.GetFunction(ContentFunction.GetInType().Name, @operator, ContentFunction.NamedArguments, ContentFunction.Arguments);
+		ContentFunction.Operator = (Enum)ContentParser.ParseStringValue(ContentFunction.Operator.GetType(), @operator);
 	}
 
 	[CommandFunction]
@@ -113,7 +108,13 @@ public partial class Cell
 
 		(var namedArgs, var args) = Shared.SeparateNamedArguments<string>(arguments);
 
-		ContentFunction = FunctionCollection.GetFunction(ContentFunction.GetInType().Name, ContentFunction.Operator.ToString(), namedArgs.Count > 0 ? namedArgs : ContentFunction.NamedArguments, args.Any() ? args.Cast<object>() : ContentFunction.Arguments);
+		ContentFunction.NamedArguments = namedArgs;
+
+		var argType = ContentFunction.Arguments.GetType().GenericTypeArguments.First();
+
+		var targetArray = FunctionCollection.ParseArgumentList(args, argType);
+
+		ContentFunction.Arguments = targetArray.Cast<object>();
 	}
 
 	[CommandFunction]

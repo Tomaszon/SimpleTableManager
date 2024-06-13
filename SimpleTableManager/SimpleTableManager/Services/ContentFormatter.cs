@@ -1,3 +1,5 @@
+using SimpleTableManager.Models;
+
 namespace SimpleTableManager.Services;
 
 public class ContentFormatter : IFormatProvider, ICustomFormatter
@@ -51,6 +53,14 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 
 				_ => throw new FormatException()
 			};
+		}
+		else if (arg is IShape2Sized shape2Sized)
+		{
+			return $"S1: {shape2Sized.Size1.ToString(_format)}, S2: {shape2Sized.Size2.ToString(_format)}";
+		}
+		else if (arg is IShape1Sized shape1Sized)
+		{
+			return $"S1: {shape1Sized.Size1.ToString(_format)}";
 		}
 
 		return arg!.ToString()!;

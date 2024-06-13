@@ -5,9 +5,7 @@ public static class Shared
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
 		{ "int", $"{nameof(System)}.int32" },
-		{ "bool", $"{nameof(System)}.boolean" },
-		{ "shape", $"{nameof(SimpleTableManager)}.{nameof(Models)}.shape" },
-		{ "rectangle", $"{nameof(SimpleTableManager)}.{nameof(Models)}.rectangle" }
+		{ "bool", $"{nameof(System)}.boolean" }
 	};
 
 	public static string NAMED_ARG_SEPARATOR { get; } = ":=";

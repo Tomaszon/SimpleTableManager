@@ -29,18 +29,13 @@ public static class FunctionCollection
 
 	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<object> arguments)
 	{
-		//IDEA use argument to search for function (useful for interface typed parameters)
 		var functionType = Functions[argType];
 
 		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
 
 		var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
 
-		var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(argType))!;
-
-		var parsedArgs = argType == typeof(string) ? arguments! : arguments.Select(a => a is string str ? ContentParser.ParseStringValue(argType, str!) : a);
-
-		parsedArgs.ForEach(e => targetArray.Add(e));
+		var targetArray = ParseArgumentList(arguments, argType);
 
 		var instance = (IFunction)Activator.CreateInstance(functionType)!;
 
@@ -68,5 +63,16 @@ public static class FunctionCollection
 	private static Type GetRootClass(Type type)
 	{
 		return type.BaseType is not null && type.BaseType != typeof(object) ? GetRootClass(type.BaseType) : type;
+	}
+
+	public static System.Collections.IList ParseArgumentList(IEnumerable<object> arguments, Type argType)
+	{
+		var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(argType))!;
+
+		var parsedArgs = argType == typeof(string) ? arguments! : arguments.Select(a => a is string str ? ContentParser.ParseStringValue(argType, str!) : a);
+
+		parsedArgs.ForEach(e => targetArray.Add(e));
+
+		return targetArray;
 	}
 }

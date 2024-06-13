@@ -1,6 +1,3 @@
-using SimpleTableManager.Extensions;
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services.Functions;
 
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
@@ -17,11 +14,15 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
 
-	IEnumerable<object> IFunction.Arguments => Arguments.Cast<object>();
+	IEnumerable<object> IFunction.Arguments
+	{
+		get => Arguments.Cast<object>();
+		set => Arguments = value.Cast<TIn>();
+	}
 
 	public TOpertor Operator { get; set; }
 
-	Enum IFunction.Operator => Operator;
+	Enum IFunction.Operator { get => Operator; set => Operator = (TOpertor)value; }
 
 	public abstract IEnumerable<TOut> Execute();
 
