@@ -13,7 +13,8 @@
 			"date": "setDateContentFunction",
 			"time": "setTimeContentFunction",
 			"rectangle": "setRectangleContentFunction",
-			"ellipse": "setEllipseContentFunction"
+			"ellipse": "setEllipseContentFunction",
+			"right-triangle": "setRightTriangleContentFunction"
 		},
 		"content-function-operator": "setContentFunctionOperator",
 		"content-function-arguments": "setContentFunctionArguments",

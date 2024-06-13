@@ -5,7 +5,7 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Cell
 {
-	[CommandReference(StateModifier = false), CommandShortcut("showCellDetails")]
+	[CommandFunction(StateModifier = false), CommandShortcut("showCellDetails")]
 	public object ShowDetails()
 	{
 		return new
@@ -26,7 +26,7 @@ public partial class Cell
 		};
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public object ShowContentFunction()
 	{
 		return ContentFunction is null ? "None" : new

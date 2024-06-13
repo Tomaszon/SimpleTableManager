@@ -1,6 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument(ArgumentName.Decimals, 2)]
+[FunctionMappingType(typeof(decimal))]
 public class DecimalNumericFunction : NumericFunctionBase<decimal, object>
 {
 	public override IEnumerable<object> Execute()

@@ -4,13 +4,13 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Document
 {
-	[CommandReference]
+	[CommandFunction]
 	public void SetTitle(string title)
 	{
 		Metadata.Title = title;
 	}
 
-	[CommandReference("activateTableAt")]
+	[CommandFunction("activateTableAt")]
 	public void ActivateTable(int index)
 	{
 		ThrowIfNot(index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
@@ -19,7 +19,7 @@ public partial class Document
 		Tables[index].IsActive = true;
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void ActivateTable(string name)
 	{
 		var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name)!);
@@ -29,7 +29,7 @@ public partial class Document
 		ActivateTable(index);
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void ActivateNextTable()
 	{
 		GetActiveTable(out var index);
@@ -40,7 +40,7 @@ public partial class Document
 		}
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void ActivatePreviousTable()
 	{
 		GetActiveTable(out var index);
@@ -51,7 +51,7 @@ public partial class Document
 		}
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void AddNewTable(Size? size = null, string? name = null)
 	{
 		name ??= $"Table{Tables.Count}";
@@ -69,7 +69,7 @@ public partial class Document
 	}
 
 	[CommandInformation("Saves the document overwriting the previous save file")]
-	[CommandShortcut("saveDocument"), CommandReference(StateModifier = false)]
+	[CommandShortcut("saveDocument"), CommandFunction(StateModifier = false)]
 	public void Save()
 	{
 		ThrowIf(Metadata.Path is null, $"Specify a file name to save to with 'save-as'");
@@ -77,7 +77,7 @@ public partial class Document
 		Save(Metadata.Path, true);
 	}
 
-	[CommandReference("saveAs", StateModifier = false)]
+	[CommandFunction("saveAs", StateModifier = false)]
 	public void Save(string fileName, bool overwrite = false)
 	{
 		fileName = Shared.GetWorkFilePath(fileName, "json");
@@ -111,7 +111,7 @@ public partial class Document
 		GetMetaInfos(fileName);
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public void Load(string fileName, bool confirm = false)
 	{
 		ThrowIf(IsSaved == false && !confirm, $"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force file load");
@@ -137,7 +137,7 @@ public partial class Document
 		GetMetaInfos(fileName);
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	[CommandShortcut("exportDocument"), CommandInformation("Exports each table as a CSV file")]
 	public void Export(bool overwrite = false)
 	{

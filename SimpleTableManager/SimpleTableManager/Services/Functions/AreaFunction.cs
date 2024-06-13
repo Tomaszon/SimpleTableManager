@@ -38,6 +38,7 @@ public class FunctionMappingTypeAttribute : Attribute
 
 [FunctionMappingType(typeof(Rectangle))]
 [FunctionMappingType(typeof(Ellipse))]
+[FunctionMappingType(typeof(RightTriangle))]
 public class Shape2dFunction : FunctionBase<Shape2dOperator, IShape2d, decimal>
 {
 	public override IEnumerable<decimal> Execute()

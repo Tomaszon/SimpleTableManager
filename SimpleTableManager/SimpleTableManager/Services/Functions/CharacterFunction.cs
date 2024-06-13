@@ -3,6 +3,7 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument(ArgumentName.Separator, "")]
 [NamedArgument(ArgumentName.Count, 1)]
+[FunctionMappingType(typeof(char))]
 public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, object>
 {
 	public override IEnumerable<object> Execute()

@@ -5,13 +5,13 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Cell
 {
-	[CommandReference, CommandShortcut("copyCellContent")]
+	[CommandFunction, CommandShortcut("copyCellContent")]
 	public void CopyContent()
 	{
 		GlobalContainer.Add("cellContent", ContentFunction);
 	}
 
-	[CommandReference, CommandShortcut("cutCellContent")]
+	[CommandFunction, CommandShortcut("cutCellContent")]
 	public void CutContent()
 	{
 		GlobalContainer.Add("cellContent", ContentFunction);
@@ -19,7 +19,7 @@ public partial class Cell
 		ResetContent();
 	}
 
-	[CommandReference, CommandShortcut("pasteCellContent")]
+	[CommandFunction, CommandShortcut("pasteCellContent")]
 	public void PasteContent()
 	{
 		var stored = GlobalContainer.TryGet<IFunction>("cellContent");
@@ -30,7 +30,7 @@ public partial class Cell
 		}
 	}
 
-	[CommandReference, CommandShortcut("copyCellFormat")]
+	[CommandFunction, CommandShortcut("copyCellFormat")]
 	public void CopyFormat()
 	{
 		GlobalContainer.Add("cellFormat",
@@ -44,7 +44,7 @@ public partial class Cell
 		));
 	}
 
-	[CommandReference, CommandShortcut("pasteCellFormat")]
+	[CommandFunction, CommandShortcut("pasteCellFormat")]
 	public void PasteFormat()
 	{
 		var stored = GlobalContainer.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, int>?>("cellFormat");

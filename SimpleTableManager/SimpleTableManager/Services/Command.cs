@@ -67,7 +67,7 @@ public class Command
 			{
 				results.Add(method.Invoke(i, parsedArguments.ToArray()));
 
-				if (method.GetCustomAttribute<CommandReferenceAttribute>()!.StateModifier)
+				if (method.GetCustomAttribute<CommandFunctionAttribute>()!.StateModifier)
 				{
 					i.InvokeStateModifierCommandExecutedEvent();
 				}
@@ -120,7 +120,7 @@ public class Command
 		return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
 			.Union(type.GetMethods(BindingFlags.Public | BindingFlags.Static))
 			.Select(m =>
-				(attribute: m.GetCustomAttribute<CommandReferenceAttribute>(false), method: m)).Where(e =>
+				(attribute: m.GetCustomAttribute<CommandFunctionAttribute>(false), method: m)).Where(e =>
 				e.attribute is not null).ToDictionary(k => k.attribute!.MethodReference.ToLower(), v => v.method);
 	}
 

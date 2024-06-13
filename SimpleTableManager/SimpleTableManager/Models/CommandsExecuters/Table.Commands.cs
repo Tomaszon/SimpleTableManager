@@ -5,13 +5,13 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Table
 {
-	[CommandReference]
+	[CommandFunction]
 	public void ResetViewOptions()
 	{
 		ViewOptions.Set(0, 0, Math.Max(Size.Width - 1, 0), Math.Max(Size.Height - 1, 0));
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void HideColumnAt(int x)
 	{
 		Header[x].Visibility.IsColumnHidden = true;
@@ -20,7 +20,7 @@ public partial class Table
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void HideRowAt(int y)
 	{
 		Sider[y].Visibility.IsRowHidden = true;
@@ -29,7 +29,7 @@ public partial class Table
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void ShowColumnAt(int x)
 	{
 		Header[x].Visibility.IsColumnHidden = false;
@@ -38,7 +38,7 @@ public partial class Table
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void ShowRowAt(int y)
 	{
 		Sider[y].Visibility.IsRowHidden = false;
@@ -47,7 +47,7 @@ public partial class Table
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void ShowAllRows()
 	{
 		Sider.ForEach(s => s.Visibility.IsRowHidden = false);
@@ -56,7 +56,7 @@ public partial class Table
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void ShowAllColumns()
 	{
 		Header.ForEach(s => s.Visibility.IsColumnHidden = false);
@@ -65,26 +65,26 @@ public partial class Table
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void ShowAllCells()
 	{
 		ShowAllColumns();
 		ShowAllRows();
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public object ShowCellDetails(Position position)
 	{
 		return this[position].ShowDetails();
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public object ShowCellContentFunction(Position position)
 	{
 		return this[position].ShowContentFunction();
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	[CommandShortcut("exportTable"), CommandInformation("Exports table as a CSV file")]
 	public void Export(bool overwrite = false)
 	{

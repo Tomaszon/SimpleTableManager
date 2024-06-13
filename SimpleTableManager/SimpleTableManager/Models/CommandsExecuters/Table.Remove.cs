@@ -2,7 +2,7 @@
 
 public partial class Table
 {
-	[CommandReference]
+	[CommandFunction]
 	public void RemoveRowAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
@@ -19,19 +19,19 @@ public partial class Table
 		}
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void RemoveFirstRow()
 	{
 		RemoveRowAt(0);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void RemoveLastRow()
 	{
 		RemoveRowAt(Size.Height - 1);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void RemoveColumnAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Width - 1, $"Index is not in the needed range: [0, {Size.Width - 1}]");
@@ -51,13 +51,13 @@ public partial class Table
 		}
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void RemoveFirstColumn()
 	{
 		RemoveColumnAt(0);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void RemoveLastColumn()
 	{
 		RemoveColumnAt(Size.Width - 1);

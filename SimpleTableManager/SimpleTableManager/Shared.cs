@@ -6,7 +6,8 @@ public static class Shared
 	{
 		{ "int", $"{nameof(System)}.int32" },
 		{ "bool", $"{nameof(System)}.boolean" },
-		{ "shape", $"{nameof(SimpleTableManager)}.{nameof(Models)}.shape" }
+		{ "shape", $"{nameof(SimpleTableManager)}.{nameof(Models)}.shape" },
+		{ "rectangle", $"{nameof(SimpleTableManager)}.{nameof(Models)}.rectangle" }
 	};
 
 	public static string NAMED_ARG_SEPARATOR { get; } = ":=";

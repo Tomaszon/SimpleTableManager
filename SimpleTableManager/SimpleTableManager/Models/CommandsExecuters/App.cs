@@ -20,7 +20,7 @@ public class App : CommandExecuterBase
 		OnStateModifierCommandExecuted();
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void Reconfig()
 	{
 		BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
@@ -47,7 +47,7 @@ public class App : CommandExecuterBase
 		EditHistory.Add(content);
 	}
 
-	[CommandReference, CommandShortcut("redoChange")]
+	[CommandFunction, CommandShortcut("redoChange")]
 	public void Redo()
 	{
 		if (EditHistory.TryGetNextHistoryItem(out var state))
@@ -66,7 +66,7 @@ public class App : CommandExecuterBase
 		}
 	}
 
-	[CommandReference, CommandShortcut("undoChange")]
+	[CommandFunction, CommandShortcut("undoChange")]
 	public void Undo()
 	{
 		if (EditHistory.TryGetPreviousHistoryItem(out var state))
@@ -85,13 +85,13 @@ public class App : CommandExecuterBase
 		}
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public static void SetAutosave(bool autosave)
 	{
 		Settings.Current.Autosave = autosave;
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public static void Exit()
 	{
 		var answer = SmartConsole.ReadLineWhile("Are you sure y/n", _options);
@@ -108,14 +108,14 @@ public class App : CommandExecuterBase
 		}
 	}
 
-	[CommandReference(StateModifier = false), CommandShortcut, CommandInformation("Refreshes the view")]
+	[CommandFunction(StateModifier = false), CommandShortcut, CommandInformation("Refreshes the view")]
 	public static void Refresh()
 	{
 		Console.ResetColor();
 		Console.Clear();
 	}
 
-	[CommandReference(StateModifier = false)]
+	[CommandFunction(StateModifier = false)]
 	public static void SetRenderingMode(RenderingMode renderingMode)
 	{
 		Renderer.RendererSettings.RenderingMode = renderingMode;

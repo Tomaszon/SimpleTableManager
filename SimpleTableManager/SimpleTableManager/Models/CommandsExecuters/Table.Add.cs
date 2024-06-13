@@ -4,7 +4,7 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Table
 {
-	[CommandReference]
+	[CommandFunction]
 	public void AddRowAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
@@ -24,7 +24,7 @@ public partial class Table
 		}
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddRowAfter(int after)
 	{
 		ThrowIfNot(after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
@@ -32,19 +32,19 @@ public partial class Table
 		AddRowAt(after + 1);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddRowFirst()
 	{
 		AddRowAt(0);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddRowLast()
 	{
 		AddRowAt(Size.Height);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddColumnAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
@@ -64,7 +64,7 @@ public partial class Table
 		}
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddColumnAfter(int after)
 	{
 		ThrowIfNot(after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
@@ -72,13 +72,13 @@ public partial class Table
 		AddColumnAt(after + 1);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddColumnFirst()
 	{
 		AddColumnAt(0);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void AddColumnLast()
 	{
 		AddColumnAt(Size.Width);

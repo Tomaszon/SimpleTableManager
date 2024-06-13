@@ -2,7 +2,7 @@
 
 public partial class Table
 {
-	[CommandReference]
+	[CommandFunction]
 	public void SelectCell(Position position, bool deselectCurrent = false)
 	{
 		if (deselectCurrent)
@@ -13,7 +13,7 @@ public partial class Table
 		this[position].IsSelected = true;
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void SelectCells(params Position[] positions)
 	{
 		ThrowIfNot<TargetParameterCountException>(positions.Length > 0, "One or more positions needed!");
@@ -21,7 +21,7 @@ public partial class Table
 		positions.ForEach(p => this[p].IsSelected = true);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void SelectCellRange(Position positionFrom, Position positionTo, bool deselectCurrent = false)
 	{
 		if (deselectCurrent)
@@ -32,7 +32,7 @@ public partial class Table
 		this[positionFrom, positionTo].ForEach(c => c.IsSelected = true);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void SelectColumn(int x, bool deselectCurrent = false)
 	{
 		if (deselectCurrent)
@@ -43,7 +43,7 @@ public partial class Table
 		Columns[x].ForEach(c => c.IsSelected = true);
 	}
 
-	[CommandReference]
+	[CommandFunction]
 	public void SelectRow(int y, bool deselectCurrent = false)
 	{
 		if (deselectCurrent)
@@ -54,13 +54,13 @@ public partial class Table
 		Rows[y].ForEach(c => c.IsSelected = true);
 	}
 
-	[CommandReference, CommandShortcut("selectAllCells")]
+	[CommandFunction, CommandShortcut("selectAllCells")]
 	public void SelectAll()
 	{
 		Content.ForEach(c => c.IsSelected = true);
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void MoveSelectionRight()
 	{
 		var selectedCells = GetSelectedCells();
@@ -77,7 +77,7 @@ public partial class Table
 		}
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void MoveSelectionLeft()
 	{
 		var selectedCells = GetSelectedCells();
@@ -94,7 +94,7 @@ public partial class Table
 		}
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void MoveSelectionDown()
 	{
 		var selectedCells = GetSelectedCells();
@@ -111,7 +111,7 @@ public partial class Table
 		}
 	}
 
-	[CommandReference, CommandShortcut]
+	[CommandFunction, CommandShortcut]
 	public void MoveSelectionUp()
 	{
 		var selectedCells = GetSelectedCells();

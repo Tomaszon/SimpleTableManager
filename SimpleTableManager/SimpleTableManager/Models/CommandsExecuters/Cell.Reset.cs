@@ -4,19 +4,19 @@ namespace SimpleTableManager.Models.CommandExecuters
 {
 	public partial class Cell
 	{
-		[CommandReference, CommandShortcut("resetCellContent")]
+		[CommandFunction, CommandShortcut("resetCellContent")]
 		public void ResetContent()
 		{
 			ContentFunction = null;
 		}
 
-		[CommandReference]
+		[CommandFunction]
 		public void ResetComment()
 		{
 			Comment = null;
 		}
 
-		[CommandReference, CommandShortcut("resetCellFormat")]
+		[CommandFunction, CommandShortcut("resetCellFormat")]
 		public void ResetFormat()
 		{
 			GivenSize = new Size(7, 1);

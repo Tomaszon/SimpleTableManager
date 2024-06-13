@@ -666,12 +666,11 @@ public partial class SmartConsole
 
 	private static void Play(int frequency, int length, int count)
 	{
-		if (!Settings.Current.Audio)
+		if (Settings.Current.Audio)
 		{
-			return;
+			//TODO sole cross platform issue, make it work on linux
+			// Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, length));
 		}
-
-		Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, length));
 	}
 
 	private static int GetFrequency(Note note)

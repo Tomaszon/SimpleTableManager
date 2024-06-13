@@ -136,7 +136,7 @@ public class Ellipse : Shape2Sized2dBase<Ellipse>, IParsable<Ellipse>
 {
 	public override decimal Area => Size1 * Size2 * Math.PI.ToType<decimal>();
 
-	public override decimal Perimeter => 
+	public override decimal Perimeter =>
 		(Math.PI * Math.Sqrt((2 * (Size1 * Size1 + Size2 * Size2)).ToType<double>())).ToType<decimal>();
 
 	public Ellipse() { }
@@ -144,6 +144,19 @@ public class Ellipse : Shape2Sized2dBase<Ellipse>, IParsable<Ellipse>
 	public Ellipse(decimal size1, decimal size2) : base(size1, size2) { }
 
 	public static Ellipse Parse(string value, IFormatProvider? provider)
+	{
+		return ParseWrapper(value);
+	}
+}
+
+public class RightTriangle : Shape2Sized2dBase<RightTriangle>, IParsable<RightTriangle>
+{
+	public override decimal Area => Size1 * Size2 / 2;
+
+	public override decimal Perimeter =>
+		Size1 + Size2 + Math.Sqrt((Size1 * Size1 + Size2 * Size2).ToType<double>()).ToType<decimal>();
+
+	public static RightTriangle Parse(string value, IFormatProvider? provider)
 	{
 		return ParseWrapper(value);
 	}

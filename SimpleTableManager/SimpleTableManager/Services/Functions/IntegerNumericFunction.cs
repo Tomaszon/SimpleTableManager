@@ -1,6 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument(ArgumentName.Divider, 2)]
+[FunctionMappingType(typeof(int))]
 public class IntegerNumericFunction : NumericFunctionBase<int, int>
 {
 	public override IEnumerable<int> Execute()
