@@ -41,6 +41,7 @@
 	"IndexCellRightArrow": "▶",
 	"IndexCellUpArrow": "▲",
 	"IndexCellDownArrow": "▼",
+	"IndexCellFiltered": "⊨",
 	"TmpBackgroundCharacter": "?",
 	"DefaultCellBackgroundCharacter": "·",
 	"DefaultWorkDirectory": "C:\\users\\offic\\downloads",

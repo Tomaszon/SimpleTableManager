@@ -36,6 +36,8 @@ public class Settings
 
 	public char IndexCellDownArrow { get; set; }
 
+	public char IndexCellFiltered { get; set; }
+
 	public char TmpBackgroundCharacter { get; set; }
 
 	public char DefaultCellBackgroundCharacter { get; set; }

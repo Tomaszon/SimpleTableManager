@@ -32,6 +32,7 @@ public partial class Table
 			ShowAllColumnsCore();
 		}
 
+		// UNDONE only show cell if multiple column filters allow it
 		foreach (var filter in ColumnFilters)
 		{
 			Shared.IndexArray(Rows.Count).ForEach(p =>
@@ -54,6 +55,7 @@ public partial class Table
 			});
 		}
 
+		// UNDONE only show cell if multiple row filters allow it
 		foreach (var filter in RowFilters)
 		{
 			Shared.IndexArray(Columns.Count).ForEach(p =>

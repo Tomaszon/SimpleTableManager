@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager.Models.CommandExecuters;
+﻿using SimpleTableManager.Services;
+
+namespace SimpleTableManager.Models.CommandExecuters;
 
 public class IndexCell : Cell
 {
@@ -24,19 +26,24 @@ public class IndexCell : Cell
 	{
 		if (IndexCellType == IndexCellType.Header)
 		{
-			OnViewChangedCore(firstHeaderIndex, lastHeaderIndex, Table.Size.Width - 1);
+			OnViewChangedCore(firstHeaderIndex, lastHeaderIndex, Table.Size.Width - 1, Table.ColumnFilters.ContainsKey(Index));
 		}
 		else
 		{
-			OnViewChangedCore(firstSiderIndex, lastSiderIndex, Table.Size.Height - 1);
+			OnViewChangedCore(firstSiderIndex, lastSiderIndex, Table.Size.Height - 1, Table.RowFilters.ContainsKey(Index));
 		}
 
 		OnStateModifierCommandExecuted();
 	}
 
-	private void OnViewChangedCore(int? first, int? last, int maxIndex)
+	private void OnViewChangedCore(int? first, int? last, int maxIndex, bool filtered)
 	{
 		RemoveEllipses();
+
+		if(filtered)
+		{
+			AppendFilteredMark();
+		}
 
 		if (first is not null && Index == first && Index > 0)
 		{
@@ -53,6 +60,13 @@ public class IndexCell : Cell
 		var content = ContentFunction!.ExecuteAndFormat().First();
 
 		SetContent($"{content} {HigherArrow} {lastIndex}");
+	}
+
+	public void AppendFilteredMark()
+	{
+		var content = ContentFunction!.ExecuteAndFormat().First();
+
+		SetContent($"{content} {Settings.Current.IndexCellFiltered}");
 	}
 
 	public void AppendLowerEllipsis()
