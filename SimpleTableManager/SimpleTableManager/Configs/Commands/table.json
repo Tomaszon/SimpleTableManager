@@ -6,12 +6,14 @@
 			"first": "addRowFirst",
 			"last": "addRowLast"
 		},
+		"row-filter": "addRowFilter",
 		"column": {
 			"at": "addColumnAt",
 			"after": "addColumnAfter",
 			"first": "addColumnFirst",
 			"last": "addColumnLast"
-		}
+		},
+		"column-filter": "addColumnFilter"
 	},
 	"remove|delete": {
 		"row": {
@@ -19,11 +21,13 @@
 			"first": "removeFirstRow",
 			"last": "removeLastRow"
 		},
+		"row-filter": "removeRowFilter",
 		"column": {
 			"at": "removeColumnAt",
 			"first": "removeFirstColumn",
 			"last": "removeLastColumn"
-		}
+		},
+		"column-filter": "removeColumnFilter"
 	},
 	"set": {
 		"column": {

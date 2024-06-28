@@ -1,8 +1,8 @@
 namespace SimpleTableManager.Models;
 
 [JsonConverter(typeof(StringEnumConverter))]
-public enum IndexCellType
+public enum FilterType
 {
-	Header,
-	Sider
+	Column,
+	Row
 }

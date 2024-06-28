@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Services;
+﻿using System.Collections;
+using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Extensions;
 
@@ -61,5 +62,11 @@ public static class Extensions
 		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p => p.Value.Equals(type.Name.ToLower()));
 
 		return pair.Key is null ? type.Name : pair.Key.First().ToString().ToUpper() + new string(pair.Key.Skip(1).ToArray());
+	}
+
+	public static void Replace<T1, T2>(this IDictionary<T1, T2> dictionary, T1 key, T2 value)
+	{
+		dictionary.Remove(key);
+		dictionary.Add(key, value);
 	}
 }

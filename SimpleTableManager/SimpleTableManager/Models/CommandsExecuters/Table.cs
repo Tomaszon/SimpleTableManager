@@ -26,6 +26,10 @@ public partial class Table : CommandExecuterBase
 
 	public Cell CornerCell { get; set; } = default!;
 
+	public Dictionary<int, string> RowFilters = new();
+	
+	public Dictionary<int, string> ColumnFilters = new();
+
 	[JsonIgnore]
 	public Dictionary<int, List<Cell>> Columns =>
 		Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -11,65 +12,202 @@ public partial class Table
 		ViewOptions.Set(0, 0, Math.Max(Size.Width - 1, 0), Math.Max(Size.Height - 1, 0));
 	}
 
+	private void ApplyFilters()
+	{
+		if (ColumnFilters.Count > 0)
+		{
+			Shared.IndexArray(Rows.Count).ForEach(HideRowAtCore);
+		}
+		else
+		{
+			ShowAllRowsCore();
+		}
+
+		if (RowFilters.Count > 0)
+		{
+			Shared.IndexArray(Columns.Count).ForEach(HideColumnAtCore);
+		}
+		else
+		{
+			ShowAllColumnsCore();
+		}
+
+		foreach (var filter in ColumnFilters)
+		{
+			Shared.IndexArray(Rows.Count).ForEach(p =>
+			{
+				if (Rows[p][filter.Key].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
+				{
+					// UNDONE only show cell if column filter AND row filter allows it
+					// if (RowFilters.TryGetValue(p, out var rowFilter))
+					// {
+					// 	if (Columns[filter.Key][p].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
+					// 	{
+					// 		ShowRowAtCore(p);
+					// 	}
+					// }
+					// else
+					// {
+						ShowRowAtCore(p);
+					// }
+				}
+			});
+		}
+
+		foreach (var filter in RowFilters)
+		{
+			Shared.IndexArray(Columns.Count).ForEach(p =>
+			{
+				if (Columns[p][filter.Key].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
+				{
+					// UNDONE only show cell if column filter AND row filter allows it
+					// if (ColumnFilters.TryGetValue(p, out var columnFilter))
+					// {
+						// if (Rows[filter.Key][p].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
+						// {
+						// 	ShowColumnAtCore(p);
+						// }
+					// }
+					// else
+					// {
+						ShowColumnAtCore(p);
+					// }
+				}
+			});
+		}
+
+		ViewOptions.InvokeViewChangedEvent();
+	}
+
 	[CommandFunction]
-	public void HideColumnAt(int x)
+	public void AddRowFilter(int y, string filterExpression)
+	{
+		RowFilters.Replace(y, filterExpression);
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void AddColumnFilter(int x, string filterExpression)
+	{
+		ColumnFilters.Replace(x, filterExpression);
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void RemoveRowFilter(int y)
+	{
+		RowFilters.Remove(y);
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void RemoveColumnFilter(int x)
+	{
+		ColumnFilters.Remove(x);
+
+		ApplyFilters();
+	}
+
+	private void HideColumnAtCore(int x)
 	{
 		Header[x].Visibility.IsColumnHidden = true;
 		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = true);
+	}
 
-		ViewOptions.InvokeViewChangedEvent();
+	private void HideRowAtCore(int y)
+	{
+		Sider[y].Visibility.IsRowHidden = true;
+		Rows[y].ForEach(c => c.Visibility.IsRowHidden = true);
+	}
+
+	private void ShowColumnAtCore(int x)
+	{
+		Header[x].Visibility.IsColumnHidden = false;
+		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = false);
+	}
+
+	private void ShowRowAtCore(int y)
+	{
+		Sider[y].Visibility.IsRowHidden = false;
+		Rows[y].ForEach(c => c.Visibility.IsRowHidden = false);
+	}
+
+	private void ShowAllRowsCore()
+	{
+		Shared.IndexArray(Rows.Count).ForEach(ShowRowAtCore);
+	}
+
+	private void ShowAllColumnsCore()
+	{
+		Shared.IndexArray(Columns.Count).ForEach(ShowColumnAtCore);
+	}
+
+	[CommandFunction]
+	public void HideColumnAt(int x)
+	{
+		HideColumnAtCore(x);
+
+		ColumnFilters.Remove(x);
+
+		ApplyFilters();
 	}
 
 	[CommandFunction]
 	public void HideRowAt(int y)
 	{
-		Sider[y].Visibility.IsRowHidden = true;
-		Rows[y].ForEach(c => c.Visibility.IsRowHidden = true);
+		HideRowAtCore(y);
 
-		ViewOptions.InvokeViewChangedEvent();
+		RowFilters.Remove(y);
+
+		ApplyFilters();
 	}
 
 	[CommandFunction]
 	public void ShowColumnAt(int x)
 	{
-		Header[x].Visibility.IsColumnHidden = false;
-		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = false);
+		ShowColumnAtCore(x);
 
-		ViewOptions.InvokeViewChangedEvent();
+		ColumnFilters.Remove(x);
+
+		ApplyFilters();
 	}
 
 	[CommandFunction]
 	public void ShowRowAt(int y)
 	{
-		Sider[y].Visibility.IsRowHidden = false;
-		Rows[y].ForEach(c => c.Visibility.IsRowHidden = false);
+		ShowRowAtCore(y);
 
-		ViewOptions.InvokeViewChangedEvent();
+		RowFilters.Remove(y);
+
+		ApplyFilters();
 	}
 
 	[CommandFunction]
 	public void ShowAllRows()
 	{
-		Sider.ForEach(s => s.Visibility.IsRowHidden = false);
-		Rows.ForEach(r => r.Value.ForEach(c => c.Visibility.IsRowHidden = false));
+		ShowAllRowsCore();
 
-		ViewOptions.InvokeViewChangedEvent();
+		ApplyFilters();
 	}
 
 	[CommandFunction]
 	public void ShowAllColumns()
 	{
-		Header.ForEach(s => s.Visibility.IsColumnHidden = false);
-		Columns.ForEach(r => r.Value.ForEach(c => c.Visibility.IsColumnHidden = false));
+		ShowAllColumnsCore();
 
-		ViewOptions.InvokeViewChangedEvent();
+		ApplyFilters();
 	}
 
 	[CommandFunction]
 	public void ShowAllCells()
 	{
-		ShowAllColumns();
-		ShowAllRows();
+		ShowAllColumnsCore();
+		ShowAllRowsCore();
+
+		ApplyFilters();
 	}
 
 	[CommandFunction(StateModifier = false)]
