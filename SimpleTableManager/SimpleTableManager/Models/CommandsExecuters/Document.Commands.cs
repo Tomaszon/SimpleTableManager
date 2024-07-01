@@ -1,3 +1,5 @@
+using Newtonsoft.Json.Linq;
+
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -148,7 +150,40 @@ public partial class Document
 			ThrowIf<InvalidOperationException>(File.Exists(fileName) && !overwrite, $"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
 		});
 
-		Tables.ForEach(t => 
+		Tables.ForEach(t =>
 			t.Export(Shared.GetWorkFilePath($"{Metadata.Title}.{t.Name}", "csv"), overwrite));
+	}
+
+	[CommandFunction(StateModifier = false)]
+	[CommandInformation("List all available valid json files that might be STM documents")]
+	public object List(string pattern = "*")
+	{
+		string fileNames = string.Empty;
+		var files = Directory.GetFiles(Settings.Current.DefaultWorkDirectory, $"{pattern}.json");
+
+		files.ForEach(f =>
+		{
+			try
+			{
+				_ = JToken.Parse(File.ReadAllText(f));
+
+				fileNames += $"{Path.GetFileNameWithoutExtension(f)}|";
+			}
+			catch { }
+		});
+
+		return new
+		{
+			Directory = Settings.Current.DefaultWorkDirectory,
+			Files = fileNames.TrimEnd('|')
+		};
+	}
+
+	[CommandFunction]
+	public void Close(bool confirm = false)
+	{
+		ThrowIf(IsSaved == false && !confirm, $"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force document close");
+
+		Clear();
 	}
 }

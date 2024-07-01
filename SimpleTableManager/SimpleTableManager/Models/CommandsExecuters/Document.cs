@@ -16,9 +16,7 @@ public partial class Document : CommandExecuterBase
 
 	public Document(Size tableSize)
 	{
-		Metadata = new();
-		Tables.Clear();
-		AddNewTable(tableSize);
+		Clear(tableSize);
 	}
 
 	public override void OnStateModifierCommandExecuted()
@@ -41,11 +39,12 @@ public partial class Document : CommandExecuterBase
 		Tables.ForEach(t => t.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
 	}
 
-	public void Clear()
+	[MemberNotNull(nameof(Metadata))]
+	public void Clear(Size? size = null)
 	{
 		Metadata = new Metadata();
 		Tables.Clear();
-		AddNewTable(Settings.Current.DefaultTableSize);
+		AddNewTable(size ?? Settings.Current.DefaultTableSize);
 	}
 
 	public Table GetActiveTable(out int index)

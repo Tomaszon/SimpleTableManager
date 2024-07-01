@@ -20,6 +20,6 @@
 	"save-as": "saveAs",
 	"load": "load",
 	"export": "export",
-	//UNDONE
-	"new": "new"
+	"close": "close",
+	"list": "list"
 }
