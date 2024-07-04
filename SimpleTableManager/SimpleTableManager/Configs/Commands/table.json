@@ -6,14 +6,18 @@
 			"first": "addRowFirst",
 			"last": "addRowLast"
 		},
-		"row-filter": "addRowFilter",
+		"row-filter": {
+			"at": "addRowFilter"
+		},
 		"column": {
 			"at": "addColumnAt",
 			"after": "addColumnAfter",
 			"first": "addColumnFirst",
 			"last": "addColumnLast"
 		},
-		"column-filter": "addColumnFilter"
+		"column-filter": {
+			"at": "addColumnFilter"
+		}
 	},
 	"remove|delete": {
 		"row": {
@@ -21,13 +25,20 @@
 			"first": "removeFirstRow",
 			"last": "removeLastRow"
 		},
-		"row-filter": "removeRowFilter",
+		"row-filter": {
+			"at": "removeRowFilter",
+			"all": "removeRowFilters"
+		},
 		"column": {
 			"at": "removeColumnAt",
 			"first": "removeFirstColumn",
 			"last": "removeLastColumn"
 		},
-		"column-filter": "removeColumnFilter"
+		"column-filter": {
+			"at": "removeColumnFilter",
+			"all": "removeColumnFilters"
+		},
+		"filters": "removeFilters"
 	},
 	"set": {
 		"column": {
@@ -54,19 +65,39 @@
 		}
 	},
 	"select": {
-		"cell": "selectCell",
-		"cells": "selectCells",
-		"cell-range": "selectCellRange",
-		"column": "selectColumn",
-		"row": "selectRow",
+		"cell": {
+			"at": "selectCell"
+		},
+		"cells": {
+			"at": "selectCells"
+		},
+		"cell-range": {
+			"between": "selectCellRange"
+		},
+		"column": {
+			"at": "selectColumn"
+		},
+		"row": {
+			"at": "selectRow"
+		},
 		"all": "selectAll"
 	},
 	"deselect": {
-		"cell": "deselectCell",
-		"cells": "deselectCells",
-		"cell-range": "deselectCellRange",
-		"column": "deselectColumn",
-		"row": "deselectRow",
+		"cell": {
+			"at": "deselectCell"
+		},
+		"cells": {
+			"at": "deselectCells"
+		},
+		"cell-range": {
+			"between": "deselectCellRange"
+		},
+		"column": {
+			"at": "deselectColumn"
+		},
+		"row": {
+			"at": "deselectRow"
+		},
 		"all": "deselectAll"
 	},
 	"reset": {
@@ -93,7 +124,9 @@
 			"details|info": "showCellDetails",
 			"function": "showCellContentFunction",
 			"all": "showAllCells"
-		}
+		},
+		"row-filters": "showRowFilters",
+		"column-filters": "showColumnFilters"
 	},
 	"export": "export"
 }

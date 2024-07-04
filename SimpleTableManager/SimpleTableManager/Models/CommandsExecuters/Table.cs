@@ -27,7 +27,7 @@ public partial class Table : CommandExecuterBase
 	public Cell CornerCell { get; set; } = default!;
 
 	public Dictionary<int, string> RowFilters = new();
-	
+
 	public Dictionary<int, string> ColumnFilters = new();
 
 	[JsonIgnore]
@@ -97,7 +97,7 @@ public partial class Table : CommandExecuterBase
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
-	private void AddNewContentCellAt(int index)
+	private void AddNewContentCell(int index)
 	{
 		var cell = new Cell(this)
 		{
@@ -111,12 +111,14 @@ public partial class Table : CommandExecuterBase
 
 	public int GetRowHeight(int index)
 	{
-		return Shared.Max(Rows[index].Max(c => c.GetSize().Height), Sider[index].GetSize().Height);
+		return Shared.Max(Rows[index].Where(c => 
+			c.Visibility.IsVisible).Max(c => c.GetSize().Height), Sider[index].GetSize().Height);
 	}
 
 	public int GetColumnWidth(int index)
 	{
-		return Shared.Max(Columns[index].Max(c => c.GetSize().Width), Header[index].GetSize().Width);
+		return Shared.Max(Columns[index].Where(c => 
+			c.Visibility.IsVisible).Max(c => c.GetSize().Width), Header[index].GetSize().Width);
 	}
 
 	public int GetSiderWidth()
@@ -267,5 +269,39 @@ public partial class Table : CommandExecuterBase
 	public int GetMinCellLayerIndex()
 	{
 		return Content.Min(c => c.LayerIndex);
+	}
+	
+	private void HideColumnAtCore(int x)
+	{
+		Header[x].Visibility.IsColumnHidden = true;
+		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = true);
+	}
+
+	private void HideRowAtCore(int y)
+	{
+		Sider[y].Visibility.IsRowHidden = true;
+		Rows[y].ForEach(c => c.Visibility.IsRowHidden = true);
+	}
+
+	private void ShowColumnAtCore(int x)
+	{
+		Header[x].Visibility.IsColumnHidden = false;
+		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = false);
+	}
+
+	private void ShowRowAtCore(int y)
+	{
+		Sider[y].Visibility.IsRowHidden = false;
+		Rows[y].ForEach(c => c.Visibility.IsRowHidden = false);
+	}
+
+	private void ShowAllRowsCore()
+	{
+		Shared.IndexArray(Rows.Count).ForEach(ShowRowAtCore);
+	}
+
+	private void ShowAllColumnsCore()
+	{
+		Shared.IndexArray(Columns.Count).ForEach(ShowColumnAtCore);
 	}
 }

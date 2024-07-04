@@ -62,4 +62,45 @@ public partial class Table
 	{
 		RemoveColumnAt(Size.Width - 1);
 	}
+
+	[CommandFunction]
+	public void RemoveRowFilter(int y)
+	{
+		RowFilters.Remove(y);
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void RemoveColumnFilter(int x)
+	{
+		ColumnFilters.Remove(x);
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void RemoveRowFilters()
+	{
+		RowFilters.Clear();
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void RemoveColumnFilters()
+	{
+		ColumnFilters.Clear();
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void RemoveFilters()
+	{
+		ColumnFilters.Clear();
+		RowFilters.Clear();
+
+		ApplyFilters();
+	}
 }

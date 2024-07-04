@@ -13,7 +13,7 @@ public partial class Table
 
 		for (int x = 0; x < Size.Width; x++)
 		{
-			AddNewContentCellAt(index * Size.Width + x);
+			AddNewContentCell(index * Size.Width + x);
 		}
 
 		Size.Height++;
@@ -53,7 +53,7 @@ public partial class Table
 
 		for (int y = 0; y < Size.Height; y++)
 		{
-			AddNewContentCellAt(Size.Width * y + y + index);
+			AddNewContentCell(Size.Width * y + y + index);
 		}
 
 		Size.Width++;
@@ -82,5 +82,21 @@ public partial class Table
 	public void AddColumnLast()
 	{
 		AddColumnAt(Size.Width);
+	}
+
+	[CommandFunction]
+	public void AddRowFilter(int y, string filterExpression)
+	{
+		RowFilters.Replace(y, filterExpression);
+
+		ApplyFilters();
+	}
+
+	[CommandFunction]
+	public void AddColumnFilter(int x, string filterExpression)
+	{
+		ColumnFilters.Replace(x, filterExpression);
+
+		ApplyFilters();
 	}
 }

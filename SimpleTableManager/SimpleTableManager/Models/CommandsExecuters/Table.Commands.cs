@@ -14,137 +14,43 @@ public partial class Table
 
 	private void ApplyFilters()
 	{
-		if (ColumnFilters.Count > 0)
-		{
-			Shared.IndexArray(Rows.Count).ForEach(HideRowAtCore);
-		}
-		else
-		{
-			ShowAllRowsCore();
-		}
+		ShowAllRowsCore();
+		ShowAllColumnsCore();
 
-		if (RowFilters.Count > 0)
-		{
-			Shared.IndexArray(Columns.Count).ForEach(HideColumnAtCore);
-		}
-		else
-		{
-			ShowAllColumnsCore();
-		}
-
-		// UNDONE only show cell if multiple column filters allow it
-		foreach (var filter in ColumnFilters)
-		{
-			Shared.IndexArray(Rows.Count).ForEach(p =>
-			{
-				if (Rows[p][filter.Key].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
-				{
-					// UNDONE only show cell if column filter AND row filter allows it
-					// if (RowFilters.TryGetValue(p, out var rowFilter))
-					// {
-					// 	if (Columns[filter.Key][p].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
-					// 	{
-					// 		ShowRowAtCore(p);
-					// 	}
-					// }
-					// else
-					// {
-						ShowRowAtCore(p);
-					// }
-				}
-			});
-		}
-
-		// UNDONE only show cell if multiple row filters allow it
-		foreach (var filter in RowFilters)
-		{
-			Shared.IndexArray(Columns.Count).ForEach(p =>
-			{
-				if (Columns[p][filter.Key].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
-				{
-					// UNDONE only show cell if column filter AND row filter allows it
-					// if (ColumnFilters.TryGetValue(p, out var columnFilter))
-					// {
-						// if (Rows[filter.Key][p].GetFormattedContents().Any(c => Regex.IsMatch(c, filter.Value)))
-						// {
-						// 	ShowColumnAtCore(p);
-						// }
-					// }
-					// else
-					// {
-						ShowColumnAtCore(p);
-					// }
-				}
-			});
-		}
+		ApplyFilterCore(ColumnFilters, Columns, HideRowAtCore);
+		ApplyFilterCore(RowFilters, Rows, HideColumnAtCore);
 
 		ViewOptions.InvokeViewChangedEvent();
 	}
 
+	private static void ApplyFilterCore(Dictionary<int, string> filters, Dictionary<int, List<Cell>> cells, Action<int> action)
+	{
+		foreach (var filter in filters)
+		{
+			for (int i = 0; i < cells[filter.Key].Count; i++)
+			{
+				if (cells[filter.Key][i].ContentFunction is null ||
+					cells[filter.Key][i].GetFormattedContents().All(v =>
+						!Regex.IsMatch(v, filter.Value, RegexOptions.IgnoreCase)) &&
+					cells[filter.Key][i].ContentFunction?.Execute().All(v =>
+						!Regex.IsMatch(v?.ToString() ?? "", filter.Value, RegexOptions.IgnoreCase)) == true)
+				{
+					action(i);
+				}
+			};
+		}
+	}
+	
 	[CommandFunction]
-	public void AddRowFilter(int y, string filterExpression)
+	public Dictionary<int, string> ShowRowFilters()
 	{
-		RowFilters.Replace(y, filterExpression);
-
-		ApplyFilters();
+		return RowFilters;
 	}
 
 	[CommandFunction]
-	public void AddColumnFilter(int x, string filterExpression)
+	public Dictionary<int, string> ShowColumnFilters()
 	{
-		ColumnFilters.Replace(x, filterExpression);
-
-		ApplyFilters();
-	}
-
-	[CommandFunction]
-	public void RemoveRowFilter(int y)
-	{
-		RowFilters.Remove(y);
-
-		ApplyFilters();
-	}
-
-	[CommandFunction]
-	public void RemoveColumnFilter(int x)
-	{
-		ColumnFilters.Remove(x);
-
-		ApplyFilters();
-	}
-
-	private void HideColumnAtCore(int x)
-	{
-		Header[x].Visibility.IsColumnHidden = true;
-		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = true);
-	}
-
-	private void HideRowAtCore(int y)
-	{
-		Sider[y].Visibility.IsRowHidden = true;
-		Rows[y].ForEach(c => c.Visibility.IsRowHidden = true);
-	}
-
-	private void ShowColumnAtCore(int x)
-	{
-		Header[x].Visibility.IsColumnHidden = false;
-		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = false);
-	}
-
-	private void ShowRowAtCore(int y)
-	{
-		Sider[y].Visibility.IsRowHidden = false;
-		Rows[y].ForEach(c => c.Visibility.IsRowHidden = false);
-	}
-
-	private void ShowAllRowsCore()
-	{
-		Shared.IndexArray(Rows.Count).ForEach(ShowRowAtCore);
-	}
-
-	private void ShowAllColumnsCore()
-	{
-		Shared.IndexArray(Columns.Count).ForEach(ShowColumnAtCore);
+		return ColumnFilters;
 	}
 
 	[CommandFunction]
