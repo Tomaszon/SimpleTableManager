@@ -128,5 +128,10 @@
 		"row-filters": "showRowFilters",
 		"column-filters": "showColumnFilters"
 	},
-	"export": "export"
+	"export": "export",
+	"swap": {
+		"cells": {
+			"at": "swapCells"
+		}
+	}
 }

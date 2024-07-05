@@ -77,4 +77,10 @@ public class HistoryList
 	{
 		_index = _history.Count + _indexResetOffset;
 	}
+
+	public void Clear()
+	{
+		_history.Clear();
+		_index = 0;
+	}
 }

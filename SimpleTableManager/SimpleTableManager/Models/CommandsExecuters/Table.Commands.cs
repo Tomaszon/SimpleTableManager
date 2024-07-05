@@ -1,5 +1,5 @@
-using System.Text;
 using System.Text.RegularExpressions;
+
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -40,7 +40,7 @@ public partial class Table
 			};
 		}
 	}
-	
+
 	[CommandFunction]
 	public Dictionary<int, string> ShowRowFilters()
 	{
@@ -170,5 +170,21 @@ public partial class Table
 
 			throw new OperationCanceledException("Can not save document", ex);
 		}
+	}
+
+	[CommandFunction]
+	public void SwapCells(Position position1, Position position2)
+	{
+		var cell1 = this[position1];
+		var cell2 = this[position2];
+
+		var index1 = Content.IndexOf(cell1);
+		var index2 = Content.IndexOf(cell2);
+
+		Content.RemoveAt(index1);
+		Content.Insert(index1, cell2);
+
+		Content.RemoveAt(index2);
+		Content.Insert(index2, cell1);
 	}
 }

@@ -120,6 +120,8 @@ public partial class Document
 
 		fileName = Shared.GetWorkFilePath(fileName, "json");
 
+		var app = InstanceMap.Instance.GetInstance<App>()!;
+
 		try
 		{
 			using var f = File.Open(fileName, FileMode.Open);
@@ -128,10 +130,12 @@ public partial class Document
 			Deserialize(sr);
 
 			IsSaved = true;
+
+			app.EditHistory.Clear();
 		}
 		catch (Exception ex)
 		{
-			Clear();
+			app.Undo();
 
 			throw new OperationCanceledException("Can not load document", ex);
 		}
@@ -185,5 +189,7 @@ public partial class Document
 		ThrowIf(IsSaved == false && !confirm, $"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force document close");
 
 		Clear();
+
+		InstanceMap.Instance.GetInstance<App>()!.EditHistory.Clear();
 	}
 }
