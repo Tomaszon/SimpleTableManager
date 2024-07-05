@@ -47,6 +47,6 @@ public class ConsoleColorSet
 
 	public override string ToString()
 	{
-		return $"F: {Foreground}, B: {Background}";
+		return $"F:{Foreground}, B:{Background}";
 	}
 }

@@ -19,6 +19,6 @@ public class ContentAlignment
 
 	public override string ToString()
 	{
-		return $"H: {Horizontal}, V: {Vertical}";
+		return $"H:{Horizontal}, V:{Vertical}";
 	}
 }

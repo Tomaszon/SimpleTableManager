@@ -187,4 +187,13 @@ public partial class Table
 		Content.RemoveAt(index2);
 		Content.Insert(index2, cell1);
 	}
+
+	[CommandFunction]
+	public Dictionary<Position, string> ShowCellComments()
+	{
+		return Shared.IndexArray(Size.Width).SelectMany(x => 
+			Shared.IndexArray(Size.Height).Select(y => 
+				(Position: new Position(x, y), this[x, y].Comment)))
+					.Where(p => p.Comment is not null).ToDictionary(k => k.Position, v => v.Comment!);
+	}
 }

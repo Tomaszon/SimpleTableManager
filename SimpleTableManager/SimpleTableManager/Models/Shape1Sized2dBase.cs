@@ -24,7 +24,7 @@ public abstract class Shape1Sized2dBase<T> : ParsableBase<T>, IShape2d, IShape1S
 
 	public override string ToString()
 	{
-		return $"S1: {Size1}";
+		return $"S1:{Size1}";
 	}
 
 	public static T ParseWrapper(string value)

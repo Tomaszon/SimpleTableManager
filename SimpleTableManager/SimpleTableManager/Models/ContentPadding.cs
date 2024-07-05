@@ -25,6 +25,6 @@ public class ContentPadding
 
 	public override string ToString()
 	{
-		return $"T: {Top}, B: {Bottom}, L: {Left}, R: {Right}";
+		return $"T:{Top}, B:{Bottom}, L:{Left}, R:{Right}";
 	}
 }

@@ -123,7 +123,8 @@
 		"cell": {
 			"details|info": "showCellDetails",
 			"function": "showCellContentFunction",
-			"all": "showAllCells"
+			"all": "showAllCells",
+			"comments": "showCellComments"
 		},
 		"row-filters": "showRowFilters",
 		"column-filters": "showColumnFilters"

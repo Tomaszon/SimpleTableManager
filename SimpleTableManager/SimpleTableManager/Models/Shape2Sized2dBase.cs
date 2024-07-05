@@ -20,7 +20,7 @@ public abstract class Shape2Sized2dBase<T> : Shape1Sized2dBase<T>, IShape2Sized 
 
 	public override string ToString()
 	{
-		return $"S1: {Size1}, S2: {Size2}";
+		return $"S1:{Size1}, S2:{Size2}";
 	}
 
 	public new static T ParseWrapper(string value)

@@ -24,7 +24,7 @@ public class Size : ParsableBase<Size>, IParsable<Size>
 
 	public override string ToString()
 	{
-		return $"W: {Width}, H: {Height}";
+		return $"W:{Width}, H:{Height}";
 	}
 
 	public void Deconstruct(out int w, out int h)
