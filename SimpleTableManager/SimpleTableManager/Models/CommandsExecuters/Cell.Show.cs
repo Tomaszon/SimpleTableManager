@@ -22,8 +22,15 @@ public partial class Cell
 				Color = ContentColor.ToString(),
 			},
 			Comment,
-			Visibility.IsHidden
+			Visibility.IsHidden,
+			ReferencedCell = ReferencedObject is not null ? Table[(Cell)ReferencedObject] : null
 		};
+	}
+
+	[CommandFunction(IgnoreReferencedObject = true, StateModifier = false)]
+	public object ShowSelfDetails()
+	{
+		return ShowDetails();
 	}
 
 	[CommandFunction(StateModifier = false)]
@@ -38,5 +45,11 @@ public partial class Cell
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()
 		};
+	}
+
+	[CommandFunction(IgnoreReferencedObject = true, StateModifier = false)]
+	public object ShowSelfContentFunction()
+	{
+		return ShowContentFunction();
 	}
 }

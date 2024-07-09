@@ -66,7 +66,7 @@ public partial class SmartConsole
 
 		if (command.AvailableKeys is { })
 		{
-			_lastHelp += $"Available keys:\n";
+			_lastHelp += $"\nAvailable keys:\n";
 
 			foreach (var key in command.AvailableKeys)
 			{

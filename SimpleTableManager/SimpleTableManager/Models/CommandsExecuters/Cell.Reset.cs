@@ -26,5 +26,11 @@ namespace SimpleTableManager.Models.CommandExecuters
 			BorderColor = new(Settings.Current.DefaultBorderColor);
 			LayerIndex = 0;
 		}
+
+		[CommandFunction(IgnoreReferencedObject = true)]
+		public void ResetReferenceCell()
+		{
+			ReferencedObject = null;
+		}
 	}
 }

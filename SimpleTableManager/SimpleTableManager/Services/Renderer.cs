@@ -622,19 +622,19 @@ public static class Renderer
 			Settings.Current.SelectedBorderColor.Background : cell.BorderColor.Background;
 	}
 
-	private static void ChangeToTextColors()
+	public static void ChangeToTextColors()
 	{
 		Console.ForegroundColor = Settings.Current.TextColor.Foreground;
 		Console.BackgroundColor = Settings.Current.TextColor.Background;
 	}
 
-	private static void ChangeToOkLabelColors()
+	public static void ChangeToOkLabelColors()
 	{
 		Console.ForegroundColor = Settings.Current.OkLabelColor.Foreground;
 		Console.BackgroundColor = Settings.Current.OkLabelColor.Background;
 	}
 
-	private static void ChangeToNotOkLabelColors()
+	public static void ChangeToNotOkLabelColors()
 	{
 		Console.ForegroundColor = Settings.Current.NotOkLabelColor.Foreground;
 		Console.BackgroundColor = Settings.Current.NotOkLabelColor.Background;

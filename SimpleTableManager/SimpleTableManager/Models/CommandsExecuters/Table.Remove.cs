@@ -17,6 +17,8 @@ public partial class Table
 		{
 			ViewOptions.DecreaseHeight();
 		}
+
+		RemoveDeadCellReferences();
 	}
 
 	[CommandFunction]
@@ -49,6 +51,15 @@ public partial class Table
 		{
 			ViewOptions.DecreaseWidth();
 		}
+
+		RemoveDeadCellReferences();
+	}
+
+	private void RemoveDeadCellReferences()
+	{
+		Content.Where(c =>
+			c.ReferencedObject is not null &&
+			!Content.Contains((Cell)c.ReferencedObject)).ForEach(c => c.ResetReferenceCell());
 	}
 
 	[CommandFunction]

@@ -188,7 +188,16 @@ public class Program
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"{ex.Message} -> {ex}");
+				Console.Write($"{ex.Message} -> \n\n");
+
+				Renderer.ChangeToNotOkLabelColors();
+
+				Console.Write("Details:\n");
+
+				Renderer.ChangeToTextColors();
+
+				Console.WriteLine($"   {ex}");
+
 				Console.Write("Press any key to continue");
 
 				SmartConsole.PlayNote(Note.Critical);

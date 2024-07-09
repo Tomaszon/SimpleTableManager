@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -218,5 +217,11 @@ public partial class Cell
 	public void SetComment(string comment)
 	{
 		Comment = comment;
+	}
+
+	[CommandFunction(IgnoreReferencedObject = true)]
+	public void SetReferenceCell(Position position)
+	{
+		ReferencedObject = Table[position.X, position.Y];
 	}
 }

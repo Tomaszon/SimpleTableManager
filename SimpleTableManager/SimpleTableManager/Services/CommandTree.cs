@@ -58,7 +58,7 @@ public static class CommandTree
 					}
 					else
 					{
-						throw new KeyNotFoundException($"Unknow command key '{key}' in '{rawCommand}'");
+						throw new CommandKeyNotFoundException(rawCommand, key);
 					}
 				}
 

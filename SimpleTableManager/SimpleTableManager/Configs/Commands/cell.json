@@ -30,16 +30,21 @@
 			"min": "setLayerIndexToMin",
 			"max": "setLayerIndexToMax",
 			"to": "setLayerIndex"
-		}
+		},
+		"reference-cell": "setReferenceCell"
 	},
 	"reset": {
 		"content": "resetContent",
 		"comment": "resetComment",
-		"format": "resetFormat"
+		"format": "resetFormat",
+		"reference-cell": "resetReferenceCell"
 	},
 	"show": {
 		"details": "showDetails",
-		"function": "showContentFunction"
+		"function": "showContentFunction",
+		"self": {
+			"details": "showSelfDetails"
+		}
 	},
 	"increase": {
 		"layer-index": "increaseLayerIndex"

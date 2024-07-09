@@ -9,6 +9,8 @@ public class CommandFunctionAttribute : Attribute
 
 	public bool StateModifier { get; set; } = true;
 
+	public bool IgnoreReferencedObject { get; set; }
+
 	public CommandFunctionAttribute([CallerMemberName] string reference = null!)
 	{
 		MethodReference = reference;

@@ -65,11 +65,15 @@ public class Command
 		{
 			instances.ForEach(i =>
 			{
-				results.Add(method.Invoke(i, parsedArguments.ToArray()));
+				var attribute = method.GetCustomAttribute<CommandFunctionAttribute>()!;
 
-				if (method.GetCustomAttribute<CommandFunctionAttribute>()!.StateModifier)
+				var endReferencedObject = attribute.IgnoreReferencedObject ? i : i.GetEndReferencedObject();
+
+				results.Add(method.Invoke(endReferencedObject, parsedArguments.ToArray()));
+
+				if (attribute!.StateModifier)
 				{
-					i.InvokeStateModifierCommandExecutedEvent();
+					endReferencedObject.InvokeStateModifierCommandExecutedEvent();
 				}
 			});
 		}
