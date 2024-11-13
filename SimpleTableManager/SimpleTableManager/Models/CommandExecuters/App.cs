@@ -1,3 +1,4 @@
+using System.Globalization;
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -28,6 +29,9 @@ public class App : CommandExecuterBase
 		Settings.FromJson(@".\Configs\settings.json");
 		CellBorders.FromJson(@".\Configs\cellBorders.json");
 		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
+		Localizer.FromJson(@".\Configs\Localizations");
+
+		CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture(Settings.Current.Culture);
 	}
 
 	public override void OnStateModifierCommandExecuted()

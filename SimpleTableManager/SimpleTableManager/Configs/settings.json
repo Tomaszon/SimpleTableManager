@@ -1,5 +1,5 @@
 {
-	"Logo":[
+	"Logo": [
 		" ____ _____ _   _",
 		"/ ___|__ __| \\ / |",
 		"\\___ \\ | | |  v  |",
@@ -53,5 +53,6 @@
 	},
 	"Autosave": false,
 	"Author": "Tomaszon",
-	"Audio": false
+	"Audio": false,
+	"Culture": "hu"
 }

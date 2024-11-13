@@ -114,9 +114,10 @@ public partial class Document
 	}
 
 	[CommandFunction(StateModifier = false)]
+	[CommandInformation<Document>]
 	public void Load(string fileName, bool confirm = false)
 	{
-		ThrowIf(IsSaved == false && !confirm, $"Document contains unsaved changes that will be lost! Set {nameof(confirm)} to 'true' to force file load");
+		ThrowIf(IsSaved == false && !confirm, T("unsaved", nameof(confirm)));
 
 		fileName = Shared.GetWorkFilePath(fileName, "json");
 

@@ -1,7 +1,17 @@
+using System.Diagnostics;
+using SimpleTableManager.Services;
+
 namespace SimpleTableManager.Models;
 
 public abstract class ValidatorBase
 {
+	public string T(string key, params object[] args)
+	{
+		var method = new StackFrame(1).GetMethod()?.Name;
+
+		return Localizer.Localize(GetType().Name, method, key, args);
+	}
+
 	public static void ThrowIf([DoesNotReturnIf(true)] bool validator, string error)
 	{
 		ThrowIf<ArgumentException>(validator, error);

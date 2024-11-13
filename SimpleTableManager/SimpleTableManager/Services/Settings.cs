@@ -1,4 +1,7 @@
-﻿using SimpleTableManager.Models;
+﻿using System.Globalization;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services;
 
@@ -55,6 +58,8 @@ public class Settings
 	public string Author { get; set; } = "";
 
 	public bool Audio { get; set; }
+
+	public string Culture { get; set; } = CultureInfo.CurrentUICulture.Name;
 
 	public static Settings Current { get; private set; } = new();
 

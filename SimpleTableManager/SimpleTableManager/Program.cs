@@ -177,6 +177,22 @@ public class Program
 
 				SmartConsole.PlayNote(Note.Question);
 			}
+			catch (LocalizationException ex)
+			{
+				Renderer.ChangeToNotOkLabelColors();
+
+				Console.Write("Translation not found:\n");
+
+				Renderer.ChangeToTextColors();
+
+				Console.WriteLine($"   {ex.Message}");
+
+				Console.Write("Press any key to continue");
+
+				SmartConsole.PlayNote(Note.Critical);
+
+				Console.ReadKey();
+			}
 			catch (Exception ex) when (ex.IsHandled())
 			{
 				Console.WriteLine(ex.Message);

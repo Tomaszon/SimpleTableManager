@@ -7,11 +7,11 @@ namespace SimpleTableManager.Services;
 
 public partial class SmartConsole
 {
-	public const string HELP_COMMAND = "help";
+	public const string HELP_COMMAND = "--help";
 
-	private static readonly string _LAST_HELP_PLACEHOLDER = "Enter command to execute";
+	public static string LAST_HELP_PLACEHOLDER => Localizer.TryLocalize<SmartConsole>("helpPlaceholder");
 
-	private static string _lastHelp = _LAST_HELP_PLACEHOLDER;
+	private static string _lastHelp = LAST_HELP_PLACEHOLDER;
 
 	private static int _insertIndex = 0;
 
@@ -129,7 +129,7 @@ public partial class SmartConsole
 		}
 		else
 		{
-			_lastHelp = _LAST_HELP_PLACEHOLDER;
+			_lastHelp = LAST_HELP_PLACEHOLDER;
 		}
 
 		_lastHelp = _lastHelp.TrimEnd(',', '\n');
