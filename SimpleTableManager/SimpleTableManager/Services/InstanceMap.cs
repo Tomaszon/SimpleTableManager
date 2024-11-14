@@ -4,32 +4,35 @@ namespace SimpleTableManager.Services;
 
 public class InstanceMap
 {
-	private readonly Dictionary<Type, Func<IEnumerable<IStateModifierCommandExecuter>>> _arrayMap = new();
+	private readonly Dictionary<(string LocalizedName, Type Type), Func<IEnumerable<IStateModifierCommandExecuter>>> _arrayMap = new();
 
 	public static InstanceMap Instance { get; } = new();
 
-	public IEnumerable<Type> GetTypes() => _arrayMap.Select(p => p.Key);
+	public IEnumerable<Type> GetTypes() => _arrayMap.Select(p => p.Key.Type);
+
+	private string LocalizeKey<T>() => Localizer.Localize<InstanceMap>(typeof(T).Name);
 
 	public void Add<T>(Func<IEnumerable<T>> func) where T : IStateModifierCommandExecuter
 	{
-		_arrayMap.Add(typeof(T), () => func.Invoke().Cast<IStateModifierCommandExecuter>());
+		_arrayMap.Add((LocalizeKey<T>(), typeof(T)), () => func.Invoke().Cast<IStateModifierCommandExecuter>());
 	}
 
 	public void Add<T>(Func<T> func) where T : IStateModifierCommandExecuter
 	{
-		_arrayMap.Add(typeof(T), () => new[] { func.Invoke() }.Cast<IStateModifierCommandExecuter>());
+		
+		_arrayMap.Add((LocalizeKey<T>(), typeof(T)), () => new[] { func.Invoke() }.Cast<IStateModifierCommandExecuter>());
 	}
 
 	public void Remove<T>() where T : IStateModifierCommandExecuter
 	{
-		_arrayMap.Remove(typeof(T));
+		_arrayMap.Remove((LocalizeKey<T>(), typeof(T)));
 	}
 
 	public IEnumerable<IStateModifierCommandExecuter> GetInstances(string typeName, out Type type)
 	{
-		var result = _arrayMap.First(p => p.Key.Name.ToLower().Equals(typeName.ToLower()));
+		var result = _arrayMap.First(p => p.Key.LocalizedName.ToLower().Equals(typeName.ToLower()));
 
-		type = result.Key;
+		type = result.Key.Type;
 
 		return result.Value.Invoke();
 	}
@@ -46,7 +49,7 @@ public class InstanceMap
 
 	public IEnumerable<IStateModifierCommandExecuter> GetInstances(Type type)
 	{
-		return _arrayMap[type].Invoke();
+		return _arrayMap[(Localizer.Localize<InstanceMap>(type.Name), type)].Invoke();
 	}
 
 	public bool TryGetInstances<T>([NotNullWhen(true)] out IEnumerable<T?>? instances)

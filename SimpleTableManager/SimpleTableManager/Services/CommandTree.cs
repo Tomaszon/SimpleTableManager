@@ -14,8 +14,29 @@ public static class CommandTree
 
 		foreach (var f in Directory.GetFiles(folderPath))
 		{
-			Commands.Add(Path.GetFileNameWithoutExtension(f), JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(f)));
+			var expando = JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(f))!;
+
+			expando = LocalizeCommandTree(expando);
+
+			var key = Localizer.Localize(typeof(CommandTree), null, Path.GetFileNameWithoutExtension(f));
+
+			Commands.Add(key , expando);
 		}
+	}
+
+	public static ExpandoObject LocalizeCommandTree(ExpandoObject original)
+	{
+		var clone = new ExpandoObject()!;
+
+		foreach (var kvp in original)
+		{
+			if (Localizer.TryLocalize(typeof(CommandTree), kvp.Key, out var result))
+			{
+				clone.TryAdd(result, kvp.Value is ExpandoObject o ? LocalizeCommandTree(o) : kvp.Value);
+			}
+		}
+
+		return clone;
 	}
 
 	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments)

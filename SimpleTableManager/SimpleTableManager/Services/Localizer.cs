@@ -27,26 +27,31 @@ namespace SimpleTableManager.Services
 			}
 		}
 
+		public static bool TryLocalize(Type type, string key, out string result)
+		{
+			return TryLocalize(type, null, key, out result);
+		}
+
 		public static string TryLocalize<T>(string key, params object[] args)
 		{
-			TryLocalize(typeof(T).Name, null, key, out var result, args);
+			TryLocalize(typeof(T), null, key, out var result, args);
 
 			return result;
 		}
 
 		public static bool TryLocalize<T>(string? method, string key, out string result, params object[] args)
 		{
-			return TryLocalize(typeof(T).Name, method, key, out result, args);
+			return TryLocalize(typeof(T), method, key, out result, args);
 		}
 
-		public static bool TryLocalize(string? typeName, string? method, string key, out string result, params object[] args)
+		public static bool TryLocalize(Type? type, string? method, string key, out string result, params object[] args)
 		{
-			if (TryLocalizeFor(CultureInfo.CurrentUICulture, typeName, method, key, args, out var result1))
+			if (TryLocalizeFor(CultureInfo.CurrentUICulture, type?.Name, method, key, args, out var result1))
 			{
 				result = result1;
 				return true;
 			}
-			else if (TryLocalizeFor(CultureInfo.CurrentUICulture.Parent, typeName, method, key, args, out var result2))
+			else if (TryLocalizeFor(CultureInfo.CurrentUICulture.Parent, type?.Name, method, key, args, out var result2))
 			{
 
 				result = result2;
@@ -59,9 +64,14 @@ namespace SimpleTableManager.Services
 			}
 		}
 
-		public static string Localize(string? typeName, string? method, string key, params object[] args)
+		public static string Localize<T>(string key)
 		{
-			if (TryLocalize(typeName, method, key, out var result, args))
+			return Localize(typeof(T), null, key);
+		}
+
+		public static string Localize(Type? type, string? method, string key, params object[] args)
+		{
+			if (TryLocalize(type, method, key, out var result, args))
 			{
 				return result;
 			}

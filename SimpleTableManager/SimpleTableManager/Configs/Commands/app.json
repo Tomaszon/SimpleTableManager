@@ -1,11 +1,11 @@
 {
-	"refresh": "refresh",
-	"exit|quit": "exit",
-	"set": {
-		"rendering-mode": "setRenderingMode",
-		"autosave": "setAutosave"
+	"{1}": "refresh",
+	"{2}": "exit",
+	"{3}": {
+		"{4}": "setRenderingMode",
+		"{5}": "setAutosave"
 	},
-	"undo": "undo",
-	"redo": "redo",
-	"reconfig": "reconfig"
+	"{6}": "undo",
+	"{7}": "redo",
+	"{8}": "reconfig"
 }

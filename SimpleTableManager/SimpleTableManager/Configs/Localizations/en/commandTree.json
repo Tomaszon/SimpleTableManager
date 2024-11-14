@@ -1,0 +1,20 @@
+{
+	"{1}": "refresh",
+	"{2}": "exit|quit",
+	"set": "beállítások",
+	"rendering-mode": "megjelenítési-mód",
+	"autosave": "automatikus-mentés",
+	"undo": "visszavonás",
+	"redo": "ismétlés",
+	"reconfig": "újrakonfigurálás",
+	"add": "hozzáadások",
+	"table": "táblázat",
+	"remove": "eltávolítások",
+	"activate": "aktiválás",
+	"named": "név-alapján",
+	"at": "pozíció-alapján",
+	"next": "következő",
+	"previous": "előző",
+	"cell": "cella",
+	"document": "dokumentum"
+}

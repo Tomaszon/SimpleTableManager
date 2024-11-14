@@ -347,7 +347,7 @@ public partial class SmartConsole
 
 			return GetHintResult.PartialKey;
 		}
-		catch (KeyNotFoundException)
+		catch (Exception e) when (e is KeyNotFoundException || e is CommandKeyNotFoundException)
 		{
 			availableKeys = null;
 

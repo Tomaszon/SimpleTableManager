@@ -24,14 +24,14 @@ public class App : CommandExecuterBase
 	[CommandFunction]
 	public void Reconfig()
 	{
+		Settings.FromJson(@".\Configs\settings.json");
+		CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture(Settings.Current.Culture);
+		
+		Localizer.FromJson(@".\Configs\Localizations");
 		BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
 		CommandTree.FromJsonFolder(@".\Configs\Commands");
-		Settings.FromJson(@".\Configs\settings.json");
 		CellBorders.FromJson(@".\Configs\cellBorders.json");
 		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
-		Localizer.FromJson(@".\Configs\Localizations");
-
-		CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture(Settings.Current.Culture);
 	}
 
 	public override void OnStateModifierCommandExecuted()

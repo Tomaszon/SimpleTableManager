@@ -9,7 +9,7 @@ public abstract class ValidatorBase
 	{
 		var method = new StackFrame(1).GetMethod()?.Name;
 
-		return Localizer.Localize(GetType().Name, method, key, args);
+		return Localizer.Localize(GetType(), method, key, args);
 	}
 
 	public static void ThrowIf([DoesNotReturnIf(true)] bool validator, string error)
