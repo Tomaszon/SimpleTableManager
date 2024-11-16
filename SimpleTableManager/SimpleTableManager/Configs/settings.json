@@ -45,6 +45,7 @@
 	"TmpBackgroundCharacter": "?",
 	"DefaultCellBackgroundCharacter": "·",
 	"DefaultWorkDirectory": "C:\\users\\offic\\downloads",
+	"CommandHintRowCount" : 3,
 	"CommandHistoryLength": 10,
 	"EditHistoryLength": 10,
 	"DefaultTableSize": {

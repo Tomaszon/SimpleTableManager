@@ -39,6 +39,7 @@ public partial class SmartConsole
 			}
 
 			Console.WriteLine("\n");
+			Console.WriteLine(new string('\n', Settings.Current.CommandHintRowCount));
 		}
 
 		Console.Write(_COMMAND_LINE_PREFIX);
@@ -211,6 +212,8 @@ public partial class SmartConsole
 	{
 		saveToHistory = true;
 
+		ClearHintRows(true);
+
 		return k.Key switch
 		{
 			ConsoleKey.Enter => AcceptCommand(),
@@ -239,12 +242,105 @@ public partial class SmartConsole
 		return AcceptCommand();
 	}
 
+	private static (int top, int left) ClearHintRows(bool restoreCursorPosition)
+	{
+		(var left, var top) = Console.GetCursorPosition();
+
+		MoveCursorToHintRow(top);
+
+		Shared.IndexArray(Settings.Current.CommandHintRowCount).ForEach(i =>
+			Console.WriteLine(new string(' ', Console.WindowWidth)));
+
+		if (restoreCursorPosition)
+		{
+			Console.SetCursorPosition(left, top);
+		}
+		else
+		{
+			MoveCursorToHintRow(top);
+		}
+
+		return (left, top);
+	}
+
+	private static void MoveCursorToHintRow(int top)
+	{
+		Console.SetCursorPosition(0, top - Settings.Current.CommandHintRowCount - 1);
+	}
+
+	private static void ShowHintRows(List<string> availableKeys, string nextKey, string? partialKey)
+	{
+		(var left, var top) = Console.GetCursorPosition();
+
+		MoveCursorToHintRow(top);
+
+		var keyIndexAggregate = 0;
+
+		Shared.IndexArray(Settings.Current.CommandHintRowCount).ForEach(i =>
+		{
+			if (availableKeys.Count <= keyIndexAggregate)
+			{
+				return;
+			}
+
+			ShowHintRow(availableKeys.Skip(keyIndexAggregate).ToList(), nextKey, out var keyIndex, partialKey);
+			keyIndexAggregate += keyIndex;
+
+			Console.WriteLine();
+		});
+
+		if (keyIndexAggregate < availableKeys.Count)
+		{
+			Console.Write(nextKey == availableKeys[keyIndexAggregate - 1] ? "..." : " ...");
+		}
+
+		Console.ForegroundColor = Settings.Current.TextColor.Foreground;
+
+		Console.SetCursorPosition(left, top);
+	}
+
+	private static void ShowHintRow(List<string> availableKeys, string nextKey, out int keyIndex, string? partialKey)
+	{
+		keyIndex = 0;
+
+		if (nextKey != availableKeys[0])
+		{
+			Console.Write(" ");
+		}
+		while (keyIndex < availableKeys.Count && 
+			Console.GetCursorPosition().Left < Console.WindowWidth - availableKeys[keyIndex].Length - 5)
+		{
+			var key = nextKey == availableKeys[keyIndex] ? $"[ {nextKey} ]" : $" {availableKeys[keyIndex]} ";
+			if (keyIndex > 0 && nextKey != availableKeys[keyIndex] && nextKey != availableKeys[keyIndex - 1])
+			{
+				Console.Write(" ");
+			}
+
+			if (partialKey is not null && !availableKeys[keyIndex].StartsWith(partialKey))
+			{
+				Console.ForegroundColor = Settings.Current.NotAvailableContentColor.Foreground;
+			}
+			else
+			{
+				Console.ForegroundColor = Settings.Current.TextColor.Foreground;
+			}
+
+			Console.Write(key);
+			keyIndex++;
+		}
+	}
+
 	private static bool IterateHint(ConsoleModifiers modifiers)
 	{
-		var nextKey = GetHint(modifiers, out _, out var isSpaceAppendNeeded, out var pacl, out var pkl);
+		var nextKey = GetHint(modifiers, out _, out var isSpaceAppendNeeded, out var pacl, out var pk, out var pkl, out var aks);
 
 		if (nextKey is not null)
 		{
+			if (aks is not null)
+			{
+				ShowHintRows(aks, nextKey, pk);
+			}
+
 			MoveCursorToTheRight();
 			DeleteCharsToLeft(pacl + pkl);
 			if (isSpaceAppendNeeded)
@@ -279,7 +375,7 @@ public partial class SmartConsole
 		return false;
 	}
 
-	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out int partialKeyLength)
+	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out string? partialKey, out int partialKeyLength, out List<string>? availableKeys)
 	{
 		var value = _buffer.ToString();
 
@@ -287,7 +383,7 @@ public partial class SmartConsole
 
 		var rawCommand = Get1stLevelHelpCommand(value);
 
-		var result = GetHintCore(rawCommand, out var availableKeys, out var partialKey);
+		var result = GetHintCore(rawCommand, out availableKeys, out partialKey);
 
 		if (result == GetHintResult.PartialKey || result == GetHintResult.Complete)
 		{
@@ -335,7 +431,7 @@ public partial class SmartConsole
 		}
 		catch (HelpRequestedException ex)
 		{
-			availableKeys = ex.AvailableKeys;
+			availableKeys = ex.AvailableKeys?.SelectMany(k => k.Split('|')).Order().ToList();
 
 			partialKey = null;
 

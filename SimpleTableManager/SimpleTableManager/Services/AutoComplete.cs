@@ -16,9 +16,7 @@ public class AutoComplete
 
 		if (keys is not null)
 		{
-			keys.ForEach(p => _keys.AddRange(p.Split('|')));
-
-			_keys.Sort();
+			keys.ForEach(p => _keys.Add(p));
 
 			_index = _keys.Count;
 		}

@@ -47,6 +47,8 @@ public class Settings
 
 	public string DefaultWorkDirectory { get; set; } = "";
 
+	public int CommandHintRowCount { get; set; } = 2;
+
 	public uint CommandHistoryLength { get; set; }
 
 	public uint EditHistoryLength { get; set; }
