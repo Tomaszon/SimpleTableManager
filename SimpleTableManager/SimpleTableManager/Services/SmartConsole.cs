@@ -197,6 +197,8 @@ public partial class SmartConsole
 				command = new Command(new CommandReference(type.Name, method.Name), "", null);
 			}
 
+			_autoComplete.Reset();
+
 			return true;
 		}
 
