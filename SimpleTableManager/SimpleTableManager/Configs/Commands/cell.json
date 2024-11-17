@@ -1,19 +1,19 @@
 {
-	"set": {
-		"content": "setContent",
-		"comment": "setComment",
-		"content-function": {
-			"string": "setStringContentFunction",
-			"int": "setIntegerContentFunction",
-			"decimal": "setDecimalContentFunction",
-			"bool": "setBooleanContentFunction",
-			"char": "setCharacterContentFunction",
-			"datetime": "setDateTimeContentFunction",
-			"date": "setDateContentFunction",
-			"time": "setTimeContentFunction",
-			"rectangle": "setRectangleContentFunction",
-			"ellipse": "setEllipseContentFunction",
-			"right-triangle": "setRightTriangleContentFunction"
+	"{3}": {
+		"{9}": "setContent",
+		"{10}": "setComment",
+		"{11}": {
+			"{12}": "setStringContentFunction",
+			"{13}": "setIntegerContentFunction",
+			"{14}": "setDecimalContentFunction",
+			"{15}": "setBooleanContentFunction",
+			"{16}": "setCharacterContentFunction",
+			"{17}": "setDateTimeContentFunction",
+			"{18}": "setDateContentFunction",
+			"{19}": "setTimeContentFunction",
+			"{20}": "setRectangleContentFunction",
+			"{21}": "setEllipseContentFunction",
+			"{22}": "setRightTriangleContentFunction"
 		},
 		"content-function-operator": "setContentFunctionOperator",
 		"content-function-arguments": "setContentFunctionArguments",
