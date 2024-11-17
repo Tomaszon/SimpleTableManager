@@ -2,6 +2,12 @@
 
 public static class Shared
 {
+	public const string RESET = "\x1B[0m";
+	public const string BOLD = "\x1B[1m";
+	public const string ITALIC = "\x1B[3m";
+	public const string UNDERLINE = "\x1B[4m";
+	public const string BLINK = "\x1B[5m";
+
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
 		{ "int", $"{nameof(System)}.int32" },

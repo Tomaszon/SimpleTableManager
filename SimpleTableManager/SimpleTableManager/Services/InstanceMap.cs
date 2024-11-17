@@ -19,7 +19,6 @@ public class InstanceMap
 
 	public void Add<T>(Func<T> func) where T : IStateModifierCommandExecuter
 	{
-		
 		_arrayMap.Add((LocalizeKey<T>(), typeof(T)), () => new[] { func.Invoke() }.Cast<IStateModifierCommandExecuter>());
 	}
 

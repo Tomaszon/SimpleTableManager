@@ -173,7 +173,7 @@ public class Program
 			}
 			catch (HelpRequestedException ex)
 			{
-				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, ex.CommandReference, ex.Message);
+				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys?.Select(k => k.key).ToList(), ex.CommandReference, ex.Message);
 
 				SmartConsole.PlayNote(Note.Question);
 			}

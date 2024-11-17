@@ -268,7 +268,7 @@ public partial class SmartConsole
 		Console.SetCursorPosition(0, top - Settings.Current.CommandHintRowCount - 1);
 	}
 
-	private static void ShowHintRows(List<string> availableKeys, string nextKey, string? partialKey)
+	private static void ShowHintRows(List<(string key, bool isLeaf)> availableKeys, string nextKey, string? partialKey)
 	{
 		(var left, var top) = Console.GetCursorPosition();
 
@@ -291,7 +291,7 @@ public partial class SmartConsole
 
 		if (keyIndexAggregate < availableKeys.Count)
 		{
-			Console.Write(nextKey == availableKeys[keyIndexAggregate - 1] ? "..." : " ...");
+			Console.Write(nextKey == availableKeys[keyIndexAggregate - 1].key ? "..." : " ...");
 		}
 
 		Console.ForegroundColor = Settings.Current.TextColor.Foreground;
@@ -299,24 +299,31 @@ public partial class SmartConsole
 		Console.SetCursorPosition(left, top);
 	}
 
-	private static void ShowHintRow(List<string> availableKeys, string nextKey, out int keyIndex, string? partialKey)
+	private static void ShowHintRow(List<(string key, bool isLeaf)> availableKeys, string nextKey, out int keyIndex, string? partialKey)
 	{
 		keyIndex = 0;
 
-		if (nextKey != availableKeys[0])
+		if (nextKey != availableKeys[0].key)
 		{
 			Console.Write(" ");
 		}
-		while (keyIndex < availableKeys.Count && 
-			Console.GetCursorPosition().Left < Console.WindowWidth - availableKeys[keyIndex].Length - 5)
+		while (keyIndex < availableKeys.Count &&
+			Console.GetCursorPosition().Left < Console.WindowWidth - availableKeys[keyIndex].key.Length - 5)
 		{
-			var key = nextKey == availableKeys[keyIndex] ? $"[ {nextKey} ]" : $" {availableKeys[keyIndex]} ";
-			if (keyIndex > 0 && nextKey != availableKeys[keyIndex] && nextKey != availableKeys[keyIndex - 1])
+			var availableKey = availableKeys[keyIndex];
+
+			var formattedAvailableKey = availableKey.isLeaf ?
+				$"{availableKey.key}" : $"{availableKey.key}...";
+
+			var key = nextKey == availableKey.key ?
+				$"[ {formattedAvailableKey} ]" :
+				$" {formattedAvailableKey} ";
+			if (keyIndex > 0 && nextKey != availableKey.key && nextKey != availableKeys[keyIndex - 1].key)
 			{
 				Console.Write(" ");
 			}
 
-			if (partialKey is not null && !availableKeys[keyIndex].StartsWith(partialKey))
+			if (partialKey is not null && !availableKey.key.StartsWith(partialKey))
 			{
 				Console.ForegroundColor = Settings.Current.NotAvailableContentColor.Foreground;
 			}
@@ -375,7 +382,7 @@ public partial class SmartConsole
 		return false;
 	}
 
-	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out string? partialKey, out int partialKeyLength, out List<string>? availableKeys)
+	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out string? partialKey, out int partialKeyLength, out List<(string key, bool isLeaf)>? availableKeys)
 	{
 		var value = _buffer.ToString();
 
@@ -396,7 +403,7 @@ public partial class SmartConsole
 
 		if (!_autoComplete.Cycling)
 		{
-			_autoComplete.SetKeys(availableKeys);
+			_autoComplete.SetKeys(availableKeys?.Select(p => p.key));
 		}
 
 		if (result == GetHintResult.Hint)
@@ -418,7 +425,7 @@ public partial class SmartConsole
 		return null;
 	}
 
-	private static GetHintResult GetHintCore(string command, out List<string>? availableKeys, out string? partialKey)
+	private static GetHintResult GetHintCore(string command, out List<(string key, bool isLeaf)>? availableKeys, out string? partialKey)
 	{
 		try
 		{
@@ -431,7 +438,8 @@ public partial class SmartConsole
 		}
 		catch (HelpRequestedException ex)
 		{
-			availableKeys = ex.AvailableKeys?.SelectMany(k => k.Split('|')).Order().ToList();
+			availableKeys = ex.AvailableKeys?.SelectMany(k =>
+				k.key.Split('|').Select(p => (p, k.isLeaf))).OrderBy(p => p.p).ToList();
 
 			partialKey = null;
 

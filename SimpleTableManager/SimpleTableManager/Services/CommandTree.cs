@@ -18,7 +18,7 @@ public static class CommandTree
 
 			expando = LocalizeCommandTree(expando);
 
-			var key = Localizer.Localize(typeof(CommandTree), null, Path.GetFileNameWithoutExtension(f));
+			var key = Localizer.Localize(typeof(InstanceMap), null, Path.GetFileNameWithoutExtension(f));
 
 			Commands.Add(key , expando);
 		}
@@ -41,7 +41,7 @@ public static class CommandTree
 
 	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments)
 	{
-		var keys = rawCommand.Split(' ', System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries).Select(k => k.Replace("\\s", " ").Replace("\\t", " ")).ToList();
+		var keys = rawCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(k => k.Replace("\\s", " ").Replace("\\t", " ")).ToList();
 
 		if (keys.Count == 0)
 		{
@@ -59,7 +59,7 @@ public static class CommandTree
 		{
 			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
 			{
-				throw new HelpRequestedException(rawCommand, o.Select(e => e.Key).ToList(), null);
+				throw new HelpRequestedException(rawCommand, o.Select(e => (e.Key, e.Value is not ExpandoObject)).ToList(), null);
 			}
 			else
 			{
