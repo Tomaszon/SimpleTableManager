@@ -1,25 +1,25 @@
 {
-	"add": {
-		"table": "addNewTable"
+	"{48}": {
+		"{49}": "addNewTable"
 	},
-	"remove": {
-		"table": "removeTable"
+	"{50}": {
+		"{49}": "removeTable"
 	},
-	"activate": {
-		"table": {
-			"named": "activateTable",
-			"at": "activateTableAt",
-			"next": "activateNextTable",
-			"previous": "activatePreviousTable"
+	"{51}": {
+		"{49}": {
+			"{52}": "activateTable",
+			"{53}": "activateTableAt",
+			"{54}": "activateNextTable",
+			"{55}": "activatePreviousTable"
 		}
 	},
-	"set": {
-		"title": "setTitle"
+	"{3}": {
+		"{56}": "setTitle"
 	},
-	"save": "save",
-	"save-as": "saveAs",
-	"load": "load",
-	"export": "export",
-	"close": "close",
-	"list": "list"
+	"{57}": "save",
+	"{58}": "saveAs",
+	"{59}": "load",
+	"{60}": "export",
+	"{61}": "close",
+	"{62}": "list"
 }

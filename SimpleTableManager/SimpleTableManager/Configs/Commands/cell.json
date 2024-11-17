@@ -15,49 +15,49 @@
 			"{21}": "setEllipseContentFunction",
 			"{22}": "setRightTriangleContentFunction"
 		},
-		"content-function-operator": "setContentFunctionOperator",
-		"content-function-arguments": "setContentFunctionArguments",
-		"vertical-alignment": "setVerticalAlignment",
-		"horizontal-alignment": "setHorizontalAlignment",
-		"padding": "setPadding",
-		"horizontal-padding": "setHorizontalPadding",
-		"vertical-padding": "setVerticalPadding",
-		"border-color": "setBorderColor",
-		"background-color": "setBackgroundColor",
-		"content-color": "setContentColor",
-		"background-character": "setBackgroundCharacter",
-		"layer-index": {
-			"min": "setLayerIndexToMin",
-			"max": "setLayerIndexToMax",
-			"to": "setLayerIndex"
+		"{23}": "setContentFunctionOperator",
+		"{24}": "setContentFunctionArguments",
+		"{25}": "setVerticalAlignment",
+		"{26}": "setHorizontalAlignment",
+		"{27}": "setPadding",
+		"{28}": "setHorizontalPadding",
+		"{29}": "setVerticalPadding",
+		"{30}": "setBorderColor",
+		"{31}": "setBackgroundColor",
+		"{32}": "setContentColor",
+		"{33}": "setBackgroundCharacter",
+		"{34}": {
+			"{35}": "setLayerIndexToMin",
+			"{36}": "setLayerIndexToMax",
+			"{37}": "setLayerIndex"
 		},
-		"reference-cell": "setReferenceCell"
+		"{38}": "setReferenceCell"
 	},
-	"reset": {
-		"content": "resetContent",
-		"comment": "resetComment",
-		"format": "resetFormat",
-		"reference-cell": "resetReferenceCell"
+	"{39}": {
+		"{9}": "resetContent",
+		"{10}": "resetComment",
+		"{40}": "resetFormat",
+		"{38}": "resetReferenceCell"
 	},
-	"show": {
-		"details": "showDetails",
-		"function": "showContentFunction",
-		"self": {
-			"details": "showSelfDetails"
+	"{41}": {
+		"{42}": "showDetails",
+		"{11}": "showContentFunction",
+		"{43}": {
+			"{42}": "showSelfDetails"
 		}
 	},
-	"increase": {
-		"layer-index": "increaseLayerIndex"
+	"{44}": {
+		"{34}": "increaseLayerIndex"
 	},
-	"decrease": {
-		"layer-index": "decreaseLayerIndex"
+	"{45}": {
+		"{34}": "decreaseLayerIndex"
 	},
-	"copy": {
-		"content": "copyContent",
-		"format": "copyFormat"
+	"{46}": {
+		"{9}": "copyContent",
+		"{40}": "copyFormat"
 	},
-	"paste": {
-		"content": "pasteContent",
-		"format": "pasteFormat"
+	"{47}": {
+		"{9}": "pasteContent",
+		"{40}": "pasteFormat"
 	}
 }
