@@ -25,6 +25,7 @@ namespace SimpleTableManager.Models.CommandExecuters
 			ContentColor = new(Settings.Current.DefaultContentColor);
 			BorderColor = new(Settings.Current.DefaultBorderColor);
 			LayerIndex = 0;
+			ContentStyle = ContentStyle.Normal;
 		}
 
 		[CommandFunction(IgnoreReferencedObject = true)]

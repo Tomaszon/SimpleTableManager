@@ -474,17 +474,42 @@ public static class Renderer
 				switch (RendererSettings.RenderingMode)
 				{
 					case RenderingMode.Layer:
-						ChangeToLayerIndexContentColors(cell);
+						{
+							ChangeToLayerIndexContentColors(cell);
+						}
 						break;
 
 					case RenderingMode.Comment:
-						ChangeToCommentContentColors(cell);
+						{
+							ChangeToCommentContentColors(cell);
+						}
+						break;
+
+					case RenderingMode.Content:
+						{
+							if (cell.ContentStyle.HasFlag(ContentStyle.Bold))
+							{
+								Console.Write(Shared.BOLD_CHAR_CODE);
+							}
+							if (cell.ContentStyle.HasFlag(ContentStyle.Italic))
+							{
+								Console.Write(Shared.ITALIC_CHAR_CODE);
+							}
+							if (cell.ContentStyle.HasFlag(ContentStyle.Underlined))
+							{
+								Console.Write(Shared.UNDERLINE_CHAR_CODE);
+							}
+							if (cell.ContentStyle.HasFlag(ContentStyle.Blinking))
+							{
+								Console.Write(Shared.BLINK_CHAR_CODE);
+							}
+						}
 						break;
 				}
 			}
 
 			ShowIndexCellSelection(showSelection);
-			Console.Write(content);
+			Console.Write($"{content}{Shared.NORMAL_CHAR_CODE}");
 
 			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
@@ -521,7 +546,8 @@ public static class Renderer
 			infoTable[0, 2].SetContent("Path:");
 			infoTable[1, 2].SetContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
 
-			infoTable.Content.ForEach(cell =>{
+			infoTable.Content.ForEach(cell =>
+			{
 				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
 				cell.BackgroundCharacter = ' ';
 			});

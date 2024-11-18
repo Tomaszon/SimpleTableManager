@@ -31,7 +31,8 @@
 			"{36}": "setLayerIndexToMax",
 			"{37}": "setLayerIndex"
 		},
-		"{38}": "setReferenceCell"
+		"{38}": "setReferenceCell",
+		"{95}": "setContentStyle"
 	},
 	"{39}": {
 		"{9}": "resetContent",

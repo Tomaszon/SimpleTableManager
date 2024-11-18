@@ -316,7 +316,7 @@ public partial class SmartConsole
 				$"{availableKey.key}" : $"{availableKey.key}...";
 
 			var key = nextKey == availableKey.key ?
-				$"[ {formattedAvailableKey} ]" :
+				$"{Shared.BOLD_CHAR_CODE}[ {formattedAvailableKey} ]{Shared.NORMAL_CHAR_CODE}" :
 				$" {formattedAvailableKey} ";
 			if (keyIndex > 0 && nextKey != availableKey.key && nextKey != availableKeys[keyIndex - 1].key)
 			{

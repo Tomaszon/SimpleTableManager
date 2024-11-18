@@ -224,4 +224,10 @@ public partial class Cell
 	{
 		ReferencedObject = Table[position.X, position.Y];
 	}
+
+	[CommandFunction]
+	public void SetContentStyle(ContentStyle style)
+	{
+		ContentStyle = style;
+	}
 }

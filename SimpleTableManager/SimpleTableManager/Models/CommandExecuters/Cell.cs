@@ -29,6 +29,8 @@ public partial class Cell : CommandExecuterBase
 
 	public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);
 
+	public ContentStyle ContentStyle { get; set; } = ContentStyle.Normal;
+
 	public ConsoleColorSet ContentColor { get; set; } = new(Settings.Current.DefaultContentColor);
 
 	public ConsoleColorSet BackgroundColor { get; set; } = new(Settings.Current.DefaultBackgroundColor);
