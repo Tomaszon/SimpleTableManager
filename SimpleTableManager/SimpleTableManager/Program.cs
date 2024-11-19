@@ -7,7 +7,7 @@ namespace SimpleTableManager;
 public class Program
 {
 	// private async static Task Main()
-	private static void Main()
+	private static void Main(params string[] args)
 	{
 		Console.TreatControlCAsInput = true;
 		Console.OutputEncoding = System.Text.Encoding.Unicode;
@@ -146,6 +146,15 @@ public class Program
 		{
 			try
 			{
+				if (args.Length > 0)
+				{
+					var fileName = args[0];
+
+					args = Array.Empty<string>();
+
+					InstanceMap.Instance.GetInstance<Document>()!.Load(fileName);
+				}
+
 				SmartConsole.Render(app.Document);
 
 				SmartConsole.PlayNote(Note.Ok);
