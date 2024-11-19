@@ -135,6 +135,13 @@ public class Program
 
 		//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
 		#endregion test
+
+		if (Settings.Current.ShowStartupLogo)
+		{
+			Renderer.RenderStartupLogo();
+			Task.Delay(Settings.Current.StartupLogoDelay).Wait();
+		}
+
 		do
 		{
 			try

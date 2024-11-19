@@ -5,6 +5,33 @@
 		"\\___ \\ | | |  v  |",
 		"|____/ |_| |_| |_| {version}"
 	],
+	"StartupLogo": [
+		"   _____________ _________________ _____       _____",
+		"  /.............|.................|.....\\     /.....|",
+		" /..............|.................|......\\   /......|",
+		"/......_________|_____......._____|.......\\_/.......|",
+		"\\.............\\       |.....|     |.................|",
+		" \\.............\\      |.....|     |.................|",
+		" _\\_______......\\     |.....|     |.....|\\.../|.....|",
+		"|.............../     |.....|     |.....| \\_/ |.....|",
+		"|............../      |.....|     |.....|     |.....|",
+		"|_____________/       |_____|     |_____|     |_____|",
+		"",
+		"",
+		"+---------------------------------------------------+",
+		"|                Simple Table Manager               |",
+		"+---------------------------------------------------+"
+	],
+	"StartupSplashes": [
+		"splash1",
+		"splash2",
+		"splash3",
+		"splash4",
+		"splash5",
+		"splash6",
+		"splash7",
+		"splash8"
+	],
 	//"TextForegroundColor": "Green",
 	//"TextBackgroundColor": "Black",
 	//"DefaultCellForegroundColor": "Black",
@@ -45,7 +72,7 @@
 	"TmpBackgroundCharacter": "?",
 	"DefaultCellBackgroundCharacter": "·",
 	"DefaultWorkDirectory": "C:\\users\\offic\\downloads",
-	"CommandHintRowCount" : 3,
+	"CommandHintRowCount": 3,
 	"CommandHistoryLength": 10,
 	"EditHistoryLength": 10,
 	"DefaultTableSize": {
@@ -55,5 +82,5 @@
 	"Autosave": false,
 	"Author": "Tomaszon",
 	"Audio": false,
-	"Culture": "en"
+	"Culture": "hu"
 }
