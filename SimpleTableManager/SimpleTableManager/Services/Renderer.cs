@@ -491,17 +491,29 @@ public static class Renderer
 							{
 								Console.Write(Shared.BOLD_CHAR_CODE);
 							}
+							if (cell.ContentStyle.HasFlag(ContentStyle.Dim))
+							{
+								Console.Write(Shared.DIM_CHAR_CODE);
+							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Italic))
 							{
 								Console.Write(Shared.ITALIC_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Underlined))
 							{
-								Console.Write(Shared.UNDERLINE_CHAR_CODE);
+								Console.Write(Shared.UNDERLINED_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Blinking))
 							{
-								Console.Write(Shared.BLINK_CHAR_CODE);
+								Console.Write(Shared.BLINKING_CHAR_CODE);
+							}
+							if (cell.ContentStyle.HasFlag(ContentStyle.Striked))
+							{
+								Console.Write(Shared.STRIKED_CHAR_CODE);
+							}
+							if (cell.ContentStyle.HasFlag(ContentStyle.Overlined))
+							{
+								Console.Write(Shared.OVERLINED_CHAR_CODE);
 							}
 						}
 						break;

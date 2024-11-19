@@ -5,8 +5,11 @@ public enum ContentStyle
 {
 	Normal = 0,
 	Bold = 1,
-	Italic = 2,
-	Underlined = 4,
-	Blinking = 8,
-	All = Blinking | Underlined | Italic | Bold
+	Dim = 2,
+	Italic = 4,
+	Underlined = 8,
+	Blinking = 16,
+	Striked = 32,
+	Overlined = 64,
+	All = Overlined | Striked | Blinking | Underlined | Italic | Dim | Bold
 }
