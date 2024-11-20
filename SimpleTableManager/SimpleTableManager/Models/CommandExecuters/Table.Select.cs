@@ -65,16 +65,15 @@ public partial class Table
 	{
 		var selectedCells = GetSelectedCells();
 
-		ThrowIf(selectedCells.Count() != 1, "Selection movement available with one selected cell!");
-
-		var cell = selectedCells.Single();
-
-		var position = this[cell];
-
-		if (position.X < Size.Width - 1)
+		var newPositions = selectedCells.Select(cell =>
 		{
-			SelectCell(new Position(position.X + 1, position.Y), true);
-		}
+			var position = this[cell];
+
+			return new Position((position.X + 1) % Size.Width, position.Y);
+		}).ToArray();
+
+		DeselectAll();
+		SelectCells(newPositions);
 	}
 
 	[CommandFunction, CommandShortcut]
@@ -82,16 +81,15 @@ public partial class Table
 	{
 		var selectedCells = GetSelectedCells();
 
-		ThrowIf(selectedCells.Count() != 1, "Selection movement available with one selected cell!");
-
-		var cell = selectedCells.Single();
-
-		var position = this[cell];
-
-		if (position.X > 0)
+		var newPositions = selectedCells.Select(cell =>
 		{
-			SelectCell(new Position(position.X - 1, position.Y), true);
-		}
+			var position = this[cell];
+
+			return new Position((position.X - 1 + Size.Width) % Size.Width, position.Y);
+		}).ToArray();
+
+		DeselectAll();
+		SelectCells(newPositions);
 	}
 
 	[CommandFunction, CommandShortcut]
@@ -99,16 +97,15 @@ public partial class Table
 	{
 		var selectedCells = GetSelectedCells();
 
-		ThrowIf(selectedCells.Count() != 1, "Selection movement available with one selected cell!");
-
-		var cell = selectedCells.Single();
-
-		var position = this[cell];
-
-		if (position.Y < Size.Height - 1)
+		var newPositions = selectedCells.Select(cell =>
 		{
-			SelectCell(new Position(position.X, position.Y + 1), true);
-		}
+			var position = this[cell];
+
+			return new Position(position.X, (position.Y + 1) % Size.Height);
+		}).ToArray();
+
+		DeselectAll();
+		SelectCells(newPositions);
 	}
 
 	[CommandFunction, CommandShortcut]
@@ -116,15 +113,14 @@ public partial class Table
 	{
 		var selectedCells = GetSelectedCells();
 
-		ThrowIf(selectedCells.Count() != 1, "Selection movement available with one selected cell!");
-
-		var cell = selectedCells.Single();
-
-		var position = this[cell];
-
-		if (position.Y > 0)
+		var newPositions = selectedCells.Select(cell =>
 		{
-			SelectCell(new Position(position.X, position.Y - 1), true);
-		}
+			var position = this[cell];
+
+			return new Position(position.X, (position.Y - 1 + Size.Height) % Size.Height);
+		}).ToArray();
+
+		DeselectAll();
+		SelectCells(newPositions);
 	}
 }
