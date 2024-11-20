@@ -107,9 +107,9 @@ public static class Renderer
 		var placeHolderCell = new Cell(table, GetTmpBackground(size)) { ContentColor = new(Settings.Current.TextColor) };
 		var placeHolderCellPosition = new Position(tableOffset);
 
-		DrawCellBorders(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
+		RenderCellBorders(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
 
-		DrawCellContent(placeHolderCell, placeHolderCellPosition, size, true, false);
+		RenderCellContent(placeHolderCell, placeHolderCellPosition, size, true, false);
 
 		Task.Delay(500).Wait();
 	}
@@ -145,9 +145,9 @@ public static class Renderer
 
 		var size = table.GetCornerCellSize();
 
-		DrawCellBorders(table.CornerCell, position, size, CellBorders.Get(CellBorderType.CornerCellOpen));
+		RenderCellBorders(table.CornerCell, position, size, CellBorders.Get(CellBorderType.CornerCellOpen));
 
-		DrawCellContent(table.CornerCell, position, size, true, false);
+		RenderCellContent(table.CornerCell, position, size, true, false);
 	}
 
 	private static void RenderHeader(Table table, Size tableOffset)
@@ -166,9 +166,9 @@ public static class Renderer
 
 				var border = CellBorders.Get(GetHeaderCellBorderType(table.ViewOptions.Size.Width, posInView.X));
 
-				DrawCellBorders(cell, position, size, border);
+				RenderCellBorders(cell, position, size, border);
 
-				DrawCellContent(cell, position, size, true, table.IsColumnSelected(x));
+				RenderCellContent(cell, position, size, true, table.IsColumnSelected(x));
 			}
 		});
 	}
@@ -188,9 +188,9 @@ public static class Renderer
 
 				var border = CellBorders.Get(GetSiderCellBorderType(table.ViewOptions.Size.Height, posInView.Y));
 
-				DrawCellBorders(cell, position, size, border);
+				RenderCellBorders(cell, position, size, border);
 
-				DrawCellContent(cell, position, size, true, table.IsRowSelected(y));
+				RenderCellContent(cell, position, size, true, table.IsRowSelected(y));
 			}
 		});
 	}
@@ -212,9 +212,9 @@ public static class Renderer
 
 					var border = GetContentCellBorder(table, cell, posInView);
 
-					DrawCellBorders(cell, position, size, border);
+					RenderCellBorders(cell, position, size, border);
 
-					DrawCellContent(cell, position, size, ignoreRenderingMode, false);
+					RenderCellContent(cell, position, size, ignoreRenderingMode, false);
 				}
 			}));
 	}
@@ -318,14 +318,14 @@ public static class Renderer
 		}
 	}
 
-	private static void DrawCellBorders(Cell cell, Position position, Size size, CellBorder border)
+	private static void RenderCellBorders(Cell cell, Position position, Size size, CellBorder border)
 	{
 		ChangeToCellBorderColors(cell);
 
 		if (border.Top != BorderType.None)
 		{
 			Console.SetCursorPosition(position.X + 1, position.Y);
-			DrawBorderSegment(border.Top, size.Width - 2);
+			RenderBorderSegment(border.Top, size.Width - 2);
 		}
 
 		if (border.Left != BorderType.None)
@@ -333,7 +333,7 @@ public static class Renderer
 			Console.SetCursorPosition(position.X, position.Y + 1);
 			Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
 			{
-				DrawBorderSegment(border.Left);
+				RenderBorderSegment(border.Left);
 				Shared.StepCursor(-1, 1);
 			});
 		}
@@ -343,7 +343,7 @@ public static class Renderer
 			Console.SetCursorPosition(position.X + size.Width - 1, position.Y + 1);
 			Shared.IndexArray(size.Height - 2, 1).ForEach(i =>
 			{
-				DrawBorderSegment(border.Right);
+				RenderBorderSegment(border.Right);
 				Shared.StepCursor(-1, 1);
 			});
 		}
@@ -351,35 +351,35 @@ public static class Renderer
 		if (border.Bottom != BorderType.None)
 		{
 			Console.SetCursorPosition(position.X + 1, position.Y + size.Height - 1);
-			DrawBorderSegment(border.Bottom, size.Width - 2);
+			RenderBorderSegment(border.Bottom, size.Width - 2);
 		}
 
 		if (border.TopLeft != BorderType.None)
 		{
 			Console.SetCursorPosition(position.X, position.Y);
-			DrawBorderSegment(border.TopLeft);
+			RenderBorderSegment(border.TopLeft);
 		}
 
 		if (border.TopRight != BorderType.None)
 		{
 			Console.SetCursorPosition(position.X + size.Width - 1, position.Y);
-			DrawBorderSegment(border.TopRight);
+			RenderBorderSegment(border.TopRight);
 		}
 
 		if (border.BottomLeft != BorderType.None)
 		{
 			Console.SetCursorPosition(position.X, position.Y + size.Height - 1);
-			DrawBorderSegment(border.BottomLeft);
+			RenderBorderSegment(border.BottomLeft);
 		}
 
 		if (border.BottomRight != BorderType.None)
 		{
 			Console.SetCursorPosition(position.X + size.Width - 1, position.Y + size.Height - 1);
-			DrawBorderSegment(border.BottomRight);
+			RenderBorderSegment(border.BottomRight);
 		}
 	}
 
-	private static void DrawBorderSegment(BorderType border, int count = 1)
+	private static void RenderBorderSegment(BorderType border, int count = 1)
 	{
 		if (border != BorderType.None)
 		{
@@ -391,7 +391,7 @@ public static class Renderer
 		}
 	}
 
-	private static void DrawCellContent(Cell cell, Position position, Size size, bool ignoreRenderingMode, bool showSelection)
+	private static void RenderCellContent(Cell cell, Position position, Size size, bool ignoreRenderingMode, bool showSelection)
 	{
 		var sizeWithoutBorders = new Size(size.Width - 2, size.Height - 2);
 
@@ -429,7 +429,15 @@ public static class Renderer
 			var leftPaddingSize = sizeWithoutBorders.Width;
 			var rightPaddingSize = 0;
 
-			if (IsCellContentDrawNeeded(contentsToRender, vAlignment, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
+			//IDEA
+			// var ellipsisThreshold = (int)((Console.WindowWidth - 5) * .75);
+
+			// contentsToRender = contentsToRender.Select(c =>
+			// {
+			// 	return c.Length > ellipsisThreshold ? $"{c[..ellipsisThreshold]} ..." : c;
+			// });
+
+			if (IsCellContentRenderNeeded(contentsToRender, vAlignment, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
 			{
 				content = contentsToRender.ElementAt(contentIndex);
 
@@ -531,7 +539,9 @@ public static class Renderer
 
 	public static void LoadingScreen()
 	{
-		if (Settings.Current.ShowLoadingScreen)
+		if (Settings.Current.ShowLoadingScreen &&
+			Console.WindowHeight > Settings.Current.LoadingScreenLogo.Length + 5 &&
+			Console.WindowWidth > Settings.Current.LoadingScreenLogo.Max(p => p.Length))
 		{
 			Console.Clear();
 
@@ -627,7 +637,7 @@ public static class Renderer
 		// }
 	}
 
-	private static bool IsCellContentDrawNeeded(IEnumerable<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)
+	private static bool IsCellContentRenderNeeded(IEnumerable<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)
 	{
 		var startLineIndex = alignment switch
 		{
@@ -637,11 +647,11 @@ public static class Renderer
 			_ => height - contents.Count() - padding.Bottom
 		};
 
-		var isDrawNeeded = startLineIndex <= lineIndex && startLineIndex + contents.Count() > lineIndex;
+		var isRenderNeeded = startLineIndex <= lineIndex && startLineIndex + contents.Count() > lineIndex;
 
-		contentIndex = isDrawNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
+		contentIndex = isRenderNeeded ? Math.Abs(startLineIndex - lineIndex) : default;
 
-		return isDrawNeeded;
+		return isRenderNeeded;
 	}
 
 	private static int GetStartIndexForCenteredContent(int contentAreaSize, int contentLength, int padding1, int padding2)

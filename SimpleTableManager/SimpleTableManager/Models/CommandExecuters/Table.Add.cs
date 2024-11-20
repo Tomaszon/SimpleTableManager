@@ -9,7 +9,9 @@ public partial class Table
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
-		Sider.Add(new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
+		Sider.Insert(index, new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
+
+		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
 
 		for (int x = 0; x < Size.Width; x++)
 		{
@@ -25,23 +27,23 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void AddRowAfter(int after)
+	public void AddRowAfter(int after, int count = 1)
 	{
 		ThrowIfNot(after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
 
-		AddRowAt(after + 1);
+		Shared.IndexArray(count).ForEach(i => AddRowAt(after + 1));
 	}
 
 	[CommandFunction]
-	public void AddRowFirst()
+	public void AddRowFirst(int count = 1)
 	{
-		AddRowAt(0);
+		Shared.IndexArray(count).ForEach(i => AddRowAt(0));
 	}
 
 	[CommandFunction]
-	public void AddRowLast()
+	public void AddRowLast(int count = 1)
 	{
-		AddRowAt(Size.Height);
+		Shared.IndexArray(count).ForEach(i => AddRowAt(Size.Height));
 	}
 
 	[CommandFunction]
@@ -49,7 +51,9 @@ public partial class Table
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
-		Header.Add(new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+		Header.Insert(index, new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+
+		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
 
 		for (int y = 0; y < Size.Height; y++)
 		{
@@ -65,23 +69,23 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void AddColumnAfter(int after)
+	public void AddColumnAfter(int after, int count = 1)
 	{
 		ThrowIfNot(after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
 
-		AddColumnAt(after + 1);
+		Shared.IndexArray(count).ForEach(i => AddColumnAt(after + 1));
 	}
 
 	[CommandFunction]
-	public void AddColumnFirst()
+	public void AddColumnFirst(int count = 1)
 	{
-		AddColumnAt(0);
+		Shared.IndexArray(count).ForEach(i => AddColumnAt(0));
 	}
 
 	[CommandFunction]
-	public void AddColumnLast()
+	public void AddColumnLast(int count = 1)
 	{
-		AddColumnAt(Size.Width);
+		Shared.IndexArray(count).ForEach(i => AddColumnAt(Size.Width));
 	}
 
 	[CommandFunction]
