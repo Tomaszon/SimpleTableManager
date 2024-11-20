@@ -136,11 +136,7 @@ public class Program
 		//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
 		#endregion test
 
-		if (Settings.Current.ShowStartupLogo)
-		{
-			Renderer.RenderStartupLogo();
-			Task.Delay(Settings.Current.StartupLogoDelay).Wait();
-		}
+		Renderer.LoadingScreen();
 
 		do
 		{
@@ -211,6 +207,12 @@ public class Program
 			}
 			catch (Exception ex) when (ex.IsHandled())
 			{
+				Renderer.ChangeToNotOkLabelColors();
+
+				Console.WriteLine("Error\n");
+
+				Renderer.ChangeToTextColors();
+
 				Console.WriteLine(ex.Message);
 				Console.Write("Press any key to continue");
 
@@ -220,6 +222,12 @@ public class Program
 			}
 			catch (Exception ex)
 			{
+				Renderer.ChangeToNotOkLabelColors();
+
+				Console.WriteLine("Unexpected error\n");
+
+				Renderer.ChangeToTextColors();
+
 				Console.Write($"{ex.Message} -> \n\n");
 
 				Renderer.ChangeToNotOkLabelColors();

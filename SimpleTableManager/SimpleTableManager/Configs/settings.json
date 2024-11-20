@@ -5,7 +5,7 @@
 		"\\___ \\ | | |  v  |",
 		"|____/ |_| |_| |_| {version}"
 	],
-	"StartupLogo": [
+	"LoadingScreenLogo": [
 		"   _____________ _________________ _____       _____",
 		"  /.............|.................|.....\\     /.....|",
 		" /..............|.................|......\\   /......|",
@@ -22,7 +22,7 @@
 		"|                Simple Table Manager               |",
 		"+---------------------------------------------------+"
 	],
-	"StartupSplashes": [
+	"LoadingScreenSplashes": [
 		"splash1",
 		"splash2",
 		"splash3",
@@ -82,5 +82,5 @@
 	"Autosave": false,
 	"Author": "Tomaszon",
 	"Audio": false,
-	"Culture": "hu"
+	"Culture": "en"
 }

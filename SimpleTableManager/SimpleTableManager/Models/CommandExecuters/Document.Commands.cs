@@ -133,12 +133,20 @@ public partial class Document
 			IsSaved = true;
 
 			app.EditHistory.Clear();
+
+			Renderer.LoadingScreen();
+		}
+		catch (FileNotFoundException)
+		{
+			throw;
 		}
 		catch (Exception ex)
 		{
-			app.Undo();
-
 			throw new OperationCanceledException("Can not load document", ex);
+		}
+		finally
+		{
+			app.Undo();
 		}
 
 		GetMetaInfos(fileName);
@@ -192,5 +200,7 @@ public partial class Document
 		Clear();
 
 		InstanceMap.Instance.GetInstance<App>()!.EditHistory.Clear();
+
+		Renderer.LoadingScreen();
 	}
 }

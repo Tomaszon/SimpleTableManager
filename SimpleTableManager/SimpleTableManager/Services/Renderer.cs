@@ -529,44 +529,50 @@ public static class Renderer
 		});
 	}
 
-	public static void RenderStartupLogo()
+	public static void LoadingScreen()
 	{
-		Console.Clear();
-
-		var maxLength = Settings.Current.StartupLogo.Max(s => s.Length);
-		var t2 = Localizer.Localize(typeof(Renderer), null, "loading");
-
-		for (int i = 0; i < Settings.Current.StartupLogo.Length; i++)
+		if (Settings.Current.ShowLoadingScreen)
 		{
-			Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, (Console.WindowHeight - Settings.Current.StartupLogo.Length) / 2 + i);
+			Console.Clear();
 
-			for (int j = 0; j < Settings.Current.StartupLogo[i].Length; j++)
+			var maxLength = Settings.Current.LoadingScreenLogo.Max(s => s.Length);
+
+			for (int i = 0; i < Settings.Current.LoadingScreenLogo.Length; i++)
 			{
-				var c = Settings.Current.StartupLogo[i][j];
+				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, (Console.WindowHeight - Settings.Current.LoadingScreenLogo.Length) / 2 + i);
 
-				Console.ForegroundColor = c == '.' ?
-					Settings.Current.DefaultBackgroundColor.Foreground :
-					Settings.Current.DefaultContentColor.Foreground;
-				Console.BackgroundColor = c == '.' ?
-					Settings.Current.DefaultBackgroundColor.Background :
-					Settings.Current.DefaultContentColor.Background;
+				for (int j = 0; j < Settings.Current.LoadingScreenLogo[i].Length; j++)
+				{
+					var c = Settings.Current.LoadingScreenLogo[i][j];
 
-				Console.Write(c);
+					Console.ForegroundColor = c == '.' ?
+						Settings.Current.DefaultBackgroundColor.Foreground :
+						Settings.Current.DefaultContentColor.Foreground;
+					Console.BackgroundColor = c == '.' ?
+						Settings.Current.DefaultBackgroundColor.Background :
+						Settings.Current.DefaultContentColor.Background;
+
+					Console.Write(c);
+				}
 			}
+
+			Console.ForegroundColor = Settings.Current.DefaultContentColor.Foreground;
+			Console.BackgroundColor = Settings.Current.DefaultContentColor.Background;
+
+			var splashText = Localizer.Localize(typeof(Renderer), null, Settings.Current.LoadingScreenSplashes[new Random().Next(Settings.Current.LoadingScreenSplashes.Length)]);
+
+			Console.SetCursorPosition(Console.WindowWidth - (Console.WindowWidth - maxLength) / 2 - splashText.Length, (Console.WindowHeight - Settings.Current.LoadingScreenLogo.Length) / 2 - 2);
+
+			Console.Write(splashText);
+
+			var loadingText = Localizer.Localize(typeof(Renderer), null, "loading");
+
+			Console.SetCursorPosition((Console.WindowWidth - loadingText.Length) / 2, (Console.WindowHeight + Settings.Current.LoadingScreenLogo.Length) / 2 + 2);
+
+			Console.Write(loadingText);
+
+			Task.Delay(Settings.Current.LoadingScreenDelay).Wait();
 		}
-
-		Console.ForegroundColor = Settings.Current.DefaultContentColor.Foreground;
-		Console.BackgroundColor = Settings.Current.DefaultContentColor.Background;
-
-		var splash = Localizer.Localize(typeof(Renderer), null, Settings.Current.StartupSplashes[new Random().Next(Settings.Current.StartupSplashes.Length)]);
-
-		Console.SetCursorPosition(Console.WindowWidth - (Console.WindowWidth - maxLength) / 2 - splash.Length, (Console.WindowHeight - Settings.Current.StartupLogo.Length) / 2 - 2);
-
-		Console.Write(splash);
-
-		Console.SetCursorPosition((Console.WindowWidth - t2.Length) / 2, (Console.WindowHeight + Settings.Current.StartupLogo.Length) / 2 + 3);
-
-		Console.Write(t2);
 	}
 
 	private static void RenderLogo()

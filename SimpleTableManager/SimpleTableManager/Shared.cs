@@ -63,7 +63,9 @@ public static class Shared
 			ex is TargetParameterCountException ||
 			ex is ArgumentException ||
 			ex is ArgumentCountException ||
-			ex is CommandKeyNotFoundException;
+			ex is CommandKeyNotFoundException ||
+			ex is FileNotFoundException ||
+			ex is OperationCanceledException;
 	}
 
 	public static void SerializeObject(StreamWriter sw, object? source, TypeNameHandling typeNameHandling = TypeNameHandling.All)

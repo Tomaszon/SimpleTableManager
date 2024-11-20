@@ -9,13 +9,13 @@ public class Settings
 {
 	public string[] Logo { get; set; } = Array.Empty<string>();
 
-	public string[] StartupLogo { get; set; } = Array.Empty<string>();
+	public string[] LoadingScreenLogo { get; set; } = Array.Empty<string>();
 
-	public string[] StartupSplashes { get; set; } = Array.Empty<string>();
+	public string[] LoadingScreenSplashes { get; set; } = Array.Empty<string>();
 
-	public bool ShowStartupLogo { get; set; } = true;
+	public bool ShowLoadingScreen { get; set; } = true;
 
-	public int StartupLogoDelay { get; set; } = 2500;
+	public int LoadingScreenDelay { get; set; } = 1500;
 
 	public ConsoleColorSet TextColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
 
