@@ -208,6 +208,15 @@ public static class Renderer
 
 					var size = table.GetContentCellSize(x, y);
 
+					// var m = .3;
+
+					// //IDEA
+					// var ellipsisThreshold = (int)((Console.WindowWidth) * m);
+
+					// size.Width = Math.Min(ellipsisThreshold, size.Width);
+
+					// //IDEA limit size for content ellipses
+
 					var posInView = table.PositionInView(x, y);
 
 					var border = GetContentCellBorder(table, cell, posInView);
@@ -425,17 +434,26 @@ public static class Renderer
 		{
 			Console.SetCursorPosition(position.X + 1, position.Y + 1 + i);
 
-			var content = "";
-			var leftPaddingSize = sizeWithoutBorders.Width;
-			var rightPaddingSize = 0;
 
-			//IDEA
-			// var ellipsisThreshold = (int)((Console.WindowWidth - 5) * .75);
+			// var m = .3;
+
+			// //IDEA
+			// var ellipsisThreshold = (int)((Console.WindowWidth) * m);
+
+			// if (contentsToRender.Any(c => c.Length > (int)(Console.WindowWidth * m)))
+			// {
+			// 	sizeWithoutBorders.Width = (int)(Console.WindowWidth * m);
+			// }
 
 			// contentsToRender = contentsToRender.Select(c =>
 			// {
-			// 	return c.Length > ellipsisThreshold ? $"{c[..ellipsisThreshold]} ..." : c;
+			// 	return c.Length > ellipsisThreshold ? $"{c[..(ellipsisThreshold - 4)]} ..." : c;
 			// });
+
+
+			var content = "";
+			var leftPaddingSize = sizeWithoutBorders.Width;
+			var rightPaddingSize = 0;
 
 			if (IsCellContentRenderNeeded(contentsToRender, vAlignment, cell.ContentPadding, i, sizeWithoutBorders.Height, out var contentIndex) && contentsToRender.Count() > contentIndex)
 			{

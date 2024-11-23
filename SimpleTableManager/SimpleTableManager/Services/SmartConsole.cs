@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Text;
 
 using SimpleTableManager.Models;
@@ -774,8 +775,10 @@ public partial class SmartConsole
 	{
 		if (Settings.Current.Audio)
 		{
-			//TODO sole cross platform issue, make it work on linux
-			// Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, length));
+			//REWORK solve cross platform issue, make it work on linux
+			//RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+			//Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, length));
+			//use NetCoreAudio with custom audio files?
 		}
 	}
 

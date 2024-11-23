@@ -69,7 +69,7 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 
 	private static TOut Avg(IEnumerable<TIn> array)
 	{
-		return  (Sum(array) / array.Count().ToType<TIn>()).ToType<TOut>();
+		return (Sum(array) / array.Count().ToType<TIn>()).ToType<TOut>();
 	}
 
 	private static TOut Multiply(IEnumerable<TIn> array)

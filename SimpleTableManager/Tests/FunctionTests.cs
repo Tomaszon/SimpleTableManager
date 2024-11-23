@@ -160,5 +160,35 @@ namespace SimpleTableManager.Tests
 
 			CheckResults(fn.Execute().Cast<decimal>().Select(d => Math.Round(d, 2)).Cast<object>(), results);
 		}
+
+		[Test]
+		[TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
+		public void InnerIntFunctionTest(int[] args1, int[] args2, int result)
+		{
+			var inner = new IntegerNumericFunction()
+			{
+				Operator = NumericFunctionOperator.Sum,
+				Arguments = args1
+			};
+
+			var outer = new IntegerNumericFunction()
+			{
+				Operator = NumericFunctionOperator.Mul,
+				Arguments = inner.Execute().Union(args2)
+			};
+
+			CheckResults(outer.Execute().Cast<object>(), result.Wrap());
+		}
+
+		[Test]
+		[TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
+		public void InnerIntFunctionTest2(int[] args1, int[] args2, int result)
+		{
+			var fn1 = CreateFunction(NumericFunctionOperator.Sum, args1);
+
+			var fn2 = CreateFunction(NumericFunctionOperator.Mul, args2.Union(fn1.Execute().Cast<int>()).ToArray());
+
+			CheckResults(fn2.Execute(), result.Wrap());
+		}
 	}
 }

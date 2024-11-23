@@ -30,7 +30,7 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 				return _format switch
 				{
 					"%" => $"{d * 100:0}%",
-					//TODO
+					//HACK
 					"chart5v" => GetChart(d, 5),
 					"chart10v" => GetChart(d, 10),
 					"chart5h" => GetChart(d, 5, true),
