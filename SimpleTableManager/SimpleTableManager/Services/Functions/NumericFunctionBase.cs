@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Numerics;
 
 namespace SimpleTableManager.Services.Functions;
@@ -11,39 +10,37 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Const => Arguments.Cast<TOut>(),
+			NumericFunctionOperator.Const => UnwrappedArguments.Cast<TOut>(),
 
-			NumericFunctionOperator.Neg => Arguments.Select(a => -a).Cast<TOut>(),
+			NumericFunctionOperator.Neg => UnwrappedArguments.Select(a => -a).Cast<TOut>(),
 
-			NumericFunctionOperator.Abs => Arguments.Select(TIn.Abs).Cast<TOut>(),
+			NumericFunctionOperator.Abs => UnwrappedArguments.Select(TIn.Abs).Cast<TOut>(),
 
-			NumericFunctionOperator.Sum => Sum(Arguments/*.Union(ReferenceArguments)*/).Wrap<TOut>(),
+			NumericFunctionOperator.Sum => Sum(UnwrappedArguments).Wrap<TOut>(),
 
-			NumericFunctionOperator.Sub => Sub(Arguments).Wrap(),
+			NumericFunctionOperator.Sub => Sub(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Avg => Avg(Arguments/*.Union(ReferenceArguments)*/).Wrap(),
+			NumericFunctionOperator.Avg => Avg(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Min => Min(Arguments).Wrap(),
-			//new[] { Min(Arguments), Min(ReferenceArguments) }.Min().Wrap<TOut>(),
+			NumericFunctionOperator.Min => Min(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Max => Max(Arguments).Wrap(),
-			//new[] { Max(Arguments), Max(ReferenceArguments) }.Max().Wrap<TOut>(),
+			NumericFunctionOperator.Max => Max(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Mul => Multiply(Arguments).Wrap(),
+			NumericFunctionOperator.Mul => Multiply(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Div => Divide(Arguments).Wrap(),
+			NumericFunctionOperator.Div => Divide(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Pow => Power(Arguments, GetNamedArgument<int>(ArgumentName.Power)),
+			NumericFunctionOperator.Pow => Power(UnwrappedArguments, GetNamedArgument<int>(ArgumentName.Power)),
 
-			NumericFunctionOperator.Sqrt => Sqrt(Arguments),
+			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedArguments),
 
-			NumericFunctionOperator.Log2 => LogN(Arguments, 2.ToType<TIn>()),
+			NumericFunctionOperator.Log2 => LogN(UnwrappedArguments, 2.ToType<TIn>()),
 
-			NumericFunctionOperator.Log10 => LogN(Arguments, 10.ToType<TIn>()),
+			NumericFunctionOperator.Log10 => LogN(UnwrappedArguments, 10.ToType<TIn>()),
 
-			NumericFunctionOperator.LogE => LogN(Arguments, double.E.ToType<TIn>()),
+			NumericFunctionOperator.LogE => LogN(UnwrappedArguments, double.E.ToType<TIn>()),
 
-			NumericFunctionOperator.LogN => LogN(Arguments, GetNamedArgument<TIn>(ArgumentName.Base)),
+			NumericFunctionOperator.LogN => LogN(UnwrappedArguments, GetNamedArgument<TIn>(ArgumentName.Base)),
 
 			_ => throw GetInvalidOperatorException()
 		};

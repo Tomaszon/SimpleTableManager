@@ -15,6 +15,10 @@ namespace SimpleTableManager.Models
 
 		public bool? VerticallyLocked { get; set; }
 
+		public bool IsReferenceType => Table is not null && Position is not null;
+
+		public bool IsConstType => ConstValue is not null;
+
 		public FunctionParameter(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
 		{
 			Table = table;
@@ -28,9 +32,9 @@ namespace SimpleTableManager.Models
 			ConstValue = value;
 		}
 
-		public static explicit operator List<T>?(FunctionParameter<T> parameter)
+		public static explicit operator List<T>(FunctionParameter<T> parameter)
 		{
-			return 
+			return
 				parameter.Table?[parameter.Position!].ContentFunction?.Execute().Cast<T>().ToList() ??
 				parameter.ConstValue!.Wrap().ToList();
 		}
@@ -38,6 +42,19 @@ namespace SimpleTableManager.Models
 		public static explicit operator FunctionParameter<T>(T value)
 		{
 			return new FunctionParameter<T>(value);
+		}
+
+
+		public static explicit operator FunctionParameter<object>(FunctionParameter<T> function)
+		{
+			//TODO check if ref is not a problem
+			return new FunctionParameter<object>(function.ConstValue!)
+			{
+				Table = function.Table,
+				Position = function.Position,
+				HorizontallyLocked = function.HorizontallyLocked,
+				VerticallyLocked = function.VerticallyLocked
+			};
 		}
 	}
 }

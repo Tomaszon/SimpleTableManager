@@ -1,3 +1,5 @@
+using SimpleTableManager.Models;
+
 namespace SimpleTableManager.Services.Functions;
 
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
@@ -12,13 +14,15 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new();
 
-	public IEnumerable<TIn> Arguments { get; set; } = Enumerable.Empty<TIn>();
+	public IEnumerable<FunctionParameter<TIn>> Arguments { get; set; } = Enumerable.Empty<FunctionParameter<TIn>>();
 
-	IEnumerable<object> IFunction.Arguments
+	IEnumerable<FunctionParameter<object>> IFunction.Arguments
 	{
-		get => Arguments.Cast<object>();
-		set => Arguments = value.Cast<TIn>();
+		get => Arguments.Select(a => (FunctionParameter<object>)a);
+		set => Arguments = value.Cast<FunctionParameter<TIn>>();
 	}
+
+	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => (List<TIn>)a);
 
 	public TOpertor Operator { get; set; }
 

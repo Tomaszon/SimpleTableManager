@@ -1,4 +1,5 @@
 using System.Data;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
@@ -9,11 +10,11 @@ public static class FunctionCollection
 	static FunctionCollection()
 	{
 		var functions = Assembly.GetExecutingAssembly().GetTypes().Where(t =>
-			t.Namespace == typeof(IFunction).Namespace && !t.IsAbstract && 
+			t.Namespace == typeof(IFunction).Namespace && !t.IsAbstract &&
 			!t.IsInterface && !t.IsGenericType && !t.IsNested);
 
-		Functions = functions.SelectMany(f => 
-			f.GetCustomAttributes<FunctionMappingTypeAttribute>().Select(a => 
+		Functions = functions.SelectMany(f =>
+			f.GetCustomAttributes<FunctionMappingTypeAttribute>().Select(a =>
 				(a.MappingType, FunctionType: f))).ToDictionary(k => k.MappingType, v => v.FunctionType);
 	}
 
@@ -67,9 +68,15 @@ public static class FunctionCollection
 
 	public static System.Collections.IList ParseArgumentList(IEnumerable<object> arguments, Type argType)
 	{
-		var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(argType))!;
+		var functionParameterType = typeof(FunctionParameter<>).MakeGenericType(argType);
 
-		var parsedArgs = argType == typeof(string) ? arguments! : arguments.Select(a => a is string str ? ContentParser.ParseStringValue(argType, str!) : a);
+		var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(functionParameterType))!;
+
+		var parsedArgs = argType == typeof(string) ?
+			arguments!.Select(a => new FunctionParameter<string>((string)a)) :
+			arguments.Select(a => a is string str ?
+				Activator.CreateInstance(functionParameterType, ContentParser.ParseStringValue(argType, str!)) :
+				Activator.CreateInstance(functionParameterType, new object[] { a }));
 
 		parsedArgs.ForEach(e => targetArray.Add(e));
 

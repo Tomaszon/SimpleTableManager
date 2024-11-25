@@ -1,6 +1,7 @@
 ﻿using SimpleTableManager.Models;
 using SimpleTableManager.Models.CommandExecuters;
 using SimpleTableManager.Services;
+using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager;
 
@@ -134,6 +135,20 @@ public class Program
 		//table[0, 0].GivenSize = new Size(25, 1);
 
 		//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
+
+		// var document = app.Document;
+		// var table = document.GetActiveTable();
+
+		// var innerCell = table[1, 0];
+		// innerCell.TestFnParam = new FunctionParameter<int>(3);
+		// innerCell.ContentFunction = FunctionCollection.GetFunction<int>("Const", null, new object[] { 8 });
+
+		// var outerCell = table[0, 0];
+		// outerCell.TestFnParam = new FunctionParameter<int>(table, new Position(1,0));
+		// outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new object[] { 2, 4 }.Union(((List<int>)outerCell.TestFnParam).Cast<object>()));
+
+		// FunctionCollection.GetFunction<bool>("Const", null, new object[] { true, false });
+
 		#endregion test
 
 		Renderer.LoadingScreen();

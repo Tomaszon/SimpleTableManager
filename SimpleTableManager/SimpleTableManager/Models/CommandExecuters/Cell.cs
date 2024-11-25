@@ -24,6 +24,12 @@ public partial class Cell : CommandExecuterBase
 
 	public CellVisibility Visibility { get; set; } = new();
 
+
+
+	public FunctionParameter<int> TestFnParam { get; set; }
+
+
+
 	//TODO not rendered properly
 	public ContentPadding ContentPadding { get; set; } = new();
 

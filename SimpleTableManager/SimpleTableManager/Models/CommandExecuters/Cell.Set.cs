@@ -103,17 +103,18 @@ public partial class Cell
 	[CommandFunction]
 	public void SetContentFunctionArguments(params string[] arguments)
 	{
-		ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
+		//REWORK
+		// ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
 
-		(var namedArgs, var args) = Shared.SeparateNamedArguments<string>(arguments);
+		// (var namedArgs, var args) = Shared.SeparateNamedArguments<string>(arguments);
 
-		ContentFunction.NamedArguments = namedArgs;
+		// ContentFunction.NamedArguments = namedArgs;
 
-		var argType = ContentFunction.Arguments.GetType().GenericTypeArguments.First();
+		// var argType = ContentFunction.GetInType();
 
-		var targetArray = FunctionCollection.ParseArgumentList(args, argType);
+		// var targetArray = FunctionCollection.ParseArgumentList(args, argType);
 
-		ContentFunction.Arguments = targetArray.Cast<object>();
+		// ContentFunction.Arguments = targetArray.Cast<object>();
 	}
 
 	[CommandFunction]

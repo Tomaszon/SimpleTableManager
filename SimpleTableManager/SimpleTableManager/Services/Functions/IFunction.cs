@@ -1,10 +1,12 @@
+using SimpleTableManager.Models;
+
 namespace SimpleTableManager.Services.Functions;
 
 public interface IFunction
 {
 	Dictionary<ArgumentName, string> NamedArguments { get; set; }
 
-	IEnumerable<object> Arguments { get; set; }
+	IEnumerable<FunctionParameter<object>> Arguments { get; set; }
 
 	Enum Operator { get; set; }
 

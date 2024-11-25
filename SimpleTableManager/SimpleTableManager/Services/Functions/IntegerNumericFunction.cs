@@ -11,11 +11,11 @@ public class IntegerNumericFunction : NumericFunctionBase<int, int>
 
 		return Operator switch
 		{
-			NumericFunctionOperator.Rem => Arguments.Select(p => DivRem(p, divider)),
+			NumericFunctionOperator.Rem => UnwrappedArguments.Select(p => DivRem(p, divider)),
 
-			NumericFunctionOperator.And => And(Arguments).Wrap(),
+			NumericFunctionOperator.And => And(UnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Or => Or(Arguments).Wrap(),
+			NumericFunctionOperator.Or => Or(UnwrappedArguments).Wrap(),
 
 			_ => base.Execute()
 		};
