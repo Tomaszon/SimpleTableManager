@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager.Services;
+﻿using SimpleTableManager.Models;
+
+namespace SimpleTableManager.Services;
 
 public static class Shared
 {
@@ -10,6 +12,8 @@ public static class Shared
 	public const string BLINKING_CHAR_CODE = "\x1B[5m";
 	public const string STRIKED_CHAR_CODE = "\x1B[9m";
 	public const string OVERLINED_CHAR_CODE = "\x1B[53m";
+	public const string NAMED_ARG_SEPARATOR = ":=";
+	public const char REF_CHAR = '$';
 
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
@@ -17,14 +21,12 @@ public static class Shared
 		{ "bool", $"{nameof(System)}.boolean" }
 	};
 
-	public static string NAMED_ARG_SEPARATOR { get; } = ":=";
-
-	public static (Dictionary<ArgumentName, string>, IEnumerable<TType>) SeparateNamedArguments<TType>(params string[] arguments)
+	public static (Dictionary<ArgumentName, string>, IEnumerable<IFunctionArgument>) SeparateNamedArguments<TType>(params string[] arguments)
 	where TType : IParsable<TType>
 	{
 		var namedArgs = arguments.Where(a => a.Contains(NAMED_ARG_SEPARATOR) == true);
 
-		var regularArgs = arguments.Where(a => !namedArgs.Contains(a)).Select(e => TType.Parse(e, null));
+		var regularArgs = arguments.Where(a => !namedArgs.Contains(a)).Select(e => new ConstFunctionArgument<TType>(TType.Parse(e, null)));
 
 		var namedArgsDic = namedArgs.ToDictionary(k => Enum.Parse<ArgumentName>(k.Split(NAMED_ARG_SEPARATOR)[0], true), v => v.Split(NAMED_ARG_SEPARATOR)[1]);
 

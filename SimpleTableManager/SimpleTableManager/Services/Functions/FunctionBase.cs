@@ -14,15 +14,15 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new();
 
-	public IEnumerable<FunctionParameter<TIn>> Arguments { get; set; } = Enumerable.Empty<FunctionParameter<TIn>>();
+	public IEnumerable<IFunctionArgument> Arguments { get; set; } = Enumerable.Empty<IFunctionArgument>();
 
-	IEnumerable<FunctionParameter<object>> IFunction.Arguments
-	{
-		get => Arguments.Select(a => (FunctionParameter<object>)a);
-		set => Arguments = value.Cast<FunctionParameter<TIn>>();
-	}
+	// IEnumerable<IFunctionParameter> IFunction.Arguments
+	// {
+	// 	get => Arguments;
+	// 	set => Arguments = value.Cast<ReferenceFunctionParameter<TIn>>();
+	// }
 
-	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => (List<TIn>)a);
+	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => a.Resolve()).Cast<TIn>();
 
 	public TOpertor Operator { get; set; }
 

@@ -2,59 +2,79 @@ using SimpleTableManager.Models.CommandExecuters;
 
 namespace SimpleTableManager.Models
 {
-	//UNDONE
-	public class FunctionParameter<T>
+	public interface IFunctionArgument
 	{
-		public T? ConstValue { get; set; }
+		//TODO handle null values
+		IEnumerable<object>? Resolve();
+	}
 
-		public Table? Table { get; set; }
 
-		public Position? Position { get; set; }
+	public interface IReferenceFunctionArgument : IFunctionArgument
+	{
+		CellReference CellReference { get; set; }
+	}
 
-		public bool? HorizontallyLocked { get; set; }
+	public interface IConstFunctionArgument : IFunctionArgument
+	{
+		object ConstValue { get; set; }
+	}
 
-		public bool? VerticallyLocked { get; set; }
+	public class ConstFunctionArgument<T> : IConstFunctionArgument
+	{
+		public T ConstValue { get; set; }
 
-		public bool IsReferenceType => Table is not null && Position is not null;
-
-		public bool IsConstType => ConstValue is not null;
-
-		public FunctionParameter(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
+		object IConstFunctionArgument.ConstValue
 		{
-			Table = table;
-			Position = position;
-			HorizontallyLocked = horizontallyLocked;
-			VerticallyLocked = verticallyLocked;
+			get => ConstValue!;
+			set => ConstValue = (T)value;
 		}
 
-		public FunctionParameter(T value)
+		public ConstFunctionArgument(T value)
 		{
 			ConstValue = value;
 		}
 
-		public static explicit operator List<T>(FunctionParameter<T> parameter)
+		public IEnumerable<T> Resolve()
 		{
-			return
-				parameter.Table?[parameter.Position!].ContentFunction?.Execute().Cast<T>().ToList() ??
-				parameter.ConstValue!.Wrap().ToList();
+			return ConstValue.Wrap().ToList();
 		}
 
-		public static explicit operator FunctionParameter<T>(T value)
+		IEnumerable<object> IFunctionArgument.Resolve()
 		{
-			return new FunctionParameter<T>(value);
+			return Resolve().Cast<object>();
+		}
+	}
+
+	//UNDONE
+	public class ReferenceFunctionArgument<T> : IReferenceFunctionArgument
+	{
+		public CellReference CellReference { get; set; }
+
+		public ReferenceFunctionArgument(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
+		{
+			CellReference = new CellReference(table, position, horizontallyLocked, verticallyLocked);
 		}
 
-
-		public static explicit operator FunctionParameter<object>(FunctionParameter<T> function)
+		public IEnumerable<T>? Resolve()
 		{
-			//TODO check if ref is not a problem
-			return new FunctionParameter<object>(function.ConstValue!)
-			{
-				Table = function.Table,
-				Position = function.Position,
-				HorizontallyLocked = function.HorizontallyLocked,
-				VerticallyLocked = function.VerticallyLocked
-			};
+			return CellReference.Table[CellReference.Position].ContentFunction?.Execute().Cast<T>().ToList();
 		}
+
+		IEnumerable<object>? IFunctionArgument.Resolve()
+		{
+			return Resolve()?.Cast<object>();
+		}
+
+		// public static explicit operator List<T>(FunctionParameter<T> parameter)
+		// {
+		// 	return
+		// 		parameter.CellReference?.Table[parameter.CellReference.Position].ContentFunction?.Execute().Cast<T>().ToList() ??
+		// 		parameter.ConstValue!.Wrap().ToList();
+		// }
+
+		// public static explicit operator FunctionParameter<T>(T value)
+		// {
+		// 	return new FunctionParameter<T>(value);
+		// }
 	}
 }

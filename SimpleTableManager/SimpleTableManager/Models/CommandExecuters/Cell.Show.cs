@@ -41,16 +41,13 @@ public partial class Cell
 			Type = ContentFunction.GetType().Name,
 			ContentFunction.Operator,
 			ContentFunction.NamedArguments,
-			ReferenceArguments = ContentFunction.Arguments.Where(a => a.IsReferenceType).Select(a =>
+			ReferenceArguments = ContentFunction.Arguments.Where(a => a is IReferenceFunctionArgument).Cast<IReferenceFunctionArgument>().Select(a =>
 			new
 			{
-				Table = a.Table?.Name,
-				Position = a.Position?.ToString(),
-				a.VerticallyLocked,
-				a.HorizontallyLocked,
-				ReferencedValues = (List<object>)a
+				Reference = a.CellReference.ToString(),
+				ReferencedValues = a.Resolve()
 			}),
-			ConstArguments = ContentFunction.Arguments.Where(a => a.IsConstType).Select(a => a.ConstValue),
+			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>().SelectMany(a => a.Resolve()!),
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()
 		};

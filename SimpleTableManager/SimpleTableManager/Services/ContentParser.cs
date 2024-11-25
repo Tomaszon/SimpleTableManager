@@ -81,16 +81,4 @@ public static class ContentParser
 			}).Single();
 		}
 	}
-
-	public static object ParseStringValue(string dataTypeName, string value)
-	{
-		if (string.IsNullOrWhiteSpace(dataTypeName))
-		{
-			return value;
-		}
-
-		var type = GetTypeByFriendlyName(dataTypeName);
-
-		return ParseStringValue(type, value);
-	}
 }

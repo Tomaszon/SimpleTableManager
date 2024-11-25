@@ -10,7 +10,7 @@ public partial class Cell
 	{
 		var args = Shared.SeparateNamedArguments<T>(arguments);
 
-		ContentFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2.Cast<object>());
+		ContentFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
 	}
 
 	[CommandFunction]

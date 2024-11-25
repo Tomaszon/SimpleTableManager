@@ -136,16 +136,17 @@ public class Program
 
 		//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
 
-		// var document = app.Document;
-		// var table = document.GetActiveTable();
+		var document = app.Document;
+		var table = document.GetActiveTable();
 
-		// var innerCell = table[1, 0];
-		// innerCell.TestFnParam = new FunctionParameter<int>(3);
-		// innerCell.ContentFunction = FunctionCollection.GetFunction<int>("Const", null, new object[] { 8 });
+		var innerCell = table[2, 0];
+		innerCell.ContentFunction = FunctionCollection.GetFunction<int>("Const", null, new ConstFunctionArgument<int>[] { new(2) });
 
-		// var outerCell = table[0, 0];
-		// outerCell.TestFnParam = new FunctionParameter<int>(table, new Position(1,0));
-		// outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new object[] { 2, 4 }.Union(((List<int>)outerCell.TestFnParam).Cast<object>()));
+		var middleCell = table[1, 0];
+		middleCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(3), new ReferenceFunctionArgument<int>(table, new Position(2, 0)) });
+
+		var outerCell = table[0, 0];
+		outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(4), new ReferenceFunctionArgument<int>(table, new Position(1, 0)) });
 
 		// FunctionCollection.GetFunction<bool>("Const", null, new object[] { true, false });
 

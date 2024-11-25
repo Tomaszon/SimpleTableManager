@@ -6,7 +6,7 @@ public interface IFunction
 {
 	Dictionary<ArgumentName, string> NamedArguments { get; set; }
 
-	IEnumerable<FunctionParameter<object>> Arguments { get; set; }
+	IEnumerable<IFunctionArgument> Arguments { get; set; }
 
 	Enum Operator { get; set; }
 

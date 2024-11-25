@@ -1,3 +1,4 @@
+using SimpleTableManager.Models;
 using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
@@ -12,13 +13,15 @@ public class TestBase
 	}
 
 	protected static IFunction CreateFunction<T>(Enum functionOperator, T[] args)
+	where T: IParsable<T>
 	{
 		return CreateFunction(functionOperator, null, args);
 	}
 
 	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
+	where T : IParsable<T>
 	{
-		return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(), namedArguments, args.Cast<object>());
+		return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(), namedArguments, args.Select(e => new ConstFunctionArgument<T>(e)));
 	}
 
 	protected static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)
