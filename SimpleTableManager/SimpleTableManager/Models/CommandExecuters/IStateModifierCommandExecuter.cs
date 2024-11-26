@@ -6,5 +6,5 @@ public interface IStateModifierCommandExecuter
 
 	void InvokeStateModifierCommandExecutedEvent();
 
-	event Action? StateModifierCommandExecuted;
+	event Action<IStateModifierCommandExecuter>? StateModifierCommandExecuted;
 }

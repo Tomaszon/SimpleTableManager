@@ -3,7 +3,8 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("TableName,x,y", ".+,$?\\d,$?\\d")]
+[ParseFormat("TableName,$x,$y ($ for axis lock)", ".+,\\$?\\d,\\$?\\d")]
+[ParseFormat("$x,$y ($ for axis lock)", "\\$?\\d,\\$?\\d")]
 public class CellReference : ParsableBase<CellReference>, IParsable<CellReference>
 {
 	public Table Table { get; set; }
@@ -14,7 +15,7 @@ public class CellReference : ParsableBase<CellReference>, IParsable<CellReferenc
 
 	public bool VerticallyLocked { get; set; }
 
-	public CellReference(Table table, Position position, bool horizontallyLocked, bool verticallyLocked)
+	public CellReference(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
 	{
 		Table = table;
 		Position = position;
@@ -26,19 +27,26 @@ public class CellReference : ParsableBase<CellReference>, IParsable<CellReferenc
 	{
 		return ParseWrapper(value, (args) =>
 		{
-			var n = args[0];
-			var x = int.Parse(args[1].Trim(Shared.REF_CHAR).Trim());
-			var y = int.Parse(args[2].Trim(Shared.REF_CHAR).Trim());
+			var ns = args.Length == 3 ? args[0] : null;
+			var xs = args.Length == 3 ? args[1] : args[0];
+			var ys = args.Length == 3 ? args[2] : args[1];
 
-			//EXPERIMENTAL do this better?
-			var t = InstanceMap.Instance.GetInstance<Document>()!.Tables.Single(t => t.Name == n);
+			var n = ns;
+			var x = int.Parse(xs.Trim(Shared.REF_CHAR).Trim());
+			var y = int.Parse(ys.Trim(Shared.REF_CHAR).Trim());
 
-			return new CellReference(t, new Position(x, y), args[1].Contains(Shared.REF_CHAR), args[2].Contains(Shared.REF_CHAR));
+			var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
+			var t = n is null ? 
+				doc.GetActiveTable() :
+				doc.Tables.Single(t => t.Name.Equals(n, StringComparison.InvariantCultureIgnoreCase));
+
+			return new CellReference(t, new Position(x, y), xs.Contains(Shared.REF_CHAR), ys.Contains(Shared.REF_CHAR));
 		});
 	}
 
 	public override string ToString()
 	{
-		return $"{Table.Name}:{(HorizontallyLocked ? Shared.REF_CHAR : "")}X{Position.X}{(VerticallyLocked ? Shared.REF_CHAR : "")}Y{Position.Y}";
+		return $"T:{Table.Name}, X:{(HorizontallyLocked ? Shared.REF_CHAR : "")}{Position.X}, Y:{(VerticallyLocked ? Shared.REF_CHAR : "")}{Position.Y}";
 	}
 }

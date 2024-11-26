@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Models;
+﻿using System.Security.Cryptography;
+using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services;
 
@@ -20,18 +21,6 @@ public static class Shared
 		{ "int", $"{nameof(System)}.int32" },
 		{ "bool", $"{nameof(System)}.boolean" }
 	};
-
-	public static (Dictionary<ArgumentName, string>, IEnumerable<IFunctionArgument>) SeparateNamedArguments<TType>(params string[] arguments)
-	where TType : IParsable<TType>
-	{
-		var namedArgs = arguments.Where(a => a.Contains(NAMED_ARG_SEPARATOR) == true);
-
-		var regularArgs = arguments.Where(a => !namedArgs.Contains(a)).Select(e => new ConstFunctionArgument<TType>(TType.Parse(e, null)));
-
-		var namedArgsDic = namedArgs.ToDictionary(k => Enum.Parse<ArgumentName>(k.Split(NAMED_ARG_SEPARATOR)[0], true), v => v.Split(NAMED_ARG_SEPARATOR)[1]);
-
-		return (namedArgsDic, regularArgs);
-	}
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)
 	{
@@ -93,30 +82,36 @@ public static class Shared
 
 	public static string SerializeObject(object? source)
 	{
-		using var m = new MemoryStream();
-		using var sw = new StreamWriter(m);
-		using var sr = new StreamReader(m);
+		using var ms = new MemoryStream();
+		using var sw = new StreamWriter(ms);
+		using var sr = new StreamReader(ms);
 
 		SerializeObject(sw, source);
 
 		sw.Flush();
 
-		m.Position = 0;
+		ms.Position = 0;
 
-		return sr.ReadToEnd();
+		var result = sr.ReadToEnd();
+
+		sr.Close();
+		sw.Close();
+		ms.Close();
+		
+		return result;
 	}
 
 	public static object? DeserializeObject(string state)
 	{
-		using var m = new MemoryStream();
-		using var sw = new StreamWriter(m);
-		using var sr = new StreamReader(m);
+		using var ms = new MemoryStream();
+		using var sw = new StreamWriter(ms);
+		using var sr = new StreamReader(ms);
 
 		sw.Write(state);
 
 		sw.Flush();
 
-		m.Position = 0;
+		ms.Position = 0;
 
 		var serializer = new JsonSerializer
 		{
@@ -124,9 +119,14 @@ public static class Shared
 			ContractResolver = new ClearPropertyContractResolver(),
 		};
 
-		return serializer.Deserialize(new JsonTextReader(sr));
-	}
+		var result = serializer.Deserialize(new JsonTextReader(sr));
 
+		sr.Close();
+		sw.Close();
+		ms.Close();
+
+		return result;
+	}
 
 	public static string GetWorkFilePath(string fileName, string extension)
 	{

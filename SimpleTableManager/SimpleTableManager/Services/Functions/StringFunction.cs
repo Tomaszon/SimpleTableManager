@@ -1,8 +1,8 @@
 
 namespace SimpleTableManager.Services.Functions;
 
-[NamedArgument(ArgumentName.Separator, " ")]
-[NamedArgument(ArgumentName.Trim, ' ')]
+[NamedArgument<string>(ArgumentName.Separator, " ")]
+[NamedArgument<char>(ArgumentName.Trim, ' ')]
 [FunctionMappingType(typeof(string))]
 public class StringFunction : FunctionBase<StringFunctionOperator, string, object>
 {

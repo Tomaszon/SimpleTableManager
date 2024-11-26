@@ -1,42 +1,51 @@
-using SimpleTableManager.Models.CommandExecuters;
-
 namespace SimpleTableManager.Models
 {
 	public interface IFunctionArgument
 	{
 		//TODO handle null values
 		IEnumerable<object>? Resolve();
-	}
 
+		bool TryResolve(out IEnumerable<object>? result)
+		{
+			try
+			{
+				result = Resolve();
 
-	public interface IReferenceFunctionArgument : IFunctionArgument
-	{
-		CellReference CellReference { get; set; }
+				return true;
+			}
+			catch
+			{
+				result = null;
+
+				return false;
+			}
+		}
 	}
 
 	public interface IConstFunctionArgument : IFunctionArgument
 	{
-		object ConstValue { get; set; }
+		object Value { get; set; }
 	}
 
 	public class ConstFunctionArgument<T> : IConstFunctionArgument
+	where T: IParsable<T>
 	{
-		public T ConstValue { get; set; }
+		public T Value { get; set; }
 
-		object IConstFunctionArgument.ConstValue
+		object IConstFunctionArgument.Value
 		{
-			get => ConstValue!;
-			set => ConstValue = (T)value;
+			get => Value!;
+			set => Value = (T)value;
 		}
 
 		public ConstFunctionArgument(T value)
 		{
-			ConstValue = value;
+			Value = value;
 		}
 
 		public IEnumerable<T> Resolve()
 		{
-			return ConstValue.Wrap().ToList();
+			return Value.Wrap().ToList();
 		}
 
 		IEnumerable<object> IFunctionArgument.Resolve()
@@ -45,36 +54,18 @@ namespace SimpleTableManager.Models
 		}
 	}
 
-	//UNDONE
-	public class ReferenceFunctionArgument<T> : IReferenceFunctionArgument
+	public class ReferenceFunctionArgument : IFunctionArgument
 	{
-		public CellReference CellReference { get; set; }
+		public CellReference Reference { get; set; }
 
-		public ReferenceFunctionArgument(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
+		public ReferenceFunctionArgument(CellReference reference)
 		{
-			CellReference = new CellReference(table, position, horizontallyLocked, verticallyLocked);
+			Reference = reference;
 		}
 
-		public IEnumerable<T>? Resolve()
+		public IEnumerable<object>? Resolve()
 		{
-			return CellReference.Table[CellReference.Position].ContentFunction?.Execute().Cast<T>().ToList();
+			return Reference.Table[Reference.Position].ContentFunction?.Execute();
 		}
-
-		IEnumerable<object>? IFunctionArgument.Resolve()
-		{
-			return Resolve()?.Cast<object>();
-		}
-
-		// public static explicit operator List<T>(FunctionParameter<T> parameter)
-		// {
-		// 	return
-		// 		parameter.CellReference?.Table[parameter.CellReference.Position].ContentFunction?.Execute().Cast<T>().ToList() ??
-		// 		parameter.ConstValue!.Wrap().ToList();
-		// }
-
-		// public static explicit operator FunctionParameter<T>(T value)
-		// {
-		// 	return new FunctionParameter<T>(value);
-		// }
 	}
 }

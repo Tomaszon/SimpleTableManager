@@ -14,7 +14,7 @@ public class Program
 		Console.OutputEncoding = System.Text.Encoding.Unicode;
 		Console.InputEncoding = System.Text.Encoding.Unicode;
 
-		Settings.FromJson(@".\Configs\settings.json");
+		Settings.FromJson(@"Configs/settings.json");
 
 		var app = new App(new Document(Settings.Current.DefaultTableSize));
 
@@ -143,10 +143,10 @@ public class Program
 		innerCell.ContentFunction = FunctionCollection.GetFunction<int>("Const", null, new ConstFunctionArgument<int>[] { new(2) });
 
 		var middleCell = table[1, 0];
-		middleCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(3), new ReferenceFunctionArgument<int>(table, new Position(2, 0)) });
+		middleCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(3), new ReferenceFunctionArgument(new(table, new Position(2, 0))) });
 
 		var outerCell = table[0, 0];
-		outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(4), new ReferenceFunctionArgument<int>(table, new Position(1, 0)) });
+		outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(4), new ReferenceFunctionArgument(new(table, new Position(1, 0))) });
 
 		// FunctionCollection.GetFunction<bool>("Const", null, new object[] { true, false });
 

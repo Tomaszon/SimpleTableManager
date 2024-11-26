@@ -8,7 +8,7 @@ public partial class Cell
 	private void SetFunction<T>(Enum functionOperator, params string[] arguments)
 		where T : IParsable<T>
 	{
-		var args = Shared.SeparateNamedArguments<T>(arguments);
+		var args = SeparateArguments<T>(arguments);
 
 		ContentFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
 	}
@@ -18,11 +18,12 @@ public partial class Cell
 	{
 		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
 
-		var args = Shared.SeparateNamedArguments<string>(contents);
+		var args = SeparateArguments<string>(contents);
 
-		args.Item1.TryGetValue(ArgumentName.Type, out var typeName);
+		//IDEA auto determine the function type
+		// args.Item1.TryGetValue(ArgumentName.Type, out var typeName);
 
-		ContentFunction = FunctionCollection.GetFunction(typeName ?? "string", "const", args.Item1, args.Item2);
+		ContentFunction = FunctionCollection.GetFunction("string", "const", args.Item1, args.Item2);
 	}
 
 	[CommandFunction]

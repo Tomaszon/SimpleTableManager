@@ -74,8 +74,15 @@ public partial class Table : CommandExecuterBase
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
-	public override void OnStateModifierCommandExecuted()
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender)
 	{
+		var position = this[(Cell)sender];
+
+		var referrerCells = Content.Where(c => c.ContentFunction?.Arguments.Any(a => 
+			a is ReferenceFunctionArgument rfa && rfa.Reference.Position.Equals(position)) == true);
+
+		referrerCells.ForEach(c => c.InvokeStateModifierCommandExecutedEvent());
+
 		InvokeStateModifierCommandExecutedEvent();
 	}
 

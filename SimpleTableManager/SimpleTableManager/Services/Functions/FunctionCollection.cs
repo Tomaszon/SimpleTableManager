@@ -18,25 +18,21 @@ public static class FunctionCollection
 				(a.MappingType, FunctionType: f))).ToDictionary(k => k.MappingType, v => v.FunctionType);
 	}
 
-	public static IFunction GetFunction<T>(string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction<T>(string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
 	{
 		return GetFunction(typeof(T), functionOperator, namedArguments, arguments);
 	}
 
-	public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
 	{
 		return GetFunction(ContentParser.GetTypeByFriendlyName(typeName), functionOperator, namedArguments, arguments);
 	}
 
-	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, string>? namedArguments, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
 	{
 		var functionType = Functions[argType];
 
 		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
-
-		var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
-
-		var targetArray = ParseArgumentList(arguments, argType);
 
 		var instance = (IFunction)Activator.CreateInstance(functionType)!;
 
@@ -51,11 +47,15 @@ public static class FunctionCollection
 
 		if (namedArguments is not null)
 		{
-			functionType.GetProperty(nameof(IFunction.NamedArguments))!.SetValue(instance, namedArguments);
+			var namedArgumentsProperty = functionType.GetProperty(nameof(IFunction.NamedArguments))!;
+			
+			namedArgumentsProperty.SetValue(instance, namedArguments);
 		}
 		if (arguments is not null)
 		{
-			argumentsProperty.SetValue(instance, targetArray);
+			var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
+
+			argumentsProperty.SetValue(instance, arguments);
 		}
 
 		return instance;
@@ -64,18 +64,5 @@ public static class FunctionCollection
 	private static Type GetRootClass(Type type)
 	{
 		return type.BaseType is not null && type.BaseType != typeof(object) ? GetRootClass(type.BaseType) : type;
-	}
-
-	public static System.Collections.IEnumerable ParseArgumentList(IEnumerable<IFunctionArgument> arguments, Type argType)
-	{
-		// var functionParameterType = typeof(ReferenceFunctionParameter<>).MakeGenericType(argType);
-
-		// var targetArray = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(functionParameterType))!;
-
-		// arguments.ForEach(e => targetArray.Add(e));
-
-		// return targetArray;
-
-		return arguments;
 	}
 }

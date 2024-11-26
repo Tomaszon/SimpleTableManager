@@ -40,14 +40,25 @@ public partial class Cell
 		{
 			Type = ContentFunction.GetType().Name,
 			ContentFunction.Operator,
-			ContentFunction.NamedArguments,
-			ReferenceArguments = ContentFunction.Arguments.Where(a => a is IReferenceFunctionArgument).Cast<IReferenceFunctionArgument>().Select(a =>
-			new
-			{
-				Reference = a.CellReference.ToString(),
-				ReferencedValues = a.Resolve()
-			}),
-			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>().SelectMany(a => a.Resolve()!),
+
+			ReferenceNamedArguments = ContentFunction.NamedArguments.Where(a => a.Value is ReferenceFunctionArgument).ToDictionary(k => k.Key, v =>
+				new
+				{
+					Refrence = ((ReferenceFunctionArgument)v.Value).Reference.ToString(),
+					ReferencedValues = ((IFunctionArgument)v.Value).TryResolve(out var result) && result?.Count() == 1 ? result.Single() : "Cell reference error"
+				}),
+
+			ConstNamedArguments = ContentFunction.NamedArguments.Where(a => a.Value is IConstFunctionArgument).ToDictionary(k => k.Key, v => ((IConstFunctionArgument)v.Value).Resolve().Single()),
+
+			ReferenceArguments = ContentFunction.Arguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>().Select(a =>
+				new
+				{
+					Reference = a.Reference.ToString(),
+					ReferencedValues = ((IFunctionArgument)a).TryResolve(out var result) ? result : "Cell reference error".Wrap()
+				}),
+
+			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>().SelectMany(a => a.Resolve()),
+
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()
 		};

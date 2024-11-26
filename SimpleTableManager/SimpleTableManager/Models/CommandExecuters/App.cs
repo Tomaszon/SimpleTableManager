@@ -18,37 +18,41 @@ public class App : CommandExecuterBase
 
 		document.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 
-		OnStateModifierCommandExecuted();
+		InvokeStateModifierCommandExecutedEvent();
 	}
 
 	[CommandFunction]
 	public void Reconfig()
 	{
-		Settings.FromJson(@".\Configs\settings.json");
+		Settings.FromJson(@"Configs/settings.json");
 		CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture(Settings.Current.Culture);
-		
-		Localizer.FromJson(@".\Configs\Localizations");
-		BorderCharacters.FromJson(@".\Configs\borderCharacters.json");
-		CommandTree.FromJsonFolder(@".\Configs\Commands");
-		CellBorders.FromJson(@".\Configs\cellBorders.json");
-		CommandShortcuts.FromJson(@".\Configs\commandShortcuts.json");
+
+		Localizer.FromJson(@"Configs/Localizations");
+		BorderCharacters.FromJson(@"Configs/borderCharacters.json");
+		CommandTree.FromJsonFolder(@"Configs/Commands");
+		CellBorders.FromJson(@"Configs/cellBorders.json");
+		CommandShortcuts.FromJson(@"Configs/commandShortcuts.json");
 	}
 
-	public override void OnStateModifierCommandExecuted()
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter _)
 	{
-		using var m = new MemoryStream();
-		using var sw = new StreamWriter(m);
-		using var sr = new StreamReader(m);
+		using var ms = new MemoryStream();
+		using var sw = new StreamWriter(ms);
+		using var sr = new StreamReader(ms);
 
 		Document.Serialize(sw);
 
 		sw.Flush();
 
-		m.Position = 0;
+		ms.Position = 0;
 
 		var content = sr.ReadToEnd();
 
 		EditHistory.Add(content);
+
+		sr.Close();
+		sw.Close();
+		ms.Close();
 	}
 
 	[CommandFunction, CommandShortcut("redoChange")]
@@ -56,17 +60,21 @@ public class App : CommandExecuterBase
 	{
 		if (EditHistory.TryGetNextHistoryItem(out var state))
 		{
-			using var m = new MemoryStream();
-			using var sw = new StreamWriter(m);
-			using var sr = new StreamReader(m);
+			using var ms = new MemoryStream();
+			using var sw = new StreamWriter(ms);
+			using var sr = new StreamReader(ms);
 
 			sw.Write(state);
 
 			sw.Flush();
 
-			m.Position = 0;
+			ms.Position = 0;
 
 			Document.Deserialize(sr);
+
+			sr.Close();
+			sw.Close();
+			ms.Close();
 		}
 	}
 
@@ -75,17 +83,21 @@ public class App : CommandExecuterBase
 	{
 		if (EditHistory.TryGetPreviousHistoryItem(out var state))
 		{
-			using var m = new MemoryStream();
-			using var sw = new StreamWriter(m);
-			using var sr = new StreamReader(m);
+			using var ms = new MemoryStream();
+			using var sw = new StreamWriter(ms);
+			using var sr = new StreamReader(ms);
 
 			sw.Write(state);
 
 			sw.Flush();
 
-			m.Position = 0;
+			ms.Position = 0;
 
 			Document.Deserialize(sr);
+
+			sr.Close();
+			sw.Close();
+			ms.Close();
 		}
 	}
 

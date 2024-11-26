@@ -114,13 +114,27 @@ public partial class Cell : CommandExecuterBase
 		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
+	public static (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArguments<TType>(params string[] arguments)
+	where TType : IParsable<TType>
+	{
+		var namedArgs = arguments.Where(a => a.Contains(Shared.NAMED_ARG_SEPARATOR) == true);
+
+		var regularArgs = ContentParser.ParseFunctionArguments<TType>(arguments.Where(a => !namedArgs.Contains(a)));
+
+		var namedArgsDic = namedArgs.ToDictionary(
+			k => Enum.Parse<ArgumentName>(k.Split(Shared.NAMED_ARG_SEPARATOR)[0], true), 
+			v => ContentParser.ParseFunctionArgument<string>(v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
+			
+		return (namedArgsDic, regularArgs);
+	}
+
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
 		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
-	public override void OnStateModifierCommandExecuted()
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender)
 	{
 		_cachedFormattedContent = Enumerable.Empty<string>();
 	}

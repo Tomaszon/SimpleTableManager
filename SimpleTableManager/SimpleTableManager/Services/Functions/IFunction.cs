@@ -4,7 +4,7 @@ namespace SimpleTableManager.Services.Functions;
 
 public interface IFunction
 {
-	Dictionary<ArgumentName, string> NamedArguments { get; set; }
+	Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; }
 
 	IEnumerable<IFunctionArgument> Arguments { get; set; }
 

@@ -19,7 +19,7 @@ public partial class Document : CommandExecuterBase
 		Clear(tableSize);
 	}
 
-	public override void OnStateModifierCommandExecuted()
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter _)
 	{
 		if (Settings.Current.Autosave && Metadata.Path is not null)
 		{

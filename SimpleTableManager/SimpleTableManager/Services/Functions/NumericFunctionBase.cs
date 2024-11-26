@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace SimpleTableManager.Services.Functions;
 
-[NamedArgument(ArgumentName.Power, 1), NamedArgument(ArgumentName.Base, 2)]
+[NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<int>(ArgumentName.Base, 2)]
 public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
 	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, IConvertible, TOut
 {

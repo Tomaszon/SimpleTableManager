@@ -1,3 +1,5 @@
+using SimpleTableManager.Models;
+
 namespace SimpleTableManager.Services;
 
 public static class ContentParser
@@ -9,10 +11,11 @@ public static class ContentParser
 			return Type.GetType(mapped, true, true)!;
 		}
 
-		return Type.GetType($"{nameof(System)}.{name}".ToLower(), false, true) ?? 
+		return Type.GetType($"{nameof(System)}.{name}".ToLower(), false, true) ??
 			Type.GetType($"{nameof(SimpleTableManager)}.{nameof(Models)}.{name}", true, true)!;
 	}
 
+	//REWORK use IParsable interface
 	public static object ParseStringValue(Type dataType, string value)
 	{
 		if (dataType == typeof(string) || dataType == typeof(object))
@@ -49,6 +52,7 @@ public static class ContentParser
 		}
 	}
 
+	//REWORK use IParsable interface
 	public static MethodInfo GetParseMethod(Type dataType, out Type targetDataType)
 	{
 		if (dataType.Name == "Nullable`1")
@@ -80,5 +84,22 @@ public static class ContentParser
 				}
 			}).Single();
 		}
+	}
+
+	public static List<IFunctionArgument> ParseFunctionArguments<TType>(IEnumerable<string> values)
+	where TType : IParsable<TType>
+	{
+		return values.Select(ParseFunctionArgument<TType>).ToList();
+	}
+
+	public static IFunctionArgument ParseFunctionArgument<TType>(string value)
+	where TType : IParsable<TType>
+	{
+		if (CellReference.TryParse(value, null, out var cellReference))
+		{
+			return new ReferenceFunctionArgument(cellReference);
+		}
+
+		return new ConstFunctionArgument<TType>(TType.Parse(value, null));
 	}
 }

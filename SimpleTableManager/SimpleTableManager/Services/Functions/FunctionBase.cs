@@ -12,7 +12,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
 	// Enumerable.Empty<TIn>();
 
-	public Dictionary<ArgumentName, string> NamedArguments { get; set; } = new();
+	public Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; } = new();
 
 	public IEnumerable<IFunctionArgument> Arguments { get; set; } = Enumerable.Empty<IFunctionArgument>();
 
@@ -68,17 +68,19 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		return typeof(TIn);
 	}
 
-	public TParse? GetNamedArgument<TParse>(ArgumentName key)
-		where TParse : IParsable<TParse>
+	public T? GetNamedArgument<T>(ArgumentName key)
+		where T : IParsable<T>
 	{
-		if (NamedArguments.TryGetValue(key, out var s))
+		if (NamedArguments.TryGetValue(key, out var argument))
 		{
-			return TParse.Parse(s, null);
+			var result = argument.Resolve().Single();
+
+			return result is string s ? T.Parse(s, null) : (T)result;
 		}
 
-		if (GetType().GetCustomAttributes<NamedArgumentAttribute>().SingleOrDefault(p => p.Key == key) is var a && a is { })
+		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })
 		{
-			return a.Value.ToType<TParse>();
+			return attribute.Value;
 		}
 
 		return default;
