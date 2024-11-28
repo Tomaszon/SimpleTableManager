@@ -4,7 +4,7 @@ public interface IStateModifierCommandExecuter
 {
 	IStateModifierCommandExecuter GetEndReferencedObject();
 
-	void InvokeStateModifierCommandExecutedEvent();
+	void InvokeStateModifierCommandExecutedEvent(IStateModifierCommandExecuter root);
 
-	event Action<IStateModifierCommandExecuter>? StateModifierCommandExecuted;
+	event Action<IStateModifierCommandExecuter, IStateModifierCommandExecuter>? StateModifierCommandExecuted;
 }

@@ -6,7 +6,7 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(char))]
 public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, object>
 {
-	public override IEnumerable<object> Execute()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		var separator = GetNamedArgument<string>(ArgumentName.Separator);
 		var count = GetNamedArgument<int>(ArgumentName.Count);

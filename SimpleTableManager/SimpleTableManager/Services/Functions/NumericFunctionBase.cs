@@ -6,7 +6,7 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
 	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, IConvertible, TOut
 {
-	public override IEnumerable<TOut> Execute()
+	public override IEnumerable<TOut> ExecuteCore()
 	{
 		return Operator switch
 		{

@@ -18,7 +18,7 @@ public class App : CommandExecuterBase
 
 		document.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 
-		InvokeStateModifierCommandExecutedEvent();
+		InvokeStateModifierCommandExecutedEvent(this);
 	}
 
 	[CommandFunction]
@@ -34,7 +34,7 @@ public class App : CommandExecuterBase
 		CommandShortcuts.FromJson(@"Configs/commandShortcuts.json");
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter _)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
 	{
 		using var ms = new MemoryStream();
 		using var sw = new StreamWriter(ms);

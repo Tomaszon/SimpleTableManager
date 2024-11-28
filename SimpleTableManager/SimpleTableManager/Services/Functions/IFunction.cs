@@ -18,6 +18,10 @@ public interface IFunction
 
 	TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
 
+	void SetError(string error);
+
+	void ClearError();
+
 	string GetError();
 
 	Type GetInType();

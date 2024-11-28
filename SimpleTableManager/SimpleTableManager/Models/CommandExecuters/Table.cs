@@ -74,16 +74,26 @@ public partial class Table : CommandExecuterBase
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
 	{
 		var position = this[(Cell)sender];
 
-		var referrerCells = Content.Where(c => c.ContentFunction?.Arguments.Any(a => 
+		var referrerCells = Content.Where(c => c.ContentFunction?.Arguments.Any(a =>
 			a is ReferenceFunctionArgument rfa && rfa.Reference.Position.Equals(position)) == true);
 
-		referrerCells.ForEach(c => c.InvokeStateModifierCommandExecutedEvent());
+		referrerCells.ForEach(c =>
+		{
+			if (c == root)
+			{
+				c.ContentFunction?.SetError("Cyclical reference");
+			}
+			else
+			{
+				c.InvokeStateModifierCommandExecutedEvent(root);
+			}
+		});
 
-		InvokeStateModifierCommandExecutedEvent();
+		InvokeStateModifierCommandExecutedEvent(root);
 	}
 
 	public void OnViewChanged()
@@ -118,13 +128,13 @@ public partial class Table : CommandExecuterBase
 
 	public int GetRowHeight(int index)
 	{
-		return Shared.Max(Rows[index].Where(c => 
+		return Shared.Max(Rows[index].Where(c =>
 			c.Visibility.IsVisible).Max(c => c.GetSize().Height), Sider[index].GetSize().Height);
 	}
 
 	public int GetColumnWidth(int index)
 	{
-		return Shared.Max(Columns[index].Where(c => 
+		return Shared.Max(Columns[index].Where(c =>
 			c.Visibility.IsVisible).Max(c => c.GetSize().Width), Header[index].GetSize().Width);
 	}
 
@@ -277,7 +287,7 @@ public partial class Table : CommandExecuterBase
 	{
 		return Content.Min(c => c.LayerIndex);
 	}
-	
+
 	private void HideColumnAtCore(int x)
 	{
 		Header[x].Visibility.IsColumnHidden = true;

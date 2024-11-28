@@ -73,7 +73,7 @@ public class Command
 
 				if (attribute!.StateModifier)
 				{
-					endReferencedObject.InvokeStateModifierCommandExecutedEvent();
+					endReferencedObject.InvokeStateModifierCommandExecutedEvent(endReferencedObject);
 				}
 			});
 		}

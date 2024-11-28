@@ -19,7 +19,7 @@ public partial class Document : CommandExecuterBase
 		Clear(tableSize);
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter _)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
 	{
 		if (Settings.Current.Autosave && Metadata.Path is not null)
 		{
@@ -30,7 +30,7 @@ public partial class Document : CommandExecuterBase
 			IsSaved = false;
 		}
 
-		InvokeStateModifierCommandExecutedEvent();
+		InvokeStateModifierCommandExecutedEvent(root);
 	}
 
 	[OnDeserialized]

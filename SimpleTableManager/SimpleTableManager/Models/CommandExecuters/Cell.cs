@@ -92,9 +92,13 @@ public partial class Cell : CommandExecuterBase
 			{
 				return _cachedFormattedContent = ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
 			}
+			catch (OperationCanceledException ex)
+			{
+				return _cachedFormattedContent = ex.Message.Wrap();
+			}
 			catch
 			{
-				return _cachedFormattedContent = new[] { "Content function error" };
+				return _cachedFormattedContent = ContentFunction!.GetError().Wrap();
 			}
 		}
 	}
@@ -122,9 +126,9 @@ public partial class Cell : CommandExecuterBase
 		var regularArgs = ContentParser.ParseFunctionArguments<TType>(arguments.Where(a => !namedArgs.Contains(a)));
 
 		var namedArgsDic = namedArgs.ToDictionary(
-			k => Enum.Parse<ArgumentName>(k.Split(Shared.NAMED_ARG_SEPARATOR)[0], true), 
+			k => Enum.Parse<ArgumentName>(k.Split(Shared.NAMED_ARG_SEPARATOR)[0], true),
 			v => ContentParser.ParseFunctionArgument<string>(v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
-			
+
 		return (namedArgsDic, regularArgs);
 	}
 
@@ -134,8 +138,10 @@ public partial class Cell : CommandExecuterBase
 		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
 	{
 		_cachedFormattedContent = Enumerable.Empty<string>();
+
+		ContentFunction?.ClearError();
 	}
 }

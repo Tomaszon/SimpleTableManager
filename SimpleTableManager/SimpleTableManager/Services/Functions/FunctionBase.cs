@@ -5,13 +5,6 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	where TOpertor : struct, Enum
 {
-	// public IEnumerable<Cell> ReferencedCells { get; set; } = Enumerable.Empty<Cell>();
-
-	//TODO make it work, but how? reference cell or fixed position? how to decide?
-	// public IEnumerable<TIn> ReferenceArguments =>
-	//ReferencedCells.SelectMany(c => c.ContentFunction.Execute().Cast<TIn>());
-	// Enumerable.Empty<TIn>();
-
 	public Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; } = new();
 
 	public IEnumerable<IFunctionArgument> Arguments { get; set; } = Enumerable.Empty<IFunctionArgument>();
@@ -28,11 +21,40 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	Enum IFunction.Operator { get => Operator; set => Operator = (TOpertor)value; }
 
-	public abstract IEnumerable<TOut> Execute();
+	protected string? Error { get; set; }
+
+	public abstract IEnumerable<TOut> ExecuteCore();
 
 	IEnumerable<object> IFunction.Execute()
 	{
-		return Execute().Cast<object>();
+		return ExecuteWrapper().Cast<object>().ToList();
+	}
+
+	protected IEnumerable<TOut> ExecuteWrapper()
+	{
+		if (Error is null)
+		{
+			try
+			{
+				return ExecuteCore();
+			}
+			catch (InvalidCastException)
+			{
+				SetError("Invalid cast");
+
+				throw;
+			}
+			catch (NullReferenceException)
+			{
+				SetError("Null reference");
+
+				throw;
+			}
+		}
+		else
+		{
+			throw new OperationCanceledException(Error);
+		}
 	}
 
 	public IEnumerable<string> ExecuteAndFormat()
@@ -41,7 +63,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 		var formatter = new ContentFormatter(format);
 
-		return Execute().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n", StringSplitOptions.RemoveEmptyEntries)).ToList();
+		return ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n", StringSplitOptions.RemoveEmptyEntries));
 	}
 
 	public virtual Type GetOutType()
@@ -49,18 +71,19 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		return typeof(TOut);
 	}
 
+	public void SetError(string error)
+	{
+		Error = error;
+	}
+
+	public void ClearError()
+	{
+		Error = null;
+	}
+
 	public string GetError()
 	{
-		try
-		{
-			ExecuteAndFormat();
-
-			return "None";
-		}
-		catch (Exception ex)
-		{
-			return ex.Message;
-		}
+		return Error ?? "None";
 	}
 
 	public Type GetInType()

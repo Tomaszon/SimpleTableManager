@@ -4,7 +4,7 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(int))]
 public class IntegerNumericFunction : NumericFunctionBase<int, int>
 {
-	public override IEnumerable<int> Execute()
+	public override IEnumerable<int> ExecuteCore()
 	{
 		var divider = GetNamedArgument<int>(ArgumentName.Divider);
 
@@ -16,7 +16,7 @@ public class IntegerNumericFunction : NumericFunctionBase<int, int>
 
 			NumericFunctionOperator.Or => Or(UnwrappedArguments).Wrap(),
 
-			_ => base.Execute()
+			_ => base.ExecuteCore()
 		};
 	}
 

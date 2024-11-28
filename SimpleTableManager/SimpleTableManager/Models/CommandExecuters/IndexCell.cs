@@ -33,7 +33,7 @@ public class IndexCell : Cell
 			OnViewChangedCore(firstSiderIndex, lastSiderIndex, Table.Size.Height - 1, Table.RowFilters.ContainsKey(Index));
 		}
 
-		InvokeStateModifierCommandExecutedEvent();
+		InvokeStateModifierCommandExecutedEvent(this);
 	}
 
 	private void OnViewChangedCore(int? first, int? last, int maxIndex, bool filtered)
