@@ -9,12 +9,6 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public IEnumerable<IFunctionArgument> Arguments { get; set; } = Enumerable.Empty<IFunctionArgument>();
 
-	// IEnumerable<IFunctionParameter> IFunction.Arguments
-	// {
-	// 	get => Arguments;
-	// 	set => Arguments = value.Cast<ReferenceFunctionParameter<TIn>>();
-	// }
-
 	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => a.Resolve()).Cast<TIn>();
 
 	public TOpertor Operator { get; set; }
@@ -27,16 +21,16 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	IEnumerable<object> IFunction.Execute()
 	{
-		return ExecuteWrapper().Cast<object>().ToList();
+		return ExecuteWrapper().Cast<object>();
 	}
 
-	protected IEnumerable<TOut> ExecuteWrapper()
+	protected List<TOut> ExecuteWrapper()
 	{
 		if (Error is null)
 		{
 			try
 			{
-				return ExecuteCore();
+				return ExecuteCore().ToList();
 			}
 			catch (InvalidCastException)
 			{
@@ -47,6 +41,12 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 			catch (NullReferenceException)
 			{
 				SetError("Null reference");
+
+				throw;
+			}
+			catch (InvalidOperationException)
+			{
+				SetError("Invalid position");
 
 				throw;
 			}

@@ -40,7 +40,23 @@ public partial class Table : CommandExecuterBase
 
 	public Cell this[Position position] => this[position.X, position.Y];
 
-	public Cell this[int x, int y] => Content[y * Size.Width + x];
+	public Cell this[int x, int y]
+	{
+		get
+		{
+			var index = y * Size.Width + x;
+
+			if (index < Content.Count)
+			{
+				return Content[index];
+			}
+			else
+			{
+				throw new InvalidOperationException("Position is out of table");
+			}
+		}
+	}
+
 
 	public Position this[Cell cell]
 	{
