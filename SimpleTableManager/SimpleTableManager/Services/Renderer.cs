@@ -555,7 +555,7 @@ public static class Renderer
 		});
 	}
 
-	public static void LoadingScreen()
+	public static void RenderLoadingScreen()
 	{
 		if (Settings.Current.ShowLoadingScreen &&
 			Console.WindowHeight > Settings.Current.LoadingScreenLogo.Length + 5 &&

@@ -2,6 +2,7 @@ using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 
+[NamedArgument<string>(ArgumentName.Format, "")]
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	where TOpertor : struct, Enum
 {
@@ -91,7 +92,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		return typeof(TIn);
 	}
 
-	public T? GetNamedArgument<T>(ArgumentName key)
+	public T GetNamedArgument<T>(ArgumentName key)
 		where T : IParsable<T>
 	{
 		if (NamedArguments.TryGetValue(key, out var argument))
@@ -106,7 +107,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 			return attribute.Value;
 		}
 
-		return default;
+		throw new ArgumentNullException($"Missing named argument '{key}'");
 	}
 
 	public Exception GetInvalidOperatorException()

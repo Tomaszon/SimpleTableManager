@@ -46,12 +46,12 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 		}
 		else if (arg is bool b)
 		{
-			return _format switch
+			return _format.ToLower() switch
 			{
-				"YN" => b ? "Y" : "N",
-				"YesNo" => b ? "Yes" : "No",
+				"yn" => b ? "Y" : "N",
+				"yesno" => b ? "Yes" : "No",
 
-				_ => throw new FormatException()
+				_ => b.ToString()
 			};
 		}
 		else if (arg is IShape2Sized shape2Sized)
