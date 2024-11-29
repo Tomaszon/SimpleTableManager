@@ -81,6 +81,26 @@
 	},
 	"Autosave": false,
 	"Author": "Tomaszon",
-	"Audio": false,
-	"Culture": "en"
+	"Audio": true,
+	"Culture": "en",
+	"StartupNotes": [
+		"High"
+	],
+	"ShutdownNotes": [
+		"High"
+	],
+	"OkNotes": [
+		"Medium"
+	],
+	"QuestionNotes": [
+		"High"
+	],
+	"ErrorNotes": [
+		"Low"
+	],
+	"CriticalNotes": [
+		"Medium",
+		"Low"
+	],
+	"Volume": 50
 }

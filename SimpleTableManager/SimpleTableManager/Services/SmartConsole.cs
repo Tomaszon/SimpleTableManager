@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
+using NetCoreAudio.Interfaces;
+using NetCoreAudio.Utils;
 
 using SimpleTableManager.Models;
 using SimpleTableManager.Models.CommandExecuters;
@@ -356,12 +358,10 @@ public partial class SmartConsole
 				InsertCharToBuffer(' ');
 			}
 			InsertStringToBuffer(nextKey);
-
-			PlayNote(Note.Question);
 		}
 		else
 		{
-			PlayNote(Note.Error);
+			Play(Settings.Current.ErrorNotes);
 		}
 
 		return true;
@@ -743,53 +743,13 @@ public partial class SmartConsole
 		return true;
 	}
 
-	public static void PlayStartup()
-	{
-		Play(GetFrequency(Note.Error), 250, 1);
-		Play(GetFrequency(Note.Ok), 250, 1);
-		Play(GetFrequency(Note.Question), 250, 2);
-	}
-
-	public static void PlayShutdown()
-	{
-		Play(GetFrequency(Note.Question), 250, 2);
-		Play(GetFrequency(Note.Error), 250, 1);
-		Play(GetFrequency(Note.Ok), 250, 1);
-	}
-
-	public static void PlayNote(Note note)
-	{
-		var frequency = GetFrequency(note);
-
-		var count = note switch
-		{
-			Note.Critical => 2,
-
-			_ => 1
-		};
-
-		Play(frequency, 250, count);
-	}
-
-	private static void Play(int frequency, int length, int count)
+	public static async void Play(Note[] notes)
 	{
 		if (Settings.Current.Audio)
 		{
-			//REWORK solve cross platform issue, make it work on linux
-			//RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-			//Shared.IndexArray(count).ForEach(i => Console.Beep(frequency, length));
-			//use NetCoreAudio with custom audio files?
+			SmartPlayer player = new(notes);
+
+			await player.Play();
 		}
-	}
-
-	private static int GetFrequency(Note note)
-	{
-		return note switch
-		{
-			Note.Ok => 800,
-			Note.Question => 1300,
-
-			_ => 300
-		};
 	}
 }

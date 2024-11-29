@@ -9,5 +9,6 @@ public enum StringFunctionOperator
 	Len,
 	Split,
 	Trim,
-	Blow
+	Blow,
+	Like
 }

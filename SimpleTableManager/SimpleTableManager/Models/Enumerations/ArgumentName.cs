@@ -11,5 +11,6 @@ public enum ArgumentName
 	Count,
 	Power,
 	Base,
-	Format
+	Format,
+	Pattern
 }

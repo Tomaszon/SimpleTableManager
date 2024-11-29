@@ -27,7 +27,7 @@ public class Program
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable());
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable().GetSelectedCells());
 
-		SmartConsole.PlayStartup();
+		SmartConsole.Play(Settings.Current.StartupNotes);
 
 		#region test
 
@@ -153,7 +153,7 @@ public class Program
 
 		#endregion test
 
-		Renderer.LoadingScreen();
+		Renderer.RenderLoadingScreen();
 
 		do
 		{
@@ -170,8 +170,6 @@ public class Program
 
 				SmartConsole.Render(app.Document);
 
-				SmartConsole.PlayNote(Note.Ok);
-
 				var rawCommand = SmartConsole.ReadInput(out var command);
 
 				command ??= Command.FromString(rawCommand);
@@ -180,31 +178,32 @@ public class Program
 
 				SmartConsole.ShowResults(results);
 
-				SmartConsole.PlayNote(Note.Ok);
+				SmartConsole.Play(Settings.Current.OkNotes);
 			}
 			catch (ArgumentCountException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, ex.CommandReference, ex.Message);
 
-				SmartConsole.PlayNote(Note.Error);
+				SmartConsole.Play(Settings.Current.ErrorNotes);
 			}
 			catch (IncompleteCommandException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys, null, ex.Message);
 
-				SmartConsole.PlayNote(Note.Error);
+				SmartConsole.Play(Settings.Current.ErrorNotes);
 			}
 			catch (PartialKeyException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, null, null, ex.Message);
 
-				SmartConsole.PlayNote(Note.Question);
+				SmartConsole.Play(Settings.Current.QuestionNotes);
+
 			}
 			catch (HelpRequestedException ex)
 			{
 				SmartConsole.ShowHelp(ex.RawCommand, ex.AvailableKeys?.Select(k => k.key).ToList(), ex.CommandReference, ex.Message);
 
-				SmartConsole.PlayNote(Note.Question);
+				SmartConsole.Play(Settings.Current.QuestionNotes);
 			}
 			catch (LocalizationException ex)
 			{
@@ -218,7 +217,7 @@ public class Program
 
 				Console.Write("Press any key to continue");
 
-				SmartConsole.PlayNote(Note.Critical);
+				SmartConsole.Play(Settings.Current.CriticalNotes);
 
 				Console.ReadKey();
 			}
@@ -233,7 +232,7 @@ public class Program
 				Console.WriteLine(ex.Message);
 				Console.Write("Press any key to continue");
 
-				SmartConsole.PlayNote(Note.Error);
+				SmartConsole.Play(Settings.Current.ErrorNotes);
 
 				Console.ReadKey();
 			}
@@ -257,7 +256,7 @@ public class Program
 
 				Console.Write("Press any key to continue");
 
-				SmartConsole.PlayNote(Note.Critical);
+				SmartConsole.Play(Settings.Current.CriticalNotes);
 
 				Console.ReadKey();
 			}

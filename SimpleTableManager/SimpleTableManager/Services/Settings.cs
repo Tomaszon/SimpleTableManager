@@ -69,6 +69,20 @@ public class Settings
 
 	public bool Audio { get; set; }
 
+	public Note[] StartupNotes { get; set; } = Array.Empty<Note>();
+
+	public Note[] ShutdownNotes { get; set; } = Array.Empty<Note>();
+
+	public Note[] OkNotes { get; set; } = Array.Empty<Note>();
+
+	public Note[] QuestionNotes { get; set; } = Array.Empty<Note>();
+
+	public Note[] ErrorNotes { get; set; } = Array.Empty<Note>();
+
+	public Note[] CriticalNotes { get; set; } = Array.Empty<Note>();
+
+	public byte Volume { get; set; } = 25;
+
 	public string Culture { get; set; } = CultureInfo.CurrentUICulture.Name;
 
 	public static Settings Current { get; private set; } = new();

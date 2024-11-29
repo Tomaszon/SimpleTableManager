@@ -116,7 +116,7 @@ public class App : CommandExecuterBase
 		{
 			Console.WriteLine("Good bye!");
 
-			SmartConsole.PlayShutdown();
+			SmartConsole.Play(Settings.Current.ShutdownNotes);
 
 			Console.ReadKey();
 

@@ -134,7 +134,7 @@ public partial class Document
 
 			app.EditHistory.Clear();
 
-			Renderer.LoadingScreen();
+			Renderer.RenderLoadingScreen();
 		}
 		catch (FileNotFoundException)
 		{
@@ -201,6 +201,6 @@ public partial class Document
 
 		InstanceMap.Instance.GetInstance<App>()!.EditHistory.Clear();
 
-		Renderer.LoadingScreen();
+		Renderer.RenderLoadingScreen();
 	}
 }
