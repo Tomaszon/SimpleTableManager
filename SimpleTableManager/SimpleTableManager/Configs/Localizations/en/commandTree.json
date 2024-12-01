@@ -12,7 +12,7 @@
 	"{11}": "content-function",
 	"{12}": "string",
 	"{13}": "int",
-	"{14}": "decimal",
+	"{14}": "fraction",
 	"{15}": "bool",
 	"{16}": "char",
 	"{17}": "datetime",
@@ -93,5 +93,6 @@
 	"{92}": "column-filters",
 	"{93}": "swap",
 	"{94}": "deselect",
-	"{95}": "content-style"
+	"{95}": "content-style",
+	"{96}": "primitive-content"
 }

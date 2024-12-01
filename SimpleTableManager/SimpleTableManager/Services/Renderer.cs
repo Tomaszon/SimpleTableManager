@@ -13,6 +13,8 @@ public static class Renderer
 
 	private const int MINIMUM_LINES_FOR_INFOTABLE = 45;
 
+	private const int MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
+
 	private static int TableVerticalOffset;
 
 	private static int InfotableVerticalOffset;
@@ -79,6 +81,11 @@ public static class Renderer
 		{
 			Console.WriteLine();
 		}
+	}
+
+	public static void RenderCellInfos()
+	{
+
 	}
 
 	private static Size ShrinkTableViewToConsoleSize(Table table)
@@ -624,13 +631,13 @@ public static class Renderer
 		if (Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE)
 		{
 			var infoTable = new Table("", 2, 3);
-			infoTable[0, 0].SetContent("Title:");
-			infoTable[1, 0].SetContent($"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
-			infoTable[0, 1].SetContent("Created:", "Size:");
-			infoTable[1, 1].SetContent(document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
+			infoTable[0, 0].SetPrimitiveContent("Title:");
+			infoTable[1, 0].SetPrimitiveContent($"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
+			infoTable[0, 1].SetPrimitiveContent("Created:", "Size:");
+			infoTable[1, 1].SetPrimitiveContent(document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
 
-			infoTable[0, 2].SetContent("Path:");
-			infoTable[1, 2].SetContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
+			infoTable[0, 2].SetPrimitiveContent("Path:");
+			infoTable[1, 2].SetPrimitiveContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
 
 			infoTable.Content.ForEach(cell =>
 			{

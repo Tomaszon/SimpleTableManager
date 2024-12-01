@@ -79,10 +79,4 @@ public partial class Table
 
 		ViewOptions.InvokeViewChangedEvent();
 	}
-
-	[CommandFunction]
-	public void SetCellContent(Position position, params string[] contents)
-	{
-		this[position].SetContent(contents);
-	}
 }

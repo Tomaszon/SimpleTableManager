@@ -19,7 +19,8 @@ public static class Shared
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
 		{ "int", $"{nameof(System)}.int32" },
-		{ "bool", $"{nameof(System)}.boolean" }
+		{ "bool", $"{nameof(System)}.boolean" },
+		{ "fraction", $"{nameof(System)}.decimal" }
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)

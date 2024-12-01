@@ -8,22 +8,27 @@ public partial class Cell
 	private void SetFunction<T>(Enum functionOperator, params string[] arguments)
 		where T : IParsable<T>
 	{
-		var args = SeparateArguments<T>(arguments);
+		var args = SeparateArgumentsAs<T>(arguments);
 
 		ContentFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
 	}
 
-	[CommandFunction]
-	public void SetContent(params string[] contents)
+	[CommandFunction()]
+	public void SetPrimitiveContent(params string[] contents)
 	{
 		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
 
-		var args = SeparateArguments<string>(contents);
+		var args = 
+			TrySeparateArgumentsAs<int>(contents, out var r, out var t) ? r.Value :
+			TrySeparateArgumentsAs<decimal>(contents, out r, out t) ? r.Value :
+			TrySeparateArgumentsAs<char>(contents, out r, out t) ? r.Value :
+			TrySeparateArgumentsAs<bool>(contents, out r, out t) ? r.Value :
+			TrySeparateArgumentsAs<TimeOnly>(contents, out r, out t) ? r.Value:
+			TrySeparateArgumentsAs<DateOnly>(contents, out r, out t) ? r.Value:
+			TrySeparateArgumentsAs<DateTime>(contents, out r, out t) ? r.Value:
+			SeparateArgumentsAs<string>(contents);
 
-		//IDEA auto determine the function type
-		// args.Item1.TryGetValue(ArgumentName.Type, out var typeName);
-
-		ContentFunction = FunctionCollection.GetFunction("string", "const", args.Item1, args.Item2);
+		ContentFunction = FunctionCollection.GetFunction(t ?? typeof(string), "const", args.Item1, args.Item2);
 	}
 
 	[CommandFunction]
@@ -57,7 +62,7 @@ public partial class Cell
 	}
 
 	[CommandFunction]
-	public void SetDecimalContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
+	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
 	{
 		SetFunction<decimal>(functionOperator, arguments);
 	}

@@ -84,10 +84,12 @@
 	"Audio": true,
 	"Culture": "en",
 	"StartupNotes": [
+		"Medium",
 		"High"
 	],
 	"ShutdownNotes": [
-		"High"
+		"High",
+		"Medium"
 	],
 	"OkNotes": [
 		"Medium"

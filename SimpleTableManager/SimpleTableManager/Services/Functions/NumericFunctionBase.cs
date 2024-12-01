@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace SimpleTableManager.Services.Functions;
 
-[NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<int>(ArgumentName.Base, 2)]
+[NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<double>(ArgumentName.Base, 2)]
 public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
 	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, IConvertible, TOut
 {
@@ -34,22 +34,22 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 
 			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedArguments),
 
-			NumericFunctionOperator.Log2 => LogN(UnwrappedArguments, 2.ToType<TIn>()),
+			NumericFunctionOperator.Log2 => LogN(UnwrappedArguments, 2),
 
-			NumericFunctionOperator.Log10 => LogN(UnwrappedArguments, 10.ToType<TIn>()),
+			NumericFunctionOperator.Log10 => LogN(UnwrappedArguments, 10),
 
-			NumericFunctionOperator.LogE => LogN(UnwrappedArguments, double.E.ToType<TIn>()),
+			NumericFunctionOperator.LogE => LogN(UnwrappedArguments, double.E),
 
-			NumericFunctionOperator.LogN => LogN(UnwrappedArguments, GetNamedArgument<TIn>(ArgumentName.Base)),
+			NumericFunctionOperator.LogN => LogN(UnwrappedArguments, GetNamedArgument<double>(ArgumentName.Base)),
 
 			_ => throw GetInvalidOperatorException()
 		};
 	}
 
-	private static IEnumerable<TOut> LogN(IEnumerable<TIn> array, TIn @base)
+	private static IEnumerable<TOut> LogN(IEnumerable<TIn> array, double @base)
 	{
 		return array.Select(p =>
-			Math.Log(p.ToDouble(null), @base.ToDouble(null)).ToType<TOut>());
+			Math.Log(p.ToDouble(null), @base).ToType<TOut>());
 	}
 
 	private static IEnumerable<TOut> Sqrt(IEnumerable<TIn> array)

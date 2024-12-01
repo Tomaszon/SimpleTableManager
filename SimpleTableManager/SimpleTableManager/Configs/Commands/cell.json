@@ -1,11 +1,11 @@
 {
 	"{3}": {
-		"{9}": "setContent",
+		"{96}": "setPrimitiveContent",
 		"{10}": "setComment",
 		"{11}": {
 			"{12}": "setStringContentFunction",
 			"{13}": "setIntegerContentFunction",
-			"{14}": "setDecimalContentFunction",
+			"{14}": "setFractionContentFunction",
 			"{15}": "setBooleanContentFunction",
 			"{16}": "setCharacterContentFunction",
 			"{17}": "setDateTimeContentFunction",

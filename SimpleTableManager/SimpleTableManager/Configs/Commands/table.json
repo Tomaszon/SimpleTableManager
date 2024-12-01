@@ -47,9 +47,6 @@
 		"{63}": {
 			"{73}": "setRowHeight"
 		},
-		"{74}": {
-			"{9}": "setCellContent"
-		},
 		"{75}": "setViewOptions",
 		"{76}": "setViewOptionsColumns",
 		"{77}": "setViewOptionsRows",

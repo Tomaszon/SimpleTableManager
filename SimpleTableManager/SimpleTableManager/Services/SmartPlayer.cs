@@ -41,8 +41,6 @@ public class SmartPlayer
 			await _semaphoreSlim.WaitAsync();
 
 			await player.Play(fileName);
-
-			Debug.WriteLine(note.ToString());
 		}
 		catch { }
 	}

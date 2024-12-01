@@ -59,7 +59,9 @@ public static class Extensions
 
 	public static string GetFriendlyName(this Type type)
 	{
-		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p => p.Value.Equals(type.Name.ToLower()));
+		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p => 
+			p.Value.Equals($"{nameof(System)}.{type.Name}", StringComparison.OrdinalIgnoreCase) ||
+			p.Value.Equals($"{nameof(SimpleTableManager)}.{nameof(Models)}.{type.Name}", StringComparison.OrdinalIgnoreCase));
 
 		return pair.Key is null ? type.Name : pair.Key.First().ToString().ToUpper() + new string(pair.Key.Skip(1).ToArray());
 	}

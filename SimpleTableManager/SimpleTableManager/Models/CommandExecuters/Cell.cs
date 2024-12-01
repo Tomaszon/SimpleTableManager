@@ -112,13 +112,34 @@ public partial class Cell : CommandExecuterBase
 
 		if (contents?.Length > 0)
 		{
-			SetContent(contents);
+			SetPrimitiveContent(contents);
 		}
 
 		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
-	public static (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArguments<TType>(params string[] arguments)
+	public static bool TrySeparateArgumentsAs<TType>(string[] arguments, [NotNullWhen(true)] out (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>)? result, [NotNullWhen(true)] out Type? resultType)
+	where TType : IParsable<TType>
+	{
+		try
+		{
+			result = SeparateArgumentsAs<TType>(arguments);
+
+			resultType = typeof(TType);
+
+			return true;
+		}
+		catch
+		{
+			result = null;
+
+			resultType = null;
+
+			return false;
+		}
+	}
+
+	public static (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArgumentsAs<TType>(string[] arguments)
 	where TType : IParsable<TType>
 	{
 		var namedArgs = arguments.Where(a => a.Contains(Shared.NAMED_ARG_SEPARATOR) == true);

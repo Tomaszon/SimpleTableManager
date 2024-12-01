@@ -12,7 +12,7 @@
 	"{11}": "tartalom-függvény",
 	"{12}": "szöveg",
 	"{13}": "egész-szám",
-	"{14}": "szám",
+	"{14}": "tört-szám",
 	"{15}": "logikai",
 	"{16}": "karakter",
 	"{17}": "dátum-idő",
@@ -93,5 +93,6 @@
 	"{92}": "oszlop-szűrők",
 	"{93}": "csere",
 	"{94}": "kijelölés-megszüntetése",
-	"{95}": "tartalom-stílus"
+	"{95}": "tartalom-stílus",
+	"{96}": "egyszerű-tartalom"
 }
