@@ -76,7 +76,7 @@ public class FunctionTests : TestBase
 
 		var fn = CreateFunction(NumericFunctionOperator.LogE, new[] { e, e * e });
 
-		CheckResults(fn.Execute(), new[] { 1m, 2m });
+		CheckResults(fn.Execute(), new[] { 1d, 2d });
 	}
 
 	// 		[Test]

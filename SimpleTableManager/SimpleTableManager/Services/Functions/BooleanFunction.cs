@@ -15,6 +15,10 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
 
 			BooleanFunctionOperator.Or => UnwrappedArguments.Any(a => a).Wrap(),
 
+			BooleanFunctionOperator.IsNotNull => Arguments.Any(a => a.Resolve() is not null).Wrap(),
+			
+			BooleanFunctionOperator.IsNull => Arguments.All(a => a.Resolve() is null).Wrap(),
+
 			_ => throw GetInvalidOperatorException()
 		};
 	}

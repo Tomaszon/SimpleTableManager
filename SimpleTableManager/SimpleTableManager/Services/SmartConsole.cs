@@ -149,7 +149,7 @@ public partial class SmartConsole
 
 		var rawCommand = _buffer.ToString().Trim();
 
-		if (saveToHistory)
+		if (saveToHistory && !string.IsNullOrEmpty(rawCommand))
 		{
 			_commandHistory.Add(rawCommand);
 		}

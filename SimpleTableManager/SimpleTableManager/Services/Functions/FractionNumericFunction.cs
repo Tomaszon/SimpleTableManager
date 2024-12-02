@@ -1,6 +1,5 @@
 namespace SimpleTableManager.Services.Functions;
 
-[NamedArgument<int>(ArgumentName.Decimals, 2)]
 [FunctionMappingType(typeof(decimal))]
 public class FractionNumericFunction : NumericFunctionBase<decimal, object>
 {

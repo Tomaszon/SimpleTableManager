@@ -12,6 +12,14 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => a.Resolve()).Cast<TIn>();
 
+	//EXPERIMENTAL do not throw null exception in some cases
+	protected IEnumerable<TIn> UnwrappedArgumentsAs(Func<object, TIn>? transformation = null)
+	{
+		transformation ??= a => (TIn)a;
+
+		return Arguments.SelectMany(a => a.Resolve()).Select(transformation);
+	}
+
 	public TOpertor Operator { get; set; }
 
 	Enum IFunction.Operator { get => Operator; set => Operator = (TOpertor)value; }
@@ -48,6 +56,12 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 			catch (InvalidOperationException)
 			{
 				SetError("Invalid position");
+
+				throw;
+			}
+			catch (ArgumentException)
+			{
+				SetError("Multiple values");
 
 				throw;
 			}
@@ -97,7 +111,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	{
 		if (NamedArguments.TryGetValue(key, out var argument))
 		{
-			var result = argument.Resolve().Single();
+			var results = argument.Resolve() ?? throw new NullReferenceException();
+
+			var result = results.Count() == 1 ? results.Single() : throw new ArgumentException("");
 
 			return result is string s ? T.Parse(s, null) : (T)result;
 		}

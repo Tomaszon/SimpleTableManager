@@ -46,14 +46,9 @@ public partial class Table : CommandExecuterBase
 		{
 			var index = y * Size.Width + x;
 
-			if (index < Content.Count)
-			{
-				return Content[index];
-			}
-			else
-			{
-				throw new InvalidOperationException("Position is out of table");
-			}
+			ThrowIf<InvalidOperationException>(y < 0 || y >= Size.Height || x < 0 || x >= Size.Width, "Position is out of table");
+
+			return Content[index];
 		}
 	}
 
@@ -94,14 +89,15 @@ public partial class Table : CommandExecuterBase
 	{
 		var position = this[(Cell)sender];
 
-		var referrerCells = Content.Where(c => c.ContentFunction?.Arguments.Any(a =>
-			a is ReferenceFunctionArgument rfa && rfa.Reference.Position.Equals(position)) == true);
+		var referrerCells = Content.Where(c =>
+			c.ContentFunction?.Arguments.Union(c.ContentFunction!.NamedArguments.Values).Any(a =>
+				a is ReferenceFunctionArgument rfa && rfa.Reference.Position.Equals(position)) == true);
 
 		referrerCells.ForEach(c =>
 		{
 			if (c == root)
 			{
-				c.ContentFunction?.SetError("Cyclical reference");
+				c.ContentFunction?.SetError("Circular reference");
 			}
 			else
 			{

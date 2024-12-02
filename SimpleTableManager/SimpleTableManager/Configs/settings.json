@@ -76,7 +76,7 @@
 	"CommandHistoryLength": 10,
 	"EditHistoryLength": 10,
 	"DefaultTableSize": {
-		"Width": 5,
+		"Width": 3,
 		"Height": 2
 	},
 	"Autosave": false,

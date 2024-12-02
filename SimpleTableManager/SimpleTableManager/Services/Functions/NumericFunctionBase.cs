@@ -3,6 +3,7 @@ using System.Numerics;
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<double>(ArgumentName.Base, 2)]
+[NamedArgument<int>(ArgumentName.Decimals, 2)]
 public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
 	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, IConvertible, TOut
 {
@@ -46,12 +47,13 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 		};
 	}
 
-	private static IEnumerable<TOut> LogN(IEnumerable<TIn> array, double @base)
+	private IEnumerable<TOut> LogN(IEnumerable<TIn> array, double @base)
 	{
 		return array.Select(p =>
-			Math.Log(p.ToDouble(null), @base).ToType<TOut>());
+			double.Round(Math.Log(p.ToDouble(null), @base), GetNamedArgument<int>(ArgumentName.Decimals)).ToType<TOut>());
 	}
 
+	//TODO use decimals in all fraction double functions
 	private static IEnumerable<TOut> Sqrt(IEnumerable<TIn> array)
 	{
 		return array.Select(p =>

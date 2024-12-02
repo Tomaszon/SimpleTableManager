@@ -6,5 +6,7 @@ public enum BooleanFunctionOperator
 	Const,
 	Not,
 	And,
-	Or
+	Or,
+	IsNull,
+	IsNotNull
 }
