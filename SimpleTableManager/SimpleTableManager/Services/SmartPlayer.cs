@@ -9,8 +9,6 @@ public class SmartPlayer
 
 	private readonly Note[] _notes;
 
-	private byte _volume = 25;
-
 	public SmartPlayer(Note[] notes)
 	{
 		_notes = notes;
@@ -21,18 +19,13 @@ public class SmartPlayer
 		await Task.Run(() => Shared.IndexArray(_notes.Length).ForEach(async i => await Enqueue(_notes[i])));
 	}
 
-	public void SetVolume(byte volume)
-	{
-		_volume = volume;
-	}
-
 	private async Task Enqueue(Note note)
 	{
 		try
 		{
 			var player = new Player();
 
-			await player.SetVolume(_volume);
+			await player.SetVolume(Settings.Current.Volume);
 
 			player.PlaybackFinished += Finished;
 
