@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
+
 using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services;
 
+/// <summary>
+/// Global application settings
+/// </summary>
 public class Settings
 {
 	public string[] Logo { get; set; } = Array.Empty<string>();

@@ -1,8 +1,10 @@
-using System.Diagnostics;
 using NetCoreAudio;
 
 namespace SimpleTableManager.Services;
 
+/// <summary>
+/// Plays sound files
+/// </summary>
 public class SmartPlayer
 {
 	private readonly SemaphoreSlim _semaphoreSlim = new(1);
@@ -14,11 +16,17 @@ public class SmartPlayer
 		_notes = notes;
 	}
 
+	/// <summary>
+	/// Plays a sound configured amount of times
+	/// </summary>
 	public async Task Play()
 	{
 		await Task.Run(() => Shared.IndexArray(_notes.Length).ForEach(async i => await Enqueue(_notes[i])));
 	}
 
+	/// <summary>
+	/// Enqueues a file based play task
+	/// </summary>
 	private async Task Enqueue(Note note)
 	{
 		try
@@ -38,6 +46,9 @@ public class SmartPlayer
 		catch { }
 	}
 
+	/// <summary>
+	/// Releases the lock used for play task queuing
+	/// </summary>
 	private void Finished(object? sender, EventArgs e)
 	{
 		_semaphoreSlim.Release();

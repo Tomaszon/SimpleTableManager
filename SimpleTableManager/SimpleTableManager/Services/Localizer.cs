@@ -1,5 +1,8 @@
 using System.Globalization;
 
+/// <summary>
+/// Provides language dependent texts for translation keys
+/// </summary>
 namespace SimpleTableManager.Services
 {
 	public static class Localizer
@@ -27,11 +30,18 @@ namespace SimpleTableManager.Services
 			}
 		}
 
+		/// <summary>
+		/// Returns traslation for a given key for a given type
+		/// </summary>
 		public static bool TryLocalize(Type type, string key, out string result)
 		{
 			return TryLocalize(type, null, key, out result);
 		}
 
+		/// <summary>
+		/// Returns traslation for a given key for a given type
+		/// </summary>
+		/// <typeparam name="T">Type of instance to find localized text for</typeparam>
 		public static string TryLocalize<T>(string key, params object[] args)
 		{
 			TryLocalize(typeof(T), null, key, out var result, args);
@@ -39,11 +49,18 @@ namespace SimpleTableManager.Services
 			return result;
 		}
 
+		/// <summary>
+		/// Returns traslation for a given key in a given method for a given type
+		/// </summary>
+		/// <typeparam name="T">Type of instance to find localized text for</typeparam>
 		public static bool TryLocalize<T>(string? method, string key, out string result, params object[] args)
 		{
 			return TryLocalize(typeof(T), method, key, out result, args);
 		}
 
+		/// <summary>
+		/// Returns traslation for a given key in a given method for a given type in current ui culture or in its parent culture if translation not found
+		/// </summary>
 		public static bool TryLocalize(Type? type, string? method, string key, out string result, params object[] args)
 		{
 			if (TryLocalizeFor(CultureInfo.CurrentUICulture, type?.Name, method, key, args, out var result1))
@@ -64,11 +81,18 @@ namespace SimpleTableManager.Services
 			}
 		}
 
+
+		/// <summary>
+		/// Returns traslation for a given key
+		/// </summary>
 		public static string Localize<T>(string key)
 		{
 			return Localize(typeof(T), null, key);
 		}
 
+		/// <summary>
+		/// Returns traslation for a given key in a given method for a given type
+		/// </summary>
 		public static string Localize(Type? type, string? method, string key, params object[] args)
 		{
 			if (TryLocalize(type, method, key, out var result, args))
@@ -81,6 +105,10 @@ namespace SimpleTableManager.Services
 			}
 		}
 
+
+		/// <summary>
+		/// Returns traslation for a given key in a given method for a given type in a given culture
+		/// </summary>
 		private static bool TryLocalizeFor(CultureInfo culture, string? typeName, string? method, string key, object[] args, out string result)
 		{
 			var cultureName = culture.Name.ToLower();

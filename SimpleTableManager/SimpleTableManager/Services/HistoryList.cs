@@ -1,5 +1,8 @@
 namespace SimpleTableManager.Services;
 
+/// <summary>
+/// Stores and iterates on stored items
+/// </summary>
 public class HistoryList
 {
 	private int _index = 0;
@@ -19,6 +22,9 @@ public class HistoryList
 		_cleanAfterInsert = cleanAfterInsert;
 	}
 
+	/// <summary>
+	/// Gets prevoius stored item
+	/// </summary>
 	public bool TryGetPreviousHistoryItem([NotNullWhen(true)] out string? element)
 	{
 		if (_index > 0)
@@ -34,6 +40,9 @@ public class HistoryList
 		return false;
 	}
 
+	/// <summary>
+	/// Gets next stored item
+	/// </summary>
 	public bool TryGetNextHistoryItem([NotNullWhen(true)] out string? element)
 	{
 		if (_index < _history.Count - 1)
@@ -49,15 +58,18 @@ public class HistoryList
 		return false;
 	}
 
+	/// <summary>
+	/// Stores items to iterate through
+	/// </summary>
 	public void Add(string element)
 	{
 		var currentIndex = _index;
 
-		if(_cleanAfterInsert)
+		if (_cleanAfterInsert)
 		{
 			ResetCycle();
 
-			while(_history.Count - 1 > currentIndex)
+			while (_history.Count - 1 > currentIndex)
 			{
 				_history.RemoveAt(_history.Count - 1);
 			}
@@ -73,11 +85,17 @@ public class HistoryList
 		ResetCycle();
 	}
 
+	/// <summary>
+	/// Resets item iteration
+	/// </summary>
 	public void ResetCycle()
 	{
 		_index = _history.Count + _indexResetOffset;
 	}
 
+	/// <summary>
+	/// Clears all stored items
+	/// </summary>
 	public void Clear()
 	{
 		_history.Clear();
