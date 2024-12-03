@@ -14,6 +14,11 @@ public enum CellBorderType
 	ContentClosed,
 	ContentOpen,
 	ContentUpLeft,
+	ContentDownRight,
+	ContentHorizontalDown,
+	ContentDownLeft,
+	ContentVerticalRight,
+	ContentUpRight,
 	ContentHorizontalUp,
 	ContentVerticalLeft
 }

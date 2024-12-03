@@ -10,6 +10,31 @@
 		"Type": "Up, Left"
 	},
 	{
+		"Retro": "+",
+		"Modern": "┌",
+		"Type": "Down, Right"
+	},
+	{
+		"Retro": "+",
+		"Modern": "┬",
+		"Type": "Horizontal, Down"
+	},
+	{
+		"Retro": "+",
+		"Modern": "┐",
+		"Type": "Down, Left"
+	},
+	{
+		"Retro": "+",
+		"Modern": "├",
+		"Type": "Vertical, Right"
+	},
+	{
+		"Retro": "+",
+		"Modern": "└",
+		"Type": "Up, Right"
+	},
+	{
 		"Retro": "-",
 		"Modern": "─",
 		"Type": "Horizontal"

@@ -109,6 +109,56 @@
 		"Bottom": "Horizontal",
 		"BottomRight": "Up, Left"
 	},
+	"contentUpRight": {
+		"TopLeft": "Vertical, Right",
+		"Top": "Horizontal",
+		"TopRight": "Vertical, Horizontal",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Right, Up",
+		"Bottom": "Horizontal",
+		"BottomRight": "Horizontal, Up"
+	},
+	"contentDownRight": {
+		"TopLeft": "Down, Right",
+		"Top": "Horizontal",
+		"TopRight": "Horizontal, Down",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Vertical, Right",
+		"Bottom": "Horizontal",
+		"BottomRight": "Vertical, Horizontal"
+	},
+	"contentHorizontalDown": {
+		"TopLeft": "Horizontal, Down",
+		"Top": "Horizontal",
+		"TopRight": "Horizontal, Down",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Vertical, Horizontal",
+		"Bottom": "Horizontal",
+		"BottomRight": "Vertical, Horizontal"
+	},
+	"contentDownLeft": {
+		"TopLeft": "Horizontal, Down",
+		"Top": "Horizontal",
+		"TopRight": "Down, Left",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Vertical, Horizontal",
+		"Bottom": "Horizontal",
+		"BottomRight": "Left, Vertical"
+	},
+	"contentVerticalRight": {
+		"TopLeft": "Vertical, Right",
+		"Top": "Horizontal",
+		"TopRight": "Vertical, Horizontal",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Vertical, Right",
+		"Bottom": "Horizontal",
+		"BottomRight": "Vertical, Horizontal"
+	},
 	"contentHorizontalUp": {
 		"TopLeft": "Vertical, Horizontal",
 		"Top": "Horizontal",

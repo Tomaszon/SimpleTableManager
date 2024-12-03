@@ -45,7 +45,7 @@ public static class Renderer
 
 		RenderTempCell(table, tableOffset, tableSize);
 
-		RenderContent(table, tableOffset, false);
+		RenderContent(table, tableOffset, false, false);
 
 		RenderHeader(table, tableOffset);
 
@@ -202,7 +202,7 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderContent(Table table, Size tableOffset, bool ignoreRenderingMode)
+	private static void RenderContent(Table table, Size tableOffset, bool ignoreRenderingMode, bool headlessTable)
 	{
 		Shared.IndexArray(table.Size.Height).ForEach(y =>
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
@@ -226,7 +226,7 @@ public static class Renderer
 
 					var posInView = table.PositionInView(x, y);
 
-					var border = GetContentCellBorder(table, cell, posInView);
+					var border = GetContentCellBorder(table, cell, posInView, headlessTable);
 
 					RenderCellBorders(cell, position, size, border);
 
@@ -235,9 +235,9 @@ public static class Renderer
 			}));
 	}
 
-	private static CellBorder GetContentCellBorder(Table table, Cell cell, Position position)
+	private static CellBorder GetContentCellBorder(Table table, Cell cell, Position position, bool headlessTable)
 	{
-		var cellBorderType = GetContentCellBorderType(table.ViewOptions.Size, position);
+		var cellBorderType = GetContentCellBorderType(table.ViewOptions.Size, position, headlessTable);
 
 		var border = CellBorders.Get(cellBorderType);
 
@@ -290,7 +290,7 @@ public static class Renderer
 		return null;
 	}
 
-	private static CellBorderType GetContentCellBorderType(Size size, Position position)
+	private static CellBorderType GetContentCellBorderType(Size size, Position position, bool headlessTable)
 	{
 		if (position.X == size.Width - 1 && position.Y == size.Height - 1)
 		{
@@ -298,16 +298,36 @@ public static class Renderer
 		}
 		else if (position.X == size.Width - 1)
 		{
+			if (headlessTable && position.Y == 0)
+			{
+				return CellBorderType.ContentDownLeft;
+			}
+
 			return CellBorderType.ContentVerticalLeft;
 		}
 		else if (position.Y == size.Height - 1)
 		{
+			if (headlessTable && position.X == 0)
+			{
+				return CellBorderType.ContentUpRight;
+			}
+
 			return CellBorderType.ContentHorizontalUp;
 		}
-		else
+		else if (headlessTable && position.X == 0 && position.Y == 0)
 		{
-			return CellBorderType.ContentOpen;
+			return CellBorderType.ContentDownRight;
 		}
+		else if(headlessTable && position.X == 0)
+		{
+			return CellBorderType.ContentVerticalRight;
+		}
+		else if(headlessTable && position.Y == 0)
+		{
+			return CellBorderType.ContentHorizontalDown;
+		}
+
+		return CellBorderType.ContentOpen;
 	}
 
 	private static CellBorderType GetHeaderCellBorderType(int size, int position)
@@ -645,7 +665,7 @@ public static class Renderer
 				cell.BackgroundCharacter = ' ';
 			});
 
-			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset), true);
+			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset), true, true);
 		}
 
 		// //IDEA
