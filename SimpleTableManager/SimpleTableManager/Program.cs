@@ -1,7 +1,5 @@
-﻿using SimpleTableManager.Models;
-using SimpleTableManager.Models.CommandExecuters;
+﻿using SimpleTableManager.Models.CommandExecuters;
 using SimpleTableManager.Services;
-using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager;
 
@@ -11,8 +9,8 @@ public class Program
 	private static void Main(params string[] args)
 	{
 		Console.TreatControlCAsInput = true;
-		Console.OutputEncoding = System.Text.Encoding.Unicode;
-		Console.InputEncoding = System.Text.Encoding.Unicode;
+		Console.OutputEncoding = System.Text.Encoding.UTF8;
+		Console.InputEncoding = System.Text.Encoding.UTF8;
 
 		Settings.FromJson(@"Configs/settings.json");
 
