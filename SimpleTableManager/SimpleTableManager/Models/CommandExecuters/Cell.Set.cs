@@ -18,14 +18,14 @@ public partial class Cell
 	{
 		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
 
-		var args = 
+		var args =
 			TrySeparateArgumentsAs<int>(contents, out var r, out var t) ? r.Value :
 			TrySeparateArgumentsAs<decimal>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<char>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<bool>(contents, out r, out t) ? r.Value :
-			TrySeparateArgumentsAs<TimeOnly>(contents, out r, out t) ? r.Value:
-			TrySeparateArgumentsAs<DateOnly>(contents, out r, out t) ? r.Value:
-			TrySeparateArgumentsAs<DateTime>(contents, out r, out t) ? r.Value:
+			TrySeparateArgumentsAs<TimeOnly>(contents, out r, out t) ? r.Value :
+			TrySeparateArgumentsAs<DateOnly>(contents, out r, out t) ? r.Value :
+			TrySeparateArgumentsAs<DateTime>(contents, out r, out t) ? r.Value :
 			SeparateArgumentsAs<string>(contents);
 
 		ContentFunction = FunctionCollection.GetFunction(t ?? typeof(string), "const", args.Item1, args.Item2);
@@ -136,7 +136,7 @@ public partial class Cell
 	}
 
 	[CommandFunction]
-	public void SetPadding(int top, int bottom, int left, int right)
+	public void SetPadding([MinValue(0)] int top, [MinValue(0)] int bottom, [MinValue(0)] int left, [MinValue(0)] int right)
 	{
 		ThrowIf(top < 0 || bottom < 0 || left < 0 || right < 0, "Padding can not be less then 0!");
 

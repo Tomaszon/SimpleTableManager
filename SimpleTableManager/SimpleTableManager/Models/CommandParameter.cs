@@ -16,12 +16,31 @@ public class CommandParameter
 
 	public bool IsNullable => Type.IsAssignableFrom(null);
 
+	public object? MinValue { get; set; }
+
+	public object? MaxValue { get; set; }
+
 	public IEnumerable<string> ParseFormats { get; set; } = new List<string>();
 
-	public CommandParameter(Type type, string name)
+	public CommandParameter(ParameterInfo parameterInfo)
 	{
-		Type = type;
-		Name = name;
+		var isArray = parameterInfo.ParameterType.IsArray;
+
+		Type = parameterInfo.ParameterType;
+		Name = parameterInfo.Name!;
+
+		MinValue = parameterInfo.GetCustomAttribute<MinValueAttribute>()?.Value;
+		MaxValue = parameterInfo.GetCustomAttribute<MaxValueAttribute>()?.Value;
+
+		DefaultValue = isArray ?
+			Array.CreateInstance(parameterInfo.ParameterType.GetElementType()!, 0) :
+			parameterInfo.DefaultValue;
+
+		ParseFormats = (isArray ?
+			parameterInfo.ParameterType.GetElementType()! :
+			parameterInfo.ParameterType).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format);
+
+		IsOptional = parameterInfo.IsOptional || isArray;
 	}
 
 	public override string ToString()
@@ -31,8 +50,10 @@ public class CommandParameter
 		var nullable = IsNullable ? "  nullable=true" : "";
 		var optional = IsOptional ? $"  default={JsonConvert.SerializeObject(DefaultValue)}" : "";
 		var formats = ParseFormats.Any() ? $"  {(IsArray ? "elementFormat" : "formats")}={string.Join("' '", ParseFormats)}" : "";
+		var minValue = MinValue is not null ? $"  min={MinValue}" : "";
+		var maxValue = MaxValue is not null ? $"  min={MaxValue}" : "";
 
 
-		return $"{{{Name}:{typeName}{values}{nullable}{optional}{formats}}}";
+		return $"{{{Name}:{typeName}{minValue}{maxValue}{values}{nullable}{optional}{formats}}}";
 	}
 }

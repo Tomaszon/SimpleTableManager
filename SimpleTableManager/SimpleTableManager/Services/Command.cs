@@ -130,20 +130,7 @@ public class Command
 
 	public static List<CommandParameter> GetParameters(MethodInfo method)
 	{
-		return method.GetParameters().Select(p =>
-		{
-			var isArray = p.ParameterType.IsArray;
-
-			return new CommandParameter
-			(p.ParameterType, p.Name!)
-			{
-				DefaultValue = isArray ?
-					Array.CreateInstance(p.ParameterType.GetElementType()!, 0) : p.DefaultValue,
-				IsOptional = p.IsOptional || isArray,
-				ParseFormats = (isArray ? p.ParameterType.GetElementType()! :
-					p.ParameterType).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format)
-			};
-		}).ToList();
+		return method.GetParameters().Select(p => new CommandParameter(p)).ToList();
 	}
 
 	public static bool IsValid(string rawCommand)
