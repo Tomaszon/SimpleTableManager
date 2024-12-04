@@ -138,8 +138,6 @@ public partial class Cell
 	[CommandFunction]
 	public void SetPadding([MinValue(0)] int top, [MinValue(0)] int bottom, [MinValue(0)] int left, [MinValue(0)] int right)
 	{
-		ThrowIf(top < 0 || bottom < 0 || left < 0 || right < 0, "Padding can not be less then 0!");
-
 		ContentPadding = new(top, bottom, left, right);
 	}
 

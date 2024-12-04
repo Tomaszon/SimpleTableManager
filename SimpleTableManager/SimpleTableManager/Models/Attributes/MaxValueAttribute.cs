@@ -3,9 +3,19 @@ namespace SimpleTableManager.Models.Attributes;
 [AttributeUsage(AttributeTargets.Parameter)]
 public class MaxValueAttribute : Attribute
 {
-	public object Value { get; set; }
+	public IComparable Value { get; set; }
 
-	public MaxValueAttribute(object value)
+	public MaxValueAttribute(int value)
+	{
+		Value = value;
+	}
+
+	public MaxValueAttribute(double value)
+	{
+		Value = value;
+	}
+
+	public MaxValueAttribute(char value)
 	{
 		Value = value;
 	}

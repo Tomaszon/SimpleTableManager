@@ -16,9 +16,9 @@ public class CommandParameter
 
 	public bool IsNullable => Type.IsAssignableFrom(null);
 
-	public object? MinValue { get; set; }
+	public IComparable? MinValue { get; set; }
 
-	public object? MaxValue { get; set; }
+	public IComparable? MaxValue { get; set; }
 
 	public IEnumerable<string> ParseFormats { get; set; } = new List<string>();
 

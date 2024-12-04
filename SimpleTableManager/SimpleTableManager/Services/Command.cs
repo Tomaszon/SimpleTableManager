@@ -41,6 +41,7 @@ public class Command
 		}
 
 		List<object?> parsedArguments = new();
+		List<string> validationResults = new();
 
 		for (var i = 0; i < parameters.Count; i++)
 		{
@@ -50,6 +51,14 @@ public class Command
 			{
 				var values = ParseArrayValues(parameters, i, paramType);
 
+				if (values is not null)
+				{
+					foreach (var e in values)
+					{
+						validationResults.AddRange(ValidateArgument(e, parameters[i]));
+					}
+				}
+
 				parsedArguments.Add(values);
 			}
 			else
@@ -57,8 +66,15 @@ public class Command
 				var value = i < Arguments?.Count ?
 					ContentParser.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
+				validationResults.AddRange(ValidateArgument(value, parameters[i]));
+
 				parsedArguments.Add(value);
 			}
+		}
+
+		if (validationResults.Count > 0)
+		{
+			throw new ArgumentException(string.Join('\n', validationResults));
 		}
 
 		try
@@ -83,6 +99,39 @@ public class Command
 		}
 
 		return results;
+	}
+
+	private static List<string> ValidateArgument(object? value, CommandParameter parameter)
+	{
+		var validationResults = new List<string>();
+
+		if (value is not null)
+		{
+			var isNumber = value.GetType().GetInterface("INumber`1") is not null && value is not char;
+			var v = value is int p ? (double)p : value;
+
+			if (parameter.MaxValue is var max && max is not null)
+			{
+				var m = max is int i ? (double)i : max;
+
+				if (m.CompareTo(v) < 0)
+				{
+					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be less then" : "preceed")} '{max}'");
+				}
+			}
+
+			if (parameter.MinValue is var min && min is not null)
+			{
+				var m = min is int i ? (double)i : min;
+
+				if (m.CompareTo(v) > 0)
+				{
+					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be greater then" : "exceed")} '{min}'");
+				}
+			}
+		}
+
+		return validationResults;
 	}
 
 	private Array? ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType)
