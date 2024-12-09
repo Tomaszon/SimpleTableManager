@@ -14,7 +14,6 @@ public class CommandInformationAttribute : Attribute
 	}
 }
 
-
 public class CommandInformationAttribute<T> : CommandInformationAttribute
 {
 	public CommandInformationAttribute([CallerMemberName] string method = null!) : base(null!)

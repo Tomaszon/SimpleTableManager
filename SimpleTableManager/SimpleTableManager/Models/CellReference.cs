@@ -3,17 +3,17 @@ using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("TableName,$x,$y ($ for axis lock)", ".+,\\$?\\d,\\$?\\d")]
-[ParseFormat("$x,$y ($ for axis lock)", "\\$?\\d,\\$?\\d")]
+[ParseFormat("TableName,{0}x,{0}y ({0} for axis unlock)", "(?<t>.+),(?<x>{1}?\\d),(?<y>{1}?\\d)", new object[] { Shared.REF_CHAR, Shared.REGEX_REF_CHAR })]
+[ParseFormat("{0}x,{0}y ({0} for axis unlock)", "(?<x>{1}?\\d),(?<y>{1}?\\d)", new object[] { Shared.REF_CHAR, Shared.REGEX_REF_CHAR })]
 public class CellReference : ParsableBase<CellReference>, IParsable<CellReference>
 {
 	public Table Table { get; set; }
 
 	public Position Position { get; set; }
 
-	public bool HorizontallyLocked { get; set; }
+	public bool HorizontallyLocked { get; set; } = true;
 
-	public bool VerticallyLocked { get; set; }
+	public bool VerticallyLocked { get; set; } = true;
 
 	public CellReference(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
 	{
@@ -27,26 +27,26 @@ public class CellReference : ParsableBase<CellReference>, IParsable<CellReferenc
 	{
 		return ParseWrapper(value, (args) =>
 		{
-			var ns = args.Length == 3 ? args[0] : null;
-			var xs = args.Length == 3 ? args[1] : args[0];
-			var ys = args.Length == 3 ? args[2] : args[1];
+			var tns = args["t"].Value;
+			var xs = args["x"].Value;
+			var ys = args["y"].Value;
 
-			var n = ns;
-			var x = int.Parse(xs.Trim(Shared.REF_CHAR).Trim());
-			var y = int.Parse(ys.Trim(Shared.REF_CHAR).Trim());
+			var tn = tns;
+			var x = int.Parse(xs.Trim(Shared.REF_CHAR));
+			var y = int.Parse(ys.Trim(Shared.REF_CHAR));
 
 			var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-			var t = n is null ? 
+			var t = string.IsNullOrEmpty(tn) ?
 				doc.GetActiveTable() :
-				doc.Tables.Single(t => t.Name.Equals(n, StringComparison.InvariantCultureIgnoreCase));
+				doc.Tables.Single(t => t.Name.Equals(tn, StringComparison.InvariantCultureIgnoreCase));
 
-			return new CellReference(t, new Position(x, y), xs.Contains(Shared.REF_CHAR), ys.Contains(Shared.REF_CHAR));
+			return new CellReference(t, new Position(x, y), !xs.Contains(Shared.REF_CHAR), !ys.Contains(Shared.REF_CHAR));
 		});
 	}
 
 	public override string ToString()
 	{
-		return $"T:{Table.Name}, X:{(HorizontallyLocked ? Shared.REF_CHAR : "")}{Position.X}, Y:{(VerticallyLocked ? Shared.REF_CHAR : "")}{Position.Y}";
+		return $"T:{Table.Name}, X:{(HorizontallyLocked ? "" : Shared.REF_CHAR)}{Position.X}, Y:{(VerticallyLocked ? "" : Shared.REF_CHAR)}{Position.Y}";
 	}
 }

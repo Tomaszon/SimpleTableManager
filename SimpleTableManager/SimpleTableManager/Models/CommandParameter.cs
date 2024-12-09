@@ -49,7 +49,7 @@ public class CommandParameter
 		var values = Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "";
 		var nullable = IsNullable ? "  nullable=true" : "";
 		var optional = IsOptional ? $"  default={JsonConvert.SerializeObject(DefaultValue)}" : "";
-		var formats = ParseFormats.Any() ? $"  {(IsArray ? "elementFormat" : "formats")}={string.Join("' '", ParseFormats)}" : "";
+		var formats = ParseFormats.Any() ? $"  {(IsArray ? "elementFormat" : "formats")}='{string.Join("' '", ParseFormats)}'" : "";
 		var minValue = MinValue is not null ? $"  min={MinValue}" : "";
 		var maxValue = MaxValue is not null ? $"  min={MaxValue}" : "";
 

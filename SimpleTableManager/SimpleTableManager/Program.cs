@@ -134,8 +134,8 @@ public class Program
 
 		//Console.WriteLine(JsonConvert.SerializeObject(viewOptions));
 
-		// var document = app.Document;
-		// var table = document.GetActiveTable();
+		var document = app.Document;
+		 var table = document.GetActiveTable();
 
 		// var innerCell = table[2, 0];
 		// innerCell.ContentFunction = FunctionCollection.GetFunction<int>("Const", null, new ConstFunctionArgument<int>[] { new(2), new(5) });
@@ -147,7 +147,7 @@ public class Program
 		// outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(4), new ReferenceFunctionArgument(new(table, new Position(1, 0))) });
 
 		// FunctionCollection.GetFunction<bool>("Const", null, new object[] { true, false });
-		// table[0,0].IsSelected = true;
+		table[0,0].IsSelected = true;
 
 		#endregion test
 

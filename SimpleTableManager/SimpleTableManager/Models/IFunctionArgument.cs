@@ -5,17 +5,21 @@ namespace SimpleTableManager.Models
 		//TODO handle null values
 		IEnumerable<object>? Resolve();
 
-		bool TryResolve(out IEnumerable<object>? result)
+		bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)
 		{
 			try
 			{
 				result = Resolve();
 
+				error = null;
+
 				return true;
 			}
-			catch
+			catch (Exception ex)
 			{
 				result = null;
+
+				error = ex.Message;
 
 				return false;
 			}

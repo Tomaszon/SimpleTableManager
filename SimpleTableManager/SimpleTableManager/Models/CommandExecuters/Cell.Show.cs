@@ -45,7 +45,7 @@ public partial class Cell
 				new
 				{
 					Refrence = ((ReferenceFunctionArgument)v.Value).Reference.ToString(),
-					ReferencedValues = ((IFunctionArgument)v.Value).TryResolve(out var result) && result?.Count() == 1 ? result.Single() : "Cell reference error"
+					ReferencedValues = ((IFunctionArgument)v.Value).TryResolve(out var result, out var error) && result?.Count() == 1 ? result.Single() : $"Error: '{error}'"
 				}),
 
 			ConstNamedArguments = ContentFunction.NamedArguments.Where(a => a.Value is IConstFunctionArgument).ToDictionary(k => k.Key, v => ((IConstFunctionArgument)v.Value).Resolve().Single()),
@@ -54,7 +54,7 @@ public partial class Cell
 				new
 				{
 					Reference = a.Reference.ToString(),
-					ReferencedValues = ((IFunctionArgument)a).TryResolve(out var result) ? result : "Cell reference error".Wrap()
+					ReferencedValues = ((IFunctionArgument)a).TryResolve(out var result, out var error) ? result : $"Error: '{error}'".Wrap()
 				}),
 
 			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>().SelectMany(a => a.Resolve()),

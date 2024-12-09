@@ -1,7 +1,7 @@
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("size1,size2", "\\d,\\d"), ParseFormat("size1;size2", "\\d;\\d")]
+[ParseFormat("size1,size2", "(?<s>\\d),(?<s2>\\d)"), ParseFormat("size1;size2", "(?<s>\\d);(?<s2>\\d)")]
 public abstract class Shape2Sized2dBase<T> : Shape1Sized2dBase<T>, IShape2Sized where T : Shape2Sized2dBase<T>, IParsable<T>, new()
 {
 	public decimal Size2 { get; set; }
@@ -27,8 +27,8 @@ public abstract class Shape2Sized2dBase<T> : Shape1Sized2dBase<T>, IShape2Sized 
 	{
 		return ParseWrapper(value, args =>
 		{
-			var size1 = decimal.Parse(args[0].Trim());
-			var size2 = args.Length > 1 ? decimal.Parse(args[1].Trim()) : size1;
+			var size1 = decimal.Parse(args["s"].Value);
+			var size2 = args["s2"].Success ? decimal.Parse(args["s2"].Value) : size1;
 
 			return new T() { Size1 = size1, Size2 = size2 };
 		});

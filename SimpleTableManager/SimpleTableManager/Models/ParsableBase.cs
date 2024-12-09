@@ -5,17 +5,17 @@ namespace SimpleTableManager.Models;
 public abstract class ParsableBase<T>
 where T : class, IParsable<T>
 {
-	public static T ParseWrapper(string value, Func<string[], T> func)
+	public static T ParseWrapper(string value, Func<GroupCollection, T> func)
 	{
 		var regexes = typeof(T).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Regex);
 
 		foreach (var regex in regexes)
 		{
-			if (Regex.IsMatch(value, regex))
-			{
-				var values = Regex.Split(value, ",|;");
+			var match = Regex.Match(value, regex);
 
-				return func(values);
+			if (match.Success)
+			{
+				return func(match.Groups);
 			}
 		}
 

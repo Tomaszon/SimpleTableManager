@@ -14,7 +14,8 @@ public static class Shared
 	public const string STRIKED_CHAR_CODE = "\x1B[9m";
 	public const string OVERLINED_CHAR_CODE = "\x1B[53m";
 	public const string NAMED_ARG_SEPARATOR = ":=";
-	public const char REF_CHAR = '$';
+	public const char REF_CHAR = '*';
+	public const string REGEX_REF_CHAR = @"\*";
 
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{

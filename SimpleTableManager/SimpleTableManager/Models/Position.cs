@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models;
 
-[ParseFormat("x,y", "\\d,\\d"), ParseFormat("x;y", "\\d;\\d")]
+[ParseFormat("x,y", "(?<x>\\d),(?<y>\\d)"), ParseFormat("x;y", "(?<x>\\d);(?<y>\\d)")]
 public class Position : ParsableBase<Position>, IParsable<Position>
 {
 	public int X { get; set; }
@@ -50,8 +50,8 @@ public class Position : ParsableBase<Position>, IParsable<Position>
 	{
 		return ParseWrapper(value, (args) =>
 		{
-			var x = int.Parse(args[0].Trim());
-			var y = int.Parse(args[1].Trim());
+			var x = int.Parse(args["x"].Value);
+			var y = int.Parse(args["y"].Value);
 
 			return new Position(x, y);
 		});
