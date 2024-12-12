@@ -13,7 +13,7 @@ public class InstanceMap
 
 	public IEnumerable<Type> GetTypes() => _arrayMap.Select(p => p.Key.Type);
 
-	private string LocalizeKey<T>() => Localizer.Localize<InstanceMap>(typeof(T).Name);
+	private static string LocalizeKey<T>() => Localizer.Localize<InstanceMap>(typeof(T).Name);
 
 	/// <summary>
 	/// Adds new instances to storage

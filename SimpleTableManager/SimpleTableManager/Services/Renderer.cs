@@ -634,7 +634,7 @@ public static class Renderer
 	{
 		if (Console.WindowHeight > MINIMUM_LINES_FOR_LOGO)
 		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version;
+			var version = Shared.GetAppVersion();
 
 			var maxLength = Settings.Current.Logo.Max(s => s.Replace("{version}", "").Length);
 
@@ -650,14 +650,14 @@ public static class Renderer
 	{
 		if (Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE)
 		{
-			var infoTable = new Table("", 2, 3);
-			infoTable[0, 0].SetPrimitiveContent("Title:");
-			infoTable[1, 0].SetPrimitiveContent($"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
-			infoTable[0, 1].SetPrimitiveContent("Created:", "Size:");
-			infoTable[1, 1].SetPrimitiveContent(document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
+			var infoTable = new Table(null!, "", 2, 3);
+			infoTable[0, 0].SetStringContentFunction(StringFunctionOperator.Const, "Title:");
+			infoTable[1, 0].SetStringContentFunction(StringFunctionOperator.Const, $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
+			infoTable[0, 1].SetStringContentFunction(StringFunctionOperator.Const, "Created:", "Size:");
+			infoTable[1, 1].SetStringContentFunction(StringFunctionOperator.Const, document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
 
-			infoTable[0, 2].SetPrimitiveContent("Path:");
-			infoTable[1, 2].SetPrimitiveContent(document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
+			infoTable[0, 2].SetStringContentFunction(StringFunctionOperator.Const, "Path:");
+			infoTable[1, 2].SetStringContentFunction(StringFunctionOperator.Const, document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
 
 			infoTable.Content.ForEach(cell =>
 			{

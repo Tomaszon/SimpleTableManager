@@ -1,9 +1,9 @@
 {
-	"profiles": {
-		"SimpleTableManager": {
-			"commandName": "Executable",
-			"executablePath": "C:\\Users\\offic\\Documents\\GitHub\\SimpleTableManager\\SimpleTableManager\\SimpleTableManager\\bin\\Debug\\net6.0\\SimpleTableManager.exe",
-			"workingDirectory": "C:\\Users\\offic\\Documents\\GitHub\\SimpleTableManager\\SimpleTableManager\\SimpleTableManager\\bin\\Debug\\net6.0"
-		}
-	}
+  "profiles": {
+    "SimpleTableManager": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\offic\\Documents\\GitHub\\SimpleTableManager\\SimpleTableManager\\SimpleTableManager\\bin\\Debug\\net8.0\\SimpleTableManager.exe",
+      "workingDirectory": "C:\\Users\\offic\\Documents\\GitHub\\SimpleTableManager\\SimpleTableManager\\SimpleTableManager\\bin\\Debug\\net8.0"
+    }
+  }
 }

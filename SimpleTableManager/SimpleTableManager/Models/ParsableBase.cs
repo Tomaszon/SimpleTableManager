@@ -3,10 +3,43 @@ using System.Text.RegularExpressions;
 namespace SimpleTableManager.Models;
 
 public abstract class ParsableBase<T>
-where T : class, IParsable<T>
+where T : class, IParsable<T>, IParseCore<T>
 {
-	public static T ParseWrapper(string value, Func<GroupCollection, T> func)
+	public static T Parse(string value, IFormatProvider? _)
 	{
+		var match = GetRightMatch(value);
+
+		if (match is not null)
+		{
+			return T.ParseCore(match.Groups);
+		}
+
+		throw new FormatException();
+	}
+
+	public static bool TryParse([NotNullWhen(true)] string? value, IFormatProvider? _, [NotNullWhen(true)] out T? result)
+	{		
+		var match = GetRightMatch(value);
+
+		if (match is not null)
+		{
+			result = T.ParseCore(match.Groups);
+
+			return true;
+		}
+
+		result = null;
+
+		return false;
+	}
+
+	private static Match? GetRightMatch(string? value)
+	{
+		if (value is null)
+		{
+			return null;
+		}
+
 		var regexes = typeof(T).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Regex);
 
 		foreach (var regex in regexes)
@@ -15,33 +48,10 @@ where T : class, IParsable<T>
 
 			if (match.Success)
 			{
-				return func(match.Groups);
+				return match;
 			}
 		}
 
-		throw new FormatException();
-	}
-
-	public static bool TryParse([NotNullWhen(true)] string? value, IFormatProvider? _, [NotNullWhen(true)] out T? result)
-	{
-		if (value is null)
-		{
-			result = null;
-
-			return false;
-		}
-
-		try
-		{
-			result = T.Parse(value, null);
-
-			return true;
-		}
-		catch
-		{
-			result = null;
-
-			return false;
-		}
+		return null;
 	}
 }

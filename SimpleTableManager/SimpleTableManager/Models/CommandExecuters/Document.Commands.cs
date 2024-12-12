@@ -1,5 +1,3 @@
-using Newtonsoft.Json.Linq;
-
 using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -61,7 +59,7 @@ public partial class Document
 
 		ThrowIf(Tables.Any(t => t.Name == name), $"Can not create table with duplicate name '{name}'");
 
-		var table = new Table(name, size.Width, size.Height);
+		var table = new Table(this, name, size.Width, size.Height);
 
 		Tables.Add(table);
 
@@ -84,6 +82,8 @@ public partial class Document
 	{
 		fileName = Shared.GetWorkFilePath(fileName, "json");
 
+		var previousDocumentAppVersion = Metadata.AppVersion;
+
 		if (File.Exists(fileName) && !overwrite)
 		{
 			throw new InvalidOperationException($"File '{fileName}' already exists, set {nameof(overwrite)} to 'true' to force file save");
@@ -96,9 +96,14 @@ public partial class Document
 
 			Metadata.CreateTime ??= DateTime.Now;
 
-			Serialize(sw);
+			Metadata.AppVersion = Shared.GetAppVersion();
+
+			Shared.SerializeObject(sw, this);
 
 			IsSaved = true;
+
+			sw.Close();
+			f.Close();
 		}
 		catch (Exception ex)
 		{
@@ -106,6 +111,8 @@ public partial class Document
 			{
 				File.Delete(fileName);
 			}
+
+			Metadata.AppVersion = previousDocumentAppVersion;
 
 			throw new OperationCanceledException("Can not save document", ex);
 		}
@@ -128,11 +135,11 @@ public partial class Document
 			using var f = File.Open(fileName, FileMode.Open);
 			using var sr = new StreamReader(f);
 
-			Deserialize(sr);
+			Shared.PopulateObject(sr, this);
 
 			IsSaved = true;
 
-			app.EditHistory.Clear();
+			app.EditHistory.Init(Shared.SerializeObject(this));
 
 			Renderer.RenderLoadingScreen();
 		}
@@ -176,13 +183,12 @@ public partial class Document
 
 		files.ForEach(f =>
 		{
-			try
-			{
-				_ = JToken.Parse(File.ReadAllText(f));
+			var content = File.ReadAllText(f);
 
+			if (Settings.Current.CheckAppVersionOnDocumentLoad && CheckFileVersion(content))
+			{
 				fileNames += $"{Path.GetFileNameWithoutExtension(f)}|";
 			}
-			catch { }
 		});
 
 		return new

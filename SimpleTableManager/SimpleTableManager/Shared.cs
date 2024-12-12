@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using SimpleTableManager.Models;
+using SimpleTableManager.Models.CommandExecuters;
 
 namespace SimpleTableManager.Services;
 
@@ -61,23 +62,24 @@ public static class Shared
 			ex is OperationCanceledException;
 	}
 
-	public static void SerializeObject(StreamWriter sw, object? source, TypeNameHandling typeNameHandling = TypeNameHandling.All)
+	public static void SerializeObject(StreamWriter sw, object? source)
 	{
 		var serializer = new JsonSerializer
 		{
-			TypeNameHandling = typeNameHandling,
+			TypeNameHandling = TypeNameHandling.Auto
 		};
 
 		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, source);
 	}
 
-	public static void DeserializeObject(StreamReader sr, object target)
+	public static void PopulateObject(StreamReader sr, object target)
 	{
 		var serializer = new JsonSerializer
 		{
 			TypeNameHandling = TypeNameHandling.Auto,
-			ContractResolver = new ClearPropertyContractResolver(),
+			ContractResolver = new ClearPropertyContractResolver()
 		};
+		serializer.Converters.Add(new AppVersionConverter());
 
 		serializer.Populate(new JsonTextReader(sr), target);
 	}
@@ -118,7 +120,7 @@ public static class Shared
 		var serializer = new JsonSerializer
 		{
 			TypeNameHandling = TypeNameHandling.Auto,
-			ContractResolver = new ClearPropertyContractResolver(),
+			ContractResolver = new ClearPropertyContractResolver()
 		};
 
 		var result = serializer.Deserialize(new JsonTextReader(sr));
@@ -133,5 +135,10 @@ public static class Shared
 	public static string GetWorkFilePath(string fileName, string extension)
 	{
 		return Path.IsPathFullyQualified(fileName) ? fileName : Path.Combine(Settings.Current.DefaultWorkDirectory, $"{fileName}.{extension}");
+	}
+
+	public static Version GetAppVersion()
+	{
+		return Assembly.GetExecutingAssembly().GetName().Version!;
 	}
 }

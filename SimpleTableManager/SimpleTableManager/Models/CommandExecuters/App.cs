@@ -18,7 +18,7 @@ public class App : CommandExecuterBase
 
 		document.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 
-		InvokeStateModifierCommandExecutedEvent(this);
+		EditHistory.Init(Shared.SerializeObject(Document));
 	}
 
 	[CommandFunction]
@@ -36,23 +36,7 @@ public class App : CommandExecuterBase
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
 	{
-		using var ms = new MemoryStream();
-		using var sw = new StreamWriter(ms);
-		using var sr = new StreamReader(ms);
-
-		Document.Serialize(sw);
-
-		sw.Flush();
-
-		ms.Position = 0;
-
-		var content = sr.ReadToEnd();
-
-		EditHistory.Add(content);
-
-		sr.Close();
-		sw.Close();
-		ms.Close();
+		EditHistory.Add(Shared.SerializeObject(Document));
 	}
 
 	[CommandFunction, CommandShortcut("redoChange")]
@@ -70,7 +54,7 @@ public class App : CommandExecuterBase
 
 			ms.Position = 0;
 
-			Document.Deserialize(sr);
+			Shared.PopulateObject(sr, Document);
 
 			sr.Close();
 			sw.Close();
@@ -93,8 +77,8 @@ public class App : CommandExecuterBase
 
 			ms.Position = 0;
 
-			Document.Deserialize(sr);
-
+			Shared.PopulateObject(sr, Document);
+			
 			sr.Close();
 			sw.Close();
 			ms.Close();

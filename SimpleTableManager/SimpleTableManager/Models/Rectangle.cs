@@ -9,9 +9,4 @@ public class Rectangle : Shape2Sized2dBase<Rectangle>, IParsable<Rectangle>
 	public Rectangle() { }
 
 	public Rectangle(decimal size1, decimal size2) : base(size1, size2) { }
-
-	public static Rectangle Parse(string value, IFormatProvider? provider)
-	{
-		return ParseWrapper(value);
-	}
 }

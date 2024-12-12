@@ -10,9 +10,4 @@ public class Ellipse : Shape2Sized2dBase<Ellipse>, IParsable<Ellipse>
 	public Ellipse() { }
 
 	public Ellipse(decimal size1, decimal size2) : base(size1, size2) { }
-
-	public static Ellipse Parse(string value, IFormatProvider? provider)
-	{
-		return ParseWrapper(value);
-	}
 }

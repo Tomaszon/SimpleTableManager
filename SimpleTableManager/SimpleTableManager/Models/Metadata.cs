@@ -16,7 +16,12 @@ public class Metadata
 
 	public DateTime? CreateTime { get; set; }
 
+	public Version AppVersion { get; set; }
+
 	public Dictionary<string, string> CustomProperties { get; set; } = new();
 
-	public Metadata() { }
+	public Metadata()
+	{
+		AppVersion = Shared.GetAppVersion();
+	}
 }

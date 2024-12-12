@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace SimpleTableManager.Services;
 
 /// <summary>
@@ -20,6 +22,13 @@ public class HistoryList
 		_length = length;
 		_indexResetOffset = indexResetOffset;
 		_cleanAfterInsert = cleanAfterInsert;
+	}
+
+	public void Init(string element)
+	{
+		Clear();
+
+		Add(element);
 	}
 
 	/// <summary>

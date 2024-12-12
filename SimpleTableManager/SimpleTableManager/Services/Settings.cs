@@ -87,6 +87,8 @@ public class Settings
 
 	public string Culture { get; set; } = CultureInfo.CurrentUICulture.Name;
 
+	public bool CheckAppVersionOnDocumentLoad { get; set; } = true;
+
 	public static Settings Current { get; private set; } = new();
 
 	public static void FromJson(string path)

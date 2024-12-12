@@ -1,4 +1,3 @@
-using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -8,13 +7,13 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("copyCellContent")]
 	public void CopyContent()
 	{
-		GlobalContainer.Add("cellContent", ContentFunction);
+		Table.Document.GlobalStorage.Add("cellContent", ContentFunction);
 	}
 
 	[CommandFunction, CommandShortcut("cutCellContent")]
 	public void CutContent()
 	{
-		GlobalContainer.Add("cellContent", ContentFunction);
+		Table.Document.GlobalStorage.Add("cellContent", ContentFunction);
 
 		ResetContent();
 	}
@@ -22,7 +21,7 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("pasteCellContent")]
 	public void PasteContent()
 	{
-		var stored = GlobalContainer.TryGet<IFunction>("cellContent");
+		var stored = Table.Document.GlobalStorage.TryGet<IFunction>("cellContent");
 
 		if (stored is not null)
 		{
@@ -33,7 +32,7 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("copyCellFormat")]
 	public void CopyFormat()
 	{
-		GlobalContainer.Add("cellFormat",
+		Table.Document.GlobalStorage.Add("cellFormat",
 		(
 			GivenSize,
 			ContentPadding,
@@ -47,9 +46,9 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("pasteCellFormat")]
 	public void PasteFormat()
 	{
-		var stored = GlobalContainer.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, int>?>("cellFormat");
+		var stored = Table.Document.GlobalStorage.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, int>?>("cellFormat");
 
-		if(stored is not null)
+		if (stored is not null)
 		{
 			GivenSize = stored.Value.Item1;
 			ContentPadding = stored.Value.Item2;

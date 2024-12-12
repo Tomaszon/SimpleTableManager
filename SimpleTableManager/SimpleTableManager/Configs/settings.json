@@ -104,5 +104,6 @@
 		"Medium",
 		"Low"
 	],
-	"Volume": 50
+	"Volume": 50,
+	"CheckAppVersionOnDocumentLoad" : true
 }

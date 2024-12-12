@@ -1,7 +1,9 @@
-﻿namespace SimpleTableManager.Models;
+﻿using System.Text.RegularExpressions;
+
+namespace SimpleTableManager.Models;
 
 [ParseFormat("width,height", "(?<w>\\d),(?<h>\\d)"), ParseFormat("width;height", "(?<w>\\d);(?<h>\\d)")]
-public class Size : ParsableBase<Size>, IParsable<Size>
+public class Size : ParsableBase<Size>, IParsable<Size>, IParseCore<Size>
 {
 	public int Width { get; set; }
 
@@ -31,14 +33,11 @@ public class Size : ParsableBase<Size>, IParsable<Size>
 		h = Height;
 	}
 
-	public static Size Parse(string value, IFormatProvider? _)
+	public static Size ParseCore(GroupCollection args)
 	{
-		return ParseWrapper(value, args =>
-		{
-			var w = int.Parse(args["w"].Value);
-			var h = int.Parse(args["h"].Value);
+		var w = int.Parse(args["w"].Value);
+		var h = int.Parse(args["h"].Value);
 
-			return new Size(w, h);
-		});
+		return new Size(w, h);
 	}
 }

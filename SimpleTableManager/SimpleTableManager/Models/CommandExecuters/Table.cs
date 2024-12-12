@@ -8,6 +8,8 @@ namespace SimpleTableManager.Models.CommandExecuters;
 [JsonObject(IsReference = true)]
 public partial class Table : CommandExecuterBase
 {
+	public Document Document { get; set; } = default!;
+
 	public event Action<int?, int?, int?, int?>? ViewChanged;
 
 	public string Name { get; set; } = default!;
@@ -72,8 +74,10 @@ public partial class Table : CommandExecuterBase
 	[JsonConstructor]
 	public Table() { }
 
-	public Table(string name, int columnCount, int rowCount)
+	public Table(Document document, string name, int columnCount, int rowCount)
 	{
+		Document = document;
+
 		Name = name;
 
 		CornerCell = new(this, @"y \ x");
