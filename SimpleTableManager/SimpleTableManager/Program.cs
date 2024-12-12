@@ -195,7 +195,6 @@ public class Program
 				SmartConsole.ShowHelp(ex.RawCommand, null, null, ex.Message);
 
 				SmartConsole.Play(Settings.Current.QuestionNotes);
-
 			}
 			catch (HelpRequestedException ex)
 			{

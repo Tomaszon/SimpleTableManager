@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Models;
+﻿using System.Dynamic;
+using SimpleTableManager.Models;
 using SimpleTableManager.Models.CommandExecuters;
 
 namespace SimpleTableManager.Services;
@@ -22,7 +23,7 @@ public class Command
 
 	public static Command FromString(string rawCommand)
 	{
-		var reference = CommandTree.GetCommandReference(rawCommand, out var arguments);
+		var reference = GetCommandReference(rawCommand, out var arguments);
 
 		return new Command(reference, rawCommand, arguments);
 	}
@@ -182,21 +183,77 @@ public class Command
 		return method.GetParameters().Select(p => new CommandParameter(p)).ToList();
 	}
 
-	public static bool IsValid(string rawCommand)
+	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments)
 	{
-		try
-		{
-			FromString(rawCommand);
+		var keys = rawCommand.Split(' ').ToList();
 
-			return true;
-		}
-		catch (Exception ex) when (ex is HelpRequestedException || ex is IncompleteCommandException)
+		if (keys.Count == 0)
 		{
-			return true;
+			throw new IncompleteCommandException(rawCommand, CommandTree.Commands.Keys.ToList());
 		}
-		catch
+
+		var methodName = GetReferenceMethodNameRecursive(CommandTree.Commands, keys.First(), keys, rawCommand, out arguments);
+
+		return new CommandReference(keys.First(), methodName);
+	}
+
+	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments)
+	{
+		if (obj is ExpandoObject o)
 		{
-			return false;
+			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
+			{
+				throw new HelpRequestedException(rawCommand, o.Select(e => (e.Key, e.Value is not ExpandoObject)).ToList(), null);
+			}
+			else
+			{
+				var key = keys.First();
+
+				if (string.IsNullOrWhiteSpace(key))
+				{
+					return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
+				}
+				else
+				{
+					var matchingValue = o.FirstOrDefault(e =>
+						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
+
+					var partialMatchingValue = o.FirstOrDefault(e =>
+						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(p => p.StartsWith(key, StringComparison.OrdinalIgnoreCase))).Value;
+
+					if (matchingValue is null)
+					{
+						if (partialMatchingValue is not null)
+						{
+							throw new PartialKeyException(rawCommand, key);
+						}
+						else
+						{
+							throw new CommandKeyNotFoundException(rawCommand, key);
+						}
+					}
+
+					if (matchingValue is ExpandoObject && keys.Count <= 1 || matchingValue is not ExpandoObject && keys.Count < 1)
+					{
+						throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
+					}
+
+					return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
+				}
+			}
+		}
+		else
+		{
+			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
+			{
+				throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!));
+			}
+			else
+			{
+				arguments = StackMata.ProcessArguments(string.Join(' ', keys));
+
+				return (string)obj;
+			}
 		}
 	}
 }

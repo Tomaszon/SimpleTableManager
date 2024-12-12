@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class CommandException : Exception
+public abstract class CommandException : Exception
 {
 	public string RawCommand { get; set; }
 
