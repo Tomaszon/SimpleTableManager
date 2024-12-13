@@ -5,6 +5,15 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Cell
 {
+	public void SetContents(params string[] contents)
+	{
+		ContentFunction = new StringFunction()
+		{
+			Operator = StringFunctionOperator.Const,
+			Arguments = contents.Select(c => new ConstFunctionArgument<string>(c))
+		};
+	}
+
 	private void SetFunction<T>(Enum functionOperator, params string[] arguments)
 		where T : IParsable<T>
 	{

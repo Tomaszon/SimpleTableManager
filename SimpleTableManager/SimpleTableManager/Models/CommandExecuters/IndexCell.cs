@@ -59,25 +59,25 @@ public class IndexCell : Cell
 	{
 		var content = ContentFunction!.ExecuteAndFormat().First();
 
-		SetStringContentFunction(StringFunctionOperator.Const, $"{content} {HigherArrow} {lastIndex}");
+		SetContents($"{content} {HigherArrow} {lastIndex}");
 	}
 
 	public void AppendFilteredMark()
 	{
 		var content = ContentFunction!.ExecuteAndFormat().First();
 
-		SetStringContentFunction(StringFunctionOperator.Const, $"{content} {Settings.Current.IndexCellFiltered}");
+		SetContents($"{content} {Settings.Current.IndexCellFiltered}");
 	}
 
 	public void AppendLowerEllipsis()
 	{
 		var content = ContentFunction!.ExecuteAndFormat().First();
 
-		SetStringContentFunction(StringFunctionOperator.Const, $"0 {LowerArrow} {content}");
+		SetContents($"0 {LowerArrow} {content}");
 	}
 
 	public void RemoveEllipses()
 	{
-		SetStringContentFunction(StringFunctionOperator.Const, Index.ToString());
+		SetContents(Index.ToString());
 	}
 }

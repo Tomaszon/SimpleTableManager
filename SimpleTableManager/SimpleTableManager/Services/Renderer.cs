@@ -7,13 +7,15 @@ public static class Renderer
 {
 	public static RendererSettings RendererSettings { get; set; } = new();
 
-	private const int _FREE_LINES_BELOW_TABLE = 10;
+	private const int _FREE_LINES = 10;
 
-	private const int MINIMUM_LINES_FOR_LOGO = 50;
+	private const int _FREE_COLUMNS = 50;
 
-	private const int MINIMUM_LINES_FOR_INFOTABLE = 45;
+	private const int _MINIMUM_LINES_FOR_LOGO = 50;
 
-	private const int MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
+	private const int _MINIMUM_LINES_FOR_INFOTABLE = 45;
+
+	private const int _MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
 
 	private static int TableVerticalOffset;
 
@@ -25,13 +27,13 @@ public static class Renderer
 
 		var cells = table.GetSelectedCells();
 
-		var singleCell = cells.Count() > 1 ? null : cells.FirstOrDefault();
+		var firstSelectedCell = cells.FirstOrDefault();
 
 		ChangeToTextColors();
 
-		InfotableVerticalOffset = Console.WindowHeight > MINIMUM_LINES_FOR_LOGO ? 3 : -1;
+		InfotableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 3 : -1;
 
-		TableVerticalOffset = Console.WindowHeight > MINIMUM_LINES_FOR_LOGO ? 15 : Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE ? 11 : 2;
+		TableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 15 : Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE ? 11 : 2;
 
 		var tableSize = ShrinkTableViewToConsoleSize(table);
 
@@ -39,7 +41,9 @@ public static class Renderer
 
 		RenderLogo();
 
-		RenderDocumentInfos(document, singleCell);
+		RenderDocumentInfos(document);
+
+		RenderCellInfos(tableSize, tableOffset, firstSelectedCell);
 
 		RenderTableInfos(table, tableOffset, tableIndex, document.Tables.Count);
 
@@ -53,9 +57,126 @@ public static class Renderer
 
 		RenderCornerCell(table, tableOffset);
 
-		Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES_BELOW_TABLE);
+		Console.SetCursorPosition(0, Console.WindowHeight - _FREE_LINES);
 
 		ChangeToTextColors();
+	}
+
+	private static void RenderCellInfos(Size tableSize, Size tableOffset, Cell? cell)
+	{
+		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cell is not null)
+		{
+			var outType = cell.ContentFunction?.GetOutType().GetFriendlyName() ?? " - ";
+			var layerIndex = cell.LayerIndex.ToString();
+			var comment = cell.Comment ?? " - ";
+
+			var infoTable = new Table(null!, "", 2, 3);
+			infoTable[0, 0].SetContents("Type:");
+			infoTable[1, 0].SetContents(outType);
+			infoTable[0, 1].SetContents("Layer:");
+			infoTable[1, 1].SetContents(layerIndex);
+			infoTable[0, 2].SetContents("Comment:");
+			infoTable[1, 2].SetContents(comment);
+
+			infoTable.Content.ForEach(cell =>
+			{
+				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
+				cell.BackgroundCharacter = ' ';
+			});
+
+			RenderContent(infoTable, new Size(tableOffset.Width + tableSize.Width - 2, tableOffset.Height - 2), true, true);
+		}
+	}
+
+	public static void RenderLoadingScreen()
+	{
+		if (Settings.Current.ShowLoadingScreen &&
+			Console.WindowHeight > Settings.Current.LoadingScreenLogo.Length + 5 &&
+			Console.WindowWidth > Settings.Current.LoadingScreenLogo.Max(p => p.Length))
+		{
+			Console.Clear();
+
+			var maxLength = Settings.Current.LoadingScreenLogo.Max(s => s.Length);
+
+			for (int i = 0; i < Settings.Current.LoadingScreenLogo.Length; i++)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, (Console.WindowHeight - Settings.Current.LoadingScreenLogo.Length) / 2 + i);
+
+				for (int j = 0; j < Settings.Current.LoadingScreenLogo[i].Length; j++)
+				{
+					var c = Settings.Current.LoadingScreenLogo[i][j];
+
+					Console.ForegroundColor = c == '.' ?
+						Settings.Current.DefaultBackgroundColor.Foreground :
+						Settings.Current.DefaultContentColor.Foreground;
+					Console.BackgroundColor = c == '.' ?
+						Settings.Current.DefaultBackgroundColor.Background :
+						Settings.Current.DefaultContentColor.Background;
+
+					Console.Write(c);
+				}
+			}
+
+			Console.ForegroundColor = Settings.Current.DefaultContentColor.Foreground;
+			Console.BackgroundColor = Settings.Current.DefaultContentColor.Background;
+
+			var splashText = Localizer.Localize(typeof(Renderer), null, Settings.Current.LoadingScreenSplashes[new Random().Next(Settings.Current.LoadingScreenSplashes.Length)]);
+
+			Console.SetCursorPosition(Console.WindowWidth - (Console.WindowWidth - maxLength) / 2 - splashText.Length, (Console.WindowHeight - Settings.Current.LoadingScreenLogo.Length) / 2 - 2);
+
+			Console.Write(splashText);
+
+			var loadingText = Localizer.Localize(typeof(Renderer), null, "loading");
+
+			Console.SetCursorPosition((Console.WindowWidth - loadingText.Length) / 2, (Console.WindowHeight + Settings.Current.LoadingScreenLogo.Length) / 2 + 2);
+
+			Console.Write(loadingText);
+
+			Task.Delay(Settings.Current.LoadingScreenDelay).Wait();
+		}
+	}
+
+	private static void RenderLogo()
+	{
+		if (Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO)
+		{
+			var version = Shared.GetAppVersion();
+
+			var maxLength = Settings.Current.Logo.Max(s => s.Replace("{version}", "").Length);
+
+			for (int i = 0; i < Settings.Current.Logo.Length; i++)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, i);
+				Console.Write(Settings.Current.Logo[i].Replace("{version}", $"v.{version}"));
+			}
+		}
+	}
+
+	private static void RenderDocumentInfos(Document document)
+	{
+		if (Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE)
+		{
+			var title = $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}";
+			var createTime = document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet";
+			var size = document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet";
+			var path = document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet";
+
+			var infoTable = new Table(null!, "", 2, 3);
+			infoTable[0, 0].SetContents("Title:");
+			infoTable[1, 0].SetContents(title);
+			infoTable[0, 1].SetContents("Created:", "Size:");
+			infoTable[1, 1].SetContents(createTime, size);
+			infoTable[0, 2].SetContents("Path:");
+			infoTable[1, 2].SetContents(path);
+
+			infoTable.Content.ForEach(cell =>
+			{
+				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
+				cell.BackgroundCharacter = ' ';
+			});
+
+			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset), true, true);
+		}
 	}
 
 	private static void RenderTableInfos(Table table, Size tableOffset, int tableIndex, int tableCount)
@@ -94,11 +215,11 @@ public static class Renderer
 		{
 			var size = table.GetTableSize();
 
-			if (Console.WindowWidth - size.Width < 0)
+			if (Console.WindowWidth - _FREE_COLUMNS - size.Width < 0)
 			{
 				table.ViewOptions.DecreaseWidth();
 			}
-			else if (Console.WindowHeight - _FREE_LINES_BELOW_TABLE - TableVerticalOffset - size.Height < 0)
+			else if (Console.WindowHeight - _FREE_LINES - TableVerticalOffset - size.Height < 0)
 			{
 				table.ViewOptions.DecreaseHeight();
 			}
@@ -318,11 +439,11 @@ public static class Renderer
 		{
 			return CellBorderType.ContentDownRight;
 		}
-		else if(headlessTable && position.X == 0)
+		else if (headlessTable && position.X == 0)
 		{
 			return CellBorderType.ContentVerticalRight;
 		}
-		else if(headlessTable && position.Y == 0)
+		else if (headlessTable && position.Y == 0)
 		{
 			return CellBorderType.ContentHorizontalDown;
 		}
@@ -580,106 +701,6 @@ public static class Renderer
 			ShowIndexCellSelection(showSelection);
 			Console.Write(new string(cell.BackgroundCharacter, rightPaddingSize));
 		});
-	}
-
-	public static void RenderLoadingScreen()
-	{
-		if (Settings.Current.ShowLoadingScreen &&
-			Console.WindowHeight > Settings.Current.LoadingScreenLogo.Length + 5 &&
-			Console.WindowWidth > Settings.Current.LoadingScreenLogo.Max(p => p.Length))
-		{
-			Console.Clear();
-
-			var maxLength = Settings.Current.LoadingScreenLogo.Max(s => s.Length);
-
-			for (int i = 0; i < Settings.Current.LoadingScreenLogo.Length; i++)
-			{
-				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, (Console.WindowHeight - Settings.Current.LoadingScreenLogo.Length) / 2 + i);
-
-				for (int j = 0; j < Settings.Current.LoadingScreenLogo[i].Length; j++)
-				{
-					var c = Settings.Current.LoadingScreenLogo[i][j];
-
-					Console.ForegroundColor = c == '.' ?
-						Settings.Current.DefaultBackgroundColor.Foreground :
-						Settings.Current.DefaultContentColor.Foreground;
-					Console.BackgroundColor = c == '.' ?
-						Settings.Current.DefaultBackgroundColor.Background :
-						Settings.Current.DefaultContentColor.Background;
-
-					Console.Write(c);
-				}
-			}
-
-			Console.ForegroundColor = Settings.Current.DefaultContentColor.Foreground;
-			Console.BackgroundColor = Settings.Current.DefaultContentColor.Background;
-
-			var splashText = Localizer.Localize(typeof(Renderer), null, Settings.Current.LoadingScreenSplashes[new Random().Next(Settings.Current.LoadingScreenSplashes.Length)]);
-
-			Console.SetCursorPosition(Console.WindowWidth - (Console.WindowWidth - maxLength) / 2 - splashText.Length, (Console.WindowHeight - Settings.Current.LoadingScreenLogo.Length) / 2 - 2);
-
-			Console.Write(splashText);
-
-			var loadingText = Localizer.Localize(typeof(Renderer), null, "loading");
-
-			Console.SetCursorPosition((Console.WindowWidth - loadingText.Length) / 2, (Console.WindowHeight + Settings.Current.LoadingScreenLogo.Length) / 2 + 2);
-
-			Console.Write(loadingText);
-
-			Task.Delay(Settings.Current.LoadingScreenDelay).Wait();
-		}
-	}
-
-	private static void RenderLogo()
-	{
-		if (Console.WindowHeight > MINIMUM_LINES_FOR_LOGO)
-		{
-			var version = Shared.GetAppVersion();
-
-			var maxLength = Settings.Current.Logo.Max(s => s.Replace("{version}", "").Length);
-
-			for (int i = 0; i < Settings.Current.Logo.Length; i++)
-			{
-				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, i);
-				Console.Write(Settings.Current.Logo[i].Replace("{version}", $"v.{version}"));
-			}
-		}
-	}
-
-	private static void RenderDocumentInfos(Document document, Cell? cell)
-	{
-		if (Console.WindowHeight > MINIMUM_LINES_FOR_INFOTABLE)
-		{
-			var infoTable = new Table(null!, "", 2, 3);
-			infoTable[0, 0].SetStringContentFunction(StringFunctionOperator.Const, "Title:");
-			infoTable[1, 0].SetStringContentFunction(StringFunctionOperator.Const, $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}");
-			infoTable[0, 1].SetStringContentFunction(StringFunctionOperator.Const, "Created:", "Size:");
-			infoTable[1, 1].SetStringContentFunction(StringFunctionOperator.Const, document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet", document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet");
-
-			infoTable[0, 2].SetStringContentFunction(StringFunctionOperator.Const, "Path:");
-			infoTable[1, 2].SetStringContentFunction(StringFunctionOperator.Const, document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet");
-
-			infoTable.Content.ForEach(cell =>
-			{
-				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
-				cell.BackgroundCharacter = ' ';
-			});
-
-			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset), true, true);
-		}
-
-		// //IDEA
-		// Console.Write("Cell:");
-		// if (cell is null)
-		// {
-		// 	Console.WriteLine("Select one cell to show details");
-		// }
-		// else
-		// {
-		// 	//EXPERIMENTAL dynamic type handling
-		// 	dynamic details = cell.ShowDetails();
-		// 	Console.Write($"Function:    {details.Content.Function}    Comment:    {details.Comment}    Layer index: {details.LayerIndex}");
-		// }
 	}
 
 	private static bool IsCellContentRenderNeeded(IEnumerable<object> contents, VerticalAlignment alignment, ContentPadding padding, int lineIndex, int height, out int contentIndex)
