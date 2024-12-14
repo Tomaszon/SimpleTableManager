@@ -18,6 +18,8 @@ public partial class Table : CommandExecuterBase
 
 	public bool IsActive { get; set; }
 
+	public bool IsHeadLess { get; set; }
+
 	public ViewOptions ViewOptions { get; set; } = new(0, 0, 0, 0);
 
 	public List<Cell> Content { get; set; } = new();
@@ -156,12 +158,12 @@ public partial class Table : CommandExecuterBase
 
 	public int GetSiderWidth()
 	{
-		return Shared.Max(Sider.Max(c => c.GetSize().Width), CornerCell.GetSize().Width);
+		return IsHeadLess ? 0 : Shared.Max(Sider.Max(c => c.GetSize().Width), CornerCell.GetSize().Width);
 	}
 
 	public int GetHeaderHeight()
 	{
-		return Shared.Max(Header.Max(c => c.GetSize().Height), CornerCell.GetSize().Height);
+		return IsHeadLess ? 0 : Shared.Max(Header.Max(c => c.GetSize().Height), CornerCell.GetSize().Height);
 	}
 
 	public Size GetTableSize()
@@ -171,7 +173,7 @@ public partial class Table : CommandExecuterBase
 		var sumHeight = Shared.IndexArray(Size.Height).Where(y =>
 			!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1);
 
-		return new Size(GetSiderWidth() + sumWidth, GetHeaderHeight() + sumHeight);
+		return new Size((IsHeadLess ? 0 : GetSiderWidth()) + sumWidth, (IsHeadLess ? 0 : GetHeaderHeight()) + sumHeight);
 	}
 
 	public Size GetContentCellSize(int x, int y)
@@ -181,17 +183,17 @@ public partial class Table : CommandExecuterBase
 
 	public Size GetHeaderCellSize(int x)
 	{
-		return new Size(GetColumnWidth(x), GetHeaderHeight());
+		return IsHeadLess ? new(0, 0) : new(GetColumnWidth(x), GetHeaderHeight());
 	}
 
 	public Size GetSiderCellSize(int y)
 	{
-		return new Size(GetSiderWidth(), GetRowHeight(y));
+		return IsHeadLess ? new(0, 0) : new(GetSiderWidth(), GetRowHeight(y));
 	}
 
 	public Size GetCornerCellSize()
 	{
-		return new Size(GetSiderWidth(), GetHeaderHeight());
+		return IsHeadLess ? new(0, 0) : new(GetSiderWidth(), GetHeaderHeight());
 	}
 
 	public Position GetHeaderCellPosition(Size tableOffset, int x)
@@ -218,7 +220,7 @@ public partial class Table : CommandExecuterBase
 		var sumHeight = y > 0 ? Shared.IndexArray(y).Where(y =>
 			!IsRowHidden(y) && IsRowInView(y)).Sum(y => GetRowHeight(y) - 1) : 0;
 
-		return new Position(tableOffset.Width + GetSiderWidth() + sumWidth - 1, tableOffset.Height + GetHeaderHeight() + sumHeight - 1);
+		return new Position(tableOffset.Width + (IsHeadLess ? 0 : GetSiderWidth() - 1) + sumWidth, tableOffset.Height + (IsHeadLess ? 0 : GetHeaderHeight() - 1) + sumHeight);
 	}
 
 	public bool IsColumnHidden(int x)

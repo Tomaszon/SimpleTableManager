@@ -17,9 +17,9 @@ public static class Renderer
 
 	private const int _MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
 
-	private static int TableVerticalOffset;
+	// private static int TableVerticalOffset;
 
-	private static int InfotableVerticalOffset;
+	// private static int InfotableVerticalOffset;
 
 	public static void Render(Document document)
 	{
@@ -31,25 +31,27 @@ public static class Renderer
 
 		ChangeToTextColors();
 
-		InfotableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 3 : -1;
+		// InfotableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 3 : -1;
 
-		TableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 15 : Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE ? 11 : 2;
+		// TableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 15 : Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE ? 11 : 2;
 
-		var tableSize = ShrinkTableViewToConsoleSize(table);
+		// var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, TableVerticalOffset);
 
-		var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, TableVerticalOffset);
+		RenderLogo(out var logoBottomOffset);
 
-		RenderLogo();
+		RenderDocumentInfos(document, logoBottomOffset, out var documentInfosBottomOffset);
 
-		RenderDocumentInfos(document);
+		RenderCellInfos(firstSelectedCell, out var cellInfosLeftOffset);
 
-		RenderCellInfos(tableSize, tableOffset, firstSelectedCell);
+		var tableSize = ShrinkTableViewToConsoleSize(table, documentInfosBottomOffset + 4, Console.WindowWidth - cellInfosLeftOffset + 4);
 
-		RenderTableInfos(table, tableOffset, tableIndex, document.Tables.Count);
+		var tableOffset = new Size((cellInfosLeftOffset - 4 - tableSize.Width) / 2 + 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - 2 - tableSize.Height) / 2 + documentInfosBottomOffset + 2);
+
+		RenderTableInfos(table, new(tableOffset.Width, tableOffset.Height - 1), tableIndex, document.Tables.Count);
 
 		RenderTempCell(table, tableOffset, tableSize);
 
-		RenderContent(table, tableOffset, false, false);
+		RenderContent(table, tableOffset, false);
 
 		RenderHeader(table, tableOffset);
 
@@ -62,7 +64,7 @@ public static class Renderer
 		ChangeToTextColors();
 	}
 
-	private static void RenderCellInfos(Size tableSize, Size tableOffset, Cell? cell)
+	private static void RenderCellInfos(Cell? cell, out int leftOffset)
 	{
 		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cell is not null)
 		{
@@ -70,13 +72,17 @@ public static class Renderer
 			var layerIndex = cell.LayerIndex.ToString();
 			var comment = cell.Comment ?? " - ";
 
-			var infoTable = new Table(null!, "", 2, 3);
+			var infoTable = new Table(null!, "", 2, 3)
+			{
+				IsHeadLess = true
+			};
+
 			infoTable[0, 0].SetContents("Type:");
 			infoTable[1, 0].SetContents(outType);
 			infoTable[0, 1].SetContents("Layer:");
 			infoTable[1, 1].SetContents(layerIndex);
 			infoTable[0, 2].SetContents("Comment:");
-			infoTable[1, 2].SetContents(comment);
+			infoTable[1, 2].SetContents(comment.Chunk(15).Select(a => new string(a)).ToArray());
 
 			infoTable.Content.ForEach(cell =>
 			{
@@ -84,7 +90,15 @@ public static class Renderer
 				cell.BackgroundCharacter = ' ';
 			});
 
-			RenderContent(infoTable, new Size(tableOffset.Width + tableSize.Width - 2, tableOffset.Height - 2), true, true);
+			var tableSize = infoTable.GetTableSize();
+
+			leftOffset = Console.WindowWidth - tableSize.Width - 1;
+
+			RenderContent(infoTable, new(leftOffset, (Console.WindowHeight - tableSize.Height) / 2), true);
+		}
+		else
+		{
+			leftOffset = Console.WindowWidth + 1;
 		}
 	}
 
@@ -136,7 +150,7 @@ public static class Renderer
 		}
 	}
 
-	private static void RenderLogo()
+	private static void RenderLogo(out int bottomOffset)
 	{
 		if (Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO)
 		{
@@ -149,10 +163,16 @@ public static class Renderer
 				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, i);
 				Console.Write(Settings.Current.Logo[i].Replace("{version}", $"v.{version}"));
 			}
+
+			bottomOffset = Settings.Current.Logo.Length - 1;
+		}
+		else
+		{
+			bottomOffset = -2;
 		}
 	}
 
-	private static void RenderDocumentInfos(Document document)
+	private static void RenderDocumentInfos(Document document, int verticalOffset, out int bottomOffset)
 	{
 		if (Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE)
 		{
@@ -161,7 +181,11 @@ public static class Renderer
 			var size = document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet";
 			var path = document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet";
 
-			var infoTable = new Table(null!, "", 2, 3);
+			var infoTable = new Table(null!, "", 2, 3)
+			{
+				IsHeadLess = true
+			};
+
 			infoTable[0, 0].SetContents("Title:");
 			infoTable[1, 0].SetContents(title);
 			infoTable[0, 1].SetContents("Created:", "Size:");
@@ -175,15 +199,23 @@ public static class Renderer
 				cell.BackgroundCharacter = ' ';
 			});
 
-			RenderContent(infoTable, new((Console.WindowWidth - infoTable.GetTableSize().Width - infoTable.GetSiderWidth()) / 2, InfotableVerticalOffset), true, true);
+			var tableSize = infoTable.GetTableSize();
+
+			RenderContent(infoTable, new((Console.WindowWidth - tableSize.Width) / 2, verticalOffset + 2), true);
+
+			bottomOffset = verticalOffset + 2 + infoTable.GetTableSize().Height;
+		}
+		else
+		{
+			bottomOffset = verticalOffset;
 		}
 	}
 
-	private static void RenderTableInfos(Table table, Size tableOffset, int tableIndex, int tableCount)
+	private static void RenderTableInfos(Table table, Size offset, int tableIndex, int tableCount)
 	{
 		ChangeToTextColors();
 
-		Console.SetCursorPosition(tableOffset.Width, tableOffset.Height - 1);
+		Console.SetCursorPosition(offset.Width, offset.Height);
 		Console.Write($"Table:    {table.Name}    ");
 
 		if (tableIndex > 0 && tableIndex < tableCount - 1)
@@ -209,17 +241,17 @@ public static class Renderer
 
 	}
 
-	private static Size ShrinkTableViewToConsoleSize(Table table)
+	private static Size ShrinkTableViewToConsoleSize(Table table, int verticalDecrement, int horizontalDecrement)
 	{
 		while (true)
 		{
 			var size = table.GetTableSize();
 
-			if (Console.WindowWidth - _FREE_COLUMNS - size.Width < 0)
+			if (Console.WindowWidth - horizontalDecrement - size.Width < 0)
 			{
 				table.ViewOptions.DecreaseWidth();
 			}
-			else if (Console.WindowHeight - _FREE_LINES - TableVerticalOffset - size.Height < 0)
+			else if (Console.WindowHeight - _FREE_LINES - verticalDecrement - size.Height < 0)
 			{
 				table.ViewOptions.DecreaseHeight();
 			}
@@ -323,7 +355,7 @@ public static class Renderer
 		});
 	}
 
-	private static void RenderContent(Table table, Size tableOffset, bool ignoreRenderingMode, bool headlessTable)
+	private static void RenderContent(Table table, Size tableOffset, bool ignoreRenderingMode)
 	{
 		Shared.IndexArray(table.Size.Height).ForEach(y =>
 			Shared.IndexArray(table.Size.Width).ForEach(x =>
@@ -347,7 +379,7 @@ public static class Renderer
 
 					var posInView = table.PositionInView(x, y);
 
-					var border = GetContentCellBorder(table, cell, posInView, headlessTable);
+					var border = GetContentCellBorder(table, cell, posInView);
 
 					RenderCellBorders(cell, position, size, border);
 
@@ -356,9 +388,9 @@ public static class Renderer
 			}));
 	}
 
-	private static CellBorder GetContentCellBorder(Table table, Cell cell, Position position, bool headlessTable)
+	private static CellBorder GetContentCellBorder(Table table, Cell cell, Position position)
 	{
-		var cellBorderType = GetContentCellBorderType(table.ViewOptions.Size, position, headlessTable);
+		var cellBorderType = GetContentCellBorderType(table.ViewOptions.Size, position, table.IsHeadLess);
 
 		var border = CellBorders.Get(cellBorderType);
 
