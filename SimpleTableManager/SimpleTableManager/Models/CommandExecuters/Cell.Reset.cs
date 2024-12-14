@@ -13,7 +13,7 @@ namespace SimpleTableManager.Models.CommandExecuters
 		[CommandFunction]
 		public void ResetComment()
 		{
-			Comment = null;
+			Comments.Clear();
 		}
 
 		[CommandFunction, CommandShortcut("resetCellFormat")]

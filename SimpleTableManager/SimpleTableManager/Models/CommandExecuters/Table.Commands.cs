@@ -189,11 +189,11 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public Dictionary<Position, string> ShowCellComments()
+	public Dictionary<Position, List<string>> ShowCellComments()
 	{
 		return Shared.IndexArray(Size.Width).SelectMany(x => 
 			Shared.IndexArray(Size.Height).Select(y => 
-				(Position: new Position(x, y), this[x, y].Comment)))
-					.Where(p => p.Comment is not null).ToDictionary(k => k.Position, v => v.Comment!);
+				(Position: new Position(x, y), this[x, y].Comments)))
+					.Where(p => p.Comments.Count > 0).ToDictionary(k => k.Position, v => v.Comments);
 	}
 }

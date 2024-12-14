@@ -228,9 +228,9 @@ public partial class Cell
 	}
 
 	[CommandFunction(StateModifier = false)]
-	public void SetComment(string comment)
+	public void SetComment(string[] comments)
 	{
-		Comment = comment;
+		Comments = new List<string>(comments);
 	}
 
 	[CommandFunction(IgnoreReferencedObject = true)]

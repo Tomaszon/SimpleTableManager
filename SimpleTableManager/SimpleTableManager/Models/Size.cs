@@ -2,7 +2,7 @@
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("width,height", "(?<w>\\d),(?<h>\\d)"), ParseFormat("width;height", "(?<w>\\d);(?<h>\\d)")]
+[ParseFormat("width,height", "(?<w>\\d+),(?<h>\\d+)"), ParseFormat("width;height", "(?<w>\\d+);(?<h>\\d+)")]
 public class Size : ParsableBase<Size>, IParsable<Size>, IParseCore<Size>
 {
 	public int Width { get; set; }

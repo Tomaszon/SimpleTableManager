@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("size", "(?<s>\\d)")]
+[ParseFormat("size", "(?<s>\\d+)")]
 public abstract class Shape1Sized2dBase<T> : ParsableBase<T>, IShape2d, IShape1Sized, IParseCore<T>
 where T : Shape1Sized2dBase<T>, IParsable<T>, new()
 {

@@ -9,8 +9,6 @@ public static class Renderer
 
 	private const int _FREE_LINES = 10;
 
-	private const int _FREE_COLUMNS = 50;
-
 	private const int _MINIMUM_LINES_FOR_LOGO = 50;
 
 	private const int _MINIMUM_LINES_FOR_INFOTABLE = 45;
@@ -31,21 +29,15 @@ public static class Renderer
 
 		ChangeToTextColors();
 
-		// InfotableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 3 : -1;
-
-		// TableVerticalOffset = Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO ? 15 : Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE ? 11 : 2;
-
-		// var tableOffset = new Size((Console.WindowWidth - tableSize.Width) / 2, TableVerticalOffset);
-
 		RenderLogo(out var logoBottomOffset);
 
 		RenderDocumentInfos(document, logoBottomOffset, out var documentInfosBottomOffset);
 
-		RenderCellInfos(firstSelectedCell, out var cellInfosLeftOffset);
+		RenderCellInfos(firstSelectedCell, firstSelectedCell is not null ? table[firstSelectedCell] : null, out var cellInfosLeftOffset);
 
-		var tableSize = ShrinkTableViewToConsoleSize(table, documentInfosBottomOffset + 4, Console.WindowWidth - cellInfosLeftOffset + 4);
+		var tableSize = ShrinkTableViewToConsoleSize(table, documentInfosBottomOffset + 2, Console.WindowWidth - cellInfosLeftOffset + 2);
 
-		var tableOffset = new Size((cellInfosLeftOffset - 4 - tableSize.Width) / 2 + 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - 2 - tableSize.Height) / 2 + documentInfosBottomOffset + 2);
+		var tableOffset = new Size((cellInfosLeftOffset - 2 - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - 2 - tableSize.Height) / 2 + documentInfosBottomOffset + 2);
 
 		RenderTableInfos(table, new(tableOffset.Width, tableOffset.Height - 1), tableIndex, document.Tables.Count);
 
@@ -64,25 +56,27 @@ public static class Renderer
 		ChangeToTextColors();
 	}
 
-	private static void RenderCellInfos(Cell? cell, out int leftOffset)
+	private static void RenderCellInfos(Cell? cell, Position? position, out int leftOffset)
 	{
-		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cell is not null)
+		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cell is not null && position is not null)
 		{
 			var outType = cell.ContentFunction?.GetOutType().GetFriendlyName() ?? " - ";
 			var layerIndex = cell.LayerIndex.ToString();
-			var comment = cell.Comment ?? " - ";
+			var comments = cell.Comments.Count == 0 ? " - ".Wrap() : cell.Comments;
 
-			var infoTable = new Table(null!, "", 2, 3)
+			var infoTable = new Table(null!, "", 2, 4)
 			{
 				IsHeadLess = true
 			};
 
-			infoTable[0, 0].SetContents("Type:");
-			infoTable[1, 0].SetContents(outType);
-			infoTable[0, 1].SetContents("Layer:");
-			infoTable[1, 1].SetContents(layerIndex);
-			infoTable[0, 2].SetContents("Comment:");
-			infoTable[1, 2].SetContents(comment.Chunk(15).Select(a => new string(a)).ToArray());
+			infoTable[0, 0].SetContents("Position:");
+			infoTable[1, 0].SetContents(position.ToString());
+			infoTable[0, 1].SetContents("Type:");
+			infoTable[1, 1].SetContents(outType);
+			infoTable[0, 2].SetContents("Layer:");
+			infoTable[1, 2].SetContents(layerIndex);
+			infoTable[0, 3].SetContents("Comment:");
+			infoTable[1, 3].SetContents(comments.SelectMany(c => c.Chunk(15)).Select(c => new string(c)).ToArray());
 
 			infoTable.Content.ForEach(cell =>
 			{
@@ -92,7 +86,7 @@ public static class Renderer
 
 			var tableSize = infoTable.GetTableSize();
 
-			leftOffset = Console.WindowWidth - tableSize.Width - 1;
+			leftOffset = Console.WindowWidth - tableSize.Width - 2;
 
 			RenderContent(infoTable, new(leftOffset, (Console.WindowHeight - tableSize.Height) / 2), true);
 		}
@@ -247,11 +241,11 @@ public static class Renderer
 		{
 			var size = table.GetTableSize();
 
-			if (Console.WindowWidth - horizontalDecrement - size.Width < 0)
+			if (Console.WindowWidth - horizontalDecrement < size.Width)
 			{
 				table.ViewOptions.DecreaseWidth();
 			}
-			else if (Console.WindowHeight - _FREE_LINES - verticalDecrement - size.Height < 0)
+			else if (Console.WindowHeight - _FREE_LINES - verticalDecrement < size.Height)
 			{
 				table.ViewOptions.DecreaseHeight();
 			}
@@ -602,7 +596,7 @@ public static class Renderer
 
 				case RenderingMode.Comment:
 					{
-						contentsToRender = cell.Comment?.Wrap() ?? Enumerable.Empty<string>();
+						contentsToRender = cell.Comments;
 						hAlignment = HorizontalAlignment.Center;
 						vAlignment = VerticalAlignment.Center;
 					}

@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("size1,size2", "(?<s>\\d),(?<s2>\\d)"), ParseFormat("size1;size2", "(?<s>\\d);(?<s2>\\d)")]
+[ParseFormat("size1,size2", "(?<s>\\d+),(?<s2>\\d+)"), ParseFormat("size1;size2", "(?<s>\\d+);(?<s2>\\d+)")]
 public abstract class Shape2Sized2dBase<T> : Shape1Sized2dBase<T>, IShape2Sized, IParseCore<T>
 where T : Shape2Sized2dBase<T>, IParsable<T>, new()
 {

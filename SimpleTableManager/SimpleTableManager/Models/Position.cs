@@ -2,7 +2,7 @@
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("x,y", "(?<x>\\d),(?<y>\\d)"), ParseFormat("x;y", "(?<x>\\d);(?<y>\\d)")]
+[ParseFormat("x,y", "(?<x>\\d+),(?<y>\\d+)"), ParseFormat("x;y", "(?<x>\\d+);(?<y>\\d+)")]
 public class Position : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>
 {
 	public int X { get; set; }

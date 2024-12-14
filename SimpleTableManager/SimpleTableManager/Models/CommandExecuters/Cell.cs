@@ -41,7 +41,7 @@ public partial class Cell : CommandExecuterBase
 
 	public int LayerIndex { get; set; } = 0;
 
-	public string? Comment { get; set; }
+	public List<string> Comments { get; set; } = new ();
 
 	[JsonIgnore]
 	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);

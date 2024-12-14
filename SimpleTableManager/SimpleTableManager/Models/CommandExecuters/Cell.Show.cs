@@ -21,7 +21,7 @@ public partial class Cell
 				Alignment = ContentAlignment.ToString(),
 				Color = ContentColor.ToString(),
 			},
-			Comment,
+			Comments,
 			Visibility.IsHidden,
 			ReferencedCell = ReferencedObject is not null ? Table[(Cell)ReferencedObject] : null
 		};
