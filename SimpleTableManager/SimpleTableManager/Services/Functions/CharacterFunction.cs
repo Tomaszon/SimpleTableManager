@@ -1,4 +1,3 @@
-
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Separator, "")]

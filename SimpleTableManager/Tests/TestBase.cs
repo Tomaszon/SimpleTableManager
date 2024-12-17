@@ -12,7 +12,7 @@ public class TestBase
 		Settings.FromJson(@"Configs/settings.json");
 	}
 
-	protected static IFunction CreateFunction<T>(Enum functionOperator, T[] args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, params T[] args)
 	where T : IParsable<T>
 	{
 		return CreateFunction(functionOperator, null, args);

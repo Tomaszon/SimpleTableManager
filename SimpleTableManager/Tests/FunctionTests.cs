@@ -1,3 +1,5 @@
+using SimpleTableManager.Services.Functions;
+
 namespace SimpleTableManager.Tests;
 
 [SuppressMessage("Usage", "CA1861")]
@@ -14,14 +16,14 @@ public class FunctionTests : TestBase
 		CheckResults(fn.Execute(), results);
 	}
 
-	// 		[Test]
-	// 		[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01 10:30", "0001-01-01 02:20" }, "0001-01-01 12:50")]
-	// 		public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
-	// 		{
-	// 			var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)).ToArray());
+	[Test]
+	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01 10:30", "0001-01-01 02:20" }, "0001-01-01 12:50")]
+	public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
+	{
+		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)).ToArray());
 
-	// 			CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)).ToArray());
-	// 		}
+		CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)).ToArray());
+	}
 
 	[Test]
 	[TestCase(NumericFunctionOperator.Sum, new[] { 4, 3 }, 7)]
@@ -106,82 +108,73 @@ public class FunctionTests : TestBase
 		CheckResults(fn.Execute(), results);
 	}
 
-	// 		[Test]
-	// 		[TestCase(10, 5, 1)]
-	// 		public void DateAndTimeTest(int hours, int minutes, int seconds)
+	[Test]
+	[TestCase(1993, 12, 19, 10, 5, 1)]
+	public void DateAndTimeTest(int year, int month, int day, int hour, int minute, int second)
+	{
+		var result = new DateTime(year, month, day, hour, minute, second);
+
+		var fnd = CreateFunction(DateTimeFunctionOperator.Const, result);
+
+		CheckResults(fnd.Execute(), new[] { result });
+	}
+
+	// [Test]
+	// [TestCase(10, 5, 2, "HH:mm:ss", "10:05:02")]
+	// [TestCase(10, 0, 0, "HH", "10")]
+	// public void TimeFormatTest(int h, int m, int s, string format, string expectedResult)
+	// {
+	// 	var na = new Dictionary<ArgumentName, string>()
 	// 		{
-	// 			(DateOnly d, _) = DateTime.Now;
-	// 			var t = new TimeOnly(hours, minutes, seconds);
+	// 			{ ArgumentName.Format, format }
+	// 		};
 
-	// 			var fnd = CreateFunction(DateTimeFunctionOperator.Now, Array.Empty<DateOnly>());
+	// 	var fn = CreateFunction(DateTimeFunctionOperator.Const, na, new TimeOnly(h, m, s));
 
-	// 			CheckResults(fnd.Execute(), new[] { d });
+	// 	var formattedResult = fn.ExecuteAndFormat();
 
-	// 			var fnt = CreateFunction(DateTimeFunctionOperator.Const, new[] { t });
+	// 	CheckResults(formattedResult, expectedResult.Wrap());
+	// }
 
-	// 			CheckResults(fnt.Execute(), new[] { t });
-	// 		}
+	// [Test]
+	// [TestCase(Shape2dOperator.Area, typeof(Rectangle), new string[] { "1", "2;3" }, new object[] { 1, 6 })]
+	// [TestCase(Shape2dOperator.Perimeter, typeof(Rectangle), new string[] { "1", "2;3" }, new object[] { 4, 10 })]
+	// [TestCase(Shape2dOperator.Area, typeof(RightTriangle), new string[] { "1", "2;3" }, new object[] { .5, 3 })]
+	// [TestCase(Shape2dOperator.Perimeter, typeof(RightTriangle), new string[] { "2" }, new object[] { 6.83 })]
+	// public void ShapeTest(Shape2dOperator functionOperator, Type type, string[] shapes, object[] results)
+	// {
+	// 	var fn = FunctionCollection.GetFunction(type.GetFriendlyName(), functionOperator.ToString(), null, shapes.Cast<object>());
 
-	// 		[Test]
-	// 		[TestCase(10, 5, 2, "HH:mm:ss", "10:05:02")]
-	// 		[TestCase(10, 0, 0, "HH", "10")]
-	// 		public void TimeFormatTest(int h, int m, int s, string format, string expectedResult)
-	// 		{
-	// 			IFunction fn = new TimeFunction()
-	// 			{
-	// 				Arguments = new[] { new TimeOnly(h, m, s) },
-	// 				Operator = DateTimeFunctionOperator.Const,
-	// 				NamedArguments = new() { { ArgumentName.Format, format } }
-	// 			};
+	// 	CheckResults(fn.Execute().Cast<decimal>().Select(d => Math.Round(d, 2)).Cast<object>(), results);
+	// }
 
-	// 			var result = fn.Execute().First();
+	// [Test]
+	// [TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
+	// public void InnerIntFunctionTest(int[] args1, int[] args2, int result)
+	// {
+	// 	var inner = new IntegerNumericFunction()
+	// 	{
+	// 		Operator = NumericFunctionOperator.Sum,
+	// 		Arguments = args1
+	// 	};
 
-	// 			var f = fn.GetNamedArgument<string>(ArgumentName.Format);
+	// 	var outer = new IntegerNumericFunction()
+	// 	{
+	// 		Operator = NumericFunctionOperator.Mul,
+	// 		Arguments = inner.Execute().Union(args2)
+	// 	};
 
-	// 			var formattedResult = string.Format(new ContentFormatter(f), "{0}", result);
+	// 	CheckResults(outer.Execute().Cast<object>(), result.Wrap());
+	// }
 
-	// 			CheckResults(formattedResult.Wrap(), expectedResult.Wrap());
-	// 		}
+	// [Test]
+	// [TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
+	// public void InnerIntFunctionTest2(int[] args1, int[] args2, int result)
+	// {
+	// 	var fn1 = CreateFunction(NumericFunctionOperator.Sum, args1);
 
-	// 		[Test]
-	// 		[TestCase(Shape2dOperator.Area, typeof(Rectangle), new string[] { "1", "2;3" }, new object[] { 1, 6 })]
-	// 		[TestCase(Shape2dOperator.Perimeter, typeof(Rectangle), new string[] { "1", "2;3" }, new object[] { 4, 10 })]
-	// 		[TestCase(Shape2dOperator.Area, typeof(RightTriangle), new string[] { "1", "2;3" }, new object[] { .5, 3 })]
-	// 		[TestCase(Shape2dOperator.Perimeter, typeof(RightTriangle), new string[] { "2" }, new object[] { 6.83 })]
-	// 		public void ShapeTest(Shape2dOperator functionOperator, Type type, string[] shapes, object[] results)
-	// 		{
-	// 			var fn = FunctionCollection.GetFunction(type.GetFriendlyName(), functionOperator.ToString(), null, shapes.Cast<object>());
+	// 	var fn2 = CreateFunction(NumericFunctionOperator.Mul, args2.Union(fn1.Execute().Cast<int>()).ToArray());
 
-	// 			CheckResults(fn.Execute().Cast<decimal>().Select(d => Math.Round(d, 2)).Cast<object>(), results);
-	// 		}
-
-	// 		[Test]
-	// 		[TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
-	// 		public void InnerIntFunctionTest(int[] args1, int[] args2, int result)
-	// 		{
-	// 			var inner = new IntegerNumericFunction()
-	// 			{
-	// 				Operator = NumericFunctionOperator.Sum,
-	// 				Arguments = args1
-	// 			};
-
-	// 			var outer = new IntegerNumericFunction()
-	// 			{
-	// 				Operator = NumericFunctionOperator.Mul,
-	// 				Arguments = inner.Execute().Union(args2)
-	// 			};
-
-	// 			CheckResults(outer.Execute().Cast<object>(), result.Wrap());
-	// 		}
-
-	// 		[Test]
-	// 		[TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
-	// 		public void InnerIntFunctionTest2(int[] args1, int[] args2, int result)
-	// 		{
-	// 			var fn1 = CreateFunction(NumericFunctionOperator.Sum, args1);
-
-	// 			var fn2 = CreateFunction(NumericFunctionOperator.Mul, args2.Union(fn1.Execute().Cast<int>()).ToArray());
-
-	// 			CheckResults(fn2.Execute(), result.Wrap());
-	// 		}
+	// 	CheckResults(fn2.Execute(), result.Wrap());
+	// }
 }
