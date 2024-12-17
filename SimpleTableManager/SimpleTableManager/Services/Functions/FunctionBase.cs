@@ -12,6 +12,8 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => a.Resolve()).Cast<TIn>();
 
+	protected IEnumerable<TIn> ConvertedUnwrappedArguments => UnwrappedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
+
 	//EXPERIMENTAL do not throw null exception in some cases
 	protected IEnumerable<TIn> UnwrappedArgumentsAs(Func<object, TIn>? transformation = null)
 	{

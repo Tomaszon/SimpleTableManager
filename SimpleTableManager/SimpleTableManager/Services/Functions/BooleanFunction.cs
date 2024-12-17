@@ -7,13 +7,13 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
 	{
 		return Operator switch
 		{
-			BooleanFunctionOperator.Const => UnwrappedArguments,
+			BooleanFunctionOperator.Const => ConvertedUnwrappedArguments,
 
-			BooleanFunctionOperator.Not => UnwrappedArguments.Select(a => !a),
+			BooleanFunctionOperator.Not => ConvertedUnwrappedArguments.Select(a => !a),
 
-			BooleanFunctionOperator.And => UnwrappedArguments.All(a => a).Wrap(),
+			BooleanFunctionOperator.And => ConvertedUnwrappedArguments.All(a => a).Wrap(),
 
-			BooleanFunctionOperator.Or => UnwrappedArguments.Any(a => a).Wrap(),
+			BooleanFunctionOperator.Or => ConvertedUnwrappedArguments.Any(a => a).Wrap(),
 
 			BooleanFunctionOperator.IsNotNull => Arguments.Any(a => a.Resolve() is not null).Wrap(),
 			

@@ -11,37 +11,37 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Const => UnwrappedArguments.Cast<TOut>(),
+			NumericFunctionOperator.Const => ConvertedUnwrappedArguments.Cast<TOut>(),
 
-			NumericFunctionOperator.Neg => UnwrappedArguments.Select(a => -a).Cast<TOut>(),
+			NumericFunctionOperator.Neg => ConvertedUnwrappedArguments.Select(a => -a).Cast<TOut>(),
 
-			NumericFunctionOperator.Abs => UnwrappedArguments.Select(TIn.Abs).Cast<TOut>(),
+			NumericFunctionOperator.Abs => ConvertedUnwrappedArguments.Select(TIn.Abs).Cast<TOut>(),
 
-			NumericFunctionOperator.Sum => Sum(UnwrappedArguments).Wrap<TOut>(),
+			NumericFunctionOperator.Sum => Sum(ConvertedUnwrappedArguments).Wrap<TOut>(),
 
-			NumericFunctionOperator.Sub => Sub(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Sub => Sub(ConvertedUnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Avg => Avg(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Avg => Avg(ConvertedUnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Min => Min(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Min => Min(ConvertedUnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Max => Max(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Max => Max(ConvertedUnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Mul => Multiply(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Mul => Multiply(ConvertedUnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Div => Divide(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Div => Divide(ConvertedUnwrappedArguments).Wrap(),
 
-			NumericFunctionOperator.Pow => Power(UnwrappedArguments, GetNamedArgument<int>(ArgumentName.Power)),
+			NumericFunctionOperator.Pow => Power(ConvertedUnwrappedArguments, GetNamedArgument<int>(ArgumentName.Power)),
 
-			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedArguments),
+			NumericFunctionOperator.Sqrt => Sqrt(ConvertedUnwrappedArguments),
 
-			NumericFunctionOperator.Log2 => LogN(UnwrappedArguments, 2),
+			NumericFunctionOperator.Log2 => LogN(ConvertedUnwrappedArguments, 2),
 
-			NumericFunctionOperator.Log10 => LogN(UnwrappedArguments, 10),
+			NumericFunctionOperator.Log10 => LogN(ConvertedUnwrappedArguments, 10),
 
-			NumericFunctionOperator.LogE => LogN(UnwrappedArguments, double.E),
+			NumericFunctionOperator.LogE => LogN(ConvertedUnwrappedArguments, double.E),
 
-			NumericFunctionOperator.LogN => LogN(UnwrappedArguments, GetNamedArgument<double>(ArgumentName.Base)),
+			NumericFunctionOperator.LogN => LogN(ConvertedUnwrappedArguments, GetNamedArgument<double>(ArgumentName.Base)),
 
 			_ => throw GetInvalidOperatorException()
 		};
@@ -53,7 +53,6 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 			double.Round(Math.Log(p.ToDouble(null), @base), GetNamedArgument<int>(ArgumentName.Decimals)).ToType<TOut>());
 	}
 
-	//TODO use decimals in all fraction double functions
 	private static IEnumerable<TOut> Sqrt(IEnumerable<TIn> array)
 	{
 		return array.Select(p =>

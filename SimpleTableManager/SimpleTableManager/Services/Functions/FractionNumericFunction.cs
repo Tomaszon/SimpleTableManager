@@ -9,11 +9,11 @@ public class FractionNumericFunction : NumericFunctionBase<decimal, object>
 
 		return Operator switch
 		{
-			NumericFunctionOperator.Floor => UnwrappedArguments.Select(p => (int)decimal.Floor(p)).Cast<object>(),
+			NumericFunctionOperator.Floor => ConvertedUnwrappedArguments.Select(p => (int)decimal.Floor(p)).Cast<object>(),
 
-			NumericFunctionOperator.Ceiling => UnwrappedArguments.Select(p => (int)decimal.Ceiling(p)).Cast<object>(),
+			NumericFunctionOperator.Ceiling => ConvertedUnwrappedArguments.Select(p => (int)decimal.Ceiling(p)).Cast<object>(),
 
-			NumericFunctionOperator.Round => UnwrappedArguments.Select(p => decimal.Round(p, decimals)).Cast<object>(),
+			NumericFunctionOperator.Round => ConvertedUnwrappedArguments.Select(p => decimal.Round(p, decimals)).Cast<object>(),
 
 			_ => base.ExecuteCore()
 		};
