@@ -2,7 +2,7 @@ namespace SimpleTableManager.Models;
 
 public interface IShape2d
 {
-	decimal Area { get; }
+	double Area { get; }
 
-	decimal Perimeter { get; }
+	double Perimeter { get; }
 }

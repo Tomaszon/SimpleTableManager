@@ -22,7 +22,7 @@ public static class Shared
 	{
 		{ "int", $"{nameof(System)}.int32" },
 		{ "bool", $"{nameof(System)}.boolean" },
-		{ "fraction", $"{nameof(System)}.decimal" }
+		{ "fraction", $"{nameof(System)}.double" }
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)

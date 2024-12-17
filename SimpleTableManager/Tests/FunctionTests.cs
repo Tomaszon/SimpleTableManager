@@ -1,7 +1,3 @@
-using SimpleTableManager.Models;
-using SimpleTableManager.Services;
-using SimpleTableManager.Services.Functions;
-
 namespace SimpleTableManager.Tests;
 
 [SuppressMessage("Usage", "CA1861")]
@@ -46,54 +42,52 @@ public class FunctionTests : TestBase
 	}
 
 	[Test]
-	public void DecimalTest1()
+	public void FractionTest1()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.Sum, new[] { 4m, 3m });
+		var fn = CreateFunction(NumericFunctionOperator.Sum, new[] { 4d, 3d });
 
-		CheckResults(fn.Execute(), 7m.Wrap());
+		CheckResults(fn.Execute(), 7d.Wrap());
 	}
 
 	[Test]
-	public void DecimalTest2()
+	public void FractionTest2()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.Sqrt, new[] { 4m, 9m, 16m });
+		var fn = CreateFunction(NumericFunctionOperator.Sqrt, new[] { 4d, 9d, 16d });
 
-		CheckResults(fn.Execute(), new[] { 2m, 3m, Convert.ToDecimal(Math.Sqrt(Convert.ToDouble(16m))) });
+		CheckResults(fn.Execute(), new[] { 2d, 3d, Math.Sqrt(16d) });
 	}
 
 	[Test]
-	public void DecimalTest3()
+	public void FractionTest3()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.LogN, new[] { 2m, 4m, 16m });
+		var fn = CreateFunction(NumericFunctionOperator.LogN, new[] { 2d, 4d, 16d });
 
-		CheckResults(fn.Execute(), new[] { 1m, 2m, Convert.ToDecimal(Math.Log2(16d)) });
+		CheckResults(fn.Execute(), new[] { 1d, 2d, Math.Log2(16d) });
 	}
 
 	[Test]
-	public void DecimalTest4()
+	public void FractionTest4()
 	{
-		var e = Convert.ToDecimal(double.E);
-
-		var fn = CreateFunction(NumericFunctionOperator.LogE, new[] { e, e * e });
+		var fn = CreateFunction(NumericFunctionOperator.LogE, new[] { double.E, double.E * double.E });
 
 		CheckResults(fn.Execute(), new[] { 1d, 2d });
 	}
 
-	// 		[Test]
-	// 		[TestCase(CharacterFunctionOperator.Concat, new[] { 'a', 'l', 'm', 'a' }, "alma")]
-	// 		[TestCase(CharacterFunctionOperator.Join, new[] { 'a', 'b' }, "a,b")]
-	// 		[TestCase(CharacterFunctionOperator.Repeat, new[] { 'a' }, "aaa")]
-	// 		public void CharTest(CharacterFunctionOperator operation, char[] values, params string[] results)
-	// 		{
-	// 			var na = new Dictionary<ArgumentName, string>()
-	// 			{
-	// 				{ ArgumentName.Separator, "," },
-	// 				{ ArgumentName.Count, "3" }
-	// 			};
-	// 			var fn = CreateFunction(operation, na, values);
+	[Test]
+	[TestCase(CharacterFunctionOperator.Concat, new[] { 'a', 'l', 'm', 'a' }, "alma")]
+	[TestCase(CharacterFunctionOperator.Join, new[] { 'a', 'b' }, "a,b")]
+	[TestCase(CharacterFunctionOperator.Repeat, new[] { 'a' }, "aaa")]
+	public void CharTest(CharacterFunctionOperator operation, char[] values, params string[] results)
+	{
+		var na = new Dictionary<ArgumentName, string>()
+			{
+				{ ArgumentName.Separator, "," },
+				{ ArgumentName.Count, "3" }
+			};
+		var fn = CreateFunction(operation, na, values);
 
-	// 			CheckResults(fn.Execute(), results);
-	// 		}
+		CheckResults(fn.Execute(), results);
+	}
 
 	[Test]
 	[TestCase(StringFunctionOperator.Split, new[] { "al|ma" }, new[] { "al", "ma" })]
@@ -104,9 +98,9 @@ public class FunctionTests : TestBase
 	public void StringTest(StringFunctionOperator operation, string[] values, params object[] results)
 	{
 		var na = new Dictionary<ArgumentName, string>()
-				{
-					{ ArgumentName.Separator, "|" }
-				};
+			{
+				{ ArgumentName.Separator, "|" }
+			};
 		var fn = CreateFunction(operation, na, values);
 
 		CheckResults(fn.Execute(), results);

@@ -25,7 +25,7 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 
 		if (arg is IFormattable p)
 		{
-			if (arg is decimal d)
+			if (arg is double d)
 			{
 				return _format switch
 				{
@@ -66,9 +66,9 @@ public class ContentFormatter : IFormatProvider, ICustomFormatter
 		return arg!.ToString()!;
 	}
 
-	private static string GetChart(decimal value, int size, bool horizontal = false, bool label = false)
+	private static string GetChart(double value, int size, bool horizontal = false, bool label = false)
 	{
-		var f = (int)decimal.Round(Math.Max(Math.Min(value, 1), 0) * size);
+		var f = (int)double.Round(Math.Max(Math.Min(value, 1), 0) * size);
 		var e = size - f;
 
 		if (horizontal)

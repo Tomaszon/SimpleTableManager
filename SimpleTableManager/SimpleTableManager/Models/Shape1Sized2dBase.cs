@@ -6,16 +6,16 @@ namespace SimpleTableManager.Models;
 public abstract class Shape1Sized2dBase<T> : ParsableBase<T>, IShape2d, IShape1Sized, IParseCore<T>
 where T : Shape1Sized2dBase<T>, IParsable<T>, new()
 {
-	public decimal Size1 { get; set; }
+	public double Size1 { get; set; }
 
-	public abstract decimal Area { get; }
+	public abstract double Area { get; }
 
-	public abstract decimal Perimeter { get; }
+	public abstract double Perimeter { get; }
 
 	public Shape1Sized2dBase() { }
 
 	[JsonConstructor]
-	public Shape1Sized2dBase(decimal size1)
+	public Shape1Sized2dBase(double size1)
 	{
 		Size1 = size1;
 	}
@@ -32,7 +32,7 @@ where T : Shape1Sized2dBase<T>, IParsable<T>, new()
 
 	public static T ParseCore(GroupCollection args)
 	{
-		var size1 = decimal.Parse(args["s"].Value);
+		var size1 = double.Parse(args["s"].Value);
 
 		return new T() { Size1 = size1 };
 	}

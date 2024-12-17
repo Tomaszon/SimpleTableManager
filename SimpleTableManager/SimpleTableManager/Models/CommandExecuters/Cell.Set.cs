@@ -29,7 +29,7 @@ public partial class Cell
 
 		var args =
 			TrySeparateArgumentsAs<int>(contents, out var r, out var t) ? r.Value :
-			TrySeparateArgumentsAs<decimal>(contents, out r, out t) ? r.Value :
+			TrySeparateArgumentsAs<double>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<char>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<bool>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<TimeOnly>(contents, out r, out t) ? r.Value :
@@ -73,7 +73,7 @@ public partial class Cell
 	[CommandFunction]
 	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
 	{
-		SetFunction<decimal>(functionOperator, arguments);
+		SetFunction<double>(functionOperator, arguments);
 	}
 
 	[CommandFunction]

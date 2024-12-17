@@ -1,7 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
-[FunctionMappingType(typeof(decimal))]
-public class FractionNumericFunction : NumericFunctionBase<decimal, object>
+[FunctionMappingType(typeof(double))]
+public class FractionNumericFunction : NumericFunctionBase<double, object>
 {
 	public override IEnumerable<object> ExecuteCore()
 	{
@@ -9,11 +9,11 @@ public class FractionNumericFunction : NumericFunctionBase<decimal, object>
 
 		return Operator switch
 		{
-			NumericFunctionOperator.Floor => ConvertedUnwrappedArguments.Select(p => (int)decimal.Floor(p)).Cast<object>(),
+			NumericFunctionOperator.Floor => ConvertedUnwrappedArguments.Select(p => (int)double.Floor(p)).Cast<object>(),
 
-			NumericFunctionOperator.Ceiling => ConvertedUnwrappedArguments.Select(p => (int)decimal.Ceiling(p)).Cast<object>(),
+			NumericFunctionOperator.Ceiling => ConvertedUnwrappedArguments.Select(p => (int)double.Ceiling(p)).Cast<object>(),
 
-			NumericFunctionOperator.Round => ConvertedUnwrappedArguments.Select(p => decimal.Round(p, decimals)).Cast<object>(),
+			NumericFunctionOperator.Round => ConvertedUnwrappedArguments.Select(p => double.Round(p, decimals)).Cast<object>(),
 
 			_ => base.ExecuteCore()
 		};
@@ -26,7 +26,7 @@ public class FractionNumericFunction : NumericFunctionBase<decimal, object>
 			NumericFunctionOperator.Floor => typeof(int),
 			NumericFunctionOperator.Ceiling => typeof(int),
 
-			_ => typeof(decimal)
+			_ => typeof(double)
 		};
 	}
 }

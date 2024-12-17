@@ -18,11 +18,11 @@ public class TestBase
 		return CreateFunction(functionOperator, null, args);
 	}
 
-	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, T>? namedArguments, params T[] args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
 	where T : IParsable<T>
 	{
 		return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(),
-		 namedArguments?.ToDictionary(k => k.Key, v => (IFunctionArgument)new ConstFunctionArgument<T>(v.Value)),
+		 namedArguments?.ToDictionary(k => k.Key, v => (IFunctionArgument)new ConstFunctionArgument<string>(v.Value)),
 		  args.Select(e => new ConstFunctionArgument<T>(e)));
 	}
 
