@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Models;
+﻿using System.ComponentModel;
+using SimpleTableManager.Models;
 using SimpleTableManager.Models.CommandExecuters;
 
 namespace SimpleTableManager.Services;
@@ -15,9 +16,7 @@ public static class Renderer
 
 	private const int _MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
 
-	// private static int TableVerticalOffset;
-
-	// private static int InfotableVerticalOffset;
+	private const int _TABLE_GAP = 2;
 
 	public static void Render(Document document)
 	{
@@ -35,11 +34,13 @@ public static class Renderer
 
 		RenderCellInfos(firstSelectedCell, firstSelectedCell is not null ? table[firstSelectedCell] : null, out var cellInfosLeftOffset);
 
-		var tableSize = ShrinkTableViewToConsoleSize(table, documentInfosBottomOffset + 2, Console.WindowWidth - cellInfosLeftOffset + 2);
+		var tableSize = ShrinkTableViewToConsoleSize(table, documentInfosBottomOffset + _TABLE_GAP, Console.WindowWidth - cellInfosLeftOffset + _TABLE_GAP);
 
-		var tableOffset = new Size((cellInfosLeftOffset - 2 - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - 2 - tableSize.Height) / 2 + documentInfosBottomOffset + 2);
+		var tableOffset = tableSize.Width < Console.WindowWidth - (Console.WindowWidth - cellInfosLeftOffset) * 2 - _TABLE_GAP ?
+		new Size((Console.WindowWidth - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + documentInfosBottomOffset + _TABLE_GAP) :
+		new Size((cellInfosLeftOffset - _TABLE_GAP - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + documentInfosBottomOffset + _TABLE_GAP);
 
-		RenderTableInfos(table, new(tableOffset.Width, tableOffset.Height - 1), tableIndex, document.Tables.Count);
+		RenderTableInfos(table, new(tableOffset.Width, tableOffset.Height - (_TABLE_GAP / 2)), tableIndex, document.Tables.Count);
 
 		RenderTempCell(table, tableOffset, tableSize);
 
@@ -86,7 +87,7 @@ public static class Renderer
 
 			var tableSize = infoTable.GetTableSize();
 
-			leftOffset = Console.WindowWidth - tableSize.Width - 2;
+			leftOffset = Console.WindowWidth - tableSize.Width - _TABLE_GAP;
 
 			RenderContent(infoTable, new(leftOffset, (Console.WindowHeight - tableSize.Height) / 2), true);
 		}
@@ -195,9 +196,9 @@ public static class Renderer
 
 			var tableSize = infoTable.GetTableSize();
 
-			RenderContent(infoTable, new((Console.WindowWidth - tableSize.Width) / 2, verticalOffset + 2), true);
+			RenderContent(infoTable, new((Console.WindowWidth - tableSize.Width) / 2, verticalOffset + _TABLE_GAP), true);
 
-			bottomOffset = verticalOffset + 2 + infoTable.GetTableSize().Height;
+			bottomOffset = verticalOffset + _TABLE_GAP + infoTable.GetTableSize().Height;
 		}
 		else
 		{
@@ -207,26 +208,29 @@ public static class Renderer
 
 	private static void RenderTableInfos(Table table, Size offset, int tableIndex, int tableCount)
 	{
-		ChangeToTextColors();
+		if (offset.Height >= 0)
+		{
+			ChangeToTextColors();
 
-		Console.SetCursorPosition(offset.Width, offset.Height);
-		Console.Write($"Table:    {table.Name}    ");
+			Console.SetCursorPosition(offset.Width, offset.Height);
+			Console.Write($"Table:    {table.Name}    ");
 
-		if (tableIndex > 0 && tableIndex < tableCount - 1)
-		{
-			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
-		}
-		else if (tableIndex == 0 && tableIndex < tableCount - 1)
-		{
-			Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
-		}
-		else if (tableIndex > 0 && tableIndex == tableCount - 1)
-		{
-			Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
-		}
-		else
-		{
-			Console.WriteLine();
+			if (tableIndex > 0 && tableIndex < tableCount - 1)
+			{
+				Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
+			}
+			else if (tableIndex == 0 && tableIndex < tableCount - 1)
+			{
+				Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
+			}
+			else if (tableIndex > 0 && tableIndex == tableCount - 1)
+			{
+				Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
+			}
+			else
+			{
+				Console.WriteLine();
+			}
 		}
 	}
 
@@ -289,7 +293,7 @@ public static class Renderer
 
 	private static string GetLine(Size size, string value)
 	{
-		return Shared.IndexArray((int)Math.Ceiling((size.Width - 2) / (decimal)value.Length))
+		return Shared.IndexArray((int)Math.Ceiling((size.Width - 2) / (double)value.Length))
 			.Aggregate("", (s, i) => s += value)[..(size.Width - 2)];
 	}
 
