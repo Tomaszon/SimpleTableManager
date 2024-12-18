@@ -10,9 +10,11 @@ public static class Renderer
 
 	private const int _FREE_LINES = 10;
 
-	private const int _MINIMUM_LINES_FOR_LOGO = 50;
+	private const int _MINIMUM_LINES_FOR_LOGO = 55;
 
-	private const int _MINIMUM_LINES_FOR_INFOTABLE = 45;
+	private const int _MINIMUM_LINES_FOR_DOCUMENT_INFOS = 50;
+
+	private const int _MINIMUM_LINES_FOR_FUNCTION_INFOS = 40;
 
 	private const int _MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
 
@@ -34,11 +36,13 @@ public static class Renderer
 
 		RenderCellInfos(firstSelectedCell, firstSelectedCell is not null ? table[firstSelectedCell] : null, out var cellInfosLeftOffset);
 
-		var tableSize = ShrinkTableViewToConsoleSize(table, documentInfosBottomOffset + _TABLE_GAP, Console.WindowWidth - cellInfosLeftOffset + _TABLE_GAP);
+		RenderFunctionInfos(firstSelectedCell, documentInfosBottomOffset, out var functionInfosBottomOffset);
+
+		var tableSize = ShrinkTableViewToConsoleSize(table, functionInfosBottomOffset + _TABLE_GAP, Console.WindowWidth - cellInfosLeftOffset + _TABLE_GAP);
 
 		var tableOffset = tableSize.Width < Console.WindowWidth - (Console.WindowWidth - cellInfosLeftOffset) * 2 - _TABLE_GAP ?
-		new Size((Console.WindowWidth - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + documentInfosBottomOffset + _TABLE_GAP) :
-		new Size((cellInfosLeftOffset - _TABLE_GAP - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - documentInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + documentInfosBottomOffset + _TABLE_GAP);
+		new Size((Console.WindowWidth - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - functionInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + functionInfosBottomOffset + _TABLE_GAP) :
+		new Size((cellInfosLeftOffset - _TABLE_GAP - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - functionInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + functionInfosBottomOffset + _TABLE_GAP);
 
 		RenderTableInfos(table, new(tableOffset.Width, tableOffset.Height - (_TABLE_GAP / 2)), tableIndex, document.Tables.Count);
 
@@ -57,6 +61,44 @@ public static class Renderer
 		ChangeToTextColors();
 	}
 
+	private static void RenderFunctionInfos(Cell? cell, int verticalOffset, out int bottomOffset)
+	{
+		if (Console.WindowHeight > _MINIMUM_LINES_FOR_FUNCTION_INFOS)
+		{
+			var infoTable = new Table(null!, "", 2, 1)
+			{
+				IsHeadLess = true
+			};
+
+			int cellMaxWidth = Console.WindowWidth - 20;
+			var cellContents = cell?.ContentFunction?.ToString()?.Split('\n');
+			var cellMinWidth = Console.WindowWidth / 3;
+			var cellContentLength = cellContents?.Max(e => e.Length) ?? 0;
+
+			infoTable[0, 0].SetStringContent("Fn:");
+			infoTable[1, 0].SetStringContent(cellContentLength > cellMaxWidth ? $"{cellContents?[0]![..cellMaxWidth]} ..." : cellContents?[0] ?? "None", cellContentLength > cellMaxWidth ? $"{cellContents?[1]![..cellMaxWidth]} ..." : cellContents?[1] ?? "");
+			infoTable[1, 0].GivenSize = new Size(cellMinWidth, 1);
+			// infoTable[0, 1].SetStringContent("Named args:");
+			// infoTable[1, 1].SetStringContent();
+
+			infoTable.Content.ForEach(cell =>
+			{
+				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
+				cell.BackgroundCharacter = ' ';
+			});
+
+			var tableSize = infoTable.GetTableSize();
+
+			RenderContent(infoTable, new((Console.WindowWidth - tableSize.Width) / 2, verticalOffset + _TABLE_GAP), true);
+
+			bottomOffset = verticalOffset + _TABLE_GAP + infoTable.GetTableSize().Height;
+		}
+		else
+		{
+			bottomOffset = verticalOffset;
+		}
+	}
+
 	private static void RenderCellInfos(Cell? cell, Position? position, out int leftOffset)
 	{
 		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cell is not null && position is not null)
@@ -70,14 +112,14 @@ public static class Renderer
 				IsHeadLess = true
 			};
 
-			infoTable[0, 0].SetContents("Position:");
-			infoTable[1, 0].SetContents(position.ToString());
-			infoTable[0, 1].SetContents("Type:");
-			infoTable[1, 1].SetContents(outType);
-			infoTable[0, 2].SetContents("Layer:");
-			infoTable[1, 2].SetContents(layerIndex);
-			infoTable[0, 3].SetContents("Comment:");
-			infoTable[1, 3].SetContents(comments.SelectMany(c => c.Chunk(15)).Select(c => new string(c)).ToArray());
+			infoTable[0, 0].SetStringContent("Position:");
+			infoTable[1, 0].SetStringContent(position.ToString());
+			infoTable[0, 1].SetStringContent("Type:");
+			infoTable[1, 1].SetStringContent(outType);
+			infoTable[0, 2].SetStringContent("Layer:");
+			infoTable[1, 2].SetStringContent(layerIndex);
+			infoTable[0, 3].SetStringContent("Comment:");
+			infoTable[1, 3].SetStringContent(comments.SelectMany(c => c.Chunk(15)).Select(c => new string(c)).ToArray());
 
 			infoTable.Content.ForEach(cell =>
 			{
@@ -94,6 +136,95 @@ public static class Renderer
 		else
 		{
 			leftOffset = Console.WindowWidth + 1;
+		}
+	}
+
+	private static void RenderLogo(out int bottomOffset)
+	{
+		if (Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO)
+		{
+			var version = Shared.GetAppVersion();
+
+			var maxLength = Settings.Current.Logo.Max(s => s.Replace("{version}", "").Length);
+
+			for (int i = 0; i < Settings.Current.Logo.Length; i++)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, i);
+				Console.Write(Settings.Current.Logo[i].Replace("{version}", $"v.{version}"));
+			}
+
+			bottomOffset = Settings.Current.Logo.Length - 1;
+		}
+		else
+		{
+			bottomOffset = -2;
+		}
+	}
+
+	private static void RenderDocumentInfos(Document document, int verticalOffset, out int bottomOffset)
+	{
+		if (Console.WindowHeight > _MINIMUM_LINES_FOR_DOCUMENT_INFOS)
+		{
+			var title = $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}";
+			var createTime = document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet";
+			var size = document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet";
+			var path = document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet";
+
+			var infoTable = new Table(null!, "", 2, 3)
+			{
+				IsHeadLess = true
+			};
+
+			infoTable[0, 0].SetStringContent("Title:");
+			infoTable[1, 0].SetStringContent(title);
+			infoTable[0, 1].SetStringContent("Created:", "Size:");
+			infoTable[1, 1].SetStringContent(createTime, size);
+			infoTable[0, 2].SetStringContent("Path:");
+			infoTable[1, 2].SetStringContent(path);
+
+			infoTable.Content.ForEach(cell =>
+			{
+				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
+				cell.BackgroundCharacter = ' ';
+			});
+
+			var tableSize = infoTable.GetTableSize();
+
+			RenderContent(infoTable, new((Console.WindowWidth - tableSize.Width) / 2, verticalOffset + _TABLE_GAP), true);
+
+			bottomOffset = verticalOffset + _TABLE_GAP + infoTable.GetTableSize().Height;
+		}
+		else
+		{
+			bottomOffset = verticalOffset;
+		}
+	}
+
+	private static void RenderTableInfos(Table table, Size offset, int tableIndex, int tableCount)
+	{
+		if (offset.Height >= 0)
+		{
+			ChangeToTextColors();
+
+			Console.SetCursorPosition(offset.Width, offset.Height);
+			Console.Write($"Table:    {table.Name}    ");
+
+			if (tableIndex > 0 && tableIndex < tableCount - 1)
+			{
+				Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
+			}
+			else if (tableIndex == 0 && tableIndex < tableCount - 1)
+			{
+				Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
+			}
+			else if (tableIndex > 0 && tableIndex == tableCount - 1)
+			{
+				Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
+			}
+			else
+			{
+				Console.WriteLine();
+			}
 		}
 	}
 
@@ -143,100 +274,6 @@ public static class Renderer
 
 			Task.Delay(Settings.Current.LoadingScreenDelay).Wait();
 		}
-	}
-
-	private static void RenderLogo(out int bottomOffset)
-	{
-		if (Console.WindowHeight > _MINIMUM_LINES_FOR_LOGO)
-		{
-			var version = Shared.GetAppVersion();
-
-			var maxLength = Settings.Current.Logo.Max(s => s.Replace("{version}", "").Length);
-
-			for (int i = 0; i < Settings.Current.Logo.Length; i++)
-			{
-				Console.SetCursorPosition((Console.WindowWidth - maxLength) / 2, i);
-				Console.Write(Settings.Current.Logo[i].Replace("{version}", $"v.{version}"));
-			}
-
-			bottomOffset = Settings.Current.Logo.Length - 1;
-		}
-		else
-		{
-			bottomOffset = -2;
-		}
-	}
-
-	private static void RenderDocumentInfos(Document document, int verticalOffset, out int bottomOffset)
-	{
-		if (Console.WindowHeight > _MINIMUM_LINES_FOR_INFOTABLE)
-		{
-			var title = $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}";
-			var createTime = document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet";
-			var size = document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet";
-			var path = document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet";
-
-			var infoTable = new Table(null!, "", 2, 3)
-			{
-				IsHeadLess = true
-			};
-
-			infoTable[0, 0].SetContents("Title:");
-			infoTable[1, 0].SetContents(title);
-			infoTable[0, 1].SetContents("Created:", "Size:");
-			infoTable[1, 1].SetContents(createTime, size);
-			infoTable[0, 2].SetContents("Path:");
-			infoTable[1, 2].SetContents(path);
-
-			infoTable.Content.ForEach(cell =>
-			{
-				cell.SetHorizontalAlignment(HorizontalAlignment.Left);
-				cell.BackgroundCharacter = ' ';
-			});
-
-			var tableSize = infoTable.GetTableSize();
-
-			RenderContent(infoTable, new((Console.WindowWidth - tableSize.Width) / 2, verticalOffset + _TABLE_GAP), true);
-
-			bottomOffset = verticalOffset + _TABLE_GAP + infoTable.GetTableSize().Height;
-		}
-		else
-		{
-			bottomOffset = verticalOffset;
-		}
-	}
-
-	private static void RenderTableInfos(Table table, Size offset, int tableIndex, int tableCount)
-	{
-		if (offset.Height >= 0)
-		{
-			ChangeToTextColors();
-
-			Console.SetCursorPosition(offset.Width, offset.Height);
-			Console.Write($"Table:    {table.Name}    ");
-
-			if (tableIndex > 0 && tableIndex < tableCount - 1)
-			{
-				Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
-			}
-			else if (tableIndex == 0 && tableIndex < tableCount - 1)
-			{
-				Console.WriteLine($"{tableIndex} {Settings.Current.IndexCellRightArrow} {tableCount - 1}");
-			}
-			else if (tableIndex > 0 && tableIndex == tableCount - 1)
-			{
-				Console.WriteLine($"0 {Settings.Current.IndexCellLeftArrow} {tableIndex}");
-			}
-			else
-			{
-				Console.WriteLine();
-			}
-		}
-	}
-
-	public static void RenderCellInfos()
-	{
-
 	}
 
 	private static Size ShrinkTableViewToConsoleSize(Table table, int verticalDecrement, int horizontalDecrement)

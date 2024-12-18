@@ -14,7 +14,6 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	protected IEnumerable<TIn> ConvertedUnwrappedArguments => UnwrappedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
 
-	//EXPERIMENTAL do not throw null exception in some cases
 	protected IEnumerable<TIn> UnwrappedArgumentsAs(Func<object, TIn>? transformation = null)
 	{
 		transformation ??= a => (TIn)a;
@@ -131,5 +130,27 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	public Exception GetInvalidOperatorException()
 	{
 		return new InvalidOperationException($"Operator '{Operator}' is not supported for function type '{GetType().Name}'");
+	}
+
+	public override string? ToString()
+	{
+		var constArgs = Arguments.Where(a => a is IConstFunctionArgument).SelectMany(a => a.Resolve());
+
+		var refArgs = Arguments
+			.Where(a => a is ReferenceFunctionArgument)
+			.Cast<ReferenceFunctionArgument>()
+			.Select(a => a.Reference.ToShortString());
+
+		var constNamedArgs = NamedArguments
+			.Where(a => a.Value is IConstFunctionArgument)
+			.ToDictionary(k => k.Key, v => v.Value.Resolve().Single())
+			.Select(p => $"{p.Key}:{p.Value}");
+
+		var refNamedArgs = NamedArguments
+			.Where(a => a.Value is ReferenceFunctionArgument)
+			.ToDictionary(k => k.Key, v => ((ReferenceFunctionArgument)v.Value).Reference.ToShortString())
+			.Select(p => $"{p.Key}:{p.Value}");
+
+		return $"{GetOutType().GetFriendlyName()}:{Operator}:({string.Join(',', constArgs.Union(refArgs))})\n{string.Join(',', constNamedArgs.Union(refNamedArgs))}";
 	}
 }

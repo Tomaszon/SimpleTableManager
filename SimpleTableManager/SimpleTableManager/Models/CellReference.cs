@@ -30,6 +30,11 @@ public class CellReference : ParsableBase<CellReference>, IParsable<CellReferenc
 		return $"T:{Table.Name}, X:{(HorizontallyLocked ? "" : Shared.REF_CHAR)}{Position.X}, Y:{(VerticallyLocked ? "" : Shared.REF_CHAR)}{Position.Y}";
 	}
 
+	public string ToShortString()
+	{
+		return $"{Table.Name}:{(HorizontallyLocked ? "" : Shared.REF_CHAR)}{Position.X}:{(VerticallyLocked ? "" : Shared.REF_CHAR)}{Position.Y}";
+	}
+
 	public static CellReference ParseCore(GroupCollection args)
 	{
 		var tns = args["t"].Value;
