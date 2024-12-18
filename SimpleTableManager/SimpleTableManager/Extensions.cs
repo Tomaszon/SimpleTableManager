@@ -59,7 +59,7 @@ public static class Extensions
 
 	public static string GetFriendlyName(this Type type)
 	{
-		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p => 
+		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p =>
 			p.Value.Equals($"{nameof(System)}.{type.Name}", StringComparison.OrdinalIgnoreCase) ||
 			p.Value.Equals($"{nameof(SimpleTableManager)}.{nameof(Models)}.{type.Name}", StringComparison.OrdinalIgnoreCase));
 
@@ -70,5 +70,11 @@ public static class Extensions
 	{
 		dictionary.Remove(key);
 		dictionary.Add(key, value);
+	}
+
+	public static bool NotHasFlag<T>(this T @enum, T flag)
+	where T : Enum
+	{
+		return !@enum.HasFlag(flag);
 	}
 }

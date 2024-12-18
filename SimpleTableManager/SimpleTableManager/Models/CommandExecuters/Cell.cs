@@ -20,7 +20,7 @@ public partial class Cell : CommandExecuterBase
 
 	public IFunction? ContentFunction { get; set; }
 
-	public bool IsSelected { get; set; }
+	public CellSelectionLevel SelectionLevel { get; set; }
 
 	public CellVisibility Visibility { get; set; } = new();
 

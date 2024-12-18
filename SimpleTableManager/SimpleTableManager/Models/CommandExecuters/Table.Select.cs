@@ -10,7 +10,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		this[position].IsSelected = true;
+		this[position].SelectionLevel = CellSelectionLevel.Primary;
 	}
 
 	[CommandFunction]
@@ -18,7 +18,7 @@ public partial class Table
 	{
 		ThrowIfNot<TargetParameterCountException>(positions.Length > 0, "One or more positions needed!");
 
-		positions.ForEach(p => this[p].IsSelected = true);
+		positions.ForEach(p => this[p].SelectionLevel = CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction]
@@ -29,7 +29,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		this[positionFrom, positionTo].ForEach(c => c.IsSelected = true);
+		this[positionFrom, positionTo].ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction]
@@ -40,7 +40,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Columns[x].ForEach(c => c.IsSelected = true);
+		Columns[x].ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction]
@@ -51,13 +51,13 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Rows[y].ForEach(c => c.IsSelected = true);
+		Rows[y].ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction, CommandShortcut("selectAllCells")]
 	public void SelectAll()
 	{
-		Content.ForEach(c => c.IsSelected = true);
+		Content.ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction, CommandShortcut]

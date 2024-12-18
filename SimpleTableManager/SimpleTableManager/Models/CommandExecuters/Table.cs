@@ -235,17 +235,17 @@ public partial class Table : CommandExecuterBase
 
 	public bool IsColumnSelected(int index)
 	{
-		return index >= 0 && index < Size.Width && Columns[index].Any(c => c.IsSelected);
+		return index >= 0 && index < Size.Width && Columns[index].Any(c => c.SelectionLevel.HasFlag(CellSelectionLevel.Primary));
 	}
 
 	public bool IsRowSelected(int index)
 	{
-		return index >= 0 && index < Size.Height && Rows[index].Any(c => c.IsSelected);
+		return index >= 0 && index < Size.Height && Rows[index].Any(c => c.SelectionLevel.HasFlag(CellSelectionLevel.Primary));
 	}
 
 	public bool IsCellSelected(int x, int y)
 	{
-		return x > 0 && x < Size.Width && y > 0 && y < Size.Height && this[x, y].IsSelected;
+		return x > 0 && x < Size.Width && y > 0 && y < Size.Height && this[x, y].SelectionLevel.HasFlag(CellSelectionLevel.Primary);
 	}
 
 	public IndexCell? GetFirstVisibleHeaderInView()
@@ -270,7 +270,7 @@ public partial class Table : CommandExecuterBase
 
 	public IEnumerable<Cell> GetSelectedCells()
 	{
-		return Content.Where(c => c.IsSelected);
+		return Content.Where(c => c.SelectionLevel.HasFlag(CellSelectionLevel.Primary));
 	}
 
 	public bool IsCellInView(int x = -1, int y = -1)
