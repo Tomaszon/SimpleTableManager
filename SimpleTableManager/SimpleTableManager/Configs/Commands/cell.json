@@ -1,6 +1,6 @@
 {
 	"{3}": {
-		"{96}": "setPrimitiveContent",
+		"{9}": "setContent",
 		"{10}": "setComment",
 		"{11}": {
 			"{12}": "setStringContentFunction",

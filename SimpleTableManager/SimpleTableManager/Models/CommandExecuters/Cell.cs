@@ -112,7 +112,7 @@ public partial class Cell : CommandExecuterBase
 
 		if (contents?.Length > 0)
 		{
-			SetContents(contents);
+			SetStringContent(contents);
 		}
 
 		StateModifierCommandExecuted += OnStateModifierCommandExecuted;

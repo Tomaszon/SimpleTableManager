@@ -5,12 +5,12 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Cell
 {
-	public void SetContents(params string[] contents)
+	public void SetStringContent(params string[] contents)
 	{
 		ContentFunction = new StringFunction()
 		{
 			Operator = StringFunctionOperator.Const,
-			Arguments = contents.Select(c => new ConstFunctionArgument<string>(c))
+			Arguments = contents.Select(c => new ConstFunctionArgument<string>(c)).Cast<IFunctionArgument>().ToList()
 		};
 	}
 
@@ -22,8 +22,9 @@ public partial class Cell
 		ContentFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
 	}
 
-	[CommandFunction()]
-	public void SetPrimitiveContent(params string[] contents)
+	[CommandFunction]
+	[CommandInformation("Sets the content function based on the type of the given arguments")]
+	public void SetContent(params string[] contents)
 	{
 		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
 

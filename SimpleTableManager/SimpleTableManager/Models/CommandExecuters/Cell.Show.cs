@@ -57,7 +57,7 @@ public partial class Cell
 					ReferencedValues = ((IFunctionArgument)a).TryResolve(out var result, out var error) ? result : $"Error: '{error}'".Wrap()
 				}),
 
-			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>().SelectMany(a => a.Resolve()),
+			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).SelectMany(a => a.Resolve()),
 
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()

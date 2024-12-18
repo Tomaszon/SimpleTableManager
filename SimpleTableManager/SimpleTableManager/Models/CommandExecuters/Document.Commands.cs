@@ -185,7 +185,7 @@ public partial class Document
 		{
 			var content = File.ReadAllText(f);
 
-			if (Settings.Current.CheckAppVersionOnDocumentLoad && CheckFileVersion(content))
+			if (!Settings.Current.CheckAppVersionOnDocumentLoad || CheckFileVersion(content))
 			{
 				fileNames += $"{Path.GetFileNameWithoutExtension(f)}|";
 			}
