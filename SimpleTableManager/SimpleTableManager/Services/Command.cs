@@ -52,11 +52,13 @@ public class Command
 			{
 				var values = ParseArrayValues(parameters, i, paramType);
 
+				validationResults.AddRange(ValidateCollectionArgument(values, parameters[i]));
+
 				if (values is not null)
 				{
 					foreach (var e in values)
 					{
-						validationResults.AddRange(ValidateArgument(e, parameters[i]));
+						validationResults.AddRange(ValidateArgumentElement(e, parameters[i]));
 					}
 				}
 
@@ -67,7 +69,7 @@ public class Command
 				var value = i < Arguments?.Count ?
 					ContentParser.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
 
-				validationResults.AddRange(ValidateArgument(value, parameters[i]));
+				validationResults.AddRange(ValidateArgumentElement(value, parameters[i]));
 
 				parsedArguments.Add(value);
 			}
@@ -102,7 +104,19 @@ public class Command
 		return results;
 	}
 
-	private static List<string> ValidateArgument(object? value, CommandParameter parameter)
+	private static List<string> ValidateCollectionArgument(Array? elements, CommandParameter parameter)
+	{
+		var validationResults = new List<string>();
+
+		if (parameter.MinLength > 0 && (elements is null || elements.Length < parameter.MinLength))
+		{
+			validationResults.Add($"Element count of '{parameter.Name}' must be at least {parameter.MinLength}");
+		}
+
+		return validationResults;
+	}
+
+	private static List<string> ValidateArgumentElement(object? value, CommandParameter parameter)
 	{
 		var validationResults = new List<string>();
 
@@ -128,6 +142,14 @@ public class Command
 				if (m.CompareTo(v) > 0)
 				{
 					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be greater then" : "exceed")} '{min}'");
+				}
+			}
+
+			if (v is string vs && vs is not null)
+			{
+				if (vs.Length < parameter.MinLength)
+				{
+					validationResults.Add($"Value for {parameter.Name} must be at least {parameter.MinLength} long");
 				}
 			}
 		}

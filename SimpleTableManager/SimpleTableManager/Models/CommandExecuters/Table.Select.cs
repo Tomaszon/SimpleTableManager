@@ -14,7 +14,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SelectCells(params Position[] positions)
+	public void SelectCells([MinLength(1)] params Position[] positions)
 	{
 		//TODO test MinLength attribute
 		positions.ForEach(p => this[p].SelectionLevel |= CellSelectionLevel.Primary);

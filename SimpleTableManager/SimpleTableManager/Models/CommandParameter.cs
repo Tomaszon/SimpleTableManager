@@ -20,6 +20,8 @@ public class CommandParameter
 
 	public IComparable? MaxValue { get; set; }
 
+	public int MinLength { get; set; }
+
 	public IEnumerable<string> ParseFormats { get; set; } = new List<string>();
 
 	public CommandParameter(ParameterInfo parameterInfo)
@@ -31,6 +33,7 @@ public class CommandParameter
 
 		MinValue = parameterInfo.GetCustomAttribute<MinValueAttribute>()?.Value;
 		MaxValue = parameterInfo.GetCustomAttribute<MaxValueAttribute>()?.Value;
+		MinLength = parameterInfo.GetCustomAttribute<MinLengthAttribute>()?.Length ?? 0;
 
 		DefaultValue = isArray ?
 			Array.CreateInstance(parameterInfo.ParameterType.GetElementType()!, 0) :
@@ -51,9 +54,9 @@ public class CommandParameter
 		var optional = IsOptional ? $"  default={JsonConvert.SerializeObject(DefaultValue)}" : "";
 		var formats = ParseFormats.Any() ? $"  {(IsArray ? "elementFormat" : "formats")}='{string.Join("' '", ParseFormats)}'" : "";
 		var minValue = MinValue is not null ? $"  min={MinValue}" : "";
-		var maxValue = MaxValue is not null ? $"  min={MaxValue}" : "";
+		var maxValue = MaxValue is not null ? $"  max={MaxValue}" : "";
+		var minLength = MinLength > 0 ? $"  minLength={MinLength}" : "";
 
-
-		return $"{{{Name}:{typeName}{minValue}{maxValue}{values}{nullable}{optional}{formats}}}";
+		return $"{{{Name}:{typeName}{minLength}{minValue}{maxValue}{values}{nullable}{optional}{formats}}}";
 	}
 }
