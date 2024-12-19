@@ -24,7 +24,7 @@ public static class Renderer
 	{
 		var table = document.GetActiveTable(out var tableIndex);
 
-		var cells = table.GetSelectedCells();
+		var cells = table.GetPrimarySelectedCells();
 
 		var firstSelectedCell = cells.FirstOrDefault();
 

@@ -5,7 +5,7 @@ public partial class Table
 	[CommandFunction]
 	public void DeselectCell(Position position)
 	{
-		this[position].SelectionLevel = CellSelectionLevel.None;
+		this[position].SelectionLevel &= CellSelectionLevel.NotPrimary;
 	}
 
 	[CommandFunction]
@@ -13,30 +13,30 @@ public partial class Table
 	{
 		ThrowIfNot<TargetParameterCountException>(positions.Length > 0, "One or more positions needed!");
 
-		positions.ForEach(p => this[p].SelectionLevel = CellSelectionLevel.None);
+		positions.ForEach(p => this[p].SelectionLevel &= CellSelectionLevel.NotPrimary);
 	}
 
 	[CommandFunction]
 	public void DeselectCellRange(Position positionFrom, Position positionTo)
 	{
-		this[positionFrom, positionTo].ForEach(c => c.SelectionLevel = CellSelectionLevel.None);
+		this[positionFrom, positionTo].ForEach(c => c.SelectionLevel &= CellSelectionLevel.NotPrimary);
 	}
 
 	[CommandFunction]
 	public void DeselectColumn(int x)
 	{
-		Columns[x].ForEach(c => c.SelectionLevel = CellSelectionLevel.None);
+		Columns[x].ForEach(c => c.SelectionLevel &= CellSelectionLevel.NotPrimary);
 	}
 
 	[CommandFunction]
 	public void DeselectRow(int y)
 	{
-		Rows[y].ForEach(c => c.SelectionLevel = CellSelectionLevel.None);
+		Rows[y].ForEach(c => c.SelectionLevel &= CellSelectionLevel.NotPrimary);
 	}
 
 	[CommandFunction, CommandShortcut("deselectAllCells")]
 	public void DeselectAll()
 	{
-		Content.ForEach(c => c.SelectionLevel = CellSelectionLevel.None);
+		Content.ForEach(c => c.SelectionLevel &= CellSelectionLevel.NotPrimary);
 	}
 }

@@ -10,15 +10,14 @@ public partial class Table
 			DeselectAll();
 		}
 
-		this[position].SelectionLevel = CellSelectionLevel.Primary;
+		this[position].SelectionLevel |= CellSelectionLevel.Primary;
 	}
 
 	[CommandFunction]
 	public void SelectCells(params Position[] positions)
 	{
-		ThrowIfNot<TargetParameterCountException>(positions.Length > 0, "One or more positions needed!");
-
-		positions.ForEach(p => this[p].SelectionLevel = CellSelectionLevel.Primary);
+		//TODO test MinLength attribute
+		positions.ForEach(p => this[p].SelectionLevel |= CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction]
@@ -29,7 +28,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		this[positionFrom, positionTo].ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
+		this[positionFrom, positionTo].ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction]
@@ -40,7 +39,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Columns[x].ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
+		Columns[x].ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction]
@@ -51,19 +50,19 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Rows[y].ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
+		Rows[y].ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction, CommandShortcut("selectAllCells")]
 	public void SelectAll()
 	{
-		Content.ForEach(c => c.SelectionLevel = CellSelectionLevel.Primary);
+		Content.ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
 	}
 
 	[CommandFunction, CommandShortcut]
 	public void MoveSelectionRight()
 	{
-		var selectedCells = GetSelectedCells();
+		var selectedCells = GetPrimarySelectedCells();
 
 		var newPositions = selectedCells.Select(cell =>
 		{
@@ -79,7 +78,7 @@ public partial class Table
 	[CommandFunction, CommandShortcut]
 	public void MoveSelectionLeft()
 	{
-		var selectedCells = GetSelectedCells();
+		var selectedCells = GetPrimarySelectedCells();
 
 		var newPositions = selectedCells.Select(cell =>
 		{
@@ -95,7 +94,7 @@ public partial class Table
 	[CommandFunction, CommandShortcut]
 	public void MoveSelectionDown()
 	{
-		var selectedCells = GetSelectedCells();
+		var selectedCells = GetPrimarySelectedCells();
 
 		var newPositions = selectedCells.Select(cell =>
 		{
@@ -111,7 +110,7 @@ public partial class Table
 	[CommandFunction, CommandShortcut]
 	public void MoveSelectionUp()
 	{
-		var selectedCells = GetSelectedCells();
+		var selectedCells = GetPrimarySelectedCells();
 
 		var newPositions = selectedCells.Select(cell =>
 		{

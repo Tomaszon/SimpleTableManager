@@ -23,7 +23,7 @@ public class Program
 		InstanceMap.Instance.Add(() => app);
 		InstanceMap.Instance.Add(() => app.Document);
 		InstanceMap.Instance.Add(() => app.Document.GetActiveTable());
-		InstanceMap.Instance.Add(() => app.Document.GetActiveTable().GetSelectedCells());
+		InstanceMap.Instance.Add(() => app.Document.GetActiveTable().GetPrimarySelectedCells());
 
 		SmartConsole.Play(Settings.Current.StartupNotes);
 

@@ -268,7 +268,7 @@ public partial class Table : CommandExecuterBase
 		return Sider.LastOrDefault(s => IsRowInView(s.Index) && !IsRowHidden(s.Index));
 	}
 
-	public IEnumerable<Cell> GetSelectedCells()
+	public IEnumerable<Cell> GetPrimarySelectedCells()
 	{
 		return Content.Where(c => c.SelectionLevel.HasFlag(CellSelectionLevel.Primary));
 	}

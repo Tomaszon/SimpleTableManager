@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using SimpleTableManager.Services;
+﻿using SimpleTableManager.Services;
 
 namespace SimpleTableManager.Extensions;
 
