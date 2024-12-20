@@ -2,6 +2,29 @@
 
 public partial class Table
 {
+	private void SelectCell(Cell cell)
+	{
+		cell.Selection.SelectPrimary();
+
+		cell.ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r => r.Table[r.Position].Selection.SelectSecondary());
+	}
+
+
+	// private void TertiarySelectionRecursive(Cell cell)
+	// {
+	// 	if (cell.ContentFunction is not null)
+	// 	{
+	// 		cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(r.Table[r.Position]));
+
+	// 		cell.Selection |= CellHighlight.Secondary;
+	// 	}
+	// 	else
+	// 	{
+	// 		cell.Selection |= CellHighlight.Tertiary;
+	// 	}
+	// }
+
+
 	[CommandFunction]
 	public void SelectCell(Position position, bool deselectCurrent = false)
 	{
@@ -10,14 +33,13 @@ public partial class Table
 			DeselectAll();
 		}
 
-		this[position].SelectionLevel |= CellSelectionLevel.Primary;
+		SelectCell(this[position]);
 	}
 
 	[CommandFunction]
 	public void SelectCells([MinLength(1)] params Position[] positions)
 	{
-		//TODO test MinLength attribute
-		positions.ForEach(p => this[p].SelectionLevel |= CellSelectionLevel.Primary);
+		positions.ForEach(p => SelectCell(this[p]));
 	}
 
 	[CommandFunction]
@@ -28,7 +50,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		this[positionFrom, positionTo].ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
+		this[positionFrom, positionTo].ForEach(SelectCell);
 	}
 
 	[CommandFunction]
@@ -39,7 +61,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Columns[x].ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
+		Columns[x].ForEach(SelectCell);
 	}
 
 	[CommandFunction]
@@ -50,13 +72,13 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Rows[y].ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
+		Rows[y].ForEach(SelectCell);
 	}
 
 	[CommandFunction, CommandShortcut("selectAllCells")]
 	public void SelectAll()
 	{
-		Content.ForEach(c => c.SelectionLevel |= CellSelectionLevel.Primary);
+		Content.ForEach(SelectCell);
 	}
 
 	[CommandFunction, CommandShortcut]

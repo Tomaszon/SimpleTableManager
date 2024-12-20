@@ -27,11 +27,23 @@ public class Settings
 
 	public ConsoleColorSet DefaultBorderColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
 
-	public ConsoleColorSet SelectedContentColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
+	public ConsoleColorSet PrimarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGreen);
 
-	public ConsoleColorSet SelectedBackgroundColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
+	public ConsoleColorSet PrimarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGreen);
 
-	public ConsoleColorSet SelectedBorderColor { get; set; } = (ConsoleColor.Yellow, ConsoleColor.Black);
+	public ConsoleColorSet PrimarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
+
+	public ConsoleColorSet SecondarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkYellow);
+
+	public ConsoleColorSet SecondarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkYellow);
+
+	public ConsoleColorSet SecondarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
+	
+	public ConsoleColorSet TertiarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkRed);
+
+	public ConsoleColorSet TertiarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkRed);
+
+	public ConsoleColorSet TertiarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
 
 	public ConsoleColorSet NotAvailableContentColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
 

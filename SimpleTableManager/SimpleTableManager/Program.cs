@@ -147,7 +147,7 @@ public class Program
 		// outerCell.ContentFunction = FunctionCollection.GetFunction<int>("Sum", null, new IFunctionArgument[] { new ConstFunctionArgument<int>(4), new ReferenceFunctionArgument(new(table, new Position(1, 0))) });
 
 		// FunctionCollection.GetFunction<bool>("Const", null, new object[] { true, false });
-		table[0, 0].SelectionLevel = CellSelectionLevel.Primary;
+		table[0, 0].Selection.SelectPrimary();
 
 		#endregion test
 

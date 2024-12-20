@@ -52,15 +52,15 @@
 	// 	"Foreground": "Black",
 	// 	"Background": "White"
 	// },
-	"SelectedContentColor": {
+	"PrimarySelectionContentColor": {
 		"Foreground": "Black",
 		"Background": "DarkGreen"
 	},
-	"SelectedBackgroundColor": {
+	"PrimarySelectionBackgroundColor": {
 		"Foreground": "Black",
 		"Background": "DarkGreen"
 	},
-	"SelectedBorderColor": {
+	"PrimarySelectionBorderColor": {
 		"Foreground": "White"
 	},
 	"ModernTableBorder": false,

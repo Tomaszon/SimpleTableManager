@@ -10,9 +10,9 @@ public static class Renderer
 
 	private const int _FREE_LINES = 10;
 
-	private const int _MINIMUM_LINES_FOR_LOGO = 55;
+	private const int _MINIMUM_LINES_FOR_LOGO = 50;
 
-	private const int _MINIMUM_LINES_FOR_DOCUMENT_INFOS = 50;
+	private const int _MINIMUM_LINES_FOR_DOCUMENT_INFOS = 45;
 
 	private const int _MINIMUM_LINES_FOR_FUNCTION_INFOS = 40;
 
@@ -439,7 +439,7 @@ public static class Renderer
 		for (int i = 0; i < matrix.GetLength(0); i++)
 		{
 			if (GetNearestVisibleCell(table, position, matrix[i, 0], matrix[i, 1]) is var nearestCell && nearestCell is not null &&
-				(nearestCell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) && cell.SelectionLevel.NotHasFlag(CellSelectionLevel.Primary) || nearestCell.LayerIndex > cell.LayerIndex && cell.SelectionLevel.NotHasFlag(CellSelectionLevel.Primary)))
+				(nearestCell.Selection.IsPrimarySelected && cell.Selection.IsNotPrimarySelected || nearestCell.LayerIndex > cell.LayerIndex && cell.Selection.IsNotPrimarySelected))
 			{
 				if (matrix[i, 0] == 0 || matrix[i, 1] == 0)
 				{
@@ -796,30 +796,33 @@ public static class Renderer
 	{
 		if (selected)
 		{
-			Console.ForegroundColor = Settings.Current.SelectedContentColor.Foreground;
-			Console.BackgroundColor = Settings.Current.SelectedContentColor.Background;
+			Console.ForegroundColor = Settings.Current.PrimarySelectionContentColor.Foreground;
+
+			Console.BackgroundColor = Settings.Current.PrimarySelectionContentColor.Background;
 		}
 	}
 
 	private static void ChangeToCommentContentColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedContentColor.Foreground :
+		Console.ForegroundColor = cell.Selection.IsPrimarySelected ?
+			Settings.Current.PrimarySelectionContentColor.Foreground :
 			Settings.Current.NotAvailableContentColor.Foreground;
-		Console.BackgroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedContentColor.Background :
+
+		Console.BackgroundColor = cell.Selection.IsPrimarySelected ?
+			Settings.Current.PrimarySelectionContentColor.Background :
 			Settings.Current.NotAvailableContentColor.Background;
 	}
 
 	private static void ChangeToLayerIndexContentColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedContentColor.Foreground :
+		Console.ForegroundColor = cell.Selection.IsPrimarySelected ?
+			Settings.Current.PrimarySelectionContentColor.Foreground :
 				cell.LayerIndex == 0 ?
 					Settings.Current.NotAvailableContentColor.Foreground :
 						cell.ContentColor.Foreground;
-		Console.BackgroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedContentColor.Background :
+
+		Console.BackgroundColor = cell.Selection.IsPrimarySelected ?
+			Settings.Current.PrimarySelectionContentColor.Background :
 				cell.LayerIndex == 0 ?
 					Settings.Current.NotAvailableContentColor.Background :
 						cell.ContentColor.Background;
@@ -827,26 +830,48 @@ public static class Renderer
 
 	private static void ChangeToCellContentColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedContentColor.Foreground : cell.ContentColor.Foreground;
-		Console.BackgroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedContentColor.Background : cell.ContentColor.Background;
+		var colors = cell.Selection.GetHighestCellSelection() switch
+		{
+			CellSelectionType.Primary => Settings.Current.PrimarySelectionContentColor,
+			CellSelectionType.Secondary => Settings.Current.SecondarySelectionContentColor,
+			CellSelectionType.Tertiary => Settings.Current.TertiarySelectionContentColor,
+
+			_ => (cell.ContentColor.Foreground, cell.ContentColor.Background)
+		};
+
+		Console.ForegroundColor = colors.Foreground;
+		Console.BackgroundColor = colors.Background;
 	}
 
 	private static void ChangeToCellBackgroundColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedBackgroundColor.Foreground : cell.BackgroundColor.Foreground;
-		Console.BackgroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedBackgroundColor.Background : cell.BackgroundColor.Background;
+		var colors = cell.Selection.GetHighestCellSelection() switch
+		{
+			CellSelectionType.Primary => Settings.Current.PrimarySelectionBackgroundColor,
+			CellSelectionType.Secondary => Settings.Current.SecondarySelectionBackgroundColor,
+			CellSelectionType.Tertiary => Settings.Current.TertiarySelectionBackgroundColor,
+
+			_ => (cell.BackgroundColor.Foreground, cell.BackgroundColor.Background)
+		};
+
+		Console.ForegroundColor = colors.Foreground;
+		Console.BackgroundColor = colors.Background;
 	}
 
 	private static void ChangeToCellBorderColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedBorderColor.Foreground : cell.BorderColor.Foreground;
-		Console.BackgroundColor = cell.SelectionLevel.HasFlag(CellSelectionLevel.Primary) ?
-			Settings.Current.SelectedBorderColor.Background : cell.BorderColor.Background;
+		
+		var colors = cell.Selection.GetHighestCellSelection() switch
+		{
+			CellSelectionType.Primary => Settings.Current.PrimarySelectionBorderColor,
+			CellSelectionType.Secondary => Settings.Current.SecondarySelectionBorderColor,
+			CellSelectionType.Tertiary => Settings.Current.TertiarySelectionBorderColor,
+
+			_ => (cell.BorderColor.Foreground,cell.BorderColor.Background)
+		};
+
+		Console.ForegroundColor = colors.Foreground;
+		Console.BackgroundColor = colors.Background;
 	}
 
 	public static void ChangeToTextColors()

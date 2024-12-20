@@ -50,14 +50,14 @@ public partial class Cell
 
 			ConstNamedArguments = ContentFunction.NamedArguments.Where(a => a.Value is IConstFunctionArgument).ToDictionary(k => k.Key, v => ((IConstFunctionArgument)v.Value).Resolve().Single()),
 
-			ReferenceArguments = ContentFunction.Arguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>().Select(a =>
+			ReferenceArguments = ContentFunction.ReferenceArguments.Select(a =>
 				new
 				{
 					Reference = a.Reference.ToString(),
 					ReferencedValues = ((IFunctionArgument)a).TryResolve(out var result, out var error) ? result : $"Error: '{error}'".Wrap()
 				}),
 
-			ConstArguments = ContentFunction.Arguments.Where(a => a is IConstFunctionArgument).SelectMany(a => a.Resolve()),
+			ConstArguments = ContentFunction.ConstArguments.SelectMany(a => a.Resolve()),
 
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()
