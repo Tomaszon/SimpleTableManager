@@ -52,17 +52,6 @@
 	// 	"Foreground": "Black",
 	// 	"Background": "White"
 	// },
-	"PrimarySelectionContentColor": {
-		"Foreground": "Black",
-		"Background": "DarkGreen"
-	},
-	"PrimarySelectionBackgroundColor": {
-		"Foreground": "Black",
-		"Background": "DarkGreen"
-	},
-	"PrimarySelectionBorderColor": {
-		"Foreground": "White"
-	},
 	"ModernTableBorder": false,
 	"IndexCellLeftArrow": "◀",
 	"IndexCellRightArrow": "▶",
@@ -105,5 +94,5 @@
 		"Low"
 	],
 	"Volume": 50,
-	"CheckAppVersionOnDocumentLoad" : false
+	"CheckAppVersionOnDocumentLoad": false
 }

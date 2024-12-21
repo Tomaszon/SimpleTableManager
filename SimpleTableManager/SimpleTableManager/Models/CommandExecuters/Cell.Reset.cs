@@ -7,7 +7,11 @@ namespace SimpleTableManager.Models.CommandExecuters
 		[CommandFunction, CommandShortcut("resetCellContent")]
 		public void ResetContent()
 		{
+			Deselect();
+
 			ContentFunction = null;
+
+			Select();
 		}
 
 		[CommandFunction]

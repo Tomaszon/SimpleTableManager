@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.CommandExecuters;
+
 namespace SimpleTableManager.Models;
 
 public class CellSelection
@@ -20,23 +22,23 @@ public class CellSelection
 
 	public bool IsNotTertiarySelected => _tertiarySelectionCount == 0;
 
-	public CellSelectionType GetHighestCellSelection()
+	public CellSelectionLevel GetHighestSelectionLevel()
 	{
 		if (IsPrimarySelected)
 		{
-			return CellSelectionType.Primary;
+			return CellSelectionLevel.Primary;
 		}
 		else if (IsSecondarySelected)
 		{
-			return CellSelectionType.Secondary;
+			return CellSelectionLevel.Secondary;
 		}
 		else if (IsTertiarySelected)
 		{
-			return CellSelectionType.Tertiary;
+			return CellSelectionLevel.Tertiary;
 		}
 		else
 		{
-			return CellSelectionType.None;
+			return CellSelectionLevel.None;
 		}
 	}
 

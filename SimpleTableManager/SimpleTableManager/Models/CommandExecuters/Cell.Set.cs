@@ -19,7 +19,13 @@ public partial class Cell
 	{
 		var args = SeparateArgumentsAs<T>(arguments);
 
-		ContentFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
+		var newFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
+
+		Deselect();
+
+		ContentFunction = newFunction;
+		
+		Select();
 	}
 
 	[CommandFunction]

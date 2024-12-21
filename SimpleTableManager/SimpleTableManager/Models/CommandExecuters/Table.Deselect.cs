@@ -4,9 +4,7 @@ public partial class Table
 {
 	public void DeselectCell(Cell cell)
 	{
-		cell.Selection.DeselectPrimary();
-
-		cell.ContentFunction?.ReferenceArguments.Select(a => a.Reference.Position).ForEach(p => this[p].Selection.DeselectSecondary());
+		cell.Deselect();
 	}
 
 	[CommandFunction]

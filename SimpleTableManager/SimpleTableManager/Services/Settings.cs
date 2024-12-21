@@ -39,9 +39,9 @@ public class Settings
 
 	public ConsoleColorSet SecondarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
 	
-	public ConsoleColorSet TertiarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkRed);
+	public ConsoleColorSet TertiarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGray);
 
-	public ConsoleColorSet TertiarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkRed);
+	public ConsoleColorSet TertiarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGray);
 
 	public ConsoleColorSet TertiarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
 

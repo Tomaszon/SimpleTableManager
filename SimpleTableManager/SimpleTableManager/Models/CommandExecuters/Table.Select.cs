@@ -4,26 +4,8 @@ public partial class Table
 {
 	private void SelectCell(Cell cell)
 	{
-		cell.Selection.SelectPrimary();
-
-		cell.ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r => r.Table[r.Position].Selection.SelectSecondary());
+		cell.Select();
 	}
-
-
-	// private void TertiarySelectionRecursive(Cell cell)
-	// {
-	// 	if (cell.ContentFunction is not null)
-	// 	{
-	// 		cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(r.Table[r.Position]));
-
-	// 		cell.Selection |= CellHighlight.Secondary;
-	// 	}
-	// 	else
-	// 	{
-	// 		cell.Selection |= CellHighlight.Tertiary;
-	// 	}
-	// }
-
 
 	[CommandFunction]
 	public void SelectCell(Position position, bool deselectCurrent = false)

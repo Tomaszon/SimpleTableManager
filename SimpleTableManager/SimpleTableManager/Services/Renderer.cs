@@ -830,11 +830,11 @@ public static class Renderer
 
 	private static void ChangeToCellContentColors(Cell cell)
 	{
-		var colors = cell.Selection.GetHighestCellSelection() switch
+		var colors = cell.Selection.GetHighestSelectionLevel() switch
 		{
-			CellSelectionType.Primary => Settings.Current.PrimarySelectionContentColor,
-			CellSelectionType.Secondary => Settings.Current.SecondarySelectionContentColor,
-			CellSelectionType.Tertiary => Settings.Current.TertiarySelectionContentColor,
+			CellSelectionLevel.Primary => Settings.Current.PrimarySelectionContentColor,
+			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionContentColor,
+			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionContentColor,
 
 			_ => (cell.ContentColor.Foreground, cell.ContentColor.Background)
 		};
@@ -845,11 +845,11 @@ public static class Renderer
 
 	private static void ChangeToCellBackgroundColors(Cell cell)
 	{
-		var colors = cell.Selection.GetHighestCellSelection() switch
+		var colors = cell.Selection.GetHighestSelectionLevel() switch
 		{
-			CellSelectionType.Primary => Settings.Current.PrimarySelectionBackgroundColor,
-			CellSelectionType.Secondary => Settings.Current.SecondarySelectionBackgroundColor,
-			CellSelectionType.Tertiary => Settings.Current.TertiarySelectionBackgroundColor,
+			CellSelectionLevel.Primary => Settings.Current.PrimarySelectionBackgroundColor,
+			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionBackgroundColor,
+			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionBackgroundColor,
 
 			_ => (cell.BackgroundColor.Foreground, cell.BackgroundColor.Background)
 		};
@@ -861,11 +861,11 @@ public static class Renderer
 	private static void ChangeToCellBorderColors(Cell cell)
 	{
 		
-		var colors = cell.Selection.GetHighestCellSelection() switch
+		var colors = cell.Selection.GetHighestSelectionLevel() switch
 		{
-			CellSelectionType.Primary => Settings.Current.PrimarySelectionBorderColor,
-			CellSelectionType.Secondary => Settings.Current.SecondarySelectionBorderColor,
-			CellSelectionType.Tertiary => Settings.Current.TertiarySelectionBorderColor,
+			CellSelectionLevel.Primary => Settings.Current.PrimarySelectionBorderColor,
+			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionBorderColor,
+			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionBorderColor,
 
 			_ => (cell.BorderColor.Foreground,cell.BorderColor.Background)
 		};

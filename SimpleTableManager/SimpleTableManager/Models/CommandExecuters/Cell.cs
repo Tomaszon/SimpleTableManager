@@ -41,7 +41,7 @@ public partial class Cell : CommandExecuterBase
 
 	public int LayerIndex { get; set; } = 0;
 
-	public List<string> Comments { get; set; } = new ();
+	public List<string> Comments { get; set; } = new();
 
 	[JsonIgnore]
 	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
@@ -151,6 +151,63 @@ public partial class Cell : CommandExecuterBase
 			v => ContentParser.ParseFunctionArgument<string>(v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
 
 		return (namedArgsDic, regularArgs);
+	}
+
+
+	public void Select()
+	{
+		Selection.SelectPrimary();
+
+		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+		{
+			var c = r.Table[r.Position];
+
+			c.Selection.SelectSecondary();
+
+			TertiarySelectionRecursive(c);
+		});
+	}
+
+	public void Deselect()
+	{
+		Selection.DeselectPrimary();
+
+		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+		{
+			var c = r.Table[r.Position];
+
+			c.Selection.DeselectSecondary();
+
+			TertiaryDeselectionRecursive(c);
+		});
+	}
+
+	private static void TertiarySelectionRecursive(Cell cell)
+	{
+		if (cell.ContentFunction is not null)
+		{
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(r.Table[r.Position]));
+
+			cell.Selection.SelectTertiary();
+		}
+		else
+		{
+			cell.Selection.SelectTertiary();
+		}
+	}
+
+	private static void TertiaryDeselectionRecursive(Cell cell)
+	{
+		if (cell.ContentFunction is not null)
+		{
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiaryDeselectionRecursive(r.Table[r.Position]));
+
+			cell.Selection.DeselectTertiary();
+		}
+		else
+		{
+			cell.Selection.DeselectTertiary();
+		}
 	}
 
 	[OnDeserialized]
