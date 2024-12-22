@@ -36,11 +36,11 @@ public partial class Table : CommandExecuterBase
 
 	[JsonIgnore]
 	public Dictionary<int, List<Cell>> Columns =>
-		Shared.IndexArray(Size.Width).ToDictionary(x => x, x => this[x, 0, x, Size.Height - 1]);
+		Shared.IndexArray(Size.Width).ToDictionary(x => x, ColumnAt);
 
 	[JsonIgnore]
 	public Dictionary<int, List<Cell>> Rows =>
-		Shared.IndexArray(Size.Height).ToDictionary(y => y, y => this[0, y, Size.Width - 1, y]);
+		Shared.IndexArray(Size.Height).ToDictionary(y => y, RowAt);
 
 	public Cell this[Position position] => this[position.X, position.Y];
 
@@ -55,7 +55,6 @@ public partial class Table : CommandExecuterBase
 			return Content[index];
 		}
 	}
-
 
 	public Position this[Cell cell]
 	{
@@ -132,6 +131,16 @@ public partial class Table : CommandExecuterBase
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
+	public List<Cell> ColumnAt(int x)
+	{
+		return this[x, 0, x, Size.Height - 1];
+	}
+
+	public List<Cell> RowAt(int y)
+	{
+		return this[0, y, Size.Width - 1, y];
+	}
+
 	private void AddNewContentCell(int index)
 	{
 		var cell = new Cell(this)
@@ -146,13 +155,13 @@ public partial class Table : CommandExecuterBase
 
 	public int GetRowHeight(int index)
 	{
-		return Shared.Max(Rows[index].Where(c =>
+		return Shared.Max(RowAt(index).Where(c =>
 			c.Visibility.IsVisible).Max(c => c.GetSize().Height), Sider[index].GetSize().Height);
 	}
 
 	public int GetColumnWidth(int index)
 	{
-		return Shared.Max(Columns[index].Where(c =>
+		return Shared.Max(ColumnAt(index).Where(c =>
 			c.Visibility.IsVisible).Max(c => c.GetSize().Width), Header[index].GetSize().Width);
 	}
 
@@ -225,22 +234,22 @@ public partial class Table : CommandExecuterBase
 
 	public bool IsColumnHidden(int x)
 	{
-		return Columns[x].All(c => c.Visibility.IsColumnHidden);
+		return ColumnAt(x).All(c => c.Visibility.IsColumnHidden);
 	}
 
 	public bool IsRowHidden(int y)
 	{
-		return Rows[y].All(c => c.Visibility.IsRowHidden);
+		return RowAt(y).All(c => c.Visibility.IsRowHidden);
 	}
 
 	public bool IsColumnSelected(int index)
 	{
-		return index >= 0 && index < Size.Width && Columns[index].Any(c => c.Selection.IsPrimarySelected);
+		return index >= 0 && index < Size.Width && ColumnAt(index).Any(c => c.Selection.IsPrimarySelected);
 	}
 
 	public bool IsRowSelected(int index)
 	{
-		return index >= 0 && index < Size.Height && Rows[index].Any(c => c.Selection.IsPrimarySelected);
+		return index >= 0 && index < Size.Height && RowAt(index).Any(c => c.Selection.IsPrimarySelected);
 	}
 
 	public bool IsCellSelected(int x, int y)
@@ -309,34 +318,34 @@ public partial class Table : CommandExecuterBase
 	private void HideColumnAtCore(int x)
 	{
 		Header[x].Visibility.IsColumnHidden = true;
-		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = true);
+		ColumnAt(x).ForEach(c => c.Visibility.IsColumnHidden = true);
 	}
 
 	private void HideRowAtCore(int y)
 	{
 		Sider[y].Visibility.IsRowHidden = true;
-		Rows[y].ForEach(c => c.Visibility.IsRowHidden = true);
+		RowAt(y).ForEach(c => c.Visibility.IsRowHidden = true);
 	}
 
 	private void ShowColumnAtCore(int x)
 	{
 		Header[x].Visibility.IsColumnHidden = false;
-		Columns[x].ForEach(c => c.Visibility.IsColumnHidden = false);
+		ColumnAt(x).ForEach(c => c.Visibility.IsColumnHidden = false);
 	}
 
 	private void ShowRowAtCore(int y)
 	{
 		Sider[y].Visibility.IsRowHidden = false;
-		Rows[y].ForEach(c => c.Visibility.IsRowHidden = false);
+		RowAt(y).ForEach(c => c.Visibility.IsRowHidden = false);
 	}
 
 	private void ShowAllRowsCore()
 	{
-		Shared.IndexArray(Rows.Count).ForEach(ShowRowAtCore);
+		Shared.IndexArray(Size.Height).ForEach(ShowRowAtCore);
 	}
 
 	private void ShowAllColumnsCore()
 	{
-		Shared.IndexArray(Columns.Count).ForEach(ShowColumnAtCore);
+		Shared.IndexArray(Size.Width).ForEach(ShowColumnAtCore);
 	}
 }

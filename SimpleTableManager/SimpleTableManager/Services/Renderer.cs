@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using SimpleTableManager.Models;
+﻿using SimpleTableManager.Models;
 using SimpleTableManager.Models.CommandExecuters;
 
 namespace SimpleTableManager.Services;
@@ -305,8 +304,6 @@ public static class Renderer
 		RenderCellBorders(placeHolderCell, placeHolderCellPosition, size, CellBorders.Get(CellBorderType.CornerCellClosed));
 
 		RenderCellContent(placeHolderCell, placeHolderCellPosition, size, true, false);
-
-		Task.Delay(500).Wait();
 	}
 
 	private static string[] GetTmpBackground(Size size)
@@ -605,14 +602,7 @@ public static class Renderer
 
 	private static void RenderBorderSegment(BorderType border, int count = 1)
 	{
-		if (border != BorderType.None)
-		{
-			Console.Write(new string(BorderCharacters.Get(border), count));
-		}
-		else
-		{
-			Shared.StepCursor(count, 0);
-		}
+		Console.Write(new string(BorderCharacters.Get(border), count));
 	}
 
 	private static void RenderCellContent(Cell cell, Position position, Size size, bool ignoreRenderingMode, bool showSelection)
@@ -860,14 +850,14 @@ public static class Renderer
 
 	private static void ChangeToCellBorderColors(Cell cell)
 	{
-		
+
 		var colors = cell.Selection.GetHighestSelectionLevel() switch
 		{
 			CellSelectionLevel.Primary => Settings.Current.PrimarySelectionBorderColor,
 			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionBorderColor,
 			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionBorderColor,
 
-			_ => (cell.BorderColor.Foreground,cell.BorderColor.Background)
+			_ => (cell.BorderColor.Foreground, cell.BorderColor.Background)
 		};
 
 		Console.ForegroundColor = colors.Foreground;

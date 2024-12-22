@@ -40,13 +40,13 @@ public partial class Table
 	[CommandFunction]
 	public void SetColumnWidth(int index, int width)
 	{
-		Columns[index].ForEach(c => c.GivenSize = new(width, c.GivenSize.Height));
+		ColumnAt(index).ForEach(c => c.GivenSize = new(width, c.GivenSize.Height));
 	}
 
 	[CommandFunction]
 	public void SetRowHeight(int index, int height)
 	{
-		Rows[index].ForEach(c => c.GivenSize = new(c.GivenSize.Width, height));
+		RowAt(index).ForEach(c => c.GivenSize = new(c.GivenSize.Width, height));
 	}
 
 	[CommandFunction]

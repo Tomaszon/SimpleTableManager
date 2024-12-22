@@ -43,7 +43,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Columns[x].ForEach(SelectCell);
+		ColumnAt(x).ForEach(SelectCell);
 	}
 
 	[CommandFunction]
@@ -54,7 +54,7 @@ public partial class Table
 			DeselectAll();
 		}
 
-		Rows[y].ForEach(SelectCell);
+		RowAt(y).ForEach(SelectCell);
 	}
 
 	[CommandFunction, CommandShortcut("selectAllCells")]

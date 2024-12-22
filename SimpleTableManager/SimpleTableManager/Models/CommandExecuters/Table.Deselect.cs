@@ -30,13 +30,13 @@ public partial class Table
 	[CommandFunction]
 	public void DeselectColumn(int x)
 	{
-		Columns[x].ForEach(DeselectCell);
+		ColumnAt(x).ForEach(DeselectCell);
 	}
 
 	[CommandFunction]
 	public void DeselectRow(int y)
 	{
-		Rows[y].ForEach(DeselectCell);
+		RowAt(y).ForEach(DeselectCell);
 	}
 
 	[CommandFunction, CommandShortcut("deselectAllCells")]
