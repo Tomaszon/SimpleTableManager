@@ -11,7 +11,7 @@ public partial class Table
 
 		Sider.Insert(index, new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
 
-		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
+		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
 
 		for (int x = 0; x < Size.Width; x++)
 		{
