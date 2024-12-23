@@ -20,7 +20,7 @@ public static class Shared
 
 	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
-		{ "int", $"{nameof(System)}.int32" },
+		{ "int", $"{nameof(System)}.int64" },
 		{ "bool", $"{nameof(System)}.boolean" },
 		{ "fraction", $"{nameof(System)}.double" }
 	};

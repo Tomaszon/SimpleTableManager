@@ -35,7 +35,7 @@ public partial class Cell
 		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
 
 		var args =
-			TrySeparateArgumentsAs<int>(contents, out var r, out var t) ? r.Value :
+			TrySeparateArgumentsAs<long>(contents, out var r, out var t) ? r.Value :
 			TrySeparateArgumentsAs<double>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<char>(contents, out r, out t) ? r.Value :
 			TrySeparateArgumentsAs<bool>(contents, out r, out t) ? r.Value :
@@ -74,7 +74,7 @@ public partial class Cell
 	[CommandFunction]
 	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
 	{
-		SetFunction<int>(functionOperator, arguments);
+		SetFunction<long>(functionOperator, arguments);
 	}
 
 	[CommandFunction]

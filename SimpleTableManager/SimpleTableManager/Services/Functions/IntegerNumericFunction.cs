@@ -1,10 +1,10 @@
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<int>(ArgumentName.Divider, 2)]
-[FunctionMappingType(typeof(int))]
-public class IntegerNumericFunction : NumericFunctionBase<int, int>
+[FunctionMappingType(typeof(long))]
+public class IntegerNumericFunction : NumericFunctionBase<long, long>
 {
-	public override IEnumerable<int> ExecuteCore()
+	public override IEnumerable<long> ExecuteCore()
 	{
 		var divider = GetNamedArgument<int>(ArgumentName.Divider);
 
@@ -20,17 +20,17 @@ public class IntegerNumericFunction : NumericFunctionBase<int, int>
 		};
 	}
 
-	private static int And(IEnumerable<int> array)
+	private static long And(IEnumerable<long> array)
 	{
-		return array.Aggregate(~0, (a, c) => a &= c);
+		return array.Aggregate(~0L, (a, c) => a &= c);
 	}
 
-	private static int Or(IEnumerable<int> array)
+	private static long Or(IEnumerable<long> array)
 	{
-		return array.Aggregate(0, (a, c) => a |= c);
+		return array.Aggregate(0L, (a, c) => a |= c);
 	}
 
-	private static int DivRem(int a, int b)
+	private static long DivRem(long a, long b)
 	{
 		Math.DivRem(a, b, out var rem);
 
