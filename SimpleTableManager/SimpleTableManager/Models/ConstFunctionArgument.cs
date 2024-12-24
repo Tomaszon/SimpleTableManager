@@ -1,19 +1,14 @@
 namespace SimpleTableManager.Models
 {
-	public class ConstFunctionArgument<T> : IConstFunctionArgument
+	public class ConstFunctionArgument<T>(T value) : IConstFunctionArgument
 	where T : IParsable<T>
 	{
-		public T Value { get; set; }
+		public T Value { get; set; } = value;
 
 		object IConstFunctionArgument.Value
 		{
 			get => Value!;
 			set => Value = (T)value;
-		}
-
-		public ConstFunctionArgument(T value)
-		{
-			Value = value;
 		}
 
 		public IEnumerable<T> Resolve()

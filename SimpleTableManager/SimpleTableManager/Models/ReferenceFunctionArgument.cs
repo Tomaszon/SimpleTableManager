@@ -1,13 +1,8 @@
 namespace SimpleTableManager.Models
 {
-	public class ReferenceFunctionArgument : IFunctionArgument
+	public class ReferenceFunctionArgument(CellReference reference) : IFunctionArgument
 	{
-		public CellReference Reference { get; set; }
-
-		public ReferenceFunctionArgument(CellReference reference)
-		{
-			Reference = reference;
-		}
+		public CellReference Reference { get; set; } = reference;
 
 		public IEnumerable<object>? Resolve()
 		{

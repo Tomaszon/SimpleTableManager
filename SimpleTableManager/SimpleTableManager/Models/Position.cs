@@ -3,24 +3,14 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("x,y", "(?<x>\\d+),(?<y>\\d+)"), ParseFormat("x;y", "(?<x>\\d+);(?<y>\\d+)")]
-public class Position : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>
+[method: JsonConstructor]
+public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>
 {
-	public int X { get; set; }
+	public int X { get; set; } = x;
 
-	public int Y { get; set; }
+	public int Y { get; set; } = y;
 
-	[JsonConstructor]
-	public Position(int x, int y)
-	{
-		X = x;
-		Y = y;
-	}
-
-	public Position(Size size)
-	{
-		X = size.Width;
-		Y = size.Height;
-	}
+	public Position(Size size) : this(size.Width, size.Height) { }
 
 	public override string ToString()
 	{

@@ -3,24 +3,14 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("width,height", "(?<w>\\d+),(?<h>\\d+)"), ParseFormat("width;height", "(?<w>\\d+);(?<h>\\d+)")]
-public class Size : ParsableBase<Size>, IParsable<Size>, IParseCore<Size>
+[method: JsonConstructor]
+public class Size(int width, int height) : ParsableBase<Size>, IParsable<Size>, IParseCore<Size>
 {
-	public int Width { get; set; }
+	public int Width { get; set; } = width;
 
-	public int Height { get; set; }
+	public int Height { get; set; } = height;
 
-	[JsonConstructor]
-	public Size(int width, int height)
-	{
-		Width = width;
-		Height = height;
-	}
-
-	public Size(Position position)
-	{
-		Width = position.X;
-		Height = position.Y;
-	}
+	public Size(Position position) : this(position.X, position.Y) { }
 
 	public override string ToString()
 	{
