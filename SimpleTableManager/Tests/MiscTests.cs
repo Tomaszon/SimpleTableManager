@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework.Internal;
 
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Tests;
 
 public class MiscTests : TestBase

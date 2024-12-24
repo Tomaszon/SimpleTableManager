@@ -1,5 +1,3 @@
-using SimpleTableManager.Models.CommandExecuters;
-
 namespace SimpleTableManager.Models;
 
 public class CellSelection

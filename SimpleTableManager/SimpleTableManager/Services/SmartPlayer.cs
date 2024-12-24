@@ -5,16 +5,11 @@ namespace SimpleTableManager.Services;
 /// <summary>
 /// Plays sound files
 /// </summary>
-public class SmartPlayer
+public class SmartPlayer(Note[] notes)
 {
 	private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
-	private readonly Note[] _notes;
-
-	public SmartPlayer(Note[] notes)
-	{
-		_notes = notes;
-	}
+	private readonly Note[] _notes = notes;
 
 	/// <summary>
 	/// Plays a sound configured amount of times

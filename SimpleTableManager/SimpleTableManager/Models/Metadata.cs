@@ -1,6 +1,4 @@
-﻿using SimpleTableManager.Services;
-
-namespace SimpleTableManager.Models;
+﻿namespace SimpleTableManager.Models;
 
 public class Metadata
 {
@@ -16,12 +14,7 @@ public class Metadata
 
 	public DateTime? CreateTime { get; set; }
 
-	public Version AppVersion { get; set; }
+	public Version AppVersion { get; set; } = Shared.GetAppVersion();
 
-	public Dictionary<string, string> CustomProperties { get; set; } = new();
-
-	public Metadata()
-	{
-		AppVersion = Shared.GetAppVersion();
-	}
+	public Dictionary<string, string> CustomProperties { get; set; } = [];
 }

@@ -1,7 +1,5 @@
 ﻿using System.Runtime.Serialization;
 
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Cell selection and table related commands")]

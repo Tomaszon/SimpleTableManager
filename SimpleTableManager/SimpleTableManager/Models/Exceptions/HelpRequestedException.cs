@@ -1,14 +1,8 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class HelpRequestedException : CommandException
+public class HelpRequestedException(string rawCommand, List<(string, bool)>? availableKeys, CommandReference? commandReference) : CommandException(rawCommand, "Help for command")
 {
-	public List<(string key, bool isLeaf)>? AvailableKeys { get; set; }
+	public List<(string key, bool isLeaf)>? AvailableKeys { get; set; } = availableKeys;
 
-	public CommandReference? CommandReference { get; set; }
-
-	public HelpRequestedException(string rawCommand, List<(string, bool)>? availableKeys, CommandReference? commandReference) : base(rawCommand, "Help for command")
-	{
-		AvailableKeys = availableKeys;
-		CommandReference = commandReference;
-	}
+	public CommandReference? CommandReference { get; set; } = commandReference;
 }

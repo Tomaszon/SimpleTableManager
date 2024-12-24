@@ -1,7 +1,4 @@
-﻿using SimpleTableManager.Models.CommandExecuters;
-using SimpleTableManager.Services;
-
-namespace SimpleTableManager;
+﻿namespace SimpleTableManager;
 
 public class Program
 {

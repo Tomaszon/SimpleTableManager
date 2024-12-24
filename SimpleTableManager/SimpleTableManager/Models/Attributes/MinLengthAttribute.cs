@@ -1,12 +1,7 @@
 namespace SimpleTableManager.Models.Attributes;
 
 [AttributeUsage(AttributeTargets.Parameter)]
-public class MinLengthAttribute : Attribute
+public class MinLengthAttribute(int length) : Attribute
 {
-	public int Length { get; set; }
-
-	public MinLengthAttribute(int length)
-	{
-		Length = length;
-	}
+	public int Length { get; set; } = length;
 }

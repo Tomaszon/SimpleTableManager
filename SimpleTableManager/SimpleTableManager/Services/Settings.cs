@@ -1,7 +1,5 @@
 ﻿using System.Globalization;
 
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services;
 
 /// <summary>

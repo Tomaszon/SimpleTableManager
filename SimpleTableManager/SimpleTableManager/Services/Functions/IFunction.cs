@@ -1,5 +1,3 @@
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services.Functions;
 
 public interface IFunction

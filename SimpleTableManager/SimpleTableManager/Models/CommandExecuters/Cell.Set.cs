@@ -1,5 +1,4 @@
-﻿using SimpleTableManager.Services;
-using SimpleTableManager.Services.Functions;
+﻿using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models.CommandExecuters;
 

@@ -1,13 +1,11 @@
-﻿using SimpleTableManager.Models.CommandExecuters;
-
-namespace SimpleTableManager.Services;
+﻿namespace SimpleTableManager.Services;
 
 /// <summary>
 /// Stores instances mapped for types
 /// </summary>
 public class InstanceMap
 {
-	private readonly Dictionary<(string LocalizedName, Type Type), Func<IEnumerable<IStateModifierCommandExecuter>>> _arrayMap = new();
+	private readonly Dictionary<(string LocalizedName, Type Type), Func<IEnumerable<IStateModifierCommandExecuter>>> _arrayMap = [];
 
 	public static InstanceMap Instance { get; } = new();
 

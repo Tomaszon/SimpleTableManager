@@ -1,16 +1,10 @@
 namespace SimpleTableManager.Models.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public class NamedArgumentAttribute<T> : Attribute
-where T: IParsable<T>
+public class NamedArgumentAttribute<T>(ArgumentName key, T value) : Attribute
+where T : IParsable<T>
 {
-	public ArgumentName Key { get; set; }
+	public ArgumentName Key { get; set; } = key;
 
-	public T Value { get; set; }
-
-	public NamedArgumentAttribute(ArgumentName key, T value)
-	{
-		Key = key;
-		Value = value;
-	}
+	public T Value { get; set; } = value;
 }

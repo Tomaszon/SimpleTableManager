@@ -2,8 +2,6 @@
 
 using Newtonsoft.Json.Linq;
 
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Loading, saving and other document related commands")]
@@ -15,7 +13,7 @@ public partial class Document : CommandExecuterBase
 
 	public Metadata Metadata { get; set; }
 
-	public List<Table> Tables { get; set; } = new();
+	public List<Table> Tables { get; set; } = [];
 
 	public GlobalStorage GlobalStorage { get; set; }
 

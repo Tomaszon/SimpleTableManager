@@ -1,5 +1,3 @@
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models;
 
 /// <summary>

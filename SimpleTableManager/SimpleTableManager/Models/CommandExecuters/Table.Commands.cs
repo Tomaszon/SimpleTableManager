@@ -1,7 +1,3 @@
-using System.Text.RegularExpressions;
-
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Table

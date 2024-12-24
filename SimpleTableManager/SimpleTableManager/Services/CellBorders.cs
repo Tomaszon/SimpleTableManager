@@ -1,10 +1,8 @@
-﻿using SimpleTableManager.Models;
-
-namespace SimpleTableManager.Services;
+﻿namespace SimpleTableManager.Services;
 
 public static class CellBorders
 {
-	private static Dictionary<CellBorderType, CellBorder> _BORDERS = new();
+	private static Dictionary<CellBorderType, CellBorder> _BORDERS = [];
 
 	public static void FromJson(string path)
 	{

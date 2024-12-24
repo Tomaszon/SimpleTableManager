@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace SimpleTableManager.Models;
+﻿namespace SimpleTableManager.Models;
 
 [ParseFormat("x,y", "(?<x>\\d+),(?<y>\\d+)"), ParseFormat("x;y", "(?<x>\\d+);(?<y>\\d+)")]
 [method: JsonConstructor]

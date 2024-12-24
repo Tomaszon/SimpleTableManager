@@ -1,16 +1,10 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class ContentAlignment
+public class ContentAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
 {
-	public HorizontalAlignment Horizontal { get; set; }
+	public HorizontalAlignment Horizontal { get; set; } = horizontal;
 
-	public VerticalAlignment Vertical { get; set; }
-
-	public ContentAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
-	{
-		Horizontal = horizontal;
-		Vertical = vertical;
-	}
+	public VerticalAlignment Vertical { get; set; } = vertical;
 
 	public static implicit operator ContentAlignment((HorizontalAlignment horizontal, VerticalAlignment vertical) record)
 	{

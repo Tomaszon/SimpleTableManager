@@ -1,15 +1,8 @@
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services;
 
-public class ContentFormatter : IFormatProvider, ICustomFormatter
+public class ContentFormatter(string? format) : IFormatProvider, ICustomFormatter
 {
-	private readonly string? _format;
-
-	public ContentFormatter(string? format)
-	{
-		_format = format;
-	}
+	private readonly string? _format = format;
 
 	public object? GetFormat(Type? formatType)
 	{

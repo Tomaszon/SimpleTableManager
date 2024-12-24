@@ -1,5 +1,3 @@
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services;
 
 public static class ContentParser

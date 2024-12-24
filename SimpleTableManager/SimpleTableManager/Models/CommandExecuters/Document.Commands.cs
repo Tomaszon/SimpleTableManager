@@ -1,5 +1,3 @@
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Document

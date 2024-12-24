@@ -2,7 +2,7 @@ namespace SimpleTableManager.Services;
 
 public static class CommandShortcuts
 {
-	private static Dictionary<(ConsoleModifiers, ConsoleKey), string> _SHORTCUTS = new();
+	private static Dictionary<(ConsoleModifiers, ConsoleKey), string> _SHORTCUTS = [];
 
 	public static void FromJson(string path)
 	{

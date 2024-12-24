@@ -1,11 +1,6 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class ArgumentCountException : CommandException
+public class ArgumentCountException(string rawCommand, CommandReference? commandReference) : CommandException(rawCommand, "Count of arguments does not match the required amount!")
 {
-	public CommandReference? CommandReference { get; set; }
-
-	public ArgumentCountException(string rawCommand, CommandReference? commandReference) : base(rawCommand, "Count of arguments does not match the required amount!")
-	{
-		CommandReference = commandReference;
-	}
+	public CommandReference? CommandReference { get; set; } = commandReference;
 }

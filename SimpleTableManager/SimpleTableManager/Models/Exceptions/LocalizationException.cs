@@ -1,9 +1,5 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class LocalizationException : Exception
+public class LocalizationException(string message) : Exception(message)
 {
-	public LocalizationException(string message) : base(message)
-	{
-		
-	}
 }

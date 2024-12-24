@@ -1,11 +1,6 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class PartialKeyException : CommandException
+public class PartialKeyException(string rawCommand, string? partialKey) : CommandException(rawCommand, $"Partial key '{partialKey}' in command")
 {
-	public string? PartialKey { get; set; }
-
-	public PartialKeyException(string rawCommand, string? partialKey) : base(rawCommand, $"Partial key '{partialKey}' in command")
-	{
-		PartialKey = partialKey;
-	}
+	public string? PartialKey { get; set; } = partialKey;
 }

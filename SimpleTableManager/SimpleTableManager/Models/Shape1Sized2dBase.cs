@@ -1,29 +1,17 @@
-using System.Text.RegularExpressions;
-
 namespace SimpleTableManager.Models;
 
 [ParseFormat("size", "(?<s>\\d+)")]
-public abstract class Shape1Sized2dBase<T> : ParsableBase<T>, IShape2d, IShape1Sized, IParseCore<T>
-where T : Shape1Sized2dBase<T>, IParsable<T>, new()
+[method: JsonConstructor]
+public abstract class Shape1Sized2dBase<T>(double size1) : ParsableBase<T>, IShape2d, IShape1Sized, IParseCore<T>
+where T : Shape1Sized2dBase<T>, IParsable<T>
 {
-	public double Size1 { get; set; }
+	public double Size1 { get; set; } = size1;
 
 	public abstract double Area { get; }
 
 	public abstract double Perimeter { get; }
 
-	public Shape1Sized2dBase() { }
-
-	[JsonConstructor]
-	public Shape1Sized2dBase(double size1)
-	{
-		Size1 = size1;
-	}
-
-	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape)
-	{
-		Size1 = shape.Size1;
-	}
+	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape) : this(shape.Size1) { }
 
 	public override string ToString()
 	{
@@ -34,6 +22,6 @@ where T : Shape1Sized2dBase<T>, IParsable<T>, new()
 	{
 		var size1 = double.Parse(args["s"].Value);
 
-		return new T() { Size1 = size1 };
+		return (T)Activator.CreateInstance(typeof(T), size1)!;
 	}
 }

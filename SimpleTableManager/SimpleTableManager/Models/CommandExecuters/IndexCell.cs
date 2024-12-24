@@ -1,6 +1,4 @@
-﻿using SimpleTableManager.Services;
-
-namespace SimpleTableManager.Models.CommandExecuters;
+﻿namespace SimpleTableManager.Models.CommandExecuters;
 
 public class IndexCell : Cell
 {

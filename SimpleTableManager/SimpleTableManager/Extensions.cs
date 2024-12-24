@@ -1,6 +1,4 @@
-﻿using SimpleTableManager.Services;
-
-namespace SimpleTableManager.Extensions;
+﻿namespace SimpleTableManager.Extensions;
 
 public static class Extensions
 {

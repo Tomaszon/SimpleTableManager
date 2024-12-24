@@ -1,29 +1,16 @@
-using System.Text.RegularExpressions;
-
-using SimpleTableManager.Models.CommandExecuters;
-using SimpleTableManager.Services;
-
 namespace SimpleTableManager.Models;
 
-[ParseFormat("TableName,{0}x,{0}y ({0} for axis unlock)", "(?<t>.+),(?<x>{1}?\\d+),(?<y>{1}?\\d+)", new object[] { Shared.REF_CHAR, Shared.REGEX_REF_CHAR })]
-[ParseFormat("{0}x,{0}y ({0} for axis unlock)", "(?<x>{1}?\\d+),(?<y>{1}?\\d+)", new object[] { Shared.REF_CHAR, Shared.REGEX_REF_CHAR })]
-public class CellReference : ParsableBase<CellReference>, IParsable<CellReference>, IParseCore<CellReference>
+[ParseFormat("TableName,{0}x,{0}y ({0} for axis unlock)", "(?<t>.+),(?<x>{1}?\\d+),(?<y>{1}?\\d+)", [Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+[ParseFormat("{0}x,{0}y ({0} for axis unlock)", "(?<x>{1}?\\d+),(?<y>{1}?\\d+)", [Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+public class CellReference(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true) : ParsableBase<CellReference>, IParsable<CellReference>, IParseCore<CellReference>
 {
-	public Table Table { get; set; }
+	public Table Table { get; set; } = table;
 
-	public Position Position { get; set; }
+	public Position Position { get; set; } = position;
 
-	public bool HorizontallyLocked { get; set; } = true;
+	public bool HorizontallyLocked { get; set; } = horizontallyLocked;
 
-	public bool VerticallyLocked { get; set; } = true;
-
-	public CellReference(Table table, Position position, bool horizontallyLocked = true, bool verticallyLocked = true)
-	{
-		Table = table;
-		Position = position;
-		HorizontallyLocked = horizontallyLocked;
-		VerticallyLocked = verticallyLocked;
-	}
+	public bool VerticallyLocked { get; set; } = verticallyLocked;
 
 	public override string ToString()
 	{

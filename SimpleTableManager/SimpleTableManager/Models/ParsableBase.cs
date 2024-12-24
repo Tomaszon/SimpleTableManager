@@ -1,5 +1,3 @@
-using System.Text.RegularExpressions;
-
 namespace SimpleTableManager.Models;
 
 public abstract class ParsableBase<T>

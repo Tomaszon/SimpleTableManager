@@ -1,6 +1,5 @@
 ﻿using System.Runtime.Serialization;
 
-using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models.CommandExecuters;
@@ -40,7 +39,7 @@ public partial class Cell : CommandExecuterBase
 
 	public int LayerIndex { get; set; } = 0;
 
-	public List<string> Comments { get; set; } = new();
+	public List<string> Comments { get; set; } = [];
 
 	[JsonIgnore]
 	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);

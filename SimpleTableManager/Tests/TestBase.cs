@@ -1,5 +1,3 @@
-using SimpleTableManager.Models;
-using SimpleTableManager.Services;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Tests;

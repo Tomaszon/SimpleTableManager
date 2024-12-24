@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace SimpleTableManager.Models;
+﻿namespace SimpleTableManager.Models;
 
 [ParseFormat("width,height", "(?<w>\\d+),(?<h>\\d+)"), ParseFormat("width;height", "(?<w>\\d+);(?<h>\\d+)")]
 [method: JsonConstructor]

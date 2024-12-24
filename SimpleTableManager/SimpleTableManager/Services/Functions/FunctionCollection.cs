@@ -1,5 +1,4 @@
 using System.Data;
-using SimpleTableManager.Models;
 
 namespace SimpleTableManager.Services.Functions;
 

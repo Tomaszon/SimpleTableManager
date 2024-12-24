@@ -1,24 +1,13 @@
-using System.Text.RegularExpressions;
-
 namespace SimpleTableManager.Models;
 
 [ParseFormat("size1,size2", "(?<s>\\d+),(?<s2>\\d+)"), ParseFormat("size1;size2", "(?<s>\\d+);(?<s2>\\d+)")]
-public abstract class Shape2Sized2dBase<T> : Shape1Sized2dBase<T>, IShape2Sized, IParseCore<T>
-where T : Shape2Sized2dBase<T>, IParsable<T>, new()
+[method: JsonConstructor]
+public abstract class Shape2Sized2dBase<T>(double size1, double size2) : Shape1Sized2dBase<T>(size1), IShape2Sized, IParseCore<T>
+where T : Shape2Sized2dBase<T>, IParsable<T>
 {
-	public double Size2 { get; set; }
+	public double Size2 { get; set; } = size2;
 
-	public Shape2Sized2dBase() { }
-
-	public Shape2Sized2dBase(double size1, double size2) : base(size1)
-	{
-		Size2 = size2;
-	}
-
-	public Shape2Sized2dBase(Shape2Sized2dBase<T> shape) : base(shape)
-	{
-		Size2 = shape.Size2;
-	}
+	public Shape2Sized2dBase(Shape2Sized2dBase<T> shape) : this(shape.Size1, shape.Size2) { }
 
 	public override string ToString()
 	{
@@ -30,6 +19,6 @@ where T : Shape2Sized2dBase<T>, IParsable<T>, new()
 		var size1 = double.Parse(args["s"].Value);
 		var size2 = args["s2"].Success ? double.Parse(args["s2"].Value) : size1;
 
-		return new T() { Size1 = size1, Size2 = size2 };
+		return (T)Activator.CreateInstance(typeof(T), size1, size2)!;
 	}
 }

@@ -1,6 +1,3 @@
-
-using System.Text.RegularExpressions;
-
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Separator, " ")]

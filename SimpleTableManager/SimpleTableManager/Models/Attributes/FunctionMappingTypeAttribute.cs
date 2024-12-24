@@ -1,12 +1,7 @@
 namespace SimpleTableManager.Models.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public class FunctionMappingTypeAttribute : Attribute
+public class FunctionMappingTypeAttribute(Type mappingType) : Attribute
 {
-	public Type MappingType { get; }
-
-	public FunctionMappingTypeAttribute(Type mappingType)
-	{
-		MappingType = mappingType;
-	}
+	public Type MappingType { get; } = mappingType;
 }

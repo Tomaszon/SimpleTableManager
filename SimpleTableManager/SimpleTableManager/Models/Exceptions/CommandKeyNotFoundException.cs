@@ -1,6 +1,5 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class CommandKeyNotFoundException : CommandException
+public class CommandKeyNotFoundException(string rawCommand, string key) : CommandException(rawCommand, $"Unknown command key '{key}' in '{rawCommand}'")
 {
-	public CommandKeyNotFoundException(string rawCommand, string key) : base(rawCommand, $"Unknown command key '{key}' in '{rawCommand}'") { }
 }

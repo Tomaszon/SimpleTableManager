@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace SimpleTableManager.Services;
 
 /// <summary>
@@ -9,7 +7,7 @@ public class HistoryList
 {
 	private int _index = 0;
 
-	private readonly List<string> _history = new();
+	private readonly List<string> _history = [];
 
 	private readonly uint _length = 1;
 

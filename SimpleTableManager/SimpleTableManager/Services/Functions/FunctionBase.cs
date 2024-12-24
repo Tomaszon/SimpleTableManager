@@ -1,5 +1,3 @@
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Format, "")]

@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.Enumerations;
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum IndexCellType

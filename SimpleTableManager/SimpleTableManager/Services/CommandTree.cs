@@ -1,7 +1,5 @@
 ﻿using System.Dynamic;
 
-using SimpleTableManager.Models;
-
 namespace SimpleTableManager.Services;
 
 public static class CommandTree
