@@ -38,23 +38,23 @@ public partial class Cell
 			Type = ContentFunction.GetType().Name,
 			ContentFunction.Operator,
 
-			ReferenceNamedArguments = ContentFunction.NamedArguments.Where(a => a.Value is ReferenceFunctionArgument).ToDictionary(k => k.Key, v =>
+			ReferenceNamedArguments = ContentFunction.ReferenceNamedArguments.ToDictionary(k => k.Key, v =>
 				new
 				{
-					Refrence = ((ReferenceFunctionArgument)v.Value).Reference.ToString(),
-					ReferencedValues = ((IFunctionArgument)v.Value).TryResolve(out var result, out var error) && result?.Count() == 1 ? result.Single() : $"Error: '{error}'"
+					Refrence = v.Value.Reference.ToString(),
+					ReferencedValues = v.Value.TryResolve(out var result, out var error) && result?.Count() == 1 ? result.Single() : $"Error: '{error}'"
 				}),
 
-			ConstNamedArguments = ContentFunction.NamedArguments.Where(a => a.Value is IConstFunctionArgument).ToDictionary(k => k.Key, v => ((IConstFunctionArgument)v.Value).Resolve().Single()),
+			ConstNamedArguments = ContentFunction.ConstNamedArguments.ToDictionary(k => k.Key, v => v.Value.Value),
 
 			ReferenceArguments = ContentFunction.ReferenceArguments.Select(a =>
 				new
 				{
 					Reference = a.Reference.ToString(),
-					ReferencedValues = ((IFunctionArgument)a).TryResolve(out var result, out var error) ? result : $"Error: '{error}'".Wrap()
+					ReferencedValues = a.TryResolve(out var result, out var error) ? result : $"Error: '{error}'".Wrap()
 				}),
 
-			ConstArguments = ContentFunction.ConstArguments.SelectMany(a => a.Resolve()),
+			ConstArguments = ContentFunction.ConstArguments.Select(a => a.Value),
 
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()

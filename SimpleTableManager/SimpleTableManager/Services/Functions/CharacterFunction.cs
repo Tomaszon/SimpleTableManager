@@ -12,13 +12,13 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, o
 
 		return Operator switch
 		{
-			CharacterFunctionOperator.Const => ConvertedUnwrappedArguments.Cast<object>(),
+			CharacterFunctionOperator.Const => UnwrappedArguments.Cast<object>(),
 
-			CharacterFunctionOperator.Concat => string.Concat(ConvertedUnwrappedArguments).Wrap(),
+			CharacterFunctionOperator.Concat => string.Concat(UnwrappedArguments).Wrap(),
 
-			CharacterFunctionOperator.Join => string.Join(separator, ConvertedUnwrappedArguments).Wrap(),
+			CharacterFunctionOperator.Join => string.Join(separator, UnwrappedArguments).Wrap(),
 
-			CharacterFunctionOperator.Repeat => ConvertedUnwrappedArguments.Select(c => new string(c, count)),
+			CharacterFunctionOperator.Repeat => UnwrappedArguments.Select(c => new string(c, count)),
 
 			_ => throw GetInvalidOperatorException()
 		};

@@ -5,7 +5,7 @@ public class TimeFunction : DateTimeFunctionBase<TimeOnly, TimeOnly>
 {
 	protected override TimeOnly Sum()
 	{
-		return ConvertedUnwrappedArguments.Aggregate(TimeOnly.MinValue, (a, c) => a.Add(c.ToTimeSpan()));
+		return UnwrappedArguments.Aggregate(TimeOnly.MinValue, (a, c) => a.Add(c.ToTimeSpan()));
 	}
 
 	protected override TimeOnly Now()

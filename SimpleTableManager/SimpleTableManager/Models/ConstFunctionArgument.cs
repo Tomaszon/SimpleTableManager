@@ -11,14 +11,9 @@ namespace SimpleTableManager.Models
 			set => Value = (T)value;
 		}
 
-		public IEnumerable<T> Resolve()
-		{
-			return Value.Wrap();
-		}
-
 		IEnumerable<object> IFunctionArgument.Resolve()
 		{
-			return Resolve().Cast<object>();
+			return Value.Wrap().Cast<object>();
 		}
 	}
 }

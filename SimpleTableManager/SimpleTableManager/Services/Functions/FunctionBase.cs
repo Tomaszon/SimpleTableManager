@@ -4,19 +4,25 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	where TOpertor : struct, Enum
 {
-	public Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; } = new();
+	public Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; } = [];
 
-	public IEnumerable<IFunctionArgument> Arguments { get; set; } = Enumerable.Empty<IFunctionArgument>();
+	public IEnumerable<IFunctionArgument> Arguments { get; set; } = [];
 
-	protected IEnumerable<TIn> UnwrappedArguments => Arguments.SelectMany(a => a.Resolve()).Cast<TIn>();
+	protected IEnumerable<TIn> UnwrappedArguments => UnwrapArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
 
-	protected IEnumerable<TIn> ConvertedUnwrappedArguments => UnwrappedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
+	public IEnumerable<ReferenceFunctionArgument> ReferenceArguments => Arguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>();
 
-	protected IEnumerable<TIn> UnwrappedArgumentsAs(Func<object, TIn>? transformation = null)
+	public IEnumerable<IConstFunctionArgument> ConstArguments => Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>();
+
+	public Dictionary<ArgumentName, IConstFunctionArgument> ConstNamedArguments => NamedArguments.Where(a => a.Value is IConstFunctionArgument).ToDictionary(k => k.Key, v => (IConstFunctionArgument)v.Value);
+
+	public Dictionary<ArgumentName, ReferenceFunctionArgument> ReferenceNamedArguments => NamedArguments.Where(a => a.Value is ReferenceFunctionArgument).ToDictionary(k => k.Key, v => (ReferenceFunctionArgument)v.Value);
+
+	protected IEnumerable<TIn> UnwrapArgumentsAs(Func<object, TIn>? transformation = null)
 	{
 		transformation ??= a => (TIn)a;
 
-		return Arguments.SelectMany(a => a.Resolve()).Select(transformation);
+		return Arguments.SelectMany(a => a.Resolve() is var result && result is not null ? result : throw new NullReferenceException()).Select(transformation);
 	}
 
 	public TOpertor Operator { get; set; }
@@ -132,22 +138,14 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public override string? ToString()
 	{
-		var constArgs = Arguments.Where(a => a is IConstFunctionArgument).SelectMany(a => a.Resolve());
+		var constArgs = ConstArguments.Select(a => a.Value);
 
-		var refArgs = Arguments
-			.Where(a => a is ReferenceFunctionArgument)
-			.Cast<ReferenceFunctionArgument>()
+		var refArgs = ReferenceArguments
 			.Select(a => a.Reference.ToShortString());
 
-		var constNamedArgs = NamedArguments
-			.Where(a => a.Value is IConstFunctionArgument)
-			.ToDictionary(k => k.Key, v => v.Value.Resolve().Single())
-			.Select(p => $"{p.Key}:{p.Value}");
+		var constNamedArgs = ConstNamedArguments.Select(p => $"{p.Key}:{p.Value.Value}");
 
-		var refNamedArgs = NamedArguments
-			.Where(a => a.Value is ReferenceFunctionArgument)
-			.ToDictionary(k => k.Key, v => ((ReferenceFunctionArgument)v.Value).Reference.ToShortString())
-			.Select(p => $"{p.Key}:{p.Value}");
+		var refNamedArgs = ReferenceNamedArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
 
 		return $"{GetOutType().GetFriendlyName()}:{Operator}:({string.Join(',', constArgs.Union(refArgs))})\n{string.Join(',', constNamedArgs.Union(refNamedArgs))}";
 	}

@@ -5,7 +5,7 @@ public class DateFunction : DateTimeFunctionBase<DateOnly, DateOnly>
 {
 	protected override DateOnly Sum()
 	{
-		return ConvertedUnwrappedArguments.Aggregate(DateOnly.MinValue, (a, c) =>
+		return UnwrappedArguments.Aggregate(DateOnly.MinValue, (a, c) =>
 			a.AddYears(c.Year).AddMonths(c.Month).AddDays(c.Day));
 	}
 

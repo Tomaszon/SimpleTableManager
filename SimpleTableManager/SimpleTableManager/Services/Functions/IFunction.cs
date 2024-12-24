@@ -6,9 +6,13 @@ public interface IFunction
 
 	IEnumerable<IFunctionArgument> Arguments { get; set; }
 
-	IEnumerable<IConstFunctionArgument> ConstArguments => Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>();
+	IEnumerable<IConstFunctionArgument> ConstArguments { get; }
 
-	IEnumerable<ReferenceFunctionArgument> ReferenceArguments => Arguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>();
+	IEnumerable<ReferenceFunctionArgument> ReferenceArguments { get; }
+
+	Dictionary<ArgumentName, IConstFunctionArgument> ConstNamedArguments { get; }
+
+	Dictionary<ArgumentName, ReferenceFunctionArgument> ReferenceNamedArguments { get; }
 
 	Enum Operator { get; set; }
 

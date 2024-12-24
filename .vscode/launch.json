@@ -11,17 +11,13 @@
 			"args": [],
 			"cwd": "${workspaceFolder}/SimpleTableManager/SimpleTableManager",
 			"stopAtEntry": false,
-			"serverReadyAction": {
-				"action": "openExternally",
-				"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-			},
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/Views"
 			},
-			"justMyCode": false
+			"justMyCode": true
 		},
 		{
 			
@@ -33,17 +29,31 @@
 			"args": [],
 			"cwd": "${workspaceFolder}/SimpleTableManager/SimpleTableManager",
 			"stopAtEntry": false,
-			"serverReadyAction": {
-				"action": "openExternally",
-				"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-			},
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/Views"
 			},
-			"justMyCode": false
-		}
+			"justMyCode": true
+		},
+		{
+			"name": "Prod Build n Launch",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "buildRelease",
+			"program": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/bin/release/net8.0/SimpleTableManager.dll",
+			"console": "externalTerminal",
+			"args": [],
+			"cwd": "${workspaceFolder}/SimpleTableManager/SimpleTableManager",
+			"stopAtEntry": false,
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Production"
+			},
+			"sourceFileMap": {
+				"/Views": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/Views"
+			},
+			"justMyCode": true
+		},
 	]
 }

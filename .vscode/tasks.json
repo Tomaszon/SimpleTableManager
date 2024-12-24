@@ -90,6 +90,41 @@
 			],
 			"problemMatcher": "$msCompile",
 			"isBuildCommand": true
+		},
+		{
+			"label": "buildRelease",
+			"command": "echo",
+			"args": [
+				"All dependent projects built"
+			],
+			"type": "shell",
+			"dependsOn": [
+				"stmBuildRelease"
+			],
+			"dependsOrder": "sequence",
+			"problemMatcher": "$msCompile",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "stmBuildRelease",
+			"command": "dotnet",
+			"type": "process",
+			"dependsOn": [
+				"stmClean"
+			],
+			"args": [
+				"build",
+				"${workspaceFolder}/SimpleTableManager/SimpleTableManager/SimpleTableManager.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary",
+				"-c",
+				"Release"
+			],
+			"problemMatcher": "$msCompile",
+			"isBuildCommand": true
 		}
 	]
 }
