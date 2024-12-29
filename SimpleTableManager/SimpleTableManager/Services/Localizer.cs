@@ -7,7 +7,7 @@ namespace SimpleTableManager.Services
 {
 	public static class Localizer
 	{
-		private static readonly Dictionary<string, string> _KEYS = new();
+		private static readonly Dictionary<string, string> _KEYS = [];
 
 		public static void FromJson(string path)
 		{

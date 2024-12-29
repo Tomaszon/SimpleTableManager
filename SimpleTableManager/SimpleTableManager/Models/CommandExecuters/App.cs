@@ -9,7 +9,7 @@ public class App : CommandExecuterBase
 
 	public Document Document { get; set; }
 
-	private static readonly string[] _options = new[] { "y", "n" };
+	private static readonly string[] _options = ["y", "n"];
 
 	public App(Document document)
 	{

@@ -6,7 +6,7 @@ namespace SimpleTableManager.Models
 
 		public IEnumerable<object>? Resolve()
 		{
-			return Reference.Table[Reference.Position].ContentFunction?.Execute();
+			return Reference.Table[Reference.ReferencedPosition].ContentFunction?.Execute();
 		}
 
 		public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)

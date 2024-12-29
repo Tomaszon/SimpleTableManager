@@ -62,10 +62,11 @@ public static class Shared
 	{
 		var serializer = new JsonSerializer
 		{
-			TypeNameHandling = TypeNameHandling.Auto
+			TypeNameHandling = TypeNameHandling.Auto,
+			ContractResolver = new WritablePropertyContractResolver()
 		};
 
-		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t', }, source);
+		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t' }, source);
 	}
 
 	public static void PopulateObject(StreamReader sr, object target)
@@ -97,11 +98,11 @@ public static class Shared
 		sr.Close();
 		sw.Close();
 		ms.Close();
-		
+
 		return result;
 	}
 
-	public static object? DeserializeObject(string state)
+	public static object? DeserializeObject(Type? type, string? state)
 	{
 		using var ms = new MemoryStream();
 		using var sw = new StreamWriter(ms);
@@ -119,7 +120,7 @@ public static class Shared
 			ContractResolver = new ClearPropertyContractResolver()
 		};
 
-		var result = serializer.Deserialize(new JsonTextReader(sr));
+		var result = serializer.Deserialize(new JsonTextReader(sr), type);
 
 		sr.Close();
 		sw.Close();

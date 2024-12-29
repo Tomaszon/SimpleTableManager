@@ -36,7 +36,7 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 		y = Y;
 	}
 
-	public static Position ParseCore(GroupCollection args)
+	public static Position ParseCore(GroupCollection args, IFormatProvider? _)
 	{
 		var x = int.Parse(args["x"].Value);
 		var y = int.Parse(args["y"].Value);

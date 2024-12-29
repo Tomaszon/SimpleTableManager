@@ -32,11 +32,9 @@ public partial class Table : CommandExecuterBase
 
 	public Dictionary<int, string> ColumnFilters = new();
 
-	[JsonIgnore]
 	public Dictionary<int, List<Cell>> Columns =>
 		Shared.IndexArray(Size.Width).ToDictionary(x => x, ColumnAt);
 
-	[JsonIgnore]
 	public Dictionary<int, List<Cell>> Rows =>
 		Shared.IndexArray(Size.Height).ToDictionary(y => y, RowAt);
 
@@ -71,7 +69,7 @@ public partial class Table : CommandExecuterBase
 	public List<Cell> this[Position position1, Position position2] => this[position1.X, position1.Y, position2.X, position2.Y];
 
 	[JsonConstructor]
-	public Table() { }
+	private Table() { }
 
 	public Table(Document document, string name, int columnCount, int rowCount)
 	{
@@ -94,7 +92,7 @@ public partial class Table : CommandExecuterBase
 
 		var referrerCells = Content.Where(c =>
 			c.ContentFunction?.Arguments.Union(c.ContentFunction!.NamedArguments.Values).Any(a =>
-				a is ReferenceFunctionArgument rfa && rfa.Reference.Position.Equals(position)) == true);
+				a is ReferenceFunctionArgument rfa && rfa.Reference.ReferencedPosition.Equals(position)) == true);
 
 		referrerCells.ForEach(c =>
 		{

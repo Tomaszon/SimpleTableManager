@@ -2,10 +2,13 @@ namespace SimpleTableManager.Models;
 
 public class CellSelection
 {
+	[JsonProperty]
 	private bool _isPrimarySelected = false;
 
+	[JsonProperty]
 	private int _secondarySelectionCount = 0;
 
+	[JsonProperty]
 	private int _tertiarySelectionCount = 0;
 
 	public bool IsPrimarySelected => _isPrimarySelected;

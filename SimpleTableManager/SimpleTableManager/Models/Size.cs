@@ -21,7 +21,7 @@ public class Size(int width, int height) : ParsableBase<Size>, IParsable<Size>, 
 		h = Height;
 	}
 
-	public static Size ParseCore(GroupCollection args)
+	public static Size ParseCore(GroupCollection args, IFormatProvider? _)
 	{
 		var w = int.Parse(args["w"].Value);
 		var h = int.Parse(args["h"].Value);

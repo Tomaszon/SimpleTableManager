@@ -5,10 +5,11 @@ using SimpleTableManager.Services.Functions;
 namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Cell related commands")]
-public partial class Cell : CommandExecuterBase
+[JsonObject(IsReference = true)]
+public partial class Cell : CommandExecuterBase, IFormatProvider
 {
 	[JsonIgnore]
-	private IEnumerable<string> _cachedFormattedContent = Enumerable.Empty<string>();
+	private IEnumerable<string> _cachedFormattedContent = [];
 
 	public Table Table { get; set; } = default!;
 
@@ -41,10 +42,8 @@ public partial class Cell : CommandExecuterBase
 
 	public List<string> Comments { get; set; } = [];
 
-	[JsonIgnore]
 	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
 
-	[JsonIgnore]
 	public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
 
 	/// <summary>
@@ -102,7 +101,7 @@ public partial class Cell : CommandExecuterBase
 	}
 
 	[JsonConstructor]
-	public Cell() { }
+	private Cell() { }
 
 	public Cell(Table table, params string[] contents)
 	{
@@ -116,7 +115,7 @@ public partial class Cell : CommandExecuterBase
 		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
 	}
 
-	public static bool TrySeparateArgumentsAs<TType>(string[] arguments, [NotNullWhen(true)] out (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>)? result, [NotNullWhen(true)] out Type? resultType)
+	public bool TrySeparateArgumentsAs<TType>(string[] arguments, [NotNullWhen(true)] out (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>)? result, [NotNullWhen(true)] out Type? resultType)
 	where TType : IParsable<TType>
 	{
 		try
@@ -137,16 +136,16 @@ public partial class Cell : CommandExecuterBase
 		}
 	}
 
-	public static (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArgumentsAs<TType>(string[] arguments)
+	public (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArgumentsAs<TType>(string[] arguments)
 	where TType : IParsable<TType>
 	{
 		var namedArgs = arguments.Where(a => a.Contains(Shared.NAMED_ARG_SEPARATOR) == true);
 
-		var regularArgs = ContentParser.ParseFunctionArguments<TType>(arguments.Where(a => !namedArgs.Contains(a)));
+		var regularArgs = ContentParser.ParseFunctionArguments<TType>(this, arguments.Where(a => !namedArgs.Contains(a)));
 
 		var namedArgsDic = namedArgs.ToDictionary(
 			k => Enum.Parse<ArgumentName>(k.Split(Shared.NAMED_ARG_SEPARATOR)[0], true),
-			v => ContentParser.ParseFunctionArgument<string>(v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
+			v => ContentParser.ParseFunctionArgument<string>(this, v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
 
 		return (namedArgsDic, regularArgs);
 	}
@@ -158,11 +157,11 @@ public partial class Cell : CommandExecuterBase
 
 		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
-			var c = r.Table[r.Position];
+			var c = r.Table[r.ReferencedPosition];
 
 			c.Selection.SelectSecondary();
 
-			TertiarySelectionRecursive(c);
+			TertiarySelectionRecursive(c, false);
 		});
 	}
 
@@ -172,37 +171,43 @@ public partial class Cell : CommandExecuterBase
 
 		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
-			var c = r.Table[r.Position];
+			var c = r.Table[r.ReferencedPosition];
 
 			c.Selection.DeselectSecondary();
 
-			TertiaryDeselectionRecursive(c);
+			TertiaryDeselectionRecursive(c, false);
 		});
 	}
 
-	private static void TertiarySelectionRecursive(Cell cell)
+	private static void TertiarySelectionRecursive(Cell cell, bool selectSelf)
 	{
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(r.Table[r.Position]));
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(r.Table[r.ReferencedPosition], false));
 
-			cell.Selection.SelectTertiary();
+			if (selectSelf)
+			{
+				cell.Selection.SelectTertiary();
+			}
 		}
-		else
+		else if (selectSelf)
 		{
 			cell.Selection.SelectTertiary();
 		}
 	}
 
-	private static void TertiaryDeselectionRecursive(Cell cell)
+	private static void TertiaryDeselectionRecursive(Cell cell, bool selectSelf)
 	{
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiaryDeselectionRecursive(r.Table[r.Position]));
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiaryDeselectionRecursive(r.Table[r.ReferencedPosition], false));
 
-			cell.Selection.DeselectTertiary();
+			if (selectSelf)
+			{
+				cell.Selection.DeselectTertiary();
+			}
 		}
-		else
+		else if (selectSelf)
 		{
 			cell.Selection.DeselectTertiary();
 		}
@@ -219,5 +224,10 @@ public partial class Cell : CommandExecuterBase
 		_cachedFormattedContent = Enumerable.Empty<string>();
 
 		ContentFunction?.ClearError();
+	}
+
+	public object GetFormat(Type? formatType)
+	{
+		return this;
 	}
 }

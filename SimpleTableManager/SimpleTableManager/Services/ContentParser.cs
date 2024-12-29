@@ -84,16 +84,16 @@ public static class ContentParser
 		}
 	}
 
-	public static List<IFunctionArgument> ParseFunctionArguments<TType>(IEnumerable<string> values)
+	public static List<IFunctionArgument> ParseFunctionArguments<TType>(Cell cell, IEnumerable<string> values)
 	where TType : IParsable<TType>
 	{
-		return values.Select(ParseFunctionArgument<TType>).ToList();
+		return values.Select(v => ParseFunctionArgument<TType>(cell, v)).ToList();
 	}
 
-	public static IFunctionArgument ParseFunctionArgument<TType>(string value)
+	public static IFunctionArgument ParseFunctionArgument<TType>(Cell cell, string value)
 	where TType : IParsable<TType>
 	{
-		if (CellReference.TryParse(value, null, out var cellReference))
+		if (CellReference.TryParse(value, cell, out var cellReference))
 		{
 			return new ReferenceFunctionArgument(cellReference);
 		}

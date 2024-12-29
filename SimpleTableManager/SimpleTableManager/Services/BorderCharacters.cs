@@ -2,7 +2,7 @@
 
 public static class BorderCharacters
 {
-	private static List<BorderCharacter> _CHARACTERS = new();
+	private static List<BorderCharacter> _CHARACTERS = [];
 
 	public static void FromJson(string path)
 	{

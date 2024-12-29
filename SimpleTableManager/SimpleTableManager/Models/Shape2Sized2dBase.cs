@@ -14,7 +14,7 @@ where T : Shape2Sized2dBase<T>, IParsable<T>
 		return $"S1:{Size1}, S2:{Size2}";
 	}
 
-	public new static T ParseCore(GroupCollection args)
+	public new static T ParseCore(GroupCollection args, IFormatProvider? _)
 	{
 		var size1 = double.Parse(args["s"].Value);
 		var size2 = args["s2"].Success ? double.Parse(args["s2"].Value) : size1;

@@ -43,7 +43,11 @@ public partial class Cell
 			TrySeparateArgumentsAs<DateTime>(contents, out r, out t) ? r.Value :
 			SeparateArgumentsAs<string>(contents);
 
+		Deselect();
+
 		ContentFunction = FunctionCollection.GetFunction(t ?? typeof(string), "const", args.Item1, args.Item2);
+
+		Select();
 	}
 
 	[CommandFunction]

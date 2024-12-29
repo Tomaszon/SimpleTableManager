@@ -8,7 +8,6 @@ public class ViewOptions : ValidatorBase
 
 	public Position EndPosition { get; set; }
 
-	[JsonIgnore]
 	public Size Size => new(EndPosition.X - StartPosition.X + 1, EndPosition.Y - StartPosition.Y + 1);
 
 	public ViewOptions(int x1, int y1, int x2, int y2)

@@ -104,8 +104,7 @@
 			"dependsOrder": "sequence",
 			"problemMatcher": "$msCompile",
 			"group": {
-				"kind": "build",
-				"isDefault": true
+				"kind": "build"
 			}
 		},
 		{
