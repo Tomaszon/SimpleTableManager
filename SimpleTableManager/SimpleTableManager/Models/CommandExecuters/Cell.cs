@@ -87,7 +87,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		{
 			try
 			{
-				return _cachedFormattedContent = ContentFunction?.ExecuteAndFormat() ?? Enumerable.Empty<string>();
+				return _cachedFormattedContent = ContentFunction?.ExecuteAndFormat() ?? [];
 			}
 			catch (OperationCanceledException ex)
 			{
@@ -221,7 +221,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
 	{
-		_cachedFormattedContent = Enumerable.Empty<string>();
+		_cachedFormattedContent = [];
 
 		ContentFunction?.ClearError();
 	}

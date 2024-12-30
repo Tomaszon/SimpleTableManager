@@ -7,11 +7,11 @@ namespace SimpleTableManager.Services;
 /// </summary>
 public class Settings
 {
-	public string[] Logo { get; set; } = Array.Empty<string>();
+	public string[] Logo { get; set; } = [];
 
-	public string[] LoadingScreenLogo { get; set; } = Array.Empty<string>();
+	public string[] LoadingScreenLogo { get; set; } = [];
 
-	public string[] LoadingScreenSplashes { get; set; } = Array.Empty<string>();
+	public string[] LoadingScreenSplashes { get; set; } = [];
 
 	public bool ShowLoadingScreen { get; set; } = true;
 
@@ -81,17 +81,17 @@ public class Settings
 
 	public bool Audio { get; set; }
 
-	public Note[] StartupNotes { get; set; } = Array.Empty<Note>();
+	public Note[] StartupNotes { get; set; } = [];
 
-	public Note[] ShutdownNotes { get; set; } = Array.Empty<Note>();
+	public Note[] ShutdownNotes { get; set; } = [];
 
-	public Note[] OkNotes { get; set; } = Array.Empty<Note>();
+	public Note[] OkNotes { get; set; } = [];
 
-	public Note[] QuestionNotes { get; set; } = Array.Empty<Note>();
+	public Note[] QuestionNotes { get; set; } = [];
 
-	public Note[] ErrorNotes { get; set; } = Array.Empty<Note>();
+	public Note[] ErrorNotes { get; set; } = [];
 
-	public Note[] CriticalNotes { get; set; } = Array.Empty<Note>();
+	public Note[] CriticalNotes { get; set; } = [];
 
 	public byte Volume { get; set; } = 25;
 

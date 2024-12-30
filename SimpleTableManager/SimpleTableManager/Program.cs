@@ -158,7 +158,7 @@ public class Program
 				{
 					var fileName = args[0];
 
-					args = Array.Empty<string>();
+					args = [];
 
 					InstanceMap.Instance.GetInstance<Document>()!.Load(fileName);
 				}
