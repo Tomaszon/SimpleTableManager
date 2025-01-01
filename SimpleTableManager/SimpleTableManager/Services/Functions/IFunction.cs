@@ -31,4 +31,10 @@ public interface IFunction
 	string GetError();
 
 	Type GetInType();
+
+	void ShiftferenceArgumentPositions(Size size)
+	{
+		//UNDONE do the same with named reference arguments
+		ReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPosition(size));
+	}
 }

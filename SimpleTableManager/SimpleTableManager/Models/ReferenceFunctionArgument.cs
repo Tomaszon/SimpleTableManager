@@ -6,7 +6,11 @@ namespace SimpleTableManager.Models
 
 		public IEnumerable<object>? Resolve()
 		{
-			return Reference.Table[Reference.ReferencedPosition].ContentFunction?.Execute();
+			var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
+			var table = doc[Reference.ReferencedTableId];
+
+			return table[Reference.ReferencedPosition].ContentFunction?.Execute();
 		}
 
 		public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)

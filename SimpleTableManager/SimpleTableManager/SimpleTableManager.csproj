@@ -30,6 +30,7 @@
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NetCoreAudio" Version="2.0.0" />
+		<PackageReference Include="DeepCopy" Version="1.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>

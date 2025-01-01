@@ -8,6 +8,8 @@ namespace SimpleTableManager.Models.CommandExecuters;
 [JsonObject(IsReference = true)]
 public partial class Cell : CommandExecuterBase, IFormatProvider
 {
+	public Guid Id { get; set; } = Guid.NewGuid();
+
 	[JsonIgnore]
 	private IEnumerable<string> _cachedFormattedContent = [];
 
@@ -150,14 +152,17 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		return (namedArgsDic, regularArgs);
 	}
 
-
 	public void Select()
 	{
 		Selection.SelectPrimary();
 
+		var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
 		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
-			var c = r.Table[r.ReferencedPosition];
+			var table = doc[r.ReferencedTableId];
+
+			var c = table[r.ReferencedPosition];
 
 			c.Selection.SelectSecondary();
 
@@ -169,9 +174,13 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 	{
 		Selection.DeselectPrimary();
 
+		var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
 		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
-			var c = r.Table[r.ReferencedPosition];
+			var table = doc[r.ReferencedTableId];
+
+			var c = table[r.ReferencedPosition];
 
 			c.Selection.DeselectSecondary();
 
@@ -181,9 +190,11 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 	private static void TertiarySelectionRecursive(Cell cell, bool selectSelf)
 	{
+		var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(r.Table[r.ReferencedPosition], false));
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(doc[r.ReferencedTableId][r.ReferencedPosition], false));
 
 			if (selectSelf)
 			{
@@ -198,9 +209,11 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 	private static void TertiaryDeselectionRecursive(Cell cell, bool selectSelf)
 	{
+		var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiaryDeselectionRecursive(r.Table[r.ReferencedPosition], false));
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiaryDeselectionRecursive(doc[r.ReferencedTableId][r.ReferencedPosition], false));
 
 			if (selectSelf)
 			{

@@ -13,6 +13,15 @@ public partial class Cell
 		};
 	}
 
+	private void SetContent(IFunction newFunction)
+	{
+		Deselect();
+
+		ContentFunction = newFunction;
+
+		Select();
+	}
+
 	private void SetFunction<T>(Enum functionOperator, params string[] arguments)
 		where T : IParsable<T>
 	{
@@ -20,11 +29,7 @@ public partial class Cell
 
 		var newFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), args.Item1, args.Item2);
 
-		Deselect();
-
-		ContentFunction = newFunction;
-		
-		Select();
+		SetContent(newFunction);
 	}
 
 	[CommandFunction]
@@ -43,11 +48,7 @@ public partial class Cell
 			TrySeparateArgumentsAs<DateTime>(contents, out r, out t) ? r.Value :
 			SeparateArgumentsAs<string>(contents);
 
-		Deselect();
-
-		ContentFunction = FunctionCollection.GetFunction(t ?? typeof(string), "const", args.Item1, args.Item2);
-
-		Select();
+		SetContent(FunctionCollection.GetFunction(t ?? typeof(string), "const", args.Item1, args.Item2));
 	}
 
 	[CommandFunction]

@@ -1,8 +1,10 @@
-﻿namespace SimpleTableManager.Models;
+﻿using System.Numerics;
+
+namespace SimpleTableManager.Models;
 
 [ParseFormat("x,y", "(?<x>\\d+),(?<y>\\d+)"), ParseFormat("x;y", "(?<x>\\d+);(?<y>\\d+)")]
 [method: JsonConstructor]
-public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>
+public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>, ISubtractionOperators<Position, Position, Size>
 {
 	public int X { get; set; } = x;
 
@@ -42,5 +44,10 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 		var y = int.Parse(args["y"].Value);
 
 		return new Position(x, y);
+	}
+
+	public static Size operator -(Position left, Position right)
+	{
+		return new(left.X - right.X, left.Y - right.Y);
 	}
 }

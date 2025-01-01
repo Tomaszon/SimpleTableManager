@@ -7,13 +7,15 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("copyCellContent")]
 	public void CopyContent()
 	{
-		Table.Document.GlobalStorage.Add("cellContent", ContentFunction);
+		//IDEA use cell guid instead of cell position
+		Table.Document.GlobalStorage.Add("cellContent", (Table[this], ContentFunction));
 	}
 
 	[CommandFunction, CommandShortcut("cutCellContent")]
 	public void CutContent()
 	{
-		Table.Document.GlobalStorage.Add("cellContent", ContentFunction);
+		//IDEA use cell guid instead of cell position
+		Table.Document.GlobalStorage.Add("cellContent", (Table[this], ContentFunction));
 
 		ResetContent();
 	}
@@ -21,12 +23,13 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("pasteCellContent")]
 	public void PasteContent()
 	{
-		var stored = Table.Document.GlobalStorage.TryGet<IFunction>("cellContent");
+		var stored = Table.Document.GlobalStorage.TryGet<(Position, IFunction)>("cellContent");
 
-		if (stored is not null)
-		{
-			ContentFunction = stored;
-		}
+		var diff = Table[this] - stored.Item1;
+
+		stored.Item2.ShiftferenceArgumentPositions(diff);
+
+		SetContent(stored.Item2);
 	}
 
 	[CommandFunction, CommandShortcut("copyCellFormat")]

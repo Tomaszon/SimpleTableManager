@@ -5,18 +5,21 @@ namespace SimpleTableManager.Models;
 /// </summary>
 public class GlobalStorage
 {
-	public Dictionary<string, (Type?, string)> Dictionary { get; set; } = [];
+	public Dictionary<string, (Type? type, string? value)> Dictionary { get; set; } = [];
 
 	/// <summary>
 	/// Adds new item to the storage
 	/// </summary>
 	public void Add(string key, object? source)
 	{
-		var state = Shared.SerializeObject(source);
-
 		Dictionary.Remove(key);
 
-		Dictionary.Add(key, (source?.GetType(), state));
+		if (source is not null)
+		{
+			var state = Shared.SerializeObject(source);
+
+			Dictionary.Add(key, (source?.GetType(), state));
+		}
 	}
 
 	/// <summary>
@@ -26,7 +29,7 @@ public class GlobalStorage
 	{
 		if (Dictionary.TryGetValue(key, out var state))
 		{
-			return (T?)Shared.DeserializeObject(state.Item1, state.Item2);
+			return (T?)Shared.DeserializeObject(state.type, state.value);
 		}
 
 		return default;

@@ -6,6 +6,8 @@ namespace SimpleTableManager.Models.CommandExecuters;
 [JsonObject(IsReference = true)]
 public partial class Table : CommandExecuterBase
 {
+	public Guid Id { get; set; } = Guid.NewGuid();
+
 	public Document Document { get; set; } = default!;
 
 	public event Action<int?, int?, int?, int?>? ViewChanged;
