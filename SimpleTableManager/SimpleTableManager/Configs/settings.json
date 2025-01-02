@@ -52,7 +52,7 @@
 	// 	"Foreground": "Black",
 	// 	"Background": "White"
 	// },
-	"ModernTableBorder": false,
+	"ModernTableBorder": true,
 	"IndexCellLeftArrow": "◀",
 	"IndexCellRightArrow": "▶",
 	"IndexCellUpArrow": "▲",

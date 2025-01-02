@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class BorderCharacter
+public struct BorderCharacter
 {
 	public char Retro { get; set; }
 

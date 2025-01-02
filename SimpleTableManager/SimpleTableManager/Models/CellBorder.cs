@@ -1,6 +1,7 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class CellBorder
+[method: JsonConstructor]
+public struct CellBorder()
 {
 	public BorderType Top { get; set; } = BorderType.Horizontal;
 
@@ -18,63 +19,65 @@ public class CellBorder
 
 	public BorderType BottomRight { get; set; } = BorderType.Left | BorderType.Up;
 
-	public CellBorder TrimCorner(bool topLeft = false, bool topRight = false, bool bottomLeft = false, bool bottomRight = false)
+	public readonly CellBorder TrimCorner(bool topLeft = false, bool topRight = false, bool bottomLeft = false, bool bottomRight = false)
 	{
-		return ModifyCorners(BorderType.None, true, topLeft, topRight, bottomLeft, bottomRight);
-	}
-
-	public CellBorder TrimSide(bool top = false, bool bottom = false, bool left = false, bool right = false)
-	{
-		return ModifySides(BorderType.None, true, top, bottom, left, right);
-	}
-
-	public CellBorder Dot(bool top = false, bool bottom = false, bool left = false, bool right = false)
-	{
-		return ModifySides(BorderType.Dotted, false, top, bottom, left, right);
-	}
-
-	public CellBorder ModifySides(BorderType border, bool replace, bool top = false, bool bottom = false, bool left = false, bool right = false)
-	{
-		var result = (CellBorder)MemberwiseClone();
-
-		GetType().GetProperties().ForEach(p =>
-		{
-			if (top && p.Name.Contains("Top") ||
-				bottom && p.Name.Contains("Bottom") ||
-				left && p.Name.Contains("Left") ||
-				right && p.Name.Contains("Right"))
-			{
-				p.SetValue(result, replace ? border : (BorderType)p.GetValue(this)! | border);
-			}
-		});
-
-		return result;
-	}
-
-	public CellBorder ModifyCorners(BorderType border, bool replace, bool topLeft, bool topRight, bool bottomLeft, bool bottomRight)
-	{
-		var result = (CellBorder)MemberwiseClone();
+		var instance = this;
 
 		if (topLeft)
 		{
-			result.TopLeft = replace ? border : result.TopLeft | border;
+			instance.TopLeft = BorderType.None;
 		}
 
 		if (topRight)
 		{
-			result.TopRight = replace ? border : result.TopRight | border;
+			instance.TopRight = BorderType.None;
 		}
 
 		if (bottomLeft)
 		{
-			result.BottomLeft = replace ? border : result.BottomLeft | border;
+			instance.BottomLeft = BorderType.None;
 		}
 
 		if (bottomRight)
 		{
-			result.BottomRight = replace ? border : result.BottomRight | border;
+			instance.BottomRight = BorderType.None;
 		}
 
-		return result;
+		return instance;
+	}
+
+	public readonly CellBorder TrimSide(bool top = false, bool bottom = false, bool left = false, bool right = false)
+	{
+		var instance = this;
+
+		if (top)
+		{
+			instance.TopLeft = BorderType.None;
+			instance.Top = BorderType.None;
+			instance.TopRight = BorderType.None;
+		}
+
+		if (bottom)
+		{
+			instance.BottomLeft = BorderType.None;
+			instance.Bottom = BorderType.None;
+			instance.BottomRight = BorderType.None;
+		}
+
+		if (left)
+		{
+			instance.TopLeft = BorderType.None;
+			instance.Left = BorderType.None;
+			instance.BottomLeft = BorderType.None;
+		}
+
+		if (right)
+		{
+			instance.TopRight = BorderType.None;
+			instance.Right = BorderType.None;
+			instance.BottomRight = BorderType.None;
+		}
+
+		return instance;
 	}
 }
