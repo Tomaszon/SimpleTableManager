@@ -13,8 +13,13 @@ public partial class Cell
 		};
 	}
 
-	private void SetContent(IFunction newFunction)
+	private void SetContent(IFunction newFunction, Size? positionShift = default)
 	{
+		if (positionShift is not null)
+		{
+			newFunction?.ShiftferenceArgumentPositions(positionShift);
+		}
+
 		Deselect();
 
 		ContentFunction = newFunction;

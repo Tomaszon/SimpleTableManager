@@ -2,7 +2,7 @@
 
 public partial class Table
 {
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddRowAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
@@ -24,7 +24,7 @@ public partial class Table
 		}
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddRowAfter(int after, int count = 1)
 	{
 		ThrowIfNot(after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
@@ -32,19 +32,19 @@ public partial class Table
 		Shared.IndexArray(count).ForEach(i => AddRowAt(after + 1));
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddRowFirst(int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddRowAt(0));
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddRowLast(int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddRowAt(Size.Height));
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddColumnAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
@@ -66,7 +66,7 @@ public partial class Table
 		}
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddColumnAfter(int after, int count = 1)
 	{
 		ThrowIfNot(after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
@@ -74,13 +74,13 @@ public partial class Table
 		Shared.IndexArray(count).ForEach(i => AddColumnAt(after + 1));
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddColumnFirst(int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddColumnAt(0));
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddColumnLast(int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddColumnAt(Size.Width));

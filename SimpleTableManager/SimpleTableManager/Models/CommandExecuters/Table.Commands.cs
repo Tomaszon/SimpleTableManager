@@ -168,7 +168,7 @@ public partial class Table
 		}
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true)]
 	public void SwapCells(Position position1, Position position2)
 	{
 		var cell1 = this[position1];

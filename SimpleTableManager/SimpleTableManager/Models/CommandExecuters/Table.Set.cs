@@ -8,7 +8,7 @@ public partial class Table
 		Name = name;
 	}
 
-	[CommandFunction(GlobalCacheClearNeeded = true)]
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void SetSize(Size size)
 	{
 		ThrowIfNot(size.Width > 0 && size.Height > 0, "Can not decrease table size under 1 column or 1 row!");

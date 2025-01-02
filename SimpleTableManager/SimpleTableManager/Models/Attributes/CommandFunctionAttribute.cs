@@ -11,7 +11,12 @@ public class CommandFunctionAttribute([CallerMemberName] string reference = null
 
 	public bool IgnoreReferencedObject { get; set; }
 
-	public bool GlobalCacheClearNeeded { get; set; }
+	public bool ClearsCache { get; set; }
 
-	public bool IsGlobalStorageCellContentClearNeeded { get; set; }
+	public GlobalStorageKey Clears { get; set; }
+
+	public CommandFunctionAttribute(string reference, GlobalStorageKey key) :this(reference)
+	{
+		
+	}
 }

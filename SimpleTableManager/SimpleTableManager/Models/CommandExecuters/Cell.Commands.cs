@@ -8,14 +8,14 @@ public partial class Cell
 	public void CopyContent()
 	{
 		//IDEA use cell guid instead of cell position
-		Table.Document.GlobalStorage.Add("cellContent", (Table[this], ContentFunction));
+		Table.Document.GlobalStorage.Add(GlobalStorageKey.CellContent, (Table[this], ContentFunction));
 	}
 
 	[CommandFunction, CommandShortcut("cutCellContent")]
 	public void CutContent()
 	{
 		//IDEA use cell guid instead of cell position
-		Table.Document.GlobalStorage.Add("cellContent", (Table[this], ContentFunction));
+		Table.Document.GlobalStorage.Add(GlobalStorageKey.CellContent, (Table[this], ContentFunction));
 
 		ResetContent();
 	}
@@ -23,19 +23,17 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("pasteCellContent")]
 	public void PasteContent()
 	{
-		var stored = Table.Document.GlobalStorage.TryGet<(Position, IFunction)>("cellContent");
+		var stored = Table.Document.GlobalStorage.TryGet<(Position, IFunction)>(GlobalStorageKey.CellContent);
 
-		var diff = Table[this] - stored.Item1;
+		var diff = stored.Item1 is not null ? Table[this] - stored.Item1 : null;
 
-		stored.Item2.ShiftferenceArgumentPositions(diff);
-
-		SetContent(stored.Item2);
+		SetContent(stored.Item2, diff);
 	}
 
 	[CommandFunction, CommandShortcut("copyCellFormat")]
 	public void CopyFormat()
 	{
-		Table.Document.GlobalStorage.Add("cellFormat",
+		Table.Document.GlobalStorage.Add(GlobalStorageKey.CellFormat,
 		(
 			GivenSize,
 			ContentPadding,
@@ -49,7 +47,7 @@ public partial class Cell
 	[CommandFunction, CommandShortcut("pasteCellFormat")]
 	public void PasteFormat()
 	{
-		var stored = Table.Document.GlobalStorage.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, int>?>("cellFormat");
+		var stored = Table.Document.GlobalStorage.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, int>?>(GlobalStorageKey.CellFormat);
 
 		if (stored is not null)
 		{

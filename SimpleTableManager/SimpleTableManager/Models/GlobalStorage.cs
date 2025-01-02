@@ -5,12 +5,12 @@ namespace SimpleTableManager.Models;
 /// </summary>
 public class GlobalStorage
 {
-	public Dictionary<string, (Type? type, string? value)> Dictionary { get; set; } = [];
+	public Dictionary<GlobalStorageKey, (Type? type, string? value)> Dictionary { get; set; } = [];
 
 	/// <summary>
 	/// Adds new item to the storage
 	/// </summary>
-	public void Add(string key, object? source)
+	public void Add(GlobalStorageKey key, object? source)
 	{
 		Dictionary.Remove(key);
 
@@ -25,7 +25,7 @@ public class GlobalStorage
 	/// <summary>
 	/// Gets a stored item
 	/// </summary>
-	public T? TryGet<T>(string key)
+	public T? TryGet<T>(GlobalStorageKey key)
 	{
 		if (Dictionary.TryGetValue(key, out var state))
 		{
@@ -33,5 +33,13 @@ public class GlobalStorage
 		}
 
 		return default;
+	}
+
+	/// <summary>
+	/// Removes a stored item
+	/// </summary>
+	public void Remove(GlobalStorageKey key)
+	{
+		Dictionary.Remove(key);
 	}
 }

@@ -90,7 +90,7 @@ public class Command
 
 				if (attribute!.StateModifier)
 				{
-					endReferencedObject.InvokeStateModifierCommandExecutedEvent(new(endReferencedObject, attribute.GlobalCacheClearNeeded, attribute.IsGlobalStorageCellContentClearNeeded));
+					endReferencedObject.InvokeStateModifierCommandExecutedEvent(new StateModifierCommandExecutedEventArgs(endReferencedObject, attribute));
 				}
 			});
 		}

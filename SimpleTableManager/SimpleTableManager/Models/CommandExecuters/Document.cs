@@ -37,9 +37,14 @@ public partial class Document : CommandExecuterBase
 			IsSaved = false;
 		}
 
-		if (args.IsGlobalCacheClearNeeded)
+		if (args.ClearsCache)
 		{
 			Tables.ForEach(t => t.Content.ForEach(c => c.InvokeStateModifierCommandExecutedEvent(new(this, isPropagable: false))));
+		}
+
+		if (args.Clears == GlobalStorageKey.CellContent)
+		{
+			GlobalStorage.Remove(GlobalStorageKey.CellContent);
 		}
 
 		InvokeStateModifierCommandExecutedEvent(args);
