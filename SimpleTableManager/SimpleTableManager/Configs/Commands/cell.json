@@ -54,11 +54,17 @@
 		"{34}": "decreaseLayerIndex"
 	},
 	"{46}": {
-		"{9}": "copyContent",
+		"{9}": {
+			"{96}": "copyContent",
+			"{37}": "copyContentTo"
+		},
 		"{40}": "copyFormat"
 	},
 	"{47}": {
-		"{9}": "pasteContent",
+		"{9}": {
+			"{37}": "pasteContent",
+			"{96}": "pasteContentFrom"
+		},
 		"{40}": "pasteFormat"
 	}
 }

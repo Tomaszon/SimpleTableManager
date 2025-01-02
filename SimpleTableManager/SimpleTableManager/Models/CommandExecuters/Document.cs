@@ -17,7 +17,7 @@ public partial class Document : CommandExecuterBase
 
 	public GlobalStorage GlobalStorage { get; set; }
 
-	public Table this[string tableName] => Tables.Single(t => t.Name == tableName);
+	public Table? this[string tableName] => Tables.SingleOrDefault(t => t.Name == tableName);
 
 	public Table this[Guid id] => Tables.Single(t => t.Id == id);
 

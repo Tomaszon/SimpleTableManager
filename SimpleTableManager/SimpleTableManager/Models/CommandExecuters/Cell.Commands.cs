@@ -4,11 +4,28 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Cell
 {
-	[CommandFunction, CommandShortcut("copyCellContent")]
+	[CommandFunction(StateModifier = false), CommandShortcut("copyCellContent")]
 	public void CopyContent()
 	{
 		//IDEA use cell guid instead of cell position
 		Table.Document.GlobalStorage.Add(GlobalStorageKey.CellContent, (Table[this], ContentFunction));
+	}
+
+	[CommandFunction(StateModifier = false)]
+	public void CopyContentTo(Position position, string? tableName = null)
+	{
+		var table = tableName is not null ? Table.Document[tableName] : Table;
+
+		ThrowIf(table is null, $"No table found with name {tableName}");
+
+		var clone = Shared.SerializeClone(ContentFunction);
+
+		var diff = position - Table[this];
+
+		var targetCell = table[position];
+
+		targetCell.SetContent(clone, diff, false);
+		targetCell.InvokeStateModifierCommandExecutedEvent(new(targetCell));
 	}
 
 	[CommandFunction, CommandShortcut("cutCellContent")]
@@ -28,6 +45,22 @@ public partial class Cell
 		var diff = stored.Item1 is not null ? Table[this] - stored.Item1 : null;
 
 		SetContent(stored.Item2, diff);
+	}
+
+	[CommandFunction]
+	public void PasteContentFrom(Position position, string? tableName = null)
+	{
+		var table = tableName is not null ? Table.Document[tableName] : Table;
+
+		ThrowIf(table is null, $"No table found with name {tableName}");
+
+		var sourceCell = table[position];
+
+		var clone = Shared.SerializeClone(sourceCell.ContentFunction);
+
+		var diff = Table[this] - position;
+
+		SetContent(clone, diff);
 	}
 
 	[CommandFunction, CommandShortcut("copyCellFormat")]

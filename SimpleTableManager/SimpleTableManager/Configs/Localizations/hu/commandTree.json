@@ -35,7 +35,7 @@
 	"{34}": "réteg-index",
 	"{35}": "min",
 	"{36}": "max",
-	"{37}": "egyéni-érték",
+	"{37}": "ra",
 	"{38}": "hivatkozott-cella",
 	"{39}": "visszaállítás",
 	"{40}": "formázás",
@@ -93,5 +93,6 @@
 	"{92}": "oszlop-szűrők",
 	"{93}": "csere",
 	"{94}": "kijelölés-megszüntetése",
-	"{95}": "tartalom-stílus"
+	"{95}": "tartalom-stílus",
+	"{96}": "ról"
 }

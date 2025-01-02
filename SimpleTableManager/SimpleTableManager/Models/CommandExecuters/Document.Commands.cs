@@ -20,11 +20,13 @@ public partial class Document
 	[CommandFunction]
 	public void ActivateTable(string name)
 	{
-		var index = Tables.IndexOf(Tables.FirstOrDefault(t => t.Name == name)!);
+		var table = this[name];
 
-		ThrowIf(index == -1, $"No table found with name {name}");
+		ThrowIf(table is null, $"No table found with name {name}");
 
-		ActivateTable(index);
+		Tables.ForEach(t => t.IsActive = false);
+
+		table.IsActive = true;
 	}
 
 	[CommandFunction, CommandShortcut]

@@ -81,6 +81,13 @@ public static class Shared
 		serializer.Populate(new JsonTextReader(sr), target);
 	}
 
+	public static T? SerializeClone<T>(T? source)
+	{
+		var state = SerializeObject(source);
+
+		return (T?)DeserializeObject(source?.GetType(), state);
+	}
+
 	public static string SerializeObject(object? source)
 	{
 		using var ms = new MemoryStream();

@@ -13,18 +13,24 @@ public partial class Cell
 		};
 	}
 
-	private void SetContent(IFunction newFunction, Size? positionShift = default)
+	private void SetContent(IFunction? newFunction, Size? positionShift = default, bool selectDeselect = true)
 	{
 		if (positionShift is not null)
 		{
 			newFunction?.ShiftferenceArgumentPositions(positionShift);
 		}
 
-		Deselect();
+		if (selectDeselect)
+		{
+			Deselect();
+		}
 
 		ContentFunction = newFunction;
 
-		Select();
+		if (selectDeselect)
+		{
+			Select();
+		}
 	}
 
 	private void SetFunction<T>(Enum functionOperator, params string[] arguments)
