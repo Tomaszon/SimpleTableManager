@@ -86,11 +86,11 @@ public class Command
 
 				var endReferencedObject = attribute.IgnoreReferencedObject ? i : i.GetEndReferencedObject();
 
-				results.Add(method.Invoke(endReferencedObject, parsedArguments.ToArray()));
+				results.Add(method.Invoke(endReferencedObject, [.. parsedArguments]));
 
 				if (attribute!.StateModifier)
 				{
-					endReferencedObject.InvokeStateModifierCommandExecutedEvent(endReferencedObject);
+					endReferencedObject.InvokeStateModifierCommandExecutedEvent(new(endReferencedObject, attribute.GlobalCacheClearNeeded, attribute.IsGlobalStorageCellContentClearNeeded));
 				}
 			});
 		}

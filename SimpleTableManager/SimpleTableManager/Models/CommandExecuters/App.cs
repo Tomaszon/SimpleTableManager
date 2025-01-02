@@ -15,7 +15,7 @@ public class App : CommandExecuterBase
 	{
 		Document = document;
 
-		document.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+		document.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 
 		EditHistory.Init(Shared.SerializeObject(Document));
 	}
@@ -33,7 +33,7 @@ public class App : CommandExecuterBase
 		CommandShortcuts.FromJson(@"Configs/commandShortcuts.json");
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args)
 	{
 		EditHistory.Add(Shared.SerializeObject(Document));
 	}

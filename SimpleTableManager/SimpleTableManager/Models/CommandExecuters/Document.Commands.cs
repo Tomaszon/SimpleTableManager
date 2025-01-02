@@ -61,7 +61,7 @@ public partial class Document
 
 		Tables.Add(table);
 
-		table.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+		table.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 
 		ActivateTable(Tables.Count - 1);
 	}

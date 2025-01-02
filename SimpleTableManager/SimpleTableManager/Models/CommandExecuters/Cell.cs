@@ -114,7 +114,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 			SetStringContent(contents);
 		}
 
-		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
 
 	public bool TrySeparateArgumentsAs<TType>(string[] arguments, [NotNullWhen(true)] out (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>)? result, [NotNullWhen(true)] out Type? resultType)
@@ -229,10 +229,10 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
-		StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs arg)
 	{
 		_cachedFormattedContent = [];
 

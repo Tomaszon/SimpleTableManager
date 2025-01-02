@@ -26,7 +26,7 @@ public partial class Document : CommandExecuterBase
 		Clear(tableSize);
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args)
 	{
 		if (Settings.Current.Autosave && Metadata.Path is not null)
 		{
@@ -37,13 +37,18 @@ public partial class Document : CommandExecuterBase
 			IsSaved = false;
 		}
 
-		InvokeStateModifierCommandExecutedEvent(root);
+		if (args.IsGlobalCacheClearNeeded)
+		{
+			Tables.ForEach(t => t.Content.ForEach(c => c.InvokeStateModifierCommandExecutedEvent(new(this, isPropagable: false))));
+		}
+
+		InvokeStateModifierCommandExecutedEvent(args);
 	}
 
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
-		Tables.ForEach(t => t.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
+		Tables.ForEach(t => t.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted);
 	}
 
 	[MemberNotNull(nameof(Metadata)), MemberNotNull(nameof(GlobalStorage))]

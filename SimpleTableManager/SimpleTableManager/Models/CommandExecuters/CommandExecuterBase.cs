@@ -9,12 +9,12 @@ public abstract class CommandExecuterBase : ValidatorBase, IStateModifierCommand
 		return ReferencedObject is not null ? ReferencedObject.GetEndReferencedObject() : this;
 	}
 
-	public event Action<IStateModifierCommandExecuter, IStateModifierCommandExecuter>? StateModifierCommandExecuted;
+	public event StateModifierEventHandler StateModifierCommandExecutedEvent = delegate { };
 
-	public virtual void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root) { }
+	public virtual void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args) { }
 
-	public void InvokeStateModifierCommandExecutedEvent(IStateModifierCommandExecuter root)
+	public void InvokeStateModifierCommandExecutedEvent(StateModifierCommandExecutedEventArgs args)
 	{
-		StateModifierCommandExecuted?.Invoke(this, root);
+		StateModifierCommandExecutedEvent.Invoke(this, args);
 	}
 }

@@ -88,7 +88,7 @@ public partial class Table : CommandExecuterBase
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
-	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, IStateModifierCommandExecuter root)
+	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args)
 	{
 		var position = this[(Cell)sender];
 
@@ -98,17 +98,20 @@ public partial class Table : CommandExecuterBase
 
 		referrerCells.ForEach(c =>
 		{
-			if (c == root)
+			if (c == args.Root)
 			{
 				c.ContentFunction?.SetError("Circular reference");
 			}
 			else
 			{
-				c.InvokeStateModifierCommandExecutedEvent(root);
+				c.InvokeStateModifierCommandExecutedEvent(args);
 			}
 		});
 
-		InvokeStateModifierCommandExecutedEvent(root);
+		if (args.IsPropagable)
+		{
+			InvokeStateModifierCommandExecutedEvent(args);
+		}
 	}
 
 	public void OnViewChanged()
@@ -124,7 +127,7 @@ public partial class Table : CommandExecuterBase
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
-		Content.ForEach(c => c.StateModifierCommandExecuted += OnStateModifierCommandExecuted);
+		Content.ForEach(c => c.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted);
 
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
@@ -148,7 +151,7 @@ public partial class Table : CommandExecuterBase
 
 		Content.Insert(index, cell);
 
-		cell.StateModifierCommandExecuted += OnStateModifierCommandExecuted;
+		cell.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
 
 	public int GetRowHeight(int index)

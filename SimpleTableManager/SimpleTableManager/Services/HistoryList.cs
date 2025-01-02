@@ -70,6 +70,11 @@ public class HistoryList
 	/// </summary>
 	public void Add(string element)
 	{
+		if (_history.Count > 0 && _history[^1] == element)
+		{
+			return;
+		}
+
 		var currentIndex = _index;
 
 		if (_cleanAfterInsert)

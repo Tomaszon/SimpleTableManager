@@ -10,4 +10,8 @@ public class CommandFunctionAttribute([CallerMemberName] string reference = null
 	public bool StateModifier { get; set; } = true;
 
 	public bool IgnoreReferencedObject { get; set; }
+
+	public bool GlobalCacheClearNeeded { get; set; }
+
+	public bool IsGlobalStorageCellContentClearNeeded { get; set; }
 }

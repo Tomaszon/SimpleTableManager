@@ -2,7 +2,7 @@
 
 public partial class Table
 {
-	[CommandFunction]
+	[CommandFunction(GlobalCacheClearNeeded = true)]
 	public void RemoveRowAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
@@ -21,19 +21,19 @@ public partial class Table
 		RemoveDeadCellReferences();
 	}
 
-	[CommandFunction]
+	[CommandFunction(GlobalCacheClearNeeded = true)]
 	public void RemoveFirstRow()
 	{
 		RemoveRowAt(0);
 	}
 
-	[CommandFunction]
+	[CommandFunction(GlobalCacheClearNeeded = true)]
 	public void RemoveLastRow()
 	{
 		RemoveRowAt(Size.Height - 1);
 	}
 
-	[CommandFunction]
+	[CommandFunction(GlobalCacheClearNeeded = true)]
 	public void RemoveColumnAt(int index)
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Width - 1, $"Index is not in the needed range: [0, {Size.Width - 1}]");
@@ -62,13 +62,13 @@ public partial class Table
 			!Content.Contains((Cell)c.ReferencedObject)).ForEach(c => c.ResetReferenceCell());
 	}
 
-	[CommandFunction]
+	[CommandFunction(GlobalCacheClearNeeded = true)]
 	public void RemoveFirstColumn()
 	{
 		RemoveColumnAt(0);
 	}
 
-	[CommandFunction]
+	[CommandFunction(GlobalCacheClearNeeded = true)]
 	public void RemoveLastColumn()
 	{
 		RemoveColumnAt(Size.Width - 1);
