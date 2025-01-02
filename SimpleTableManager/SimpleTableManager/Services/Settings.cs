@@ -29,19 +29,19 @@ public class Settings
 
 	public ConsoleColorSet PrimarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGreen);
 
-	public ConsoleColorSet PrimarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
+	public ConsoleColorSet PrimarySelectionBorderColor { get; set; } = (ConsoleColor.DarkGreen, ConsoleColor.Black);
 
 	public ConsoleColorSet SecondarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkYellow);
 
 	public ConsoleColorSet SecondarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkYellow);
 
-	public ConsoleColorSet SecondarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
+	public ConsoleColorSet SecondarySelectionBorderColor { get; set; } = (ConsoleColor.DarkYellow, ConsoleColor.Black);
 	
 	public ConsoleColorSet TertiarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGray);
 
 	public ConsoleColorSet TertiarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGray);
 
-	public ConsoleColorSet TertiarySelectionBorderColor { get; set; } = (ConsoleColor.White, ConsoleColor.Black);
+	public ConsoleColorSet TertiarySelectionBorderColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
 
 	public ConsoleColorSet NotAvailableContentColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
 
