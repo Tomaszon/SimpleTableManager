@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class CommandReference(string className, string methodName)
+public struct CommandReference(string className, string methodName)
 {
 	public string ClassName { get; set; } = className;
 

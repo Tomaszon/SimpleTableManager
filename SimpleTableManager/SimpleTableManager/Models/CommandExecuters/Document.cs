@@ -56,7 +56,7 @@ public partial class Document : CommandExecuterBase
 		Tables.ForEach(t => t.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted);
 	}
 
-	[MemberNotNull(nameof(Metadata)), MemberNotNull(nameof(GlobalStorage))]
+	[MemberNotNull(nameof(GlobalStorage))]
 	public void Clear(Size? size = null)
 	{
 		Metadata = new Metadata();
@@ -80,8 +80,11 @@ public partial class Document : CommandExecuterBase
 	public void GetMetaInfos(string path)
 	{
 		var fileInfo = new FileInfo(path);
-		Metadata.Path = path;
-		Metadata.Size = fileInfo.Length;
+		
+		if (fileInfo.Exists)
+		{
+			Metadata = Metadata with { Path = path, Size = fileInfo.Length };
+		}
 	}
 
 	private bool CheckFileVersion(string content)

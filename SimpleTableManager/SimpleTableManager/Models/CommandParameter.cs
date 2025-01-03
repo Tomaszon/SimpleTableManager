@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class CommandParameter
+public struct CommandParameter
 {
 	public Type Type { get; set; }
 
@@ -10,9 +10,9 @@ public class CommandParameter
 
 	public object? DefaultValue { get; set; }
 
-	public bool IsArray => Type.IsArray;
+	public readonly bool IsArray => Type.IsArray;
 
-	public bool IsNullable => Type.IsAssignableFrom(null);
+	public readonly bool IsNullable => Type.IsAssignableFrom(null);
 
 	public IComparable? MinValue { get; set; }
 
@@ -20,7 +20,7 @@ public class CommandParameter
 
 	public int MinLength { get; set; }
 
-	public IEnumerable<string> ParseFormats { get; set; } = new List<string>();
+	public IEnumerable<string> ParseFormats { get; set; }
 
 	public CommandParameter(ParameterInfo parameterInfo)
 	{
@@ -44,7 +44,7 @@ public class CommandParameter
 		IsOptional = parameterInfo.IsOptional || isArray;
 	}
 
-	public override string ToString()
+	public override readonly string ToString()
 	{
 		var typeName = $"  type={Shared.FormatTypeName(Type)}";
 		var values = Type.IsEnum ? $"  values={string.Join('|', Enum.GetNames(Type))}" : "";

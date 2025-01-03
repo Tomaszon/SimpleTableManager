@@ -65,8 +65,8 @@
 	"CommandHistoryLength": 10,
 	"EditHistoryLength": 10,
 	"DefaultTableSize": {
-		"Width": 3,
-		"Height": 2
+		"Width": 4,
+		"Height": 3
 	},
 	"Autosave": false,
 	"Author": "Tomaszon",

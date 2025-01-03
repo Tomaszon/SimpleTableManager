@@ -22,17 +22,17 @@ public partial class Table : CommandExecuterBase
 
 	public ViewOptions ViewOptions { get; set; } = new(0, 0, 0, 0);
 
-	public List<Cell> Content { get; set; } = new();
+	public List<Cell> Content { get; set; } = [];
 
-	public List<IndexCell> Header { get; set; } = new();
+	public List<IndexCell> Header { get; set; } = [];
 
-	public List<IndexCell> Sider { get; set; } = new();
+	public List<IndexCell> Sider { get; set; } = [];
 
 	public Cell CornerCell { get; set; } = default!;
 
-	public Dictionary<int, string> RowFilters = new();
+	public Dictionary<int, string> RowFilters = [];
 
-	public Dictionary<int, string> ColumnFilters = new();
+	public Dictionary<int, string> ColumnFilters = [];
 
 	public Dictionary<int, List<Cell>> Columns =>
 		Shared.IndexArray(Size.Width).ToDictionary(x => x, ColumnAt);

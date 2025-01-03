@@ -4,7 +4,7 @@ namespace SimpleTableManager.Services.Functions;
 
 public static class FunctionCollection
 {
-	public static Dictionary<Type, Type> Functions { get; set; } = new Dictionary<Type, Type>();
+	public static Dictionary<Type, Type> Functions { get; set; } = [];
 
 	static FunctionCollection()
 	{

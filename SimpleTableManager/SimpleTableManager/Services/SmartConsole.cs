@@ -80,9 +80,9 @@ public partial class SmartConsole
 				_lastHelp += ",\n";
 			}
 		}
-		else if (command.Reference is { })
+		else if (command.Reference.HasValue)
 		{
-			InstanceMap.Instance.GetInstances(command.Reference.ClassName, out var type);
+			InstanceMap.Instance.GetInstances(command.Reference.Value.ClassName, out var type);
 
 			var method = command.GetMethod(type);
 

@@ -616,7 +616,7 @@ public static class Renderer
 			{
 				case RenderingMode.Layer:
 					{
-						contentsToRender = new List<string>() { cell.LayerIndex.ToString() };
+						contentsToRender = [cell.LayerIndex.ToString()];
 						hAlignment = HorizontalAlignment.Center;
 						vAlignment = VerticalAlignment.Center;
 					}

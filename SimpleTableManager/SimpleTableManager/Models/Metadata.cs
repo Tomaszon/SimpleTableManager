@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models;
 
-public class Metadata
+public struct Metadata()
 {
 	public string Author { get; set; } = Settings.Current.Author;
 

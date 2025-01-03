@@ -44,9 +44,9 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 	public List<string> Comments { get; set; } = [];
 
-	public bool IsContentColorDefault => ContentColor.Equals(Settings.Current.DefaultContentColor);
+	public bool IsContentColorDefault => ContentColor == Settings.Current.DefaultContentColor;
 
-	public bool IsBorderColorDefault => BorderColor.Equals(Settings.Current.DefaultBorderColor);
+	public bool IsBorderColorDefault => BorderColor == Settings.Current.DefaultBorderColor;
 
 	/// <summary>
 	/// Size not including the borders

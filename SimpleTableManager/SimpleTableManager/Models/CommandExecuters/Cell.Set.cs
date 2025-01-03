@@ -157,13 +157,13 @@ public partial class Cell
 	[CommandFunction]
 	public void SetVerticalAlignment(VerticalAlignment alignment)
 	{
-		ContentAlignment.Vertical = alignment;
+		ContentAlignment = (ContentAlignment.Horizontal, alignment);
 	}
 
 	[CommandFunction]
 	public void SetHorizontalAlignment(HorizontalAlignment alignment)
 	{
-		ContentAlignment.Horizontal = alignment;
+		ContentAlignment = (alignment, ContentAlignment.Vertical);
 	}
 
 	[CommandFunction]
@@ -252,7 +252,7 @@ public partial class Cell
 	[CommandFunction(StateModifier = false)]
 	public void SetComment(string[] comments)
 	{
-		Comments = new List<string>(comments);
+		Comments = [.. comments];
 	}
 
 	[CommandFunction(IgnoreReferencedObject = true)]

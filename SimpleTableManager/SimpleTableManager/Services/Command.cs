@@ -2,22 +2,15 @@
 
 namespace SimpleTableManager.Services;
 
-public class Command
+public class Command(CommandReference? reference, string rawCommand, List<string>? arguments)
 {
-	public CommandReference? Reference { get; set; }
+	public CommandReference? Reference { get; set; } = reference;
 
-	public List<string>? Arguments { get; set; }
+	public List<string>? Arguments { get; set; } = arguments;
 
 	public List<string>? AvailableKeys { get; set; }
 
-	public string RawCommand { get; set; }
-
-	public Command(CommandReference? reference, string rawCommand, List<string>? arguments)
-	{
-		Reference = reference;
-		RawCommand = rawCommand;
-		Arguments = arguments;
-	}
+	public string RawCommand { get; set; } = rawCommand;
 
 	public static Command FromString(string rawCommand)
 	{
@@ -28,7 +21,7 @@ public class Command
 
 	public List<object?> Execute(IEnumerable<IStateModifierCommandExecuter> instances, Type type)
 	{
-		List<object?> results = new();
+		List<object?> results = [];
 
 		var method = GetMethod(type);
 		var parameters = GetParameters(method);
@@ -39,8 +32,8 @@ public class Command
 			throw new ArgumentCountException(RawCommand, Reference);
 		}
 
-		List<object?> parsedArguments = new();
-		List<string> validationResults = new();
+		List<object?> parsedArguments = [];
+		List<string> validationResults = [];
 
 		for (var i = 0; i < parameters.Count; i++)
 		{

@@ -3,21 +3,21 @@
 [method: JsonConstructor]
 public struct CellBorder()
 {
-	public BorderType Top { get; set; } = BorderType.Horizontal;
+	public BorderType Top { get; set; }
 
-	public BorderType Bottom { get; set; } = BorderType.Horizontal;
+	public BorderType Bottom { get; set; }
 
-	public BorderType Left { get; set; } = BorderType.Vertical;
+	public BorderType Left { get; set; }
 
-	public BorderType Right { get; set; } = BorderType.Vertical;
+	public BorderType Right { get; set; }
 
-	public BorderType TopLeft { get; set; } = BorderType.Right | BorderType.Down;
+	public BorderType TopLeft { get; set; }
 
-	public BorderType TopRight { get; set; } = BorderType.Left | BorderType.Down;
+	public BorderType TopRight { get; set; }
 
-	public BorderType BottomLeft { get; set; } = BorderType.Right | BorderType.Up;
+	public BorderType BottomLeft { get; set; }
 
-	public BorderType BottomRight { get; set; } = BorderType.Left | BorderType.Up;
+	public BorderType BottomRight { get; set; }
 
 	public readonly CellBorder TrimCorner(bool topLeft = false, bool topRight = false, bool bottomLeft = false, bool bottomRight = false)
 	{

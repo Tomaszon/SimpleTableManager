@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Services;
+namespace SimpleTableManager.Models.Enumerations;
 
 public enum Note
 {

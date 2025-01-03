@@ -169,7 +169,7 @@ public class Program
 
 				command ??= Command.FromString(rawCommand);
 
-				var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.ClassName, out var type), type);
+				var results = command.Execute(InstanceMap.Instance.GetInstances(command.Reference!.Value.ClassName, out var type), type);
 
 				SmartConsole.ShowResults(results);
 

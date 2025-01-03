@@ -5,7 +5,7 @@ public partial class Document
 	[CommandFunction]
 	public void SetTitle(string title)
 	{
-		Metadata.Title = title;
+		Metadata = Metadata with { Title = title };
 	}
 
 	[CommandFunction("activateTableAt")]
@@ -83,6 +83,7 @@ public partial class Document
 		fileName = Shared.GetWorkFilePath(fileName, "json");
 
 		var previousDocumentAppVersion = Metadata.AppVersion;
+		var previousCreateTime = Metadata.CreateTime;
 
 		if (File.Exists(fileName) && !overwrite)
 		{
@@ -94,9 +95,7 @@ public partial class Document
 			using var f = File.Create(fileName);
 			using var sw = new StreamWriter(f);
 
-			Metadata.CreateTime ??= DateTime.Now;
-
-			Metadata.AppVersion = Shared.GetAppVersion();
+			Metadata = Metadata with { CreateTime = Metadata.CreateTime ?? DateTime.Now, AppVersion = Shared.GetAppVersion() };
 
 			Shared.SerializeObject(sw, this);
 
@@ -112,7 +111,7 @@ public partial class Document
 				File.Delete(fileName);
 			}
 
-			Metadata.AppVersion = previousDocumentAppVersion;
+			Metadata = Metadata with { CreateTime = previousCreateTime, AppVersion = previousDocumentAppVersion };
 
 			throw new OperationCanceledException("Can not save document", ex);
 		}

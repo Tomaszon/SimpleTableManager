@@ -1,11 +1,13 @@
-﻿namespace SimpleTableManager.Models;
+﻿using System.Numerics;
+
+namespace SimpleTableManager.Models;
 
 [method: JsonConstructor]
-public class ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background)
+public readonly struct ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background) : IEqualityOperators<ConsoleColorSet, ConsoleColorSet, bool>
 {
-	public ConsoleColor Foreground { get; set; } = foreground ?? ConsoleColor.Gray;
+	public ConsoleColor Foreground { get; } = foreground ?? ConsoleColor.Gray;
 
-	public ConsoleColor Background { get; set; } = background ?? ConsoleColor.Black;
+	public ConsoleColor Background { get; } = background ?? ConsoleColor.Black;
 
 	public ConsoleColorSet(ConsoleColorSet colorSet) : this(colorSet.Foreground, colorSet.Background) { }
 
@@ -14,22 +16,32 @@ public class ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background)
 		return new ConsoleColorSet(record.foreground, record.background);
 	}
 
-	public override bool Equals(object? obj)
+	public static bool operator ==(ConsoleColorSet left, ConsoleColorSet right)
 	{
-		if (obj is ConsoleColorSet another && another is not null)
+		return left.Foreground == right.Foreground && left.Background == right.Background;
+	}
+
+	public static bool operator !=(ConsoleColorSet left, ConsoleColorSet right)
+	{
+		return !(left == right);
+	}
+
+	public override readonly bool Equals([NotNullWhen(true)] object? obj)
+	{
+		if (obj is ConsoleColorSet another)
 		{
-			return Foreground == another.Foreground && Background == another.Background;
+			return this == another;
 		}
 
 		return false;
 	}
 
-	public override int GetHashCode()
+	public override readonly int GetHashCode()
 	{
 		return base.GetHashCode();
 	}
 
-	public override string ToString()
+	public override readonly string ToString()
 	{
 		return $"F:{Foreground}, B:{Background}";
 	}
