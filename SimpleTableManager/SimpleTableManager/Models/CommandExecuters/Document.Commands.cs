@@ -121,7 +121,7 @@ public partial class Document
 
 	[CommandFunction(StateModifier = false)]
 	[CommandInformation<Document>]
-	public void Load(string fileName, bool confirm = false)
+	public void Open(string fileName, bool confirm = false)
 	{
 		ThrowIf(IsSaved == false && !confirm, T("unsaved", nameof(confirm)));
 

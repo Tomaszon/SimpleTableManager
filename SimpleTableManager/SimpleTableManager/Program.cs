@@ -160,7 +160,7 @@ public class Program
 
 					args = [];
 
-					InstanceMap.Instance.GetInstance<Document>()!.Load(fileName);
+					InstanceMap.Instance.GetInstance<Document>()!.Open(fileName);
 				}
 
 				SmartConsole.Render(app.Document);
