@@ -12,9 +12,18 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 	public string RawCommand { get; set; } = rawCommand;
 
+	public const char _ALTERNATIVE_KEY_SEPARATOR = '|';
+
+	private const char _SELECTOR_SEPARATOR = '/';
+
 	public static Command FromString(string rawCommand)
 	{
-		var reference = GetCommandReference(rawCommand, out var arguments);
+		var reference = GetCommandReference(rawCommand, out var arguments, out var selector);
+
+		if (selector is not null)
+		{
+			arguments?.Insert(0, selector);
+		}
 
 		return new Command(reference, rawCommand, arguments);
 	}
@@ -24,7 +33,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		List<object?> results = [];
 
 		var method = GetMethod(type);
-		var parameters = GetParameters(method);
+		var parameters = GetParameters(method, false);
 
 		if (parameters.Count(p => !p.IsOptional) > Arguments?.Count ||
 			parameters.All(p => !p.IsArray) && parameters.Count < Arguments?.Count)
@@ -191,26 +200,30 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 				e.attribute is not null).ToDictionary(k => k.attribute!.MethodReference.ToLower(), v => v.method);
 	}
 
-	public static List<CommandParameter> GetParameters(MethodInfo method)
+	public static List<CommandParameter> GetParameters(MethodInfo method, bool trimSelector)
 	{
-		return method.GetParameters().Select(p => new CommandParameter(p)).ToList();
+		var withSelector = method.GetCustomAttribute<CommandFunctionAttribute>()!.WithSelector;
+
+		var parameters = method.GetParameters().Skip(withSelector && trimSelector ? 1 : 0);
+
+		return parameters.Select(p => new CommandParameter(p)).ToList();
 	}
 
-	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments)
+	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments, out string? selector)
 	{
 		var keys = rawCommand.Split(' ').ToList();
 
 		if (keys.Count == 0)
 		{
-			throw new IncompleteCommandException(rawCommand, CommandTree.Commands.Keys.ToList());
+			throw new IncompleteCommandException(rawCommand, [.. CommandTree.Commands.Keys]);
 		}
 
-		var methodName = GetReferenceMethodNameRecursive(CommandTree.Commands, keys.First(), keys, rawCommand, out arguments);
+		var methodName = GetReferenceMethodNameRecursive(CommandTree.Commands, keys.First(), keys, rawCommand, out arguments, out selector);
 
 		return new CommandReference(keys.First(), methodName);
 	}
 
-	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments)
+	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments, out string? selector)
 	{
 		if (obj is ExpandoObject o)
 		{
@@ -224,15 +237,15 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 				if (string.IsNullOrWhiteSpace(key))
 				{
-					return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
+					return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
 				}
 				else
 				{
 					var matchingValue = o.FirstOrDefault(e =>
-						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
+						e.Key.Split(_ALTERNATIVE_KEY_SEPARATOR, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
 
 					var partialMatchingValue = o.FirstOrDefault(e =>
-						e.Key.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(p => p.StartsWith(key, StringComparison.OrdinalIgnoreCase))).Value;
+						e.Key.Split(_ALTERNATIVE_KEY_SEPARATOR, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(p => p.StartsWith(key, StringComparison.OrdinalIgnoreCase))).Value;
 
 					if (matchingValue is null)
 					{
@@ -251,7 +264,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 						throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
 					}
 
-					return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments);
+					return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
 				}
 			}
 		}
@@ -259,13 +272,17 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		{
 			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
 			{
-				throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!));
+				throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!.Split(_SELECTOR_SEPARATOR)[0]));
 			}
 			else
 			{
 				arguments = StackMata.ProcessArguments(string.Join(' ', keys));
 
-				return (string)obj;
+				var values = ((string)obj).Split(_SELECTOR_SEPARATOR);
+
+				selector = values.ElementAtOrDefault(1);
+
+				return values[0];
 			}
 		}
 	}

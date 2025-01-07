@@ -80,7 +80,7 @@ public partial class Cell
 		SetFunction<RightTriangle>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
+	[CommandFunction(WithSelector = true)]
 	public void SetStringContentFunction(StringFunctionOperator functionOperator, params string[] arguments)
 	{
 		SetFunction<string>(functionOperator, arguments);

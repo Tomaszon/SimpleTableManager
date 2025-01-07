@@ -3,7 +3,16 @@
 		"{9}": "setContent",
 		"{10}": "setComment",
 		"{11}": {
-			"{12}": "setStringContentFunction",
+			"{12}": {
+				"{97}": "setStringContentFunction/const",
+				"{98}": "setStringContentFunction/con",
+				"{99}": "setStringContentFunction/join",
+				"{100}": "setStringContentFunction/len",
+				"{101}": "setStringContentFunction/split",
+				"{102}": "setStringContentFunction/trim",
+				"{103}": "setStringContentFunction/blow",
+				"{104}": "setStringContentFunction/like"
+			},
 			"{13}": "setIntegerContentFunction",
 			"{14}": "setFractionContentFunction",
 			"{15}": "setBooleanContentFunction",

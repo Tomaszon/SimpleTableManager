@@ -86,7 +86,7 @@ public partial class SmartConsole
 
 			var method = command.GetMethod(type);
 
-			var parameters = Command.GetParameters(method);
+			var parameters = Command.GetParameters(method, true);
 
 			if (method.GetCustomAttribute<CommandInformationAttribute>()?.Information is var info && info is not null)
 			{
@@ -434,7 +434,7 @@ public partial class SmartConsole
 		catch (HelpRequestedException ex)
 		{
 			availableKeys = ex.AvailableKeys?.SelectMany(k =>
-				k.key.Split('|').Select(p => (p, k.isLeaf))).OrderBy(p => p.p).ToList();
+				k.key.Split(Command._ALTERNATIVE_KEY_SEPARATOR).Select(p => (p, k.isLeaf))).OrderBy(p => p.p).ToList();
 
 			partialKey = null;
 

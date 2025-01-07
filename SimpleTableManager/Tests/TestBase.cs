@@ -19,7 +19,7 @@ public class TestBase
 	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
 	where T : IParsable<T>
 	{
-		return FunctionCollection.GetFunction(typeof(T).GetFriendlyName(), functionOperator.ToString(),
+		return FunctionCollection.GetFunction<T>(functionOperator.ToString(),
 		 namedArguments?.ToDictionary(k => k.Key, v => (IFunctionArgument)new ConstFunctionArgument<string>(v.Value)),
 		  args.Select(e => new ConstFunctionArgument<T>(e)));
 	}

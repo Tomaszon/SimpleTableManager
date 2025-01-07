@@ -15,8 +15,5 @@ public class CommandFunctionAttribute([CallerMemberName] string reference = null
 
 	public GlobalStorageKey Clears { get; set; }
 
-	public CommandFunctionAttribute(string reference, GlobalStorageKey key) :this(reference)
-	{
-		
-	}
+	public bool WithSelector { get; set; }
 }

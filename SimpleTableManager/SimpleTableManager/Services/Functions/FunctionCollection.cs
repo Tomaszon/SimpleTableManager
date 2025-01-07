@@ -22,11 +22,6 @@ public static class FunctionCollection
 		return GetFunction(typeof(T), functionOperator, namedArguments, arguments);
 	}
 
-	public static IFunction GetFunction(string typeName, string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
-	{
-		return GetFunction(ContentParser.GetTypeByFriendlyName(typeName), functionOperator, namedArguments, arguments);
-	}
-
 	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
 	{
 		var functionType = Functions[argType];
