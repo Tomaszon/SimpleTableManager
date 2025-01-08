@@ -22,7 +22,7 @@ public class AutoComplete
 		}
 	}
 
-	public string GetNextKey(string? partialKey, bool backwards, out int previousAutoCompleteLength, out int mathcingKeyCount)
+	public string GetNextKey(string? partialKey, bool backwards, out int previousAutoCompleteLength, out int matchingKeyCount)
 	{
 		Cycling = true;
 
@@ -34,7 +34,7 @@ public class AutoComplete
 
 		_autoCompleteLength = nextKey.Length - (partialKey?.Length ?? 0);
 
-		mathcingKeyCount = _keys.Count(k => k.StartsWith(partialKey ?? ""));
+		matchingKeyCount = _keys.Count(k => k.StartsWith(partialKey ?? ""));
 
 		return nextKey;
 	}

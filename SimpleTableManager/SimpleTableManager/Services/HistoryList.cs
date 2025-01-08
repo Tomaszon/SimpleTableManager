@@ -30,7 +30,7 @@ public class HistoryList
 	}
 
 	/// <summary>
-	/// Gets prevoius stored item
+	/// Gets previous stored item
 	/// </summary>
 	public bool TryGetPreviousHistoryItem([NotNullWhen(true)] out string? element)
 	{

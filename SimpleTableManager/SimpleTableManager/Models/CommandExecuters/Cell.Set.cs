@@ -17,7 +17,7 @@ public partial class Cell
 	{
 		if (positionShift is not null)
 		{
-			newFunction?.ShiftferenceArgumentPositions(positionShift);
+			newFunction?.ShiftReferenceArgumentPositions(positionShift);
 		}
 
 		if (selectDeselect)

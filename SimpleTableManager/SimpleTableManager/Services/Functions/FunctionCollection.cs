@@ -30,14 +30,14 @@ public static class FunctionCollection
 
 		var instance = (IFunction)Activator.CreateInstance(functionType)!;
 
-		var operatorPoperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
+		var operatorProperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
 
-		if (!Enum.TryParse(operatorPoperty.PropertyType, functionOperator, true, out var op))
+		if (!Enum.TryParse(operatorProperty.PropertyType, functionOperator, true, out var op))
 		{
-			throw new ArgumentException($"Operator '{functionOperator}' is not valid! Values={string.Join('|', Enum.GetNames(operatorPoperty.PropertyType))}");
+			throw new ArgumentException($"Operator '{functionOperator}' is not valid! Values={string.Join('|', Enum.GetNames(operatorProperty.PropertyType))}");
 		}
 
-		operatorPoperty.SetValue(instance, op);
+		operatorProperty.SetValue(instance, op);
 
 		if (namedArguments is not null)
 		{

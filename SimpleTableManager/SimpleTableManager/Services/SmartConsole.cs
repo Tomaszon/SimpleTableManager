@@ -104,10 +104,10 @@ public partial class SmartConsole
 			}
 		}
 
-		if (command.RawCommand.Replace(HELP_COMMAND, "").TrimEnd() is var sanitedCommand &&
-			!string.IsNullOrWhiteSpace(sanitedCommand))
+		if (command.RawCommand.Replace(HELP_COMMAND, "").TrimEnd() is var sanitizedCommand &&
+			!string.IsNullOrWhiteSpace(sanitizedCommand))
 		{
-			_lastHelp += $"in '{sanitedCommand}'";
+			_lastHelp += $"in '{sanitizedCommand}'";
 		}
 
 		_lastHelp = _lastHelp.Trim();
@@ -377,7 +377,7 @@ public partial class SmartConsole
 		return false;
 	}
 
-	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int prevoiusAutoCompleteLength, out string? partialKey, out int partialKeyLength, out List<(string key, bool isLeaf)>? availableKeys)
+	private static string? GetHint(ConsoleModifiers modifiers, out int keyCount, out bool isSpaceAppendNeeded, out int previousAutoCompleteLength, out string? partialKey, out int partialKeyLength, out List<(string key, bool isLeaf)>? availableKeys)
 	{
 		var value = _buffer.ToString();
 
@@ -403,7 +403,7 @@ public partial class SmartConsole
 
 		if (result == GetHintResult.Hint)
 		{
-			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers == ConsoleModifiers.Shift, out prevoiusAutoCompleteLength, out keyCount);
+			var nextKey = _autoComplete.GetNextKey(partialKey, modifiers == ConsoleModifiers.Shift, out previousAutoCompleteLength, out keyCount);
 
 			isSpaceAppendNeeded = IsSpaceAppendNeeded(value, partialKey);
 
@@ -414,7 +414,7 @@ public partial class SmartConsole
 
 		keyCount = 0;
 		isSpaceAppendNeeded = false;
-		prevoiusAutoCompleteLength = 0;
+		previousAutoCompleteLength = 0;
 		partialKeyLength = 0;
 
 		return null;

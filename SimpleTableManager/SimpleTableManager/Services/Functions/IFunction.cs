@@ -32,9 +32,9 @@ public interface IFunction
 
 	Type GetInType();
 
-	void ShiftferenceArgumentPositions(Size size)
+	void ShiftReferenceArgumentPositions(Size size)
 	{
-		//UNDONE do the same with named reference arguments
 		ReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPosition(size));
+		ReferenceNamedArguments.ForEach(a => a.Value.Reference.ShiftReferencedPosition(size));
 	}
 }

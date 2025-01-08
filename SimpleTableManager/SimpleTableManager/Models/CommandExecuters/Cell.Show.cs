@@ -41,7 +41,7 @@ public partial class Cell
 			ReferenceNamedArguments = ContentFunction.ReferenceNamedArguments.ToDictionary(k => k.Key, v =>
 				new
 				{
-					Refrence = v.Value.Reference.ToString(),
+					Reference = v.Value.Reference.ToString(),
 					ReferencedValues = v.Value.TryResolve(out var result, out var error) && result?.Count() == 1 ? result.Single() : $"Error: '{error}'"
 				}),
 

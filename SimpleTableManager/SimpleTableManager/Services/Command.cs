@@ -131,7 +131,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 				if (m.CompareTo(v) < 0)
 				{
-					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be less then" : "preceed")} '{max}'");
+					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be less then" : "precede")} '{max}'");
 				}
 			}
 
