@@ -1,6 +1,7 @@
 ﻿namespace SimpleTableManager.Models;
 
-[ParseFormat("width,height", "^(?<w>\\d+),(?<h>\\d+)$"), ParseFormat("width;height", "^(?<w>\\d+);(?<h>\\d+)$")]
+[ParseFormat("width*height", "^(?<w>\\d+)\\*(?<h>\\d+)$")]
+[ParseFormat("widthxheight", "^(?<w>\\d+)x(?<h>\\d+)$")]
 [method: JsonConstructor]
 public class Size(int width, int height) : ParsableBase<Size>, IParsable<Size>, IParseCore<Size>
 {

@@ -4,6 +4,11 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(long))]
 public class IntegerNumericFunction : NumericFunctionBase<long, long>
 {
+	public override string GetFriendlyName()
+	{
+		return typeof(int).GetFriendlyName();
+	}
+
 	public override IEnumerable<long> ExecuteCore()
 	{
 		var divider = GetNamedArgument<int>(ArgumentName.Divider);

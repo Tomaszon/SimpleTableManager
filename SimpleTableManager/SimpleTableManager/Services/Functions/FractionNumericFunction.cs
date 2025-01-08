@@ -3,6 +3,11 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(double))]
 public class FractionNumericFunction : NumericFunctionBase<double, object>
 {
+	public override string GetFriendlyName()
+	{
+		return typeof(double).GetFriendlyName();
+	}
+
 	public override IEnumerable<object> ExecuteCore()
 	{
 		var decimals = GetNamedArgument<int>(ArgumentName.Decimals);

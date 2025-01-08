@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Format, "")]
@@ -32,6 +34,8 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	protected string? Error { get; set; }
 
 	public abstract IEnumerable<TOut> ExecuteCore();
+
+	public abstract string GetFriendlyName();
 
 	IEnumerable<object> IFunction.Execute()
 	{
@@ -120,7 +124,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 			var result = results.Count() == 1 ? results.Single() : throw new ArgumentException("");
 
-			return result is string s ? T.Parse(s, null) : (T)result;
+			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
 		}
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })
@@ -147,6 +151,14 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 		var refNamedArgs = ReferenceNamedArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
 
-		return $"{GetOutType().GetFriendlyName()}:{Operator}:({string.Join(',', constArgs.Union(refArgs))})\n{string.Join(',', constNamedArgs.Union(refNamedArgs))}";
+		var fnName = GetFriendlyName();
+
+		var returnTypeName = GetOutType().GetFriendlyName();
+
+		var jointRefArgs = string.Join(',', constArgs.Union(refArgs));
+
+		var jointRefNamedArgs = string.Join(',', constNamedArgs.Union(refNamedArgs));
+
+		return $"{fnName}:{Operator}{(fnName != returnTypeName ? $":{returnTypeName}" : "")}:({jointRefArgs})\n{jointRefNamedArgs}";
 	}
 }

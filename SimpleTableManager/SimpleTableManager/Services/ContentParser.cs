@@ -1,27 +1,17 @@
 using System.ComponentModel;
+using System.Globalization;
 
 namespace SimpleTableManager.Services;
 
 public static class ContentParser
 {
-	public static Type GetTypeByFriendlyName(string name, string? nameSpace = null)
-	{
-		if (Shared.FRIENDLY_TYPE_NAMES.TryGetValue(name.ToLower(), out var mapped))
-		{
-			return Type.GetType(mapped, true, true)!;
-		}
-
-		return Type.GetType($"{nameof(System)}.{name}".ToLower(), false, true) ??
-			Type.GetType($"{nameof(SimpleTableManager)}.{nameof(Models)}.{name}", true, true)!;
-	}
-
 	public static object ParseStringValue(Type dataType, string value)
 	{
 		var converter = dataType.Namespace == $"{nameof(SimpleTableManager)}.{nameof(Models)}" ?
 			(TypeConverter)Activator.CreateInstance(typeof(ParsableStringConverter<>).MakeGenericType(dataType))! :
 			TypeDescriptor.GetConverter(dataType);
 
-		var result = converter.ConvertFromString(value);
+		var result = converter.ConvertFromString(null, CultureInfo.CurrentUICulture, value);
 
 		return result!;
 	}
@@ -40,6 +30,6 @@ public static class ContentParser
 			return new ReferenceFunctionArgument(cellReference);
 		}
 
-		return new ConstFunctionArgument<TType>(TType.Parse(value, null));
+		return new ConstFunctionArgument<TType>(TType.Parse(value, CultureInfo.CurrentUICulture));
 	}
 }

@@ -2,7 +2,8 @@
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("x,y", "^(?<x>\\d+),(?<y>\\d+)$"), ParseFormat("x;y", "^(?<x>\\d+);(?<y>\\d+)$")]
+[ParseFormat("x,y", "^(?<x>\\d+),(?<y>\\d+)$")]
+[ParseFormat("x;y", "^(?<x>\\d+);(?<y>\\d+)$")]
 [method: JsonConstructor]
 public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>, ISubtractionOperators<Position, Position, Size>
 {

@@ -14,11 +14,14 @@ public static class Shared
 	public const char REF_CHAR = '*';
 	public const string REGEX_REF_CHAR = @"\*";
 
-	public static Dictionary<string, string> FRIENDLY_TYPE_NAMES { get; } = new()
+	public static Dictionary<Type, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
-		{ "int", $"{nameof(System)}.int64" },
-		{ "bool", $"{nameof(System)}.boolean" },
-		{ "fraction", $"{nameof(System)}.double" }
+		{ typeof(int), "int" },
+		{ typeof(long), "int" },
+		{ typeof(bool), "bool" },
+		{ typeof(double), "fraction" },
+		{ typeof(DateOnly), "date" },
+		{ typeof(TimeOnly), "time" }
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)
@@ -144,5 +147,10 @@ public static class Shared
 	public static Version GetAppVersion()
 	{
 		return Assembly.GetExecutingAssembly().GetName().Version!;
+	}
+
+	public static string ToUpperFirst(this string value)
+	{
+		return $"{value.First().ToString().ToUpper()}{new string(value.Skip(1).ToArray())}";
 	}
 }

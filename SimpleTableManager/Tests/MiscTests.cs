@@ -12,7 +12,7 @@ public class MiscTests : TestBase
 	{
 		if (Position.TryParse(value, null, out var position))
 		{
-			CheckResults(new object[] { true, position.X, position.Y }, new object[] { shouldParse, x, y });
+			CheckResults([true, position.X, position.Y], new object[] { shouldParse, x, y });
 		}
 		else
 		{
@@ -29,7 +29,7 @@ public class MiscTests : TestBase
 		if (shouldParse)
 		{
 			var position = Position.Parse(value, null);
-			CheckResults(new object[] { position.X, position.Y }, new object[] { x, y });
+			CheckResults([position.X, position.Y], new object[] { x, y });
 		}
 		else
 		{

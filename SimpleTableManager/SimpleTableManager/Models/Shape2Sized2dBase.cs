@@ -1,6 +1,9 @@
+using System.Globalization;
+
 namespace SimpleTableManager.Models;
 
-[ParseFormat("size1,size2", "(?<s>\\d+),(?<s2>\\d+)"), ParseFormat("size1;size2", "(?<s>\\d+);(?<s2>\\d+)")]
+[ParseFormat("size1*size2 (fractions)", "^(?<s>\\d*(\\.|,)?\\d+)\\*(?<s2>\\d*(\\.|,)?\\d+)$")]
+[ParseFormat("size1xsize2 (fractions)", "^(?<s>\\d*(\\.|,)?\\d+)x(?<s2>\\d*(\\.|,)?\\d+)$")]
 [method: JsonConstructor]
 public abstract class Shape2Sized2dBase<T>(double size1, double size2) : Shape1Sized2dBase<T>(size1), IShape2Sized, IParseCore<T>
 where T : Shape2Sized2dBase<T>, IParsable<T>
@@ -11,13 +14,13 @@ where T : Shape2Sized2dBase<T>, IParsable<T>
 
 	public override string ToString()
 	{
-		return $"S1:{Size1}, S2:{Size2}";
+		return $"{GetType().GetFriendlyName()}({Size1}x{Size2})";
 	}
 
 	public new static T ParseCore(GroupCollection args, IFormatProvider? _)
 	{
-		var size1 = double.Parse(args["s"].Value);
-		var size2 = args["s2"].Success ? double.Parse(args["s2"].Value) : size1;
+		var size1 = double.Parse(args["s"].Value, CultureInfo.CurrentUICulture);
+		var size2 = args["s2"].Success ? double.Parse(args["s2"].Value, CultureInfo.CurrentUICulture) : size1;
 
 		return (T)Activator.CreateInstance(typeof(T), size1, size2)!;
 	}

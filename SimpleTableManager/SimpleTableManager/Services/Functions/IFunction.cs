@@ -30,6 +30,8 @@ public interface IFunction
 
 	string GetError();
 
+	string GetFriendlyName();
+
 	Type GetInType();
 
 	void ShiftReferenceArgumentPositions(Size size)

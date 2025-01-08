@@ -51,16 +51,14 @@ public static class Extensions
 
 	public static IEnumerable<T> Wrap<T>(this T value)
 	{
-		return new[] { value };
+		return [value];
 	}
 
 	public static string GetFriendlyName(this Type type)
 	{
-		var pair = Shared.FRIENDLY_TYPE_NAMES.SingleOrDefault(p =>
-			p.Value.Equals($"{nameof(System)}.{type.Name}", StringComparison.OrdinalIgnoreCase) ||
-			p.Value.Equals($"{nameof(SimpleTableManager)}.{nameof(Models)}.{type.Name}", StringComparison.OrdinalIgnoreCase));
-
-		return pair.Key is null ? type.Name : pair.Key.First().ToString().ToUpper() + new string(pair.Key.Skip(1).ToArray());
+		return Shared.FRIENDLY_TYPE_NAMES.TryGetValue(type, out var value) ?
+			value.ToUpperFirst() :
+			type.Name.ToUpperFirst();
 	}
 
 	public static void Replace<T1, T2>(this IDictionary<T1, T2> dictionary, T1 key, T2 value)
