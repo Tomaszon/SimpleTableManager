@@ -35,7 +35,7 @@
 	"{34}": "réteg-index",
 	"{35}": "min",
 	"{36}": "max",
-	"{37}": "ra",
+	"{37}": "-ba",
 	"{38}": "hivatkozott-cella",
 	"{39}": "visszaállítás",
 	"{40}": "formázás",
@@ -93,7 +93,7 @@
 	"{93}": "csere",
 	"{94}": "kijelölés-megszüntetése",
 	"{95}": "tartalom-stílus",
-	"{96}": "ról",
+	"{96}": "-ból",
 	"{97}": "állandó",
 	"{98}": "egyesítés",
 	"{99}": "összefűzés",
@@ -101,5 +101,7 @@
 	"{101}": "darabolás",
 	"{102}": "nyírás",
 	"{103}": "aprózás",
-	"{104}": "hasonlítás"
+	"{104}": "hasonlítás",
+	"{105}": "aktív-tábla",
+	"{106}": "-ban"
 }

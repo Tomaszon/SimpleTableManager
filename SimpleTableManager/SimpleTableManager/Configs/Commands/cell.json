@@ -66,7 +66,12 @@
 		"{9}": {
 			"{96}": "copyContent",
 			"{37}": {
-				"{87}": "copyContentTo",
+				"{87}": {
+					"{105}": {
+						"{49}": "copyContentTo",
+						"{105}": "copyContentToTable"
+					}
+				},
 				"{88}": "copyContentToRange"
 			}
 		},

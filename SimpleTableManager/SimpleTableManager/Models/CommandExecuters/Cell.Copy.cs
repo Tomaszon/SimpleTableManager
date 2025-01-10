@@ -14,12 +14,15 @@ public partial class Cell
 		CopyContentTo(Table, positions);
 	}
 
-	//UNDONE
-	// [CommandFunction(StateModifier = false)]
-	// public void CopyContentTo(string tableName, [MinLength(1)] IEnumerable<Position> positions)
-	// {
-	// 	CopyContentTo(, positions);
-	// }
+	[CommandFunction("copyContentToTable", StateModifier = false)]
+	public void CopyContentTo(string tableName, [MinLength(1)] IEnumerable<Position> positions)
+	{
+		var table = Table.Document[tableName];
+
+		ThrowIf(table is null, $"No table found with name {tableName}");
+
+		CopyContentTo(table, positions);
+	}
 
 	[CommandFunction(StateModifier = false)]
 	public void CopyContentToRange(Position positionFrom, Position positionTo, string? tableName = null)
