@@ -717,31 +717,31 @@ public static class Renderer
 						{
 							if (cell.ContentStyle.HasFlag(ContentStyle.Bold))
 							{
-								Console.Write(Shared.BOLD_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.BOLD_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Dim))
 							{
-								Console.Write(Shared.DIM_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.DIM_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Italic))
 							{
-								Console.Write(Shared.ITALIC_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.ITALIC_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Underlined))
 							{
-								Console.Write(Shared.UNDERLINED_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.UNDERLINED_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Blinking))
 							{
-								Console.Write(Shared.BLINKING_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.BLINKING_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Striked))
 							{
-								Console.Write(Shared.STRIKED_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.STRIKED_CHAR_CODE);
 							}
 							if (cell.ContentStyle.HasFlag(ContentStyle.Overlined))
 							{
-								Console.Write(Shared.OVERLINED_CHAR_CODE);
+								Console.Write(ContentStyleCharCodes.OVERLINED_CHAR_CODE);
 							}
 						}
 						break;
@@ -749,7 +749,7 @@ public static class Renderer
 			}
 
 			ShowIndexCellSelection(showSelection);
-			Console.Write($"{content}{Shared.NORMAL_CHAR_CODE}");
+			Console.Write($"{content}{ContentStyleCharCodes.NORMAL_CHAR_CODE}");
 
 			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);

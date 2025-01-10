@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SimpleTableManager/SimpleTableManager.csproj" />
+  <Project Path="Tests/SimpleTableManager.Tests.csproj" />
+</Solution>
