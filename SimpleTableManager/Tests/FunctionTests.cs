@@ -18,9 +18,9 @@ public class FunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01 10:30", "0001-01-01 02:20" }, "0001-01-01 12:50")]
 	public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)).ToArray());
+		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)));
 
-		CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)).ToArray());
+		CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)));
 	}
 
 	[Test]
@@ -171,7 +171,7 @@ public class FunctionTests : TestBase
 	// {
 	// 	var fn1 = CreateFunction(NumericFunctionOperator.Sum, args1);
 
-	// 	var fn2 = CreateFunction(NumericFunctionOperator.Mul, args2.Union(fn1.Execute().Cast<int>()).ToArray());
+	// 	var fn2 = CreateFunction(NumericFunctionOperator.Mul, args2.Union(fn1.Execute().Cast<int>()));
 
 	// 	CheckResults(fn2.Execute(), result.Wrap());
 	// }

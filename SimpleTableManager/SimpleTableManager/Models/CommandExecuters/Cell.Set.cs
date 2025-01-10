@@ -4,7 +4,7 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 public partial class Cell
 {
-	public void SetStringContent(params string[] contents)
+	public void SetStringContent(params IEnumerable<string> contents)
 	{
 		ContentFunction = new StringFunction()
 		{

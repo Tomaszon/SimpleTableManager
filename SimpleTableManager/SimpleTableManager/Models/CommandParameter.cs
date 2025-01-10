@@ -1,4 +1,7 @@
-﻿namespace SimpleTableManager.Models;
+﻿using System.Collections;
+using System.Runtime.CompilerServices;
+
+namespace SimpleTableManager.Models;
 
 public struct CommandParameter
 {
@@ -10,7 +13,7 @@ public struct CommandParameter
 
 	public object? DefaultValue { get; set; }
 
-	public readonly bool IsArray => Type.IsArray;
+	public readonly bool IsArray => Type.IsAssignableTo(typeof(IEnumerable));
 
 	public readonly bool IsNullable => Type.IsAssignableFrom(null);
 
@@ -24,8 +27,6 @@ public struct CommandParameter
 
 	public CommandParameter(ParameterInfo parameterInfo)
 	{
-		var isArray = parameterInfo.ParameterType.IsArray;
-
 		Type = parameterInfo.ParameterType;
 		Name = parameterInfo.Name!;
 
@@ -33,15 +34,20 @@ public struct CommandParameter
 		MaxValue = parameterInfo.GetCustomAttribute<MaxValueAttribute>()?.Value;
 		MinLength = parameterInfo.GetCustomAttribute<MinLengthAttribute>()?.Length ?? 0;
 
-		DefaultValue = isArray ?
-			Array.CreateInstance(parameterInfo.ParameterType.GetElementType()!, 0) :
+		var innerElementType = parameterInfo.ParameterType.GetElementType() ??
+			parameterInfo.ParameterType.GenericTypeArguments.Single();
+
+		DefaultValue = IsArray ?
+			Array.CreateInstance(innerElementType, 0) :
 			parameterInfo.DefaultValue;
 
-		ParseFormats = (isArray ?
-			parameterInfo.ParameterType.GetElementType()! :
-			parameterInfo.ParameterType).GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format);
+		ParseFormats = (IsArray ? innerElementType : parameterInfo.ParameterType)
+			.GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format);
 
-		IsOptional = parameterInfo.IsOptional || isArray;
+		IsOptional = 
+			parameterInfo.IsOptional || 
+			parameterInfo.GetCustomAttribute<ParamCollectionAttribute>() is not null || 
+			IsArray;
 	}
 
 	public override readonly string ToString()

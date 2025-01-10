@@ -9,7 +9,7 @@ public partial class Cell
 	}
 
 	[CommandFunction(StateModifier = false)]
-	public void CopyContentTo(Position[] positions, string? tableName = null)
+	public void CopyContentTo([MinLength(1)] IEnumerable<Position> positions, string? tableName = null)
 	{
 		var table = tableName is not null ? Table.Document[tableName] : Table;
 
@@ -35,7 +35,7 @@ public partial class Cell
 
 		ThrowIf(table is null, $"No table found with name {tableName}");
 
-		CopyContentTo(table[positionFrom, positionTo].Select(c => table[c]).ToArray(), tableName);
+		CopyContentTo(table[positionFrom, positionTo].Select(c => table[c]), tableName);
 	}
 
 	[CommandFunction, CommandShortcut("copyCellFormat")]

@@ -10,13 +10,13 @@ public class TestBase
 		Settings.FromJson(@"Configs/settings.json");
 	}
 
-	protected static IFunction CreateFunction<T>(Enum functionOperator, params T[] args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, params IEnumerable<T> args)
 	where T : IParsable<T>
 	{
 		return CreateFunction(functionOperator, null, args);
 	}
 
-	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params T[] args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params IEnumerable<T> args)
 	where T : IParsable<T>
 	{
 		return FunctionCollection.GetFunction<T>(functionOperator.ToString(),

@@ -14,10 +14,8 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void DeselectCells(params Position[] positions)
+	public void DeselectCells([MinLength(1)] params IEnumerable<Position> positions)
 	{
-		ThrowIfNot<TargetParameterCountException>(positions.Length > 0, "One or more positions needed!");
-
 		positions.ForEach(DeselectCell);
 	}
 

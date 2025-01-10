@@ -115,7 +115,7 @@ public static class Renderer
 			infoTable[0, 2].SetStringContent("Layer:");
 			infoTable[1, 2].SetStringContent(layerIndex);
 			infoTable[0, 3].SetStringContent("Comment:");
-			infoTable[1, 3].SetStringContent(comments.SelectMany(c => c.Chunk(15)).Select(c => new string(c)).ToArray());
+			infoTable[1, 3].SetStringContent(comments.SelectMany(c => c.Chunk(15)).Select(c => new string(c)));
 
 			infoTable.Content.ForEach(cell =>
 			{

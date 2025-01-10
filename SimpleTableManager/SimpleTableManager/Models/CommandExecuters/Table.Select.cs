@@ -19,7 +19,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SelectCells([MinLength(1)] params Position[] positions)
+	public void SelectCells([MinLength(1)] params IEnumerable<Position> positions)
 	{
 		positions.ForEach(p => SelectCell(this[p]));
 	}
@@ -73,7 +73,7 @@ public partial class Table
 			var position = this[cell];
 
 			return new Position((position.X + 1) % Size.Width, position.Y);
-		}).ToArray();
+		});
 
 		DeselectAll();
 		SelectCells(newPositions);
@@ -89,7 +89,7 @@ public partial class Table
 			var position = this[cell];
 
 			return new Position((position.X - 1 + Size.Width) % Size.Width, position.Y);
-		}).ToArray();
+		});
 
 		DeselectAll();
 		SelectCells(newPositions);
@@ -105,7 +105,7 @@ public partial class Table
 			var position = this[cell];
 
 			return new Position(position.X, (position.Y + 1) % Size.Height);
-		}).ToArray();
+		});
 
 		DeselectAll();
 		SelectCells(newPositions);
@@ -121,7 +121,7 @@ public partial class Table
 			var position = this[cell];
 
 			return new Position(position.X, (position.Y - 1 + Size.Height) % Size.Height);
-		}).ToArray();
+		});
 
 		DeselectAll();
 		SelectCells(newPositions);

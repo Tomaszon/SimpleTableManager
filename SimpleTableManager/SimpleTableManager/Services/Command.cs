@@ -48,7 +48,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		{
 			var paramType = parameters[i].Type;
 
-			if (paramType.IsArray)
+			if (parameters[i].IsArray)
 			{
 				var values = ParseArrayValues(parameters, i, paramType);
 
@@ -163,7 +163,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		{
 			var rest = Arguments.GetRange(index, Arguments.Count - index);
 
-			var type = arrayType.GetElementType()!;
+			var type = arrayType.GetElementType() ?? arrayType.GenericTypeArguments.Single();
 
 			var typedArray = Array.CreateInstance(type, rest.Count);
 
