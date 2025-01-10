@@ -51,4 +51,14 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 	{
 		return new(left.X - right.X, left.Y - right.Y);
 	}
+
+	public bool IsBetween(Position from, Position to)
+	{
+		return Y >= from.Y && Y <= to.Y && X >= from.X && X <= to.X;
+	}
+
+	public bool IsNotBetween(Position from, Position to)
+	{
+		return !IsBetween(from, to);
+	}
 }

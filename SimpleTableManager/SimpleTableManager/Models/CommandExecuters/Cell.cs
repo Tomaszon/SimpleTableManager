@@ -28,7 +28,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 	public ContentPadding ContentPadding { get; set; } = new();
 
-	public ContentAlignment ContentAlignment { get; set; } = new (HorizontalAlignment.Center, VerticalAlignment.Center);
+	public ContentAlignment ContentAlignment { get; set; } = new(HorizontalAlignment.Center, VerticalAlignment.Center);
 
 	public ContentStyle ContentStyle { get; set; } = ContentStyle.Normal;
 
@@ -162,11 +162,12 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		{
 			var table = doc[r.ReferencedTableId];
 
-			var c = table[r.ReferencedPosition];
+			if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+			{
+				c.Selection.SelectSecondary();
 
-			c.Selection.SelectSecondary();
-
-			TertiarySelectionRecursive(c, false);
+				TertiarySelectionRecursive(c, false);
+			}
 		});
 	}
 
@@ -180,11 +181,12 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		{
 			var table = doc[r.ReferencedTableId];
 
-			var c = table[r.ReferencedPosition];
+			if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+			{
+				c.Selection.DeselectSecondary();
 
-			c.Selection.DeselectSecondary();
-
-			TertiaryDeselectionRecursive(c, false);
+				TertiaryDeselectionRecursive(c, false);
+			}
 		});
 	}
 
@@ -194,7 +196,15 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiarySelectionRecursive(doc[r.ReferencedTableId][r.ReferencedPosition], false));
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+			{
+				var table = doc[r.ReferencedTableId];
+
+				if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+				{
+					TertiarySelectionRecursive(c, false);
+				}
+			});
 
 			if (selectSelf)
 			{
@@ -213,7 +223,15 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r => TertiaryDeselectionRecursive(doc[r.ReferencedTableId][r.ReferencedPosition], false));
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+			{
+				var table = doc[r.ReferencedTableId];
+
+				if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+				{
+					TertiaryDeselectionRecursive(c, false);
+				}
+			});
 
 			if (selectSelf)
 			{

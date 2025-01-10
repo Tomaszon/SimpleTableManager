@@ -40,17 +40,22 @@ public partial class Table : CommandExecuterBase
 	public Dictionary<int, List<Cell>> Rows =>
 		Shared.IndexArray(Size.Height).ToDictionary(y => y, RowAt);
 
+	public bool TryGetCellAt(Position position, [NotNullWhen(true)] out Cell? cell)
+	{
+		cell = position.IsBetween(new(0, 0), new(Size.Width - 1, Size.Height - 1)) is var isBetween && isBetween ? this[position] : null;
+
+		return isBetween;
+	}
+
 	public Cell this[Position position] => this[position.X, position.Y];
 
 	public Cell this[int x, int y]
 	{
 		get
 		{
-			var index = y * Size.Width + x;
-
 			ThrowIf<InvalidOperationException>(y < 0 || y >= Size.Height || x < 0 || x >= Size.Width, "Position is out of table");
 
-			return Content[index];
+			return Content[y * Size.Width + x];
 		}
 	}
 
