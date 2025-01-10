@@ -153,12 +153,10 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 		var fnName = GetFriendlyName();
 
-		var returnTypeName = GetOutType().GetFriendlyName();
-
 		var jointRefArgs = string.Join(',', constArgs.Union(refArgs));
 
 		var jointRefNamedArgs = string.Join(',', constNamedArgs.Union(refNamedArgs));
 
-		return $"{fnName}:{Operator}{(fnName != returnTypeName ? $":{returnTypeName}" : "")}:({jointRefArgs})\n{jointRefNamedArgs}";
+		return $"{fnName}:{Operator}:({jointRefArgs})\n{jointRefNamedArgs}";
 	}
 }

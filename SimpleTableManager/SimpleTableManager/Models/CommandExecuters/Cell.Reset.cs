@@ -23,7 +23,7 @@ namespace SimpleTableManager.Models.CommandExecuters
 		{
 			GivenSize = new Size(7, 1);
 			ContentPadding = new();
-			ContentAlignment = (HorizontalAlignment.Center, VerticalAlignment.Center);
+			ContentAlignment = new(HorizontalAlignment.Center, VerticalAlignment.Center);
 			ContentColor = new(Settings.Current.DefaultContentColor);
 			BorderColor = new(Settings.Current.DefaultBorderColor);
 			LayerIndex = 0;

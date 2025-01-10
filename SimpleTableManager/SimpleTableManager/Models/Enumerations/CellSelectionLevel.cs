@@ -1,7 +1,6 @@
 namespace SimpleTableManager.Models.Enumerations;
 
-[Flags]
-[JsonConverter(typeof(StringEnumConverter))]
+[Flags, JsonConverter(typeof(StringEnumConverter))]
 public enum CellSelectionLevel
 {
 	None = 0,

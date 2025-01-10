@@ -17,37 +17,37 @@ public class Settings
 
 	public int LoadingScreenDelay { get; set; } = 1500;
 
-	public ConsoleColorSet TextColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
+	public ConsoleColorSet TextColor { get; set; } = new(ConsoleColor.Gray, ConsoleColor.Black);
 
-	public ConsoleColorSet DefaultContentColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
+	public ConsoleColorSet DefaultContentColor { get; set; } = new(ConsoleColor.Gray, ConsoleColor.Black);
 
-	public ConsoleColorSet DefaultBackgroundColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
+	public ConsoleColorSet DefaultBackgroundColor { get; set; } = new(ConsoleColor.DarkGray, ConsoleColor.Black);
 
-	public ConsoleColorSet DefaultBorderColor { get; set; } = (ConsoleColor.Gray, ConsoleColor.Black);
+	public ConsoleColorSet DefaultBorderColor { get; set; } = new(ConsoleColor.Gray, ConsoleColor.Black);
 
-	public ConsoleColorSet PrimarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGreen);
+	public ConsoleColorSet PrimarySelectionContentColor { get; set; } = new(ConsoleColor.Black, ConsoleColor.DarkGreen);
 
-	public ConsoleColorSet PrimarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGreen);
+	public ConsoleColorSet PrimarySelectionBackgroundColor { get; set; } = new(ConsoleColor.Black, ConsoleColor.DarkGreen);
 
-	public ConsoleColorSet PrimarySelectionBorderColor { get; set; } = (ConsoleColor.DarkGreen, ConsoleColor.Black);
+	public ConsoleColorSet PrimarySelectionBorderColor { get; set; } = new(ConsoleColor.DarkGreen, ConsoleColor.Black);
 
-	public ConsoleColorSet SecondarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkYellow);
+	public ConsoleColorSet SecondarySelectionContentColor { get; set; } = new(ConsoleColor.Black, ConsoleColor.DarkYellow);
 
-	public ConsoleColorSet SecondarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkYellow);
+	public ConsoleColorSet SecondarySelectionBackgroundColor { get; set; } = new(ConsoleColor.Black, ConsoleColor.DarkYellow);
 
-	public ConsoleColorSet SecondarySelectionBorderColor { get; set; } = (ConsoleColor.DarkYellow, ConsoleColor.Black);
-	
-	public ConsoleColorSet TertiarySelectionContentColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGray);
+	public ConsoleColorSet SecondarySelectionBorderColor { get; set; } = new(ConsoleColor.DarkYellow, ConsoleColor.Black);
 
-	public ConsoleColorSet TertiarySelectionBackgroundColor { get; set; } = (ConsoleColor.Black, ConsoleColor.DarkGray);
+	public ConsoleColorSet TertiarySelectionContentColor { get; set; } = new(ConsoleColor.Black, ConsoleColor.DarkGray);
 
-	public ConsoleColorSet TertiarySelectionBorderColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
+	public ConsoleColorSet TertiarySelectionBackgroundColor { get; set; } = new(ConsoleColor.Black, ConsoleColor.DarkGray);
 
-	public ConsoleColorSet NotAvailableContentColor { get; set; } = (ConsoleColor.DarkGray, ConsoleColor.Black);
+	public ConsoleColorSet TertiarySelectionBorderColor { get; set; } = new(ConsoleColor.DarkGray, ConsoleColor.Black);
 
-	public ConsoleColorSet OkLabelColor { get; set; } = (ConsoleColor.Green, ConsoleColor.Black);
+	public ConsoleColorSet NotAvailableContentColor { get; set; } = new(ConsoleColor.DarkGray, ConsoleColor.Black);
 
-	public ConsoleColorSet NotOkLabelColor { get; set; } = (ConsoleColor.Red, ConsoleColor.Black);
+	public ConsoleColorSet OkLabelColor { get; set; } = new(ConsoleColor.Green, ConsoleColor.Black);
+
+	public ConsoleColorSet NotOkLabelColor { get; set; } = new(ConsoleColor.Red, ConsoleColor.Black);
 
 	public bool ModernTableBorder { get; set; } = false;
 

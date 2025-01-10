@@ -28,7 +28,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 	public ContentPadding ContentPadding { get; set; } = new();
 
-	public ContentAlignment ContentAlignment { get; set; } = (HorizontalAlignment.Center, VerticalAlignment.Center);
+	public ContentAlignment ContentAlignment { get; set; } = new (HorizontalAlignment.Center, VerticalAlignment.Center);
 
 	public ContentStyle ContentStyle { get; set; } = ContentStyle.Normal;
 

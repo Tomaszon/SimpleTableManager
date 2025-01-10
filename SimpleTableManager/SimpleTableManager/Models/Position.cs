@@ -15,7 +15,7 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 
 	public override string ToString()
 	{
-		return $"X:{X}, Y:{Y}";
+		return $"X:{X},Y:{Y}";
 	}
 
 	public override bool Equals(object? obj)

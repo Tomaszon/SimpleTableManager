@@ -1,6 +1,6 @@
 ﻿namespace SimpleTableManager.Models.Enumerations;
 
-[JsonConverter(typeof(StringEnumConverter)), Flags]
+[Flags, JsonConverter(typeof(StringEnumConverter))]
 public enum BorderType
 {
 	None = 0,

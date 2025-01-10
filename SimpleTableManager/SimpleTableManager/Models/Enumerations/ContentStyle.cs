@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Models.Enumerations;
 
-[Flags]
+[Flags, JsonConverter(typeof(StringEnumConverter))]
 public enum ContentStyle
 {
 	Normal = 0,

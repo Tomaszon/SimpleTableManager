@@ -37,8 +37,8 @@ public static class Renderer
 		var tableSize = ShrinkTableViewToConsoleSize(table, functionInfosBottomOffset + _TABLE_GAP, Console.WindowWidth - cellInfosLeftOffset + _TABLE_GAP);
 
 		var tableOffset = tableSize.Width < Console.WindowWidth - (Console.WindowWidth - cellInfosLeftOffset) * 2 - _TABLE_GAP ?
-		new Size((Console.WindowWidth - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - functionInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + functionInfosBottomOffset + _TABLE_GAP) :
-		new Size((cellInfosLeftOffset - _TABLE_GAP - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - functionInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + functionInfosBottomOffset + _TABLE_GAP);
+			new Size((Console.WindowWidth - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - functionInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + functionInfosBottomOffset + _TABLE_GAP) :
+			new Size((cellInfosLeftOffset - _TABLE_GAP - tableSize.Width) / 2, (Console.WindowHeight - _FREE_LINES - functionInfosBottomOffset - _TABLE_GAP - tableSize.Height) / 2 + functionInfosBottomOffset + _TABLE_GAP);
 
 		RenderTableInfos(table, new(tableOffset.Width, tableOffset.Height - (_TABLE_GAP / 2)), tableIndex, document.Tables.Count);
 
@@ -110,7 +110,7 @@ public static class Renderer
 
 			infoTable[0, 0].SetStringContent("Position:");
 			infoTable[1, 0].SetStringContent(position.ToString());
-			infoTable[0, 1].SetStringContent("Type:");
+			infoTable[0, 1].SetStringContent("Content:");
 			infoTable[1, 1].SetStringContent(outType);
 			infoTable[0, 2].SetStringContent("Layer:");
 			infoTable[1, 2].SetStringContent(layerIndex);
@@ -823,7 +823,7 @@ public static class Renderer
 			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionContentColor,
 			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionContentColor,
 
-			_ => (cell.ContentColor.Foreground, cell.ContentColor.Background)
+			_ => new(cell.ContentColor.Foreground, cell.ContentColor.Background)
 		};
 
 		Console.ForegroundColor = colors.Foreground;
@@ -838,7 +838,7 @@ public static class Renderer
 			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionBackgroundColor,
 			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionBackgroundColor,
 
-			_ => (cell.BackgroundColor.Foreground, cell.BackgroundColor.Background)
+			_ => new(cell.BackgroundColor.Foreground, cell.BackgroundColor.Background)
 		};
 
 		Console.ForegroundColor = colors.Foreground;
@@ -854,7 +854,7 @@ public static class Renderer
 			CellSelectionLevel.Secondary => Settings.Current.SecondarySelectionBorderColor,
 			CellSelectionLevel.Tertiary => Settings.Current.TertiarySelectionBorderColor,
 
-			_ => (cell.BorderColor.Foreground, cell.BorderColor.Background)
+			_ => new(cell.BorderColor.Foreground, cell.BorderColor.Background)
 		};
 
 		Console.ForegroundColor = colors.Foreground;

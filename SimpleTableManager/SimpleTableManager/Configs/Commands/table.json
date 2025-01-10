@@ -68,9 +68,7 @@
 		"{87}": {
 			"{53}": "selectCells"
 		},
-		"{88}": {
-			"{89}": "selectCellRange"
-		},
+		"{88}": "selectCellRange",
 		"{68}": {
 			"{53}": "selectColumn"
 		},
@@ -86,9 +84,7 @@
 		"{87}": {
 			"{53}": "deselectCells"
 		},
-		"{88}": {
-			"{89}": "deselectCellRange"
-		},
+		"{88}": "deselectCellRange",
 		"{68}": {
 			"{53}": "deselectColumn"
 		},

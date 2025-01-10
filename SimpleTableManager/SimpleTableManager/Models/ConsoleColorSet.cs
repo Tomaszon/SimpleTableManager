@@ -3,18 +3,15 @@
 namespace SimpleTableManager.Models;
 
 [method: JsonConstructor]
-public readonly struct ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background) : IEqualityOperators<ConsoleColorSet, ConsoleColorSet, bool>
+public struct ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background) : IEqualityOperators<ConsoleColorSet, ConsoleColorSet, bool>
 {
-	public ConsoleColor Foreground { get; } = foreground ?? ConsoleColor.Gray;
+	[JsonConverter(typeof(StringEnumConverter))]
+	public ConsoleColor Foreground { get; set; } = foreground ?? ConsoleColor.Gray;
 
-	public ConsoleColor Background { get; } = background ?? ConsoleColor.Black;
+	[JsonConverter(typeof(StringEnumConverter))]
+	public ConsoleColor Background { get; set; } = background ?? ConsoleColor.Black;
 
 	public ConsoleColorSet(ConsoleColorSet colorSet) : this(colorSet.Foreground, colorSet.Background) { }
-
-	public static implicit operator ConsoleColorSet((ConsoleColor? foreground, ConsoleColor? background) record)
-	{
-		return new ConsoleColorSet(record.foreground, record.background);
-	}
 
 	public static bool operator ==(ConsoleColorSet left, ConsoleColorSet right)
 	{

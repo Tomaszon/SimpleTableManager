@@ -157,13 +157,13 @@ public partial class Cell
 	[CommandFunction]
 	public void SetVerticalAlignment(VerticalAlignment alignment)
 	{
-		ContentAlignment = (ContentAlignment.Horizontal, alignment);
+		ContentAlignment = new(ContentAlignment.Horizontal, alignment);
 	}
 
 	[CommandFunction]
 	public void SetHorizontalAlignment(HorizontalAlignment alignment)
 	{
-		ContentAlignment = (alignment, ContentAlignment.Vertical);
+		ContentAlignment = new(alignment, ContentAlignment.Vertical);
 	}
 
 	[CommandFunction]
@@ -196,19 +196,19 @@ public partial class Cell
 			SetLayerIndexToMax();
 		}
 
-		BorderColor = (foreground, background);
+		BorderColor = new(foreground, background);
 	}
 
 	[CommandFunction]
 	public void SetBackgroundColor(ConsoleColor foreground, ConsoleColor? background = null)
 	{
-		BackgroundColor = (foreground, background);
+		BackgroundColor = new(foreground, background);
 	}
 
 	[CommandFunction]
 	public void SetContentColor(ConsoleColor foreground, ConsoleColor? background = null)
 	{
-		ContentColor = (foreground, background);
+		ContentColor = new(foreground, background);
 	}
 
 	[CommandFunction]

@@ -80,7 +80,7 @@ public partial class Document : CommandExecuterBase
 	public void GetMetaInfos(string path)
 	{
 		var fileInfo = new FileInfo(path);
-		
+
 		if (fileInfo.Exists)
 		{
 			Metadata = Metadata with { Path = path, Size = fileInfo.Length };

@@ -65,7 +65,10 @@
 	"{46}": {
 		"{9}": {
 			"{96}": "copyContent",
-			"{37}": "copyContentTo"
+			"{37}": {
+				"{87}": "copyContentTo",
+				"{88}": "copyContentToRange"
+			}
 		},
 		"{40}": "copyFormat"
 	},

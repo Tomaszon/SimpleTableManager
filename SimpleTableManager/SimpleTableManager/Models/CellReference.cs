@@ -30,7 +30,7 @@ public class CellReference(Guid referencedTableId, Position referencedPosition, 
 	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-		return $"T:{doc[ReferencedTableId].Name}, X:{(HorizontallyLocked ? "" : Shared.REF_CHAR)}{ReferencedPosition.X}, Y:{(VerticallyLocked ? "" : Shared.REF_CHAR)}{ReferencedPosition.Y}";
+		return $"T:{doc[ReferencedTableId].Name},X:{(HorizontallyLocked ? "" : Shared.REF_CHAR)}{ReferencedPosition.X},Y:{(VerticallyLocked ? "" : Shared.REF_CHAR)}{ReferencedPosition.Y}";
 	}
 
 	public string ToShortString()
