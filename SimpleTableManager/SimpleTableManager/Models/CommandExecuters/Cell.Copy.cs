@@ -9,24 +9,17 @@ public partial class Cell
 	}
 
 	[CommandFunction(StateModifier = false)]
-	public void CopyContentTo([MinLength(1)] IEnumerable<Position> positions, string? tableName = null)
+	public void CopyContentTo([MinLength(1)] IEnumerable<Position> positions)
 	{
-		var table = tableName is not null ? Table.Document[tableName] : Table;
-
-		ThrowIf(table is null, $"No table found with name {tableName}");
-
-		positions.ForEach(p =>
-		{
-			var clone = Shared.SerializeClone(ContentFunction);
-
-			var diff = p - Table[this];
-
-			var targetCell = table[p];
-
-			targetCell.SetContent(clone, diff, false);
-			targetCell.InvokeStateModifierCommandExecutedEvent(new(targetCell));
-		});
+		CopyContentTo(Table, positions);
 	}
+
+	//UNDONE
+	// [CommandFunction(StateModifier = false)]
+	// public void CopyContentTo(string tableName, [MinLength(1)] IEnumerable<Position> positions)
+	// {
+	// 	CopyContentTo(, positions);
+	// }
 
 	[CommandFunction(StateModifier = false)]
 	public void CopyContentToRange(Position positionFrom, Position positionTo, string? tableName = null)
@@ -35,7 +28,7 @@ public partial class Cell
 
 		ThrowIf(table is null, $"No table found with name {tableName}");
 
-		CopyContentTo(table[positionFrom, positionTo].Select(c => table[c]), tableName);
+		CopyContentTo(table, table[positionFrom, positionTo].Select(c => table[c]));
 	}
 
 	[CommandFunction, CommandShortcut("copyCellFormat")]
@@ -50,5 +43,20 @@ public partial class Cell
 			BorderColor,
 			LayerIndex
 		));
+	}
+
+	private void CopyContentTo(Table table, IEnumerable<Position> positions)
+	{
+		positions.ForEach(p =>
+		{
+			var clone = Shared.SerializeClone(ContentFunction);
+
+			var diff = p - Table[this];
+
+			var targetCell = table[p];
+
+			targetCell.SetContent(clone, diff, false);
+			targetCell.InvokeStateModifierCommandExecutedEvent(new(targetCell));
+		});
 	}
 }

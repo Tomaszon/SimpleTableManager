@@ -13,9 +13,9 @@ public struct CommandParameter
 
 	public object? DefaultValue { get; set; }
 
-	public readonly bool IsArray => Type.IsAssignableTo(typeof(IEnumerable));
+	public readonly bool IsArray => Type.IsAssignableTo(typeof(IEnumerable)) && Type != typeof(string);
 
-	public readonly bool IsNullable => Type.IsAssignableFrom(null);
+	public readonly bool IsNullable => !Type.IsValueType || Nullable.GetUnderlyingType(Type) is not null;
 
 	public IComparable? MinValue { get; set; }
 
@@ -35,18 +35,18 @@ public struct CommandParameter
 		MinLength = parameterInfo.GetCustomAttribute<MinLengthAttribute>()?.Length ?? 0;
 
 		var innerElementType = parameterInfo.ParameterType.GetElementType() ??
-			parameterInfo.ParameterType.GenericTypeArguments.Single();
+			parameterInfo.ParameterType.GenericTypeArguments.SingleOrDefault();
 
 		DefaultValue = IsArray ?
-			Array.CreateInstance(innerElementType, 0) :
+			Array.CreateInstance(innerElementType!, 0) :
 			parameterInfo.DefaultValue;
 
-		ParseFormats = (IsArray ? innerElementType : parameterInfo.ParameterType)
+		ParseFormats = (IsArray ? innerElementType! : parameterInfo.ParameterType)
 			.GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format);
 
-		IsOptional = 
-			parameterInfo.IsOptional || 
-			parameterInfo.GetCustomAttribute<ParamCollectionAttribute>() is not null || 
+		IsOptional =
+			parameterInfo.IsOptional ||
+			parameterInfo.GetCustomAttribute<ParamCollectionAttribute>() is not null ||
 			IsArray;
 	}
 
