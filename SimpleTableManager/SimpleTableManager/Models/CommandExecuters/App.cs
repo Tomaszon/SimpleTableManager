@@ -85,9 +85,9 @@ public class App : CommandExecuterBase
 	}
 
 	[CommandFunction(StateModifier = false)]
-	public static void SetAutosave(bool autosave)
+	public static void SetAutoSave(bool autoSave)
 	{
-		Settings.Current.Autosave = autosave;
+		Settings.Current.AutoSave = autoSave;
 	}
 
 	[CommandFunction(StateModifier = false)]

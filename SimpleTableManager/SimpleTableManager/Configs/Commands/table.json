@@ -1,131 +1,131 @@
 {
-	"{48}": {
-		"{63}": {
-			"{53}": "AddRowAt",
-			"{64}": "addRowAfter",
-			"{65}": "addRowFirst",
-			"{66}": "addRowLast"
+	"add": {
+		"row": {
+			"at": "AddRowAt",
+			"after": "addRowAfter",
+			"first": "addRowFirst",
+			"last": "addRowLast"
 		},
-		"{67}": {
-			"{53}": "addRowFilter"
+		"rowFilter": {
+			"at": "addRowFilter"
 		},
-		"{68}": {
-			"{53}": "addColumnAt",
-			"{64}": "addColumnAfter",
-			"{65}": "addColumnFirst",
-			"{66}": "addColumnLast"
+		"column": {
+			"at": "addColumnAt",
+			"after": "addColumnAfter",
+			"first": "addColumnFirst",
+			"last": "addColumnLast"
 		},
-		"{69}": {
-			"{53}": "addColumnFilter"
+		"columnFilter": {
+			"at": "addColumnFilter"
 		}
 	},
-	"{50}": {
-		"{63}": {
-			"{53}": "removeRowAt",
-			"{65}": "removeFirstRow",
-			"{66}": "removeLastRow"
+	"remove": {
+		"row": {
+			"at": "removeRowAt",
+			"first": "removeFirstRow",
+			"last": "removeLastRow"
 		},
-		"{67}": {
-			"{53}": "removeRowFilter",
-			"{70}": "removeRowFilters"
+		"rowFilter": {
+			"at": "removeRowFilter",
+			"all": "removeRowFilters"
 		},
-		"{68}": {
-			"{53}": "removeColumnAt",
-			"{65}": "removeFirstColumn",
-			"{66}": "removeLastColumn"
+		"column": {
+			"at": "removeColumnAt",
+			"first": "removeFirstColumn",
+			"last": "removeLastColumn"
 		},
-		"{69}": {
-			"{53}": "removeColumnFilter",
-			"{70}": "removeColumnFilters"
+		"columnFilter": {
+			"at": "removeColumnFilter",
+			"all": "removeColumnFilters"
 		},
-		"{71}": "removeFilters"
+		"filters": "removeFilters"
 	},
-	"{3}": {
-		"{68}": {
-			"{72}": "setColumnWidth"
+	"set": {
+		"column": {
+			"width": "setColumnWidth"
 		},
-		"{63}": {
-			"{73}": "setRowHeight"
+		"row": {
+			"height": "setRowHeight"
 		},
-		"{75}": "setViewOptions",
-		"{76}": "setViewOptionsColumns",
-		"{77}": "setViewOptionsRows",
-		"{78}": "setName",
-		"{79}": "setSize"
+		"view": "setViewOptions",
+		"viewColumns": "setViewOptionsColumns",
+		"viewRows": "setViewOptionsRows",
+		"name": "setName",
+		"size": "setSize"
 	},
-	"{80}": {
-		"{81}": {
-			"{82}": "moveSelectionLeft",
-			"{83}": "moveSelectionRight",
-			"{84}": "moveSelectionUp",
-			"{85}": "moveSelectionDown"
+	"move": {
+		"selection": {
+			"left": "moveSelectionLeft",
+			"right": "moveSelectionRight",
+			"up": "moveSelectionUp",
+			"down": "moveSelectionDown"
 		}
 	},
-	"{86}": {
-		"{74}": {
-			"{53}": "selectCell"
+	"select": {
+		"cell": {
+			"at": "selectCell"
 		},
-		"{87}": {
-			"{53}": "selectCells"
+		"cells": {
+			"at": "selectCells"
 		},
-		"{88}": "selectCellRange",
-		"{68}": {
-			"{53}": "selectColumn"
+		"cellRange": "selectCellRange",
+		"column": {
+			"at": "selectColumn"
 		},
-		"{63}": {
-			"{53}": "selectRow"
+		"row": {
+			"at": "selectRow"
 		},
-		"{70}": "selectAll"
+		"all": "selectAll"
 	},
-	"{94}": {
-		"{74}": {
-			"{53}": "deselectCell"
+	"deselect": {
+		"cell": {
+			"at": "deselectCell"
 		},
-		"{87}": {
-			"{53}": "deselectCells"
+		"cells": {
+			"at": "deselectCells"
 		},
-		"{88}": "deselectCellRange",
-		"{68}": {
-			"{53}": "deselectColumn"
+		"cellRange": "deselectCellRange",
+		"column": {
+			"at": "deselectColumn"
 		},
-		"{63}": {
-			"{53}": "deselectRow"
+		"row": {
+			"at": "deselectRow"
 		},
-		"{70}": "deselectAll"
+		"all": "deselectAll"
 	},
-	"{39}": {
-		"{75}": "resetViewOptions"
+	"reset": {
+		"view": "resetViewOptions"
 	},
-	"{90}": {
-		"{63}": {
-			"{53}": "hideRowAt"
+	"hide": {
+		"row": {
+			"at": "hideRowAt"
 		},
-		"{68}": {
-			"{53}": "hideColumnAt"
+		"column": {
+			"at": "hideColumnAt"
 		}
 	},
-	"{41}": {
-		"{63}": {
-			"{53}": "showRowAt",
-			"{70}": "showAllRows"
+	"show": {
+		"row": {
+			"at": "showRowAt",
+			"all": "showAllRows"
 		},
-		"{68}": {
-			"{53}": "showColumnAt",
-			"{70}": "showAllColumns"
+		"column": {
+			"at": "showColumnAt",
+			"all": "showAllColumns"
 		},
-		"{74}": {
-			"{42}": "showCellDetails",
-			"{11}": "showCellContentFunction",
-			"{70}": "showAllCells",
-			"{10}": "showCellComments"
+		"cell": {
+			"details": "showCellDetails",
+			"contentFunction": "showCellContentFunction",
+			"all": "showAllCells",
+			"comment": "showCellComments"
 		},
-		"{91}": "showRowFilters",
-		"{92}": "showColumnFilters"
+		"rowFilters": "showRowFilters",
+		"columnFilters": "showColumnFilters"
 	},
-	"{60}": "export",
-	"{93}": {
-		"{87}": {
-			"{53}": "swapCells"
+	"export": "export",
+	"swap": {
+		"cells": {
+			"at": "swapCells"
 		}
 	}
 }

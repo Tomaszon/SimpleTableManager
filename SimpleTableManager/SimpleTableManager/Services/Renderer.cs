@@ -161,7 +161,7 @@ public static class Renderer
 	{
 		if (Console.WindowHeight > _MINIMUM_LINES_FOR_DOCUMENT_INFOS)
 		{
-			var title = $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.Autosave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}";
+			var title = $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.AutoSave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}";
 			var createTime = document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet";
 			var size = document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet";
 			var path = document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet";

@@ -28,7 +28,7 @@ public partial class Document : CommandExecuterBase
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args)
 	{
-		if (Settings.Current.Autosave && Metadata.Path is not null)
+		if (Settings.Current.AutoSave && Metadata.Path is not null)
 		{
 			Save();
 		}

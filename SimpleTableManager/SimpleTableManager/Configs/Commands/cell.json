@@ -1,87 +1,87 @@
 {
-	"{3}": {
-		"{9}": "setContent",
-		"{10}": "setComment",
-		"{11}": {
-			"{12}": {
-				"{97}": "setStringContentFunction/const",
-				"{98}": "setStringContentFunction/con",
-				"{99}": "setStringContentFunction/join",
-				"{100}": "setStringContentFunction/len",
-				"{101}": "setStringContentFunction/split",
-				"{102}": "setStringContentFunction/trim",
-				"{103}": "setStringContentFunction/blow",
-				"{104}": "setStringContentFunction/like"
+	"set": {
+		"content": "setContent",
+		"comment": "setComment",
+		"contentFunction": {
+			"string": {
+				"const": "setStringContentFunction/const",
+				"con": "setStringContentFunction/con",
+				"join": "setStringContentFunction/join",
+				"len": "setStringContentFunction/len",
+				"split": "setStringContentFunction/split",
+				"trim": "setStringContentFunction/trim",
+				"blow": "setStringContentFunction/blow",
+				"like": "setStringContentFunction/like"
 			},
-			"{13}": "setIntegerContentFunction",
-			"{14}": "setFractionContentFunction",
-			"{15}": "setBooleanContentFunction",
-			"{16}": "setCharacterContentFunction",
-			"{17}": "setDateTimeContentFunction",
-			"{18}": "setDateContentFunction",
-			"{19}": "setTimeContentFunction",
-			"{20}": "setRectangleContentFunction",
-			"{21}": "setEllipseContentFunction",
-			"{22}": "setRightTriangleContentFunction"
+			"int": "setIntegerContentFunction",
+			"fraction": "setFractionContentFunction",
+			"bool": "setBooleanContentFunction",
+			"char": "setCharacterContentFunction",
+			"dateTime": "setDateTimeContentFunction",
+			"date": "setDateContentFunction",
+			"time": "setTimeContentFunction",
+			"rectangle": "setRectangleContentFunction",
+			"ellipse": "setEllipseContentFunction",
+			"rightTriangle": "setRightTriangleContentFunction"
 		},
-		"{23}": "setContentFunctionOperator",
-		"{24}": "setContentFunctionArguments",
-		"{25}": "setVerticalAlignment",
-		"{26}": "setHorizontalAlignment",
-		"{27}": "setPadding",
-		"{28}": "setHorizontalPadding",
-		"{29}": "setVerticalPadding",
-		"{30}": "setBorderColor",
-		"{31}": "setBackgroundColor",
-		"{32}": "setContentColor",
-		"{33}": "setBackgroundCharacter",
-		"{34}": {
-			"{35}": "setLayerIndexToMin",
-			"{36}": "setLayerIndexToMax",
-			"{37}": "setLayerIndex"
+		"contentFunctionOperator": "setContentFunctionOperator",
+		"contentFunctionArguments": "setContentFunctionArguments",
+		"verticalAlignment": "setVerticalAlignment",
+		"horizontalAlignment": "setHorizontalAlignment",
+		"padding": "setPadding",
+		"horizontalPadding": "setHorizontalPadding",
+		"verticalPadding": "setVerticalPadding",
+		"borderColor": "setBorderColor",
+		"backgroundColor": "setBackgroundColor",
+		"contentColor": "setContentColor",
+		"backgroundCharacter": "setBackgroundCharacter",
+		"layerIndex": {
+			"min": "setLayerIndexToMin",
+			"max": "setLayerIndexToMax",
+			"to": "setLayerIndex"
 		},
-		"{38}": "setReferenceCell",
-		"{95}": "setContentStyle"
+		"referenceCell": "setReferenceCell",
+		"contentStyle": "setContentStyle"
 	},
-	"{39}": {
-		"{9}": "resetContent",
-		"{10}": "resetComment",
-		"{40}": "resetFormat",
-		"{38}": "resetReferenceCell"
+	"reset": {
+		"content": "resetContent",
+		"comment": "resetComment",
+		"format": "resetFormat",
+		"referenceCell": "resetReferenceCell"
 	},
-	"{41}": {
-		"{42}": "showDetails",
-		"{11}": "showContentFunction",
-		"{43}": {
-			"{42}": "showSelfDetails"
+	"show": {
+		"details": "showDetails",
+		"contentFunction": "showContentFunction",
+		"self": {
+			"details": "showSelfDetails"
 		}
 	},
-	"{44}": {
-		"{34}": "increaseLayerIndex"
+	"increase": {
+		"layerIndex": "increaseLayerIndex"
 	},
-	"{45}": {
-		"{34}": "decreaseLayerIndex"
+	"decrease": {
+		"layerIndex": "decreaseLayerIndex"
 	},
-	"{46}": {
-		"{9}": {
-			"{96}": "copyContent",
-			"{37}": {
-				"{87}": {
-					"{105}": {
-						"{49}": "copyContentTo",
-						"{105}": "copyContentToTable"
+	"copy": {
+		"content": {
+			"from": "copyContent",
+			"to": {
+				"cells": {
+					"activeTable": {
+						"table": "copyContentTo",
+						"activeTable": "copyContentToTable"
 					}
 				},
-				"{88}": "copyContentToRange"
+				"cellRange": "copyContentToRange"
 			}
 		},
-		"{40}": "copyFormat"
+		"format": "copyFormat"
 	},
-	"{47}": {
-		"{9}": {
-			"{37}": "pasteContent",
-			"{96}": "pasteContentFrom"
+	"paste": {
+		"content": {
+			"to": "pasteContent",
+			"from": "pasteContentFrom"
 		},
-		"{40}": "pasteFormat"
+		"format": "pasteFormat"
 	}
 }

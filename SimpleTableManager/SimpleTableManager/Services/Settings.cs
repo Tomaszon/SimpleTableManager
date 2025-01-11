@@ -75,7 +75,7 @@ public class Settings
 
 	public Size DefaultTableSize { get; set; } = new(10, 5);
 
-	public bool Autosave { get; set; }
+	public bool AutoSave { get; set; }
 
 	public string Author { get; set; } = "";
 

@@ -13,7 +13,7 @@ It is neet. It is fun.
 ### App
 - Set rendering mode
 - Undo/redo
-- Autosave option
+- Auto save option
 
 ### Document
 - Load
@@ -114,7 +114,7 @@ You can customize text and border foreground/background colors for display and s
 
 Two border styles supported 'Modern' and 'Classic'.
 
-Author and autosave options can be changed.
+Author and auto save options can be changed.
 
 And it supports beep-boop on windows. Thats important too!
 
