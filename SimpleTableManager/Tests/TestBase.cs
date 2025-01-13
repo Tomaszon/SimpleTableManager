@@ -4,12 +4,6 @@ namespace SimpleTableManager.Tests;
 
 public class TestBase
 {
-	[OneTimeSetUp]
-	public void Setup()
-	{
-		Settings.FromJson(@"Configs/settings.json");
-	}
-
 	protected static IFunction CreateFunction<T>(Enum functionOperator, params IEnumerable<T> args)
 	where T : IParsable<T>
 	{

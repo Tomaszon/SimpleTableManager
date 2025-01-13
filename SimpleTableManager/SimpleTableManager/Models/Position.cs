@@ -5,7 +5,7 @@ namespace SimpleTableManager.Models;
 [ParseFormat("x,y", "^(?<x>\\d+),(?<y>\\d+)$")]
 [ParseFormat("x;y", "^(?<x>\\d+);(?<y>\\d+)$")]
 [method: JsonConstructor]
-public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>, ISubtractionOperators<Position, Position, Size>
+public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>, ISubtractionOperators<Position, Position, Size>, IAdditionOperators<Position, Size, Position>
 {
 	public int X { get; set; } = x;
 
@@ -50,6 +50,11 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 	public static Size operator -(Position left, Position right)
 	{
 		return new(left.X - right.X, left.Y - right.Y);
+	}
+
+	public static Position operator +(Position left, Size right)
+	{
+		return new Position(left.X + right.Width, left.Y + right.Height);
 	}
 
 	public bool IsBetween(Position from, Position to)

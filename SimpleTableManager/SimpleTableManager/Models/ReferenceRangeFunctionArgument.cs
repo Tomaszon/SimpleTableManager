@@ -1,8 +1,8 @@
 namespace SimpleTableManager.Models
 {
-    public class ReferenceFunctionArgument(CellReference reference) : IFunctionArgument
+    public class ReferenceRangeFunctionArgument(CellReferenceRange reference) : IFunctionArgument
 	{
-		public CellReference Reference { get; set; } = reference;
+		public CellReferenceRange Reference { get; set; } = reference;
 
 		public IEnumerable<object>? Resolve()
 		{
@@ -10,7 +10,7 @@ namespace SimpleTableManager.Models
 
 			var table = doc[Reference.ReferencedTableId];
 
-			return table[Reference.ReferencedPosition].ContentFunction?.Execute();
+			return Reference.Compile().SelectMany(r => table[r.ReferencedPosition].ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
 		}
 
 		public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)

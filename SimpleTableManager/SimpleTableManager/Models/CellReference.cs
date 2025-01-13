@@ -1,6 +1,8 @@
 namespace SimpleTableManager.Models;
 
+[ParseFormat("TableName;{0}x;{0}y ({0} for axis unlock)", "^(?<t>.+);(?<x>{1}?\\d+);(?<y>{1}?\\d+)$", [Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 [ParseFormat("TableName,{0}x,{0}y ({0} for axis unlock)", "^(?<t>.+),(?<x>{1}?\\d+),(?<y>{1}?\\d+)$", [Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+[ParseFormat("{0}x;{0}y ({0} for axis unlock)", "^(?<x>{1}?\\d+);(?<y>{1}?\\d+)$", [Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 [ParseFormat("{0}x,{0}y ({0} for axis unlock)", "^(?<x>{1}?\\d+),(?<y>{1}?\\d+)$", [Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 [method: JsonConstructor]
 public class CellReference(Guid referencedTableId, Position referencedPosition, bool horizontallyLocked = true, bool verticallyLocked = true) : ParsableBase<CellReference>, IParsable<CellReference>, IParseCore<CellReference>
