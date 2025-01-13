@@ -99,7 +99,7 @@ public class App : CommandExecuterBase
 		{
 			Console.WriteLine("Good bye!");
 
-			SmartConsole.Play(Settings.Current.ShutdownNotes);
+			SmartConsole.PlayAsync(Settings.Current.ShutdownNotes);
 
 			Console.ReadKey();
 

@@ -14,15 +14,15 @@ public class SmartPlayer(Note[] notes)
 	/// <summary>
 	/// Plays a sound configured amount of times
 	/// </summary>
-	public async Task Play()
+	public async Task PlayAsync()
 	{
-		await Task.Run(() => Shared.IndexArray(_notes.Length).ForEach(async i => await Enqueue(_notes[i])));
+		await Task.Run(() => Shared.IndexArray(_notes.Length).ForEach(async i => await EnqueueAsync(_notes[i])));
 	}
 
 	/// <summary>
 	/// Enqueues a file based play task
 	/// </summary>
-	private async Task Enqueue(Note note)
+	private async Task EnqueueAsync(Note note)
 	{
 		try
 		{

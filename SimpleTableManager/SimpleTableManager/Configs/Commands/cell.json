@@ -67,9 +67,9 @@
 			"from": "copyContent",
 			"to": {
 				"cells": {
-					"activeTable": {
-						"table": "copyContentTo",
-						"activeTable": "copyContentToTable"
+					"in": {
+						"activeTable": "copyContentTo",
+						"table": "copyContentToTable"
 					}
 				},
 				"cellRange": "copyContentToRange"

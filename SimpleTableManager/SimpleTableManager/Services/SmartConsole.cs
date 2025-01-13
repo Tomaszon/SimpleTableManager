@@ -355,7 +355,7 @@ public partial class SmartConsole
 		}
 		else
 		{
-			Play(Settings.Current.ErrorNotes);
+			PlayAsync(Settings.Current.ErrorNotes);
 		}
 
 		return true;
@@ -737,13 +737,13 @@ public partial class SmartConsole
 		return true;
 	}
 
-	public static async void Play(Note[] notes)
+	public static async void PlayAsync(Note[] notes)
 	{
 		if (Settings.Current.Audio)
 		{
 			SmartPlayer player = new(notes);
 
-			await player.Play();
+			await player.PlayAsync();
 		}
 	}
 }
