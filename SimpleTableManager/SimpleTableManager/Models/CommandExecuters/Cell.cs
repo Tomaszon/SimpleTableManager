@@ -162,12 +162,15 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		{
 			var table = doc[r.ReferencedTableId];
 
-			if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+			r.ReferencedPositions.ForEach(p =>
 			{
-				c.Selection.SelectSecondary();
+                if (table.TryGetCellAt(p, out var c) && c != this)
+                {
+                    c.Selection.SelectSecondary();
 
-				TertiarySelectionRecursive(c, false);
-			}
+                    TertiarySelectionRecursive(c, false, this);
+                }
+            });
 		});
 	}
 
@@ -181,16 +184,19 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		{
 			var table = doc[r.ReferencedTableId];
 
-			if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+			r.ReferencedPositions.ForEach(p =>
 			{
-				c.Selection.DeselectSecondary();
+                if (table.TryGetCellAt(p, out var c) && c != this)
+                {
+                    c.Selection.DeselectSecondary();
 
-				TertiaryDeselectionRecursive(c, false);
-			}
+                    TertiaryDeselectionRecursive(c, false, this);
+                }
+            });
 		});
 	}
 
-	private static void TertiarySelectionRecursive(Cell cell, bool selectSelf)
+	private static void TertiarySelectionRecursive(Cell cell, bool selectSelf, Cell root)
 	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
@@ -200,10 +206,13 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 			{
 				var table = doc[r.ReferencedTableId];
 
-				if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+				r.ReferencedPositions.ForEach(p =>
 				{
-					TertiarySelectionRecursive(c, false);
-				}
+                    if (table.TryGetCellAt(p, out var c) && c != cell && c != root)
+                    {
+                        TertiarySelectionRecursive(c, false, root);
+                    }
+                });
 			});
 
 			if (selectSelf)
@@ -217,7 +226,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		}
 	}
 
-	private static void TertiaryDeselectionRecursive(Cell cell, bool selectSelf)
+	private static void TertiaryDeselectionRecursive(Cell cell, bool selectSelf, Cell root)
 	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
@@ -227,10 +236,13 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 			{
 				var table = doc[r.ReferencedTableId];
 
-				if (table.TryGetCellAt(r.ReferencedPosition, out var c))
+				r.ReferencedPositions.ForEach(p =>
 				{
-					TertiaryDeselectionRecursive(c, false);
-				}
+					if (table.TryGetCellAt(p, out var c) && c != cell && c != root)
+					{
+						TertiaryDeselectionRecursive(c, false, root);
+					}
+				});
 			});
 
 			if (selectSelf)

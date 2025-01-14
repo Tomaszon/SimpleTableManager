@@ -10,7 +10,8 @@ public class CommandInformationAttribute(string information) : Attribute
 
 public class CommandInformationAttribute<T> : CommandInformationAttribute
 {
-	public CommandInformationAttribute([CallerMemberName] string method = null!) : base(null!)
+	public CommandInformationAttribute([CallerMemberName] string method = null!) :
+		base(null!)
 	{
 		if (Localizer.TryLocalize<T>(method, "info", out var information))
 		{

@@ -9,7 +9,8 @@ public class Size(int width, int height) : ParsableBase<Size>, IParsable<Size>, 
 
 	public int Height { get; set; } = height;
 
-	public Size(Position position) : this(position.X, position.Y) { }
+	public Size(Position position) :
+		this(position.X, position.Y) { }
 
 	public override string ToString()
 	{

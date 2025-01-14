@@ -10,7 +10,8 @@ public class IndexCell : Cell
 
 	public int Index { get; set; }
 
-	public IndexCell(Table table, IndexCellType indexCellType, int index, char lowerArrow, char higherArrow) : base(table, index.ToString())
+	public IndexCell(Table table, IndexCellType indexCellType, int index, char lowerArrow, char higherArrow) :
+		base(table, index.ToString())
 	{
 		IndexCellType = indexCellType;
 		Index = index;

@@ -11,7 +11,8 @@ public struct ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background
 	[JsonConverter(typeof(StringEnumConverter))]
 	public ConsoleColor Background { get; set; } = background ?? ConsoleColor.Black;
 
-	public ConsoleColorSet(ConsoleColorSet colorSet) : this(colorSet.Foreground, colorSet.Background) { }
+	public ConsoleColorSet(ConsoleColorSet colorSet) :
+		this(colorSet.Foreground, colorSet.Background) { }
 
 	public static bool operator ==(ConsoleColorSet left, ConsoleColorSet right)
 	{

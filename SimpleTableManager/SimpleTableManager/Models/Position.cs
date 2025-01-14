@@ -3,7 +3,6 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("x,y", "^(?<x>\\d+),(?<y>\\d+)$")]
-[ParseFormat("x;y", "^(?<x>\\d+);(?<y>\\d+)$")]
 [method: JsonConstructor]
 public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position>, IParseCore<Position>, ISubtractionOperators<Position, Position, Size>, IAdditionOperators<Position, Size, Position>
 {
@@ -11,7 +10,9 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 
 	public int Y { get; set; } = y;
 
-	public Position(Size size) : this(size.Width, size.Height) { }
+	public Position(Size size) :
+		this(size.Width, size.Height)
+	{ }
 
 	public override string ToString()
 	{
@@ -65,5 +66,38 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 	public bool IsNotBetween(Position from, Position to)
 	{
 		return !IsBetween(from, to);
+	}
+
+	public static List<Position> Range(Position from, Position to)
+	{
+		var results = new List<Position>();
+
+		var startPosition = new Position(Math.Min(from.X, to.X), Math.Min(from.Y, to.Y));
+		var endPosition = new Position(Math.Max(from.X, to.X), Math.Max(from.Y, to.Y));
+
+		var position = new Position(startPosition.X, startPosition.Y);
+
+		while (!position.Equals(endPosition))
+		{
+			results.Add(position);
+
+			var offset = new Size(0, 0);
+
+			if (position.X < endPosition.X)
+			{
+				offset.Width = 1;
+			}
+			else if (position.Y < endPosition.Y)
+			{
+				offset.Width = startPosition.X - position.X;
+				offset.Height = 1;
+			}
+
+			position += offset;
+		}
+
+		results.Add(position);
+
+		return results;
 	}
 }

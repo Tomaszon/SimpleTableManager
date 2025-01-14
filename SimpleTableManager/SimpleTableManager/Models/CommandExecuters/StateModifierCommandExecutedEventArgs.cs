@@ -10,5 +10,6 @@ public class StateModifierCommandExecutedEventArgs(IStateModifierCommandExecuter
 
 	public bool IsPropagable { get; set; } = isPropagable;
 
-	public StateModifierCommandExecutedEventArgs(IStateModifierCommandExecuter root, CommandFunctionAttribute attribute) : this(root, attribute.ClearsCache, attribute.Clears) { }
+	public StateModifierCommandExecutedEventArgs(IStateModifierCommandExecuter root, CommandFunctionAttribute attribute) :
+		this(root, attribute.ClearsCache, attribute.Clears) { }
 }

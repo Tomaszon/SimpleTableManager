@@ -10,7 +10,8 @@ where T : Shape2Sized2dBase<T>, IParsable<T>
 {
 	public double Size2 { get; set; } = size2;
 
-	public Shape2Sized2dBase(Shape2Sized2dBase<T> shape) : this(shape.Size1, shape.Size2) { }
+	public Shape2Sized2dBase(Shape2Sized2dBase<T> shape) :
+		this(shape.Size1, shape.Size2) { }
 
 	public override string ToString()
 	{

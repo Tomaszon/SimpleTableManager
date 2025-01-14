@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Models
 {
-    public class ReferenceFunctionArgument(CellReference reference) : IFunctionArgument
+	public class ReferenceFunctionArgument(CellReference reference) : IFunctionArgument
 	{
 		public CellReference Reference { get; set; } = reference;
 
@@ -10,7 +10,7 @@ namespace SimpleTableManager.Models
 
 			var table = doc[Reference.ReferencedTableId];
 
-			return table[Reference.ReferencedPosition].ContentFunction?.Execute();
+			return Reference.ReferencedPositions.SelectMany(r => table[r].ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
 		}
 
 		public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)

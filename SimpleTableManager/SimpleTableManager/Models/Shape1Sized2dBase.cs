@@ -13,7 +13,8 @@ where T : Shape1Sized2dBase<T>, IParsable<T>
 
 	public abstract double Perimeter { get; }
 
-	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape) : this(shape.Size1) { }
+	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape) :
+		this(shape.Size1) { }
 
 	public override string ToString()
 	{
