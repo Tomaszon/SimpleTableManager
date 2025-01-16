@@ -86,10 +86,15 @@ public partial class Cell
 		SetFunction<string>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [ConstArgumentValueType<long>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<long>(functionOperator, arguments);
+		//TODO
+		// SetFunction<long>(functionOperator, arguments);
+
+		var newFunction = FunctionCollection.GetFunction<long>(functionOperator.ToString(), [], arguments);
+
+		SetContent(newFunction);
 	}
 
 	[CommandFunction]
@@ -131,10 +136,11 @@ public partial class Cell
 	[CommandFunction]
 	public void SetContentFunctionOperator(string @operator)
 	{
-		ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
+		//REWORK
+		// ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
 
-		//TODO find a way to list possible values
-		ContentFunction.Operator = (Enum)ContentParser.ParseStringValue(ContentFunction.Operator.GetType(), @operator);
+		// //TODO find a way to list possible values
+		// ContentFunction.Operator = (Enum)ContentParser.ParseStringValue(ContentFunction.Operator.GetType(), @operator, null);
 	}
 
 	[CommandFunction]

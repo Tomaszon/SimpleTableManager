@@ -34,7 +34,7 @@ where T : class, IParsable<T>, IParseCore<T>
 	private static Match? GetRightMatch(string? value, out IEnumerable<string> formats)
 	{
 		var attributes = typeof(T).GetCustomAttributes<ParseFormatAttribute>();
-		
+
 		formats = attributes.Select(a => a.Format);
 
 		if (value is null)

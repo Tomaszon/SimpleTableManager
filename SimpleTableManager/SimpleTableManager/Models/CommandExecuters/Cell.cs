@@ -143,11 +143,11 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 	{
 		var namedArgs = arguments.Where(a => a.Contains(Shared.NAMED_ARG_SEPARATOR) == true);
 
-		var regularArgs = ContentParser.ParseFunctionArguments<TType>(this, arguments.Where(a => !namedArgs.Contains(a)));
+		var regularArgs = ContentParser.ParseFunctionArguments<TType>(arguments.Where(a => !namedArgs.Contains(a)));
 
 		var namedArgsDic = namedArgs.ToDictionary(
 			k => Enum.Parse<ArgumentName>(k.Split(Shared.NAMED_ARG_SEPARATOR)[0], true),
-			v => ContentParser.ParseFunctionArgument<string>(this, v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
+			v => ContentParser.ParseFunctionArgument<string>(v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
 
 		return (namedArgsDic, regularArgs);
 	}

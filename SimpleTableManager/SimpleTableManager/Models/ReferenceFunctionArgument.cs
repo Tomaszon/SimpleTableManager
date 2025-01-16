@@ -1,36 +1,86 @@
-namespace SimpleTableManager.Models
+namespace SimpleTableManager.Models;
+
+[ParseFormat("TableName,{0}x1,{0}y1-{0}x2,{0}y2 ({0} for axis unlock)",
+"^(?<t>.+),(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
+[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+[ParseFormat("{0}x1,{0}y1-{0}x2,{0}y2 ({0} for axis unlock)",
+"^(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
+[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+[ParseFormat("TableName,{0}x,{0}y ({0} for axis unlock)",
+"^(?<t>.+),(?<x>{1}?\\d+),(?<y>{1}?\\d+)$",
+[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+[ParseFormat("{0}x,{0}y ({0} for axis unlock)",
+"^(?<x>{1}?\\d+),(?<y>{1}?\\d+)$",
+[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+public class ReferenceFunctionArgument(CellReference reference) : ParsableBase<ReferenceFunctionArgument>, IParsable<ReferenceFunctionArgument>, IParseCore<ReferenceFunctionArgument>, IFunctionArgument
 {
-	public class ReferenceFunctionArgument(CellReference reference) : IFunctionArgument
+	public CellReference Reference { get; set; } = reference;
+
+	public IEnumerable<object>? Resolve()
 	{
-		public CellReference Reference { get; set; } = reference;
+		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-		public IEnumerable<object>? Resolve()
+		var table = doc[Reference.ReferencedTableId];
+
+		return Reference.ReferencedPositions.SelectMany(r => table[r].ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
+	}
+
+	public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)
+	{
+		try
 		{
-			var doc = InstanceMap.Instance.GetInstance<Document>()!;
+			result = Resolve();
 
-			var table = doc[Reference.ReferencedTableId];
+			error = null;
 
-			return Reference.ReferencedPositions.SelectMany(r => table[r].ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
+			return true;
 		}
-
-		public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)
+		catch (Exception ex)
 		{
-			try
-			{
-				result = Resolve();
+			result = null;
 
-				error = null;
+			error = ex.Message;
 
-				return true;
-			}
-			catch (Exception ex)
-			{
-				result = null;
-
-				error = ex.Message;
-
-				return false;
-			}
+			return false;
 		}
 	}
+
+	public static ReferenceFunctionArgument ParseCore(GroupCollection args, IFormatProvider? formatProvider)
+	{
+		var targ = args["t"];
+		var xarg = args["x"];
+		var yarg = args["y"];
+		var x1s = args["x1"].Value;
+		var y1s = args["y1"].Value;
+		var x2s = args["x2"].Value;
+		var y2s = args["y2"].Value;
+
+		var doc = InstanceMap.Instance.GetInstance<Document>()!;
+
+		var t = !targ.Success ?
+			doc.GetActiveTable() :
+			doc.Tables.Single(t => t.Name.Equals(targ.Value, StringComparison.InvariantCultureIgnoreCase));
+
+		if (xarg.Success && yarg.Success)
+		{
+			var x = int.Parse(xarg.Value.Trim(Shared.REF_CHAR));
+			var y = int.Parse(yarg.Value.Trim(Shared.REF_CHAR));
+
+			return new ReferenceFunctionArgument(new(t.Id, new(x, y, !xarg.Value.Contains(Shared.REF_CHAR), !yarg.Value.Contains(Shared.REF_CHAR))));
+		}
+		else
+		{
+			var x1 = int.Parse(x1s.Trim(Shared.REF_CHAR));
+			var y1 = int.Parse(y1s.Trim(Shared.REF_CHAR));
+			var x2 = int.Parse(x2s.Trim(Shared.REF_CHAR));
+			var y2 = int.Parse(y2s.Trim(Shared.REF_CHAR));
+
+			return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, !x1s.Contains(Shared.REF_CHAR), !y1s.Contains(Shared.REF_CHAR)), new(x2, y2, !x2s.Contains(Shared.REF_CHAR), !y2s.Contains(Shared.REF_CHAR))));
+		}
+	}
+
+    public override string ToString()
+    {
+        return Reference.ToString();
+    }
 }

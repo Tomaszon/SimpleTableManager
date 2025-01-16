@@ -46,19 +46,21 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		for (var i = 0; i < parameters.Count; i++)
 		{
-			var paramType = parameters[i].Type;
+			var parameter = parameters[i];
 
-			if (parameters[i].IsArray)
+			var paramType = parameter.Type;
+
+			if (parameter.IsArray)
 			{
-				var values = ParseArrayValues(parameters, i, paramType);
+				var values = ParseArrayValues(parameters, i, paramType, parameter.ConstArgumentValueType);
 
-				validationResults.AddRange(ValidateCollectionArgument(values, parameters[i]));
+				validationResults.AddRange(ValidateCollectionArgument(values, parameter));
 
 				if (values is not null)
 				{
 					foreach (var e in values)
 					{
-						validationResults.AddRange(ValidateArgumentElement(e, parameters[i]));
+						validationResults.AddRange(ValidateArgumentElement(e, parameter));
 					}
 				}
 
@@ -67,9 +69,9 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 			else
 			{
 				var value = i < Arguments?.Count ?
-					ContentParser.ParseStringValue(paramType, Arguments[i]) : parameters[i].DefaultValue;
+					ContentParser.ParseStringValue(paramType, Arguments[i], parameter.ConstArgumentValueType) : parameter.DefaultValue;
 
-				validationResults.AddRange(ValidateArgumentElement(value, parameters[i]));
+				validationResults.AddRange(ValidateArgumentElement(value, parameter));
 
 				parsedArguments.Add(value);
 			}
@@ -157,19 +159,13 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		return validationResults;
 	}
 
-	private Array? ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType)
+	private Array? ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType, Type? constArgumentValueType)
 	{
 		if (index < Arguments?.Count)
 		{
 			var rest = Arguments.GetRange(index, Arguments.Count - index);
 
-			var type = arrayType.GetElementType() ?? arrayType.GenericTypeArguments.Single();
-
-			var typedArray = Array.CreateInstance(type, rest.Count);
-
-			Array.Copy(rest.Select(a => ContentParser.ParseStringValue(type, a)).ToArray(), typedArray, rest.Count);
-
-			return typedArray;
+			return ContentParser.ParseStringValues(arrayType, rest, constArgumentValueType);
 		}
 		else
 		{
@@ -206,7 +202,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		var parameters = method.GetParameters().Skip(withSelector && trimSelector ? 1 : 0);
 
-		return parameters.Select(p => new CommandParameter(p)).ToList();
+		return [.. parameters.Select(p => new CommandParameter(p))];
 	}
 
 	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments, out string? selector)

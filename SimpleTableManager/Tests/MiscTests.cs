@@ -77,11 +77,11 @@ public class MiscTests : TestBase
 	[TestCase("3,2-2,3", true, 2, 2, 3, 2, 2, 3, 3, 3)]
 	[TestCase("2,3-3,2", true, 2, 2, 3, 2, 2, 3, 3, 3)]
 	[TestCase("asd", false)]
-	public void ParseCellReference(string value, bool shouldParse, int x1 = 0, int y1 = 0, int? x2 = null, int? y2 = null, int? x3 = null, int? y3 = null, int? x4 = null, int? y4 = null)
+	public void ParseReferenceArgument(string value, bool shouldParse, int x1 = 0, int y1 = 0, int? x2 = null, int? y2 = null, int? x3 = null, int? y3 = null, int? x4 = null, int? y4 = null)
 	{
 		if (shouldParse)
 		{
-			var reference = CellReference.Parse(value, null);
+			var reference = ReferenceFunctionArgument.Parse(value, null);
 
 			var expected = new List<Position> { new(x1, y1) };
 
@@ -98,7 +98,7 @@ public class MiscTests : TestBase
 				expected.Add(new(x4.Value, y4.Value));
 			}
 
-			CheckResults(reference.ReferencedPositions, expected);
+			CheckResults(reference.Reference.ReferencedPositions, expected);
 		}
 		else
 		{

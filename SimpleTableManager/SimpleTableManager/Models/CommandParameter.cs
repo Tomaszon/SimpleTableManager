@@ -25,10 +25,14 @@ public struct CommandParameter
 
 	public IEnumerable<string> ParseFormats { get; set; }
 
+	public Type? ConstArgumentValueType { get; set; }
+
 	public CommandParameter(ParameterInfo parameterInfo)
 	{
 		Type = parameterInfo.ParameterType;
 		Name = parameterInfo.Name!;
+
+		ConstArgumentValueType = parameterInfo.GetCustomAttribute<ConstArgumentValueTypeAttribute>()?.Type;
 
 		MinValue = parameterInfo.GetCustomAttribute<MinValueAttribute>()?.Value;
 		MaxValue = parameterInfo.GetCustomAttribute<MaxValueAttribute>()?.Value;
@@ -41,8 +45,20 @@ public struct CommandParameter
 			Array.CreateInstance(innerElementType!, 0) :
 			parameterInfo.DefaultValue;
 
-		ParseFormats = (IsArray ? innerElementType! : parameterInfo.ParameterType)
-			.GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format);
+		var typeForFormat = IsArray ? innerElementType! : parameterInfo.ParameterType;
+
+		if (typeForFormat.IsInterface)
+		{
+			var implementingTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t =>
+				!t.IsInterface && t.IsAssignableTo(typeForFormat));
+
+			ParseFormats = implementingTypes.SelectMany(t =>
+				t.GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format));
+		}
+		else
+		{
+			ParseFormats = typeForFormat.GetCustomAttributes<ParseFormatAttribute>().Select(a => a.Format);
+		}
 
 		IsOptional =
 			parameterInfo.IsOptional ||
