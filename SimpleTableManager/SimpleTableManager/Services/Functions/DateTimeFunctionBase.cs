@@ -9,7 +9,7 @@ public abstract class DateTimeFunctionBase<TIn, TOut> : FunctionBase<DateTimeFun
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const => UnwrappedArguments.Cast<TOut>(),
+			DateTimeFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<TOut>(),
 			DateTimeFunctionOperator.Sum => Sum().Wrap(),
 			DateTimeFunctionOperator.Now => Now().Wrap(),
 

@@ -98,7 +98,7 @@ public partial class Table : CommandExecuterBase
 		var position = this[(Cell)sender];
 
 		var referrerCells = Content.Where(c =>
-			c.ContentFunction?.ReferenceArguments.Union(c.ContentFunction!.ReferenceNamedArguments.Values).Any(a =>
+			c.ContentFunction?.UnnamedReferenceArguments.Union(c.ContentFunction!.NamedReferenceArguments.Values).Any(a =>
 				a.Reference.ReferencedPositions.Any(p => p.Equals(position))) == true);
 
 		referrerCells.ForEach(c =>

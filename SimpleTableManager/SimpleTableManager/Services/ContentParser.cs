@@ -27,7 +27,8 @@ public static class ContentParser
 			var genType = typeof(ConstFunctionArgument<>).MakeGenericType(constArgumentValueType);
 
 			//TODO change to nameof unbound generic in dotnet10
-			var method = genType.GetMethod(nameof(ParsableBase<ConstFunctionArgument<int>>.TryParse), BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)!;
+			var method = genType.GetMethod(nameof(ParsableBase<ConstFunctionArgument<int>>.TryParse), 
+				BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)!;
 
 			var args = new object?[] { value, null, null };
 
@@ -49,12 +50,14 @@ public static class ContentParser
 		return converter.ConvertFromString(null, CultureInfo.CurrentUICulture, value);
 	}
 
+	[Obsolete]
 	public static List<IFunctionArgument> ParseFunctionArguments<TType>(IEnumerable<string> values)
 	where TType : IParsable<TType>
 	{
 		return [.. values.Select(v => ParseFunctionArgument<TType>(v))];
 	}
 
+	[Obsolete]
 	public static IFunctionArgument ParseFunctionArgument<TType>(string value)
 	where TType : IParsable<TType>
 	{

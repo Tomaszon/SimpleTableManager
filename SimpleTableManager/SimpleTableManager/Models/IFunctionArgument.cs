@@ -4,6 +4,7 @@ namespace SimpleTableManager.Models
 	{
 		public ArgumentName? Name { get; }
 
+		[MemberNotNullWhen(true, nameof(Name))]
 		public bool IsNamed => Name is not null;
 
 		IEnumerable<object>? Resolve();

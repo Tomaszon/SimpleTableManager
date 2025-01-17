@@ -19,21 +19,21 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 
 		return Operator switch
 		{
-			StringFunctionOperator.Const => UnwrappedArguments.Cast<object>(),
+			StringFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<object>(),
 
-			StringFunctionOperator.Con => string.Concat(UnwrappedArguments).Wrap(),
+			StringFunctionOperator.Con => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 
-			StringFunctionOperator.Join => string.Join(separator, UnwrappedArguments).Wrap(),
+			StringFunctionOperator.Join => string.Join(separator, UnwrappedUnnamedArguments).Wrap(),
 
-			StringFunctionOperator.Len => string.Concat(UnwrappedArguments).Length.Wrap<object>(),
+			StringFunctionOperator.Len => string.Concat(UnwrappedUnnamedArguments).Length.Wrap<object>(),
 
-			StringFunctionOperator.Split => UnwrappedArguments.SelectMany(p => p.Split(separator)),
+			StringFunctionOperator.Split => UnwrappedUnnamedArguments.SelectMany(p => p.Split(separator)),
 
-			StringFunctionOperator.Trim => UnwrappedArguments.Select(p => p.Trim(trim)),
+			StringFunctionOperator.Trim => UnwrappedUnnamedArguments.Select(p => p.Trim(trim)),
 
-			StringFunctionOperator.Blow => UnwrappedArguments.SelectMany(p => p.ToArray()).Cast<object>(),
+			StringFunctionOperator.Blow => UnwrappedUnnamedArguments.SelectMany(p => p.ToArray()).Cast<object>(),
 
-			StringFunctionOperator.Like => UnwrappedArguments.Any(pattern.IsMatch).Wrap<object>(),
+			StringFunctionOperator.Like => UnwrappedUnnamedArguments.Any(pattern.IsMatch).Wrap<object>(),
 
 			_ => throw GetInvalidOperatorException()
 		};

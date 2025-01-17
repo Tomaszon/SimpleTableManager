@@ -10,7 +10,7 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, DateTime>
 
 	protected override DateTime Sum()
 	{
-		return UnwrappedArguments.Aggregate(DateTime.MinValue, (a, c) => a.Add(new TimeSpan(c.Ticks)));
+		return UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => a.Add(new TimeSpan(c.Ticks)));
 	}
 
 	protected override DateTime Now()

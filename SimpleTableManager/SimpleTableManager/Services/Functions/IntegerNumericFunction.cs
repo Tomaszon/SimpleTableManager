@@ -1,25 +1,25 @@
 namespace SimpleTableManager.Services.Functions;
 
-[NamedArgument<int>(ArgumentName.Divider, 2)]
+[NamedArgument<long>(ArgumentName.Divider, 2)]
 [FunctionMappingType(typeof(long))]
 public class IntegerNumericFunction : NumericFunctionBase<long, long>
 {
 	public override string GetFriendlyName()
 	{
-		return typeof(int).GetFriendlyName();
+		return typeof(long).GetFriendlyName();
 	}
 
 	public override IEnumerable<long> ExecuteCore()
 	{
-		var divider = GetNamedArgument<int>(ArgumentName.Divider);
+		var divider = GetNamedArgument<long>(ArgumentName.Divider);
 
 		return Operator switch
 		{
-			NumericFunctionOperator.Rem => UnwrappedArguments.Select(p => DivRem(p, divider)),
+			NumericFunctionOperator.Rem => UnwrappedUnnamedArguments.Select(p => DivRem(p, divider)),
 
-			NumericFunctionOperator.And => And(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.And => And(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Or => Or(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Or => Or(UnwrappedUnnamedArguments).Wrap(),
 
 			_ => base.ExecuteCore()
 		};

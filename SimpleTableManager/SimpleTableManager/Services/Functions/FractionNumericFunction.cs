@@ -14,11 +14,11 @@ public class FractionNumericFunction : NumericFunctionBase<double, object>
 
 		return Operator switch
 		{
-			NumericFunctionOperator.Floor => UnwrappedArguments.Select(p => (int)double.Floor(p)).Cast<object>(),
+			NumericFunctionOperator.Floor => UnwrappedUnnamedArguments.Select(p => (int)double.Floor(p)).Cast<object>(),
 
-			NumericFunctionOperator.Ceiling => UnwrappedArguments.Select(p => (int)double.Ceiling(p)).Cast<object>(),
+			NumericFunctionOperator.Ceiling => UnwrappedUnnamedArguments.Select(p => (int)double.Ceiling(p)).Cast<object>(),
 
-			NumericFunctionOperator.Round => UnwrappedArguments.Select(p => double.Round(p, decimals)).Cast<object>(),
+			NumericFunctionOperator.Round => UnwrappedUnnamedArguments.Select(p => double.Round(p, decimals)).Cast<object>(),
 
 			_ => base.ExecuteCore()
 		};

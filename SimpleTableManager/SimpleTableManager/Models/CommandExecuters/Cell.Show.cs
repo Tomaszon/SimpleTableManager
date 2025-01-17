@@ -38,23 +38,23 @@ public partial class Cell
 			Type = ContentFunction.GetType().Name,
 			ContentFunction.Operator,
 
-			ReferenceNamedArguments = ContentFunction.ReferenceNamedArguments.ToDictionary(k => k.Key, v =>
+			ReferenceNamedArguments = ContentFunction.NamedReferenceArguments.ToDictionary(k => k.Key, v =>
 				new
 				{
 					Reference = v.Value.Reference.ToString(),
 					ReferencedValues = v.Value.TryResolve(out var result, out var error) && result?.Count() == 1 ? result.Single() : $"Error: '{error}'"
 				}),
 
-			ConstNamedArguments = ContentFunction.ConstNamedArguments.ToDictionary(k => k.Key, v => v.Value.Value),
+			ConstNamedArguments = ContentFunction.NamedConstArguments.ToDictionary(k => k.Key, v => v.Value.Value),
 
-			ReferenceArguments = ContentFunction.ReferenceArguments.Select(a =>
+			ReferenceArguments = ContentFunction.UnnamedReferenceArguments.Select(a =>
 				new
 				{
 					Reference = a.Reference.ToString(),
 					ReferencedValues = a.TryResolve(out var result, out var error) ? result : $"Error: '{error}'".Wrap()
 				}),
 
-			ConstArguments = ContentFunction.ConstArguments.Select(a => a.Value),
+			ConstArguments = ContentFunction.UnnamedConstArguments.Select(a => a.Value),
 
 			ReturnType = ContentFunction.GetOutType().GetFriendlyName(),
 			Error = ContentFunction.GetError()

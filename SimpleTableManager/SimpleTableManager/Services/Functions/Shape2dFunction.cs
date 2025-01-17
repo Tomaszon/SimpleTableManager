@@ -8,16 +8,16 @@ public class Shape2dFunction : FunctionBase<Shape2dOperator, IShape2d, object>
 {
 	public override string GetFriendlyName()
 	{
-		return UnwrappedArguments.FirstOrDefault()?.GetType().GetFriendlyName() ?? typeof(IShape2d).GetFriendlyName();
+		return UnwrappedUnnamedArguments.FirstOrDefault()?.GetType().GetFriendlyName() ?? typeof(IShape2d).GetFriendlyName();
 	}
 
 	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{
-			Shape2dOperator.Const => UnwrappedArguments.Select(p => p),
-			Shape2dOperator.Area => UnwrappedArguments.Select(p => p.Area).Cast<object>(),
-			Shape2dOperator.Perimeter => UnwrappedArguments.Select(p => p.Perimeter).Cast<object>(),
+			Shape2dOperator.Const => UnwrappedUnnamedArguments.Select(p => p),
+			Shape2dOperator.Area => UnwrappedUnnamedArguments.Select(p => p.Area).Cast<object>(),
+			Shape2dOperator.Perimeter => UnwrappedUnnamedArguments.Select(p => p.Perimeter).Cast<object>(),
 
 			_ => throw GetInvalidOperatorException()
 		};
@@ -30,7 +30,7 @@ public class Shape2dFunction : FunctionBase<Shape2dOperator, IShape2d, object>
 			Shape2dOperator.Area => typeof(double),
 			Shape2dOperator.Perimeter => typeof(double),
 
-			_ => UnwrappedArguments.FirstOrDefault()?.GetType() ?? typeof(IShape2d)
+			_ => UnwrappedUnnamedArguments.FirstOrDefault()?.GetType() ?? typeof(IShape2d)
 		};
 
 	}

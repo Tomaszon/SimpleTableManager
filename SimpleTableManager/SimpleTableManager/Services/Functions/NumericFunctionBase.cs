@@ -11,37 +11,37 @@ public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunct
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Const => UnwrappedArguments.Cast<TOut>(),
+			NumericFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<TOut>(),
 
-			NumericFunctionOperator.Neg => UnwrappedArguments.Select(a => -a).Cast<TOut>(),
+			NumericFunctionOperator.Neg => UnwrappedUnnamedArguments.Select(a => -a).Cast<TOut>(),
 
-			NumericFunctionOperator.Abs => UnwrappedArguments.Select(TIn.Abs).Cast<TOut>(),
+			NumericFunctionOperator.Abs => UnwrappedUnnamedArguments.Select(TIn.Abs).Cast<TOut>(),
 
-			NumericFunctionOperator.Sum => Sum(UnwrappedArguments).Wrap<TOut>(),
+			NumericFunctionOperator.Sum => Sum(UnwrappedUnnamedArguments).Wrap<TOut>(),
 
-			NumericFunctionOperator.Sub => Sub(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Sub => Sub(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Avg => Avg(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Avg => Avg(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Min => Min(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Min => Min(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Max => Max(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Max => Max(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Mul => Multiply(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Mul => Multiply(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Div => Divide(UnwrappedArguments).Wrap(),
+			NumericFunctionOperator.Div => Divide(UnwrappedUnnamedArguments).Wrap(),
 
-			NumericFunctionOperator.Pow => Power(UnwrappedArguments, GetNamedArgument<int>(ArgumentName.Power)),
+			NumericFunctionOperator.Pow => Power(UnwrappedUnnamedArguments, GetNamedArgument<int>(ArgumentName.Power)),
 
-			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedArguments),
+			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedUnnamedArguments),
 
-			NumericFunctionOperator.Log2 => LogN(UnwrappedArguments, 2),
+			NumericFunctionOperator.Log2 => LogN(UnwrappedUnnamedArguments, 2),
 
-			NumericFunctionOperator.Log10 => LogN(UnwrappedArguments, 10),
+			NumericFunctionOperator.Log10 => LogN(UnwrappedUnnamedArguments, 10),
 
-			NumericFunctionOperator.LogE => LogN(UnwrappedArguments, double.E),
+			NumericFunctionOperator.LogE => LogN(UnwrappedUnnamedArguments, double.E),
 
-			NumericFunctionOperator.LogN => LogN(UnwrappedArguments, GetNamedArgument<double>(ArgumentName.Base)),
+			NumericFunctionOperator.LogN => LogN(UnwrappedUnnamedArguments, GetNamedArgument<double>(ArgumentName.Base)),
 
 			_ => throw GetInvalidOperatorException()
 		};

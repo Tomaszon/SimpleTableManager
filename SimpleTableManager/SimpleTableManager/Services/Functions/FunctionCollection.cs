@@ -17,12 +17,12 @@ public static class FunctionCollection
 				(a.MappingType, FunctionType: f))).ToDictionary(k => k.MappingType, v => v.FunctionType);
 	}
 
-	public static IFunction GetFunction<T>(string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction<T>(string functionOperator, IEnumerable<IFunctionArgument> arguments)
 	{
-		return GetFunction(typeof(T), functionOperator, namedArguments, arguments);
+		return GetFunction(typeof(T), functionOperator, arguments);
 	}
 
-	public static IFunction GetFunction(Type argType, string functionOperator, Dictionary<ArgumentName, IFunctionArgument>? namedArguments, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction(Type argType, string functionOperator, IEnumerable<IFunctionArgument> arguments)
 	{
 		var functionType = Functions[argType];
 
@@ -39,17 +39,13 @@ public static class FunctionCollection
 
 		operatorProperty.SetValue(instance, op);
 
-		if (namedArguments is not null)
-		{
-			var namedArgumentsProperty = functionType.GetProperty(nameof(IFunction.NamedArguments))!;
-			
-			namedArgumentsProperty.SetValue(instance, namedArguments);
-		}
 		if (arguments is not null)
 		{
-			var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
+			// var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
 
-			argumentsProperty.SetValue(instance, arguments);
+			// argumentsProperty.SetValue(instance, arguments);
+
+			instance.Arguments = arguments;
 		}
 
 		return instance;

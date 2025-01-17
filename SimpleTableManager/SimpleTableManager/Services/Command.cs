@@ -46,34 +46,71 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		for (var i = 0; i < parameters.Count; i++)
 		{
+			List<FormatException> formatExceptions = [];
+
 			var parameter = parameters[i];
 
 			var paramType = parameter.Type;
 
 			if (parameter.IsArray)
 			{
-				var values = ParseArrayValues(parameters, i, paramType, parameter.ConstArgumentValueType);
-
-				validationResults.AddRange(ValidateCollectionArgument(values, parameter));
-
-				if (values is not null)
+				foreach (var possibleValueType in parameter.ConstArgumentPossibleValueTypes)
 				{
-					foreach (var e in values)
+					try
 					{
-						validationResults.AddRange(ValidateArgumentElement(e, parameter));
+						var values = ParseArrayValues(parameters, i, paramType, possibleValueType);
+
+						validationResults.AddRange(ValidateCollectionArgument(values, parameter));
+
+						if (values is not null)
+						{
+							foreach (var e in values)
+							{
+								validationResults.AddRange(ValidateArgumentElement(e, parameter));
+							}
+						}
+
+						parsedArguments.Add(values);
+
+						formatExceptions.Clear();
+
+						break;
+					}
+					catch (Exception ex) when (ex.GetInnermostException() is FormatException fe)
+					{
+						formatExceptions.Add(fe);
 					}
 				}
-
-				parsedArguments.Add(values);
 			}
 			else
 			{
-				var value = i < Arguments?.Count ?
-					ContentParser.ParseStringValue(paramType, Arguments[i], parameter.ConstArgumentValueType) : parameter.DefaultValue;
+				foreach (var t in parameter.ConstArgumentPossibleValueTypes)
+				{
+					try
+					{
+						var value = i < Arguments?.Count ?
+							ContentParser.ParseStringValue(paramType, Arguments[i], t) : parameter.DefaultValue;
 
-				validationResults.AddRange(ValidateArgumentElement(value, parameter));
+						validationResults.AddRange(ValidateArgumentElement(value, parameter));
 
-				parsedArguments.Add(value);
+						parsedArguments.Add(value);
+
+						formatExceptions.Clear();
+
+						break;
+					}
+					catch (Exception ex) when (ex.GetInnermostException() is FormatException fe)
+					{
+						formatExceptions.Add(fe);
+					}
+				}
+			}
+
+			if (formatExceptions.Count != 0)
+			{
+				throw formatExceptions.Count == 1 ?
+					formatExceptions.Single() :
+					new AggregateException("Can not format value to any of the possible types!", formatExceptions);
 			}
 		}
 

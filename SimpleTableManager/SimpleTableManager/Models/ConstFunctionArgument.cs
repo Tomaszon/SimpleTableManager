@@ -34,9 +34,15 @@ public class ConstFunctionArgument<T>(T value, ArgumentName? name = null) :
 
 		var value = (T?)ContentParser.ParseConstStringValue(typeof(T), vs)!;
 
-		ArgumentName? n = narg.Success ? Enum.Parse<ArgumentName>(narg.Value, true) : null;
+		ArgumentName? name = null;
 
-		return new ConstFunctionArgument<T>(value, n);
+		if (narg.Success)
+		{
+			name = Enum.TryParse<ArgumentName>(narg.Value, true, out var n) ?
+				(ArgumentName?)n : throw new FormatException($"Argument name '{narg.Value}' not found. Possible values: {string.Join("' '", Enum.GetValues<ArgumentName>())}");
+		}
+
+		return new ConstFunctionArgument<T>(value, name);
 	}
 
 	public override string ToString()

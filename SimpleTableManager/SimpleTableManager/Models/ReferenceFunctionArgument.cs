@@ -65,7 +65,13 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 			doc.GetActiveTable() :
 			doc.Tables.Single(t => t.Name.Equals(targ.Value, StringComparison.InvariantCultureIgnoreCase));
 
-		ArgumentName? n = narg.Success ? Enum.Parse<ArgumentName>(narg.Value, true) : null;
+		ArgumentName? name = null;
+
+		if (narg.Success)
+		{
+			name = Enum.TryParse<ArgumentName>(narg.Value, true, out var n) ?
+				(ArgumentName?)n : throw new FormatException($"Argument name '{narg.Value}' not found");
+		}
 
 		if (xarg.Success && yarg.Success)
 		{
@@ -75,7 +81,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 			var hl = !xarg.Value.Contains(Shared.REF_CHAR);
 			var vl = !yarg.Value.Contains(Shared.REF_CHAR);
 
-			return new ReferenceFunctionArgument(new(t.Id, new(x, y, hl, vl)), n);
+			return new ReferenceFunctionArgument(new(t.Id, new(x, y, hl, vl)), name);
 		}
 		else
 		{
@@ -89,7 +95,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 			var hl2 = !x2s.Contains(Shared.REF_CHAR);
 			var vl2 = !y2s.Contains(Shared.REF_CHAR);
 
-			return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, vl2, vl2)), n);
+			return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, vl2, vl2)), name);
 		}
 	}
 

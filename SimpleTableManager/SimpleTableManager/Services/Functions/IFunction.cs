@@ -2,17 +2,15 @@ namespace SimpleTableManager.Services.Functions;
 
 public interface IFunction
 {
-	Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; }
-
 	IEnumerable<IFunctionArgument> Arguments { get; set; }
 
-	IEnumerable<IConstFunctionArgument> ConstArguments { get; }
+	IEnumerable<IConstFunctionArgument> UnnamedConstArguments { get; }
 
-	IEnumerable<ReferenceFunctionArgument> ReferenceArguments { get; }
+	IEnumerable<ReferenceFunctionArgument> UnnamedReferenceArguments { get; }
 
-	Dictionary<ArgumentName, IConstFunctionArgument> ConstNamedArguments { get; }
+	Dictionary<ArgumentName, IConstFunctionArgument> NamedConstArguments { get; }
 
-	Dictionary<ArgumentName, ReferenceFunctionArgument> ReferenceNamedArguments { get; }
+	Dictionary<ArgumentName, ReferenceFunctionArgument> NamedReferenceArguments { get; }
 
 	Enum Operator { get; set; }
 
@@ -36,7 +34,7 @@ public interface IFunction
 
 	void ShiftReferenceArgumentPositions(Size size)
 	{
-		ReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPositions(size));
-		ReferenceNamedArguments.ForEach(a => a.Value.Reference.ShiftReferencedPositions(size));
+		UnnamedReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPositions(size));
+		NamedReferenceArguments.ForEach(a => a.Value.Reference.ShiftReferencedPositions(size));
 	}
 }

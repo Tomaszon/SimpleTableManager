@@ -6,26 +6,38 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	where TOpertor : struct, Enum
 {
-	public Dictionary<ArgumentName, IFunctionArgument> NamedArguments { get; set; } = [];
-
 	public IEnumerable<IFunctionArgument> Arguments { get; set; } = [];
 
-	protected IEnumerable<TIn> UnwrappedArguments => UnwrapArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
+	public IEnumerable<IFunctionArgument> UnnamedArguments =>
+		Arguments.Where(a => !a.IsNamed);
 
-	public IEnumerable<ReferenceFunctionArgument> ReferenceArguments => Arguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>();
+	public Dictionary<ArgumentName, IFunctionArgument> NamedArguments =>
+		Arguments.Where(a => a.IsNamed)
+			.ToDictionary(k => (ArgumentName)k.Name!, v => v);
 
-	public IEnumerable<IConstFunctionArgument> ConstArguments => Arguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>();
+	public IEnumerable<ReferenceFunctionArgument> UnnamedReferenceArguments =>
+		UnnamedArguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>();
 
-	public Dictionary<ArgumentName, IConstFunctionArgument> ConstNamedArguments => NamedArguments.Where(a => a.Value is IConstFunctionArgument).ToDictionary(k => k.Key, v => (IConstFunctionArgument)v.Value);
+	public IEnumerable<IConstFunctionArgument> UnnamedConstArguments =>
+		UnnamedArguments.Where(a => a is IConstFunctionArgument).Cast<IConstFunctionArgument>();
 
-	public Dictionary<ArgumentName, ReferenceFunctionArgument> ReferenceNamedArguments => NamedArguments.Where(a => a.Value is ReferenceFunctionArgument).ToDictionary(k => k.Key, v => (ReferenceFunctionArgument)v.Value);
+	public Dictionary<ArgumentName, IConstFunctionArgument> NamedConstArguments =>
+		Arguments.Where(a => a is IConstFunctionArgument && a.IsNamed)
+			.ToDictionary(k => (ArgumentName)k.Name!, v => (IConstFunctionArgument)v);
 
-	protected IEnumerable<TIn> UnwrapArgumentsAs(Func<object, TIn>? transformation = null)
+	public Dictionary<ArgumentName, ReferenceFunctionArgument> NamedReferenceArguments =>
+		Arguments.Where(a => a is ReferenceFunctionArgument && a.IsNamed)
+			.ToDictionary(k => (ArgumentName)k.Name!, v => (ReferenceFunctionArgument)v);
+
+	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<object, TIn>? transformation = null)
 	{
 		transformation ??= a => (TIn)a;
 
-		return Arguments.SelectMany(a => a.Resolve() is var result && result is not null ? result : throw new NullReferenceException()).Select(transformation);
+		return UnnamedArguments.SelectMany(a => a.Resolve() is var result && result is not null ? result : throw new NullReferenceException()).Select(transformation);
 	}
+
+	protected IEnumerable<TIn> UnwrappedUnnamedArguments =>
+		UnwrapUnnamedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
 
 	public TOpertor Operator { get; set; }
 
@@ -124,7 +136,8 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 			var result = results.Count() == 1 ? results.Single() : throw new ArgumentException("");
 
-			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
+			// return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
+			return (T)result;
 		}
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })
@@ -142,14 +155,14 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public override string? ToString()
 	{
-		var constArgs = ConstArguments.Select(a => a.Value);
+		var constArgs = UnnamedConstArguments.Select(a => a.Value);
 
-		var refArgs = ReferenceArguments
+		var refArgs = UnnamedReferenceArguments
 			.Select(a => a.Reference.ToShortString());
 
-		var constNamedArgs = ConstNamedArguments.Select(p => $"{p.Key}:{p.Value.Value}");
+		var constNamedArgs = NamedConstArguments.Select(p => $"{p.Key}:{p.Value.Value}");
 
-		var refNamedArgs = ReferenceNamedArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
+		var refNamedArgs = NamedReferenceArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
 
 		var fnName = GetFriendlyName();
 

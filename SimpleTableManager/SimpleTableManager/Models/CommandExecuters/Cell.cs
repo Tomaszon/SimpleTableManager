@@ -117,6 +117,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
 
+	[Obsolete]
 	public bool TrySeparateArgumentsAs<TType>(string[] arguments, [NotNullWhen(true)] out (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>)? result, [NotNullWhen(true)] out Type? resultType)
 	where TType : IParsable<TType>
 	{
@@ -138,6 +139,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		}
 	}
 
+	[Obsolete]
 	public (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArgumentsAs<TType>(string[] arguments)
 	where TType : IParsable<TType>
 	{
@@ -158,7 +160,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+		ContentFunction?.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
 			var table = doc[r.ReferencedTableId];
 
@@ -180,7 +182,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+		ContentFunction?.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
 			var table = doc[r.ReferencedTableId];
 
@@ -202,7 +204,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+			cell.ContentFunction.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
 			{
 				var table = doc[r.ReferencedTableId];
 
@@ -232,7 +234,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
+			cell.ContentFunction.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
 			{
 				var table = doc[r.ReferencedTableId];
 

@@ -30,4 +30,9 @@ public static class Extensions
 	{
 		return !@enum.HasFlag(flag);
 	}
+
+	public static Exception GetInnermostException(this Exception ex)
+	{
+		return ex.InnerException is null ? ex : ex.InnerException.GetInnermostException();
+	}
 }
