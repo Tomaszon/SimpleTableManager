@@ -16,30 +16,37 @@ public static class ContentParser
 		return typedArray;
 	}
 
-	public static object ParseStringValue(Type dataType, string value, Type? constArgumentValueType)
+	public static object? ParseStringValue(Type dataType, string value, Type? constArgumentValueType)
 	{
-		//IDEA make it generic for other interfaces?
 		if (dataType == typeof(IFunctionArgument) && ReferenceFunctionArgument.TryParse(value, null, out var referenceFunctionArgument))
 		{
 			return referenceFunctionArgument;
 		}
-		else
+		else if (dataType == typeof(IFunctionArgument) && constArgumentValueType is not null)
 		{
-			var targetType = constArgumentValueType ?? dataType;
+			var genType = typeof(ConstFunctionArgument<>).MakeGenericType(constArgumentValueType);
 
-			var converter = targetType.Namespace == $"{nameof(SimpleTableManager)}.{nameof(Models)}" ?
-				(TypeConverter)Activator.CreateInstance(typeof(ParsableStringConverter<>).MakeGenericType(targetType))! :
-				TypeDescriptor.GetConverter(targetType);
+			//TODO change to nameof unbound generic in dotnet10
+			var method = genType.GetMethod(nameof(ParsableBase<ConstFunctionArgument<int>>.TryParse), BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)!;
 
-			var result = converter.ConvertFromString(null, CultureInfo.CurrentUICulture, value);
+			var args = new object?[] { value, null, null };
 
-			if (dataType == typeof(IFunctionArgument) && constArgumentValueType is not null)
+			if ((bool)method.Invoke(null, args)!)
 			{
-				return Activator.CreateInstance(typeof(ConstFunctionArgument<>).MakeGenericType(constArgumentValueType), result)!;
+				return (IConstFunctionArgument)args[2]!;
 			}
-
-			return result!;
 		}
+
+		return ParseConstStringValue(dataType, value);
+	}
+
+	public static object? ParseConstStringValue(Type targetType, string value)
+	{
+		var converter = targetType.Namespace == $"{nameof(SimpleTableManager)}.{nameof(Models)}" ?
+			(TypeConverter)Activator.CreateInstance(typeof(ParsableStringConverter<>).MakeGenericType(targetType))! :
+			TypeDescriptor.GetConverter(targetType);
+
+		return converter.ConvertFromString(null, CultureInfo.CurrentUICulture, value);
 	}
 
 	public static List<IFunctionArgument> ParseFunctionArguments<TType>(IEnumerable<string> values)

@@ -1,19 +1,22 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("TableName,{0}x1,{0}y1-{0}x2,{0}y2 ({0} for axis unlock)",
-"^(?<t>.+),(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
-[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+	"^(?<t>.+),(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
+	[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 [ParseFormat("{0}x1,{0}y1-{0}x2,{0}y2 ({0} for axis unlock)",
-"^(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
-[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
-[ParseFormat("TableName,{0}x,{0}y ({0} for axis unlock)",
-"^(?<t>.+),(?<x>{1}?\\d+),(?<y>{1}?\\d+)$",
-[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
-[ParseFormat("{0}x,{0}y ({0} for axis unlock)",
-"^(?<x>{1}?\\d+),(?<y>{1}?\\d+)$",
-[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
-public class ReferenceFunctionArgument(CellReference reference) : ParsableBase<ReferenceFunctionArgument>, IParsable<ReferenceFunctionArgument>, IParseCore<ReferenceFunctionArgument>, IFunctionArgument
+	"^(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
+	[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+[ParseFormat("ArgName{0}TableName,{1}x,{1}y ({1} for axis unlock, ArgName{0} for argument naming, TableName for referring to other tables)",
+	"^((?<n>.+){0})?((?<t>.+),)?(?<x>{2}?\\d+),(?<y>{2}?\\d+)$",
+	[Shared.NAMED_ARG_SEPARATOR, Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
+public class ReferenceFunctionArgument(CellReference reference, ArgumentName? name = null) :
+	ParsableBase<ReferenceFunctionArgument>,
+	IParsable<ReferenceFunctionArgument>,
+	IParseCore<ReferenceFunctionArgument>,
+	IFunctionArgument
 {
+	public ArgumentName? Name { get; } = name;
+
 	public CellReference Reference { get; set; } = reference;
 
 	public IEnumerable<object>? Resolve()
@@ -47,6 +50,7 @@ public class ReferenceFunctionArgument(CellReference reference) : ParsableBase<R
 
 	public static ReferenceFunctionArgument ParseCore(GroupCollection args, IFormatProvider? formatProvider)
 	{
+		var narg = args["n"];
 		var targ = args["t"];
 		var xarg = args["x"];
 		var yarg = args["y"];
@@ -61,12 +65,17 @@ public class ReferenceFunctionArgument(CellReference reference) : ParsableBase<R
 			doc.GetActiveTable() :
 			doc.Tables.Single(t => t.Name.Equals(targ.Value, StringComparison.InvariantCultureIgnoreCase));
 
+		ArgumentName? n = narg.Success ? Enum.Parse<ArgumentName>(narg.Value, true) : null;
+
 		if (xarg.Success && yarg.Success)
 		{
 			var x = int.Parse(xarg.Value.Trim(Shared.REF_CHAR));
 			var y = int.Parse(yarg.Value.Trim(Shared.REF_CHAR));
 
-			return new ReferenceFunctionArgument(new(t.Id, new(x, y, !xarg.Value.Contains(Shared.REF_CHAR), !yarg.Value.Contains(Shared.REF_CHAR))));
+			var hl = !xarg.Value.Contains(Shared.REF_CHAR);
+			var vl = !yarg.Value.Contains(Shared.REF_CHAR);
+
+			return new ReferenceFunctionArgument(new(t.Id, new(x, y, hl, vl)), n);
 		}
 		else
 		{
@@ -75,12 +84,17 @@ public class ReferenceFunctionArgument(CellReference reference) : ParsableBase<R
 			var x2 = int.Parse(x2s.Trim(Shared.REF_CHAR));
 			var y2 = int.Parse(y2s.Trim(Shared.REF_CHAR));
 
-			return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, !x1s.Contains(Shared.REF_CHAR), !y1s.Contains(Shared.REF_CHAR)), new(x2, y2, !x2s.Contains(Shared.REF_CHAR), !y2s.Contains(Shared.REF_CHAR))));
+			var hl1 = !x1s.Contains(Shared.REF_CHAR);
+			var vl1 = !y1s.Contains(Shared.REF_CHAR);
+			var hl2 = !x2s.Contains(Shared.REF_CHAR);
+			var vl2 = !y2s.Contains(Shared.REF_CHAR);
+
+			return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, vl2, vl2)), n);
 		}
 	}
 
-    public override string ToString()
-    {
-        return Reference.ToString();
-    }
+	public override string ToString()
+	{
+		return Reference.ToString();
+	}
 }

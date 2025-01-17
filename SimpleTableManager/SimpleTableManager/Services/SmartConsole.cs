@@ -93,7 +93,8 @@ public partial class SmartConsole
 				_lastHelp += $"Summary:\n        {info}\n    ";
 			}
 
-			_lastHelp += $"Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    ";
+			//TODO switch for showing arg names hint
+			_lastHelp += $"Named argument names: '{string.Join("' '", Enum.GetNames<ArgumentName>())}'\n    Parameters:\n        {(parameters.Count > 0 ? string.Join("\n        ", parameters) : "No parameters")}\n    ";
 
 			if (method.GetCustomAttribute<CommandShortcutAttribute>()?.Key is var key && key is not null)
 			{
