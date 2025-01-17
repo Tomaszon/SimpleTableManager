@@ -44,7 +44,7 @@ public class FunctionTests : TestBase
 	[Test]
 	public void FractionTest1()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.Sum, new[] { 4d, 3d });
+		var fn = CreateFunction(NumericFunctionOperator.Sum, [4d, 3d]);
 
 		CheckResults(fn.Execute(), 7d.Wrap());
 	}
@@ -52,25 +52,25 @@ public class FunctionTests : TestBase
 	[Test]
 	public void FractionTest2()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.Sqrt, new[] { 4d, 9d, 16d });
+		var fn = CreateFunction(NumericFunctionOperator.Sqrt, [4d, 9d, 16d]);
 
-		CheckResults(fn.Execute(), new[] { 2d, 3d, Math.Sqrt(16d) });
+		CheckResults(fn.Execute(), [2d, 3d, Math.Sqrt(16d)]);
 	}
 
 	[Test]
 	public void FractionTest3()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.LogN, new[] { 2d, 4d, 16d });
+		var fn = CreateFunction(NumericFunctionOperator.LogN, [2d, 4d, 16d ]);
 
-		CheckResults(fn.Execute(), new[] { 1d, 2d, Math.Log2(16d) });
+		CheckResults(fn.Execute(), [1d, 2d, Math.Log2(16d)]);
 	}
 
 	[Test]
 	public void FractionTest4()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.LogE, new[] { double.E, double.E * double.E });
+		var fn = CreateFunction(NumericFunctionOperator.LogE, [double.E, double.E * double.E]);
 
-		CheckResults(fn.Execute(), new[] { 1d, 2d });
+		CheckResults(fn.Execute(), [1d, 2d]);
 	}
 
 	[Test]
@@ -79,11 +79,12 @@ public class FunctionTests : TestBase
 	[TestCase(CharacterFunctionOperator.Repeat, new[] { 'a' }, "aaa")]
 	public void CharTest(CharacterFunctionOperator operation, char[] values, params string[] results)
 	{
-		var na = new Dictionary<ArgumentName, string>()
-			{
-				{ ArgumentName.Separator, "," },
-				{ ArgumentName.Count, "3" }
-			};
+		var na = new IFunctionArgument[]
+		{
+			new ConstFunctionArgument<char>(ArgumentName.Separator, ","),
+			new ConstFunctionArgument<char>(ArgumentName.Count, 3)
+		};
+
 		var fn = CreateFunction(operation, na, values);
 
 		CheckResults(fn.Execute(), results);
@@ -97,10 +98,11 @@ public class FunctionTests : TestBase
 	[TestCase(StringFunctionOperator.Trim, new[] { "a ", " b" }, new[] { "a", "b" })]
 	public void StringTest(StringFunctionOperator operation, string[] values, params object[] results)
 	{
-		var na = new Dictionary<ArgumentName, string>()
+		var na = new IFunctionArgument[]
 			{
-				{ ArgumentName.Separator, "|" }
+				new ConstFunctionArgument<string>(ArgumentName.Separator, "|")
 			};
+
 		var fn = CreateFunction(operation, na, values);
 
 		CheckResults(fn.Execute(), results);
@@ -114,7 +116,7 @@ public class FunctionTests : TestBase
 
 		var fnd = CreateFunction(DateTimeFunctionOperator.Const, result);
 
-		CheckResults(fnd.Execute(), new[] { result });
+		CheckResults(fnd.Execute(), [result]);
 	}
 
 	// [Test]

@@ -60,7 +60,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		{
 			try
 			{
-				return ExecuteCore().ToList();
+				return [.. ExecuteCore()];
 			}
 			catch (InvalidCastException)
 			{
@@ -83,6 +83,12 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 			catch (ArgumentException)
 			{
 				SetError("Multiple values");
+
+				throw;
+			}
+			catch (FormatException)
+			{
+				SetError("Argument error");
 
 				throw;
 			}
@@ -136,8 +142,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 			var result = results.Count() == 1 ? results.Single() : throw new ArgumentException("");
 
-			// return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
-			return (T)result;
+			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
 		}
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })

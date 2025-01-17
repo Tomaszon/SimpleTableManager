@@ -17,34 +17,16 @@ public static class FunctionCollection
 				(a.MappingType, FunctionType: f))).ToDictionary(k => k.MappingType, v => v.FunctionType);
 	}
 
-	public static IFunction GetFunction<T>(string functionOperator, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction<T>(Enum functionOperator, IEnumerable<IFunctionArgument> arguments)
 	{
-		return GetFunction(typeof(T), functionOperator, arguments);
-	}
-
-	public static IFunction GetFunction(Type argType, string functionOperator, IEnumerable<IFunctionArgument> arguments)
-	{
-		var functionType = Functions[argType];
-
-		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
+		var functionType = Functions[typeof(T)];
 
 		var instance = (IFunction)Activator.CreateInstance(functionType)!;
 
-		var operatorProperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
-
-		if (!Enum.TryParse(operatorProperty.PropertyType, functionOperator, true, out var op))
-		{
-			throw new ArgumentException($"Operator '{functionOperator}' is not valid! Values={string.Join('|', Enum.GetNames(operatorProperty.PropertyType))}");
-		}
-
-		operatorProperty.SetValue(instance, op);
+		instance.Operator = functionOperator;
 
 		if (arguments is not null)
 		{
-			// var argumentsProperty = functionType.GetProperty(nameof(IFunction.Arguments), bindingFlags)!;
-
-			// argumentsProperty.SetValue(instance, arguments);
-
 			instance.Arguments = arguments;
 		}
 

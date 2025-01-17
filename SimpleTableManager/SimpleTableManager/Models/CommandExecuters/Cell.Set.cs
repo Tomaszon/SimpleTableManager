@@ -33,12 +33,12 @@ public partial class Cell
 		}
 	}
 
-	private void SetFunction<T>(Enum functionOperator, params IEnumerable<IFunction> arguments)
+	private void SetFunction<T>(Enum functionOperator, params IEnumerable<IFunctionArgument> arguments)
 		where T : IParsable<T>
 	{
-		// var newFunction = FunctionCollection.GetFunction<T>(functionOperator.ToString(), arguments);
+		var newFunction = FunctionCollection.GetFunction<T>(functionOperator, arguments);
 
-		// SetContent(newFunction);
+		SetContent(newFunction);
 	}
 
 	[CommandFunction]
@@ -89,18 +89,7 @@ public partial class Cell
 	[CommandFunction(WithSelector = true)]
 	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [PossibleValueTypes<long>] params IFunctionArgument[] arguments)
 	{
-		//TODO
-		// SetFunction<long>(functionOperator, arguments);
-
-		IFunction newFunction = new IntegerNumericFunction()
-		{
-			Operator = functionOperator,
-			Arguments = arguments
-		};
-
-		newFunction = FunctionCollection.GetFunction<long>(functionOperator.ToString(), arguments);
-
-		SetContent(newFunction);
+		SetFunction<long>(functionOperator, arguments);
 	}
 
 	[CommandFunction]

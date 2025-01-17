@@ -5,18 +5,17 @@ namespace SimpleTableManager.Tests;
 public class TestBase
 {
 	protected static IFunction CreateFunction<T>(Enum functionOperator, params IEnumerable<T> args)
-	where T : IParsable<T>
+		where T : IParsable<T>
 	{
-		return CreateFunction(functionOperator, null, args);
+		return FunctionCollection.GetFunction<T>(functionOperator,
+		  args.Select(e => new ConstFunctionArgument<T>(e)));
 	}
 
-	protected static IFunction CreateFunction<T>(Enum functionOperator, Dictionary<ArgumentName, string>? namedArguments, params IEnumerable<T> args)
-	where T : IParsable<T>
+	protected static IFunction CreateFunction<T>(Enum functionOperator, IEnumerable<IFunctionArgument> namedArguments, params IEnumerable<T> args)
+		where T : IParsable<T>
 	{
-		// return FunctionCollection.GetFunction<T>(functionOperator.ToString(),
-		//  namedArguments?.ToDictionary(k => k.Key, v => (IFunctionArgument)new ConstFunctionArgument<string>(v.Value)),
-		//   args.Select(e => new ConstFunctionArgument<T>(e)));
-		return null;
+		return FunctionCollection.GetFunction<T>(functionOperator,
+		  args.Select(e => (IFunctionArgument)new ConstFunctionArgument<T>(e)).Union(namedArguments));
 	}
 
 	protected static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)

@@ -15,7 +15,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 	IParseCore<ReferenceFunctionArgument>,
 	IFunctionArgument
 {
-	public ArgumentName? Name { get; } = name;
+	public ArgumentName? Name { get; set; } = name;
 
 	public CellReference Reference { get; set; } = reference;
 
@@ -101,6 +101,6 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public override string ToString()
 	{
-		return Reference.ToString();
+		return $"{(Name is not null ? $"{Name}:" : "")}{Reference}";
 	}
 }
