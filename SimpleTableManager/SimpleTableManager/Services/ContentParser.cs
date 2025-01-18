@@ -5,26 +5,26 @@ namespace SimpleTableManager.Services;
 
 public static class ContentParser
 {
-	public static Array? ParseStringValues(Type arrayType, List<string> values, Type? constArgumentValueType)
+	public static Array? ParseStringValues(Type arrayType, List<string> values, Type? valueType)
 	{
 		var elementType = arrayType.GetElementType() ?? arrayType.GenericTypeArguments.Single();
 
 		var typedArray = Array.CreateInstance(elementType, values.Count);
 
-		Array.Copy(values.Select(a => ParseStringValue(elementType, a, constArgumentValueType)).ToArray(), typedArray, values.Count);
+		Array.Copy(values.Select(a => ParseStringValue(elementType, a, valueType)).ToArray(), typedArray, values.Count);
 
 		return typedArray;
 	}
 
-	public static object? ParseStringValue(Type dataType, string value, Type? constArgumentValueType)
+	public static object? ParseStringValue(Type dataType, string value, Type? valueType)
 	{
 		if (dataType == typeof(IFunctionArgument) && ReferenceFunctionArgument.TryParse(value, null, out var referenceFunctionArgument))
 		{
 			return referenceFunctionArgument;
 		}
-		else if (dataType == typeof(IFunctionArgument) && constArgumentValueType is not null)
+		else if (dataType == typeof(IFunctionArgument) && valueType is not null)
 		{
-			var genType = typeof(ConstFunctionArgument<>).MakeGenericType(constArgumentValueType);
+			var genType = typeof(ConstFunctionArgument<>).MakeGenericType(valueType);
 
 			//TODO change to nameof unbound generic in dotnet10
 			var method = genType.GetMethod(nameof(ParsableBase<ConstFunctionArgument<int>>.TryParse), 

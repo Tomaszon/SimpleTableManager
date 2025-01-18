@@ -41,91 +41,84 @@ public partial class Cell
 		SetContent(newFunction);
 	}
 
-	[CommandFunction]
+	private void SetFunction(Type valueType, string functionOperator, params IEnumerable<IFunctionArgument> arguments)
+	{
+		var newFunction = FunctionCollection.GetFunction(valueType, functionOperator, arguments);
+
+		SetContent(newFunction);
+	}
+
+	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(
-		[ConstArgumentPossibleValueTypes<long, double, string>]
-		params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, bool, TimeOnly, DateOnly, DateTime, string>] params IFunctionArgument[] contents)
 	{
-		ThrowIf(contents.Length == 0, "Argument count must be greater then 0!");
-
-		// var args =
-		// 	TrySeparateArgumentsAs<long>(contents, out var r, out var t) ? r.Value :
-		// 	TrySeparateArgumentsAs<double>(contents, out r, out t) ? r.Value :
-		// 	TrySeparateArgumentsAs<char>(contents, out r, out t) ? r.Value :
-		// 	TrySeparateArgumentsAs<bool>(contents, out r, out t) ? r.Value :
-		// 	TrySeparateArgumentsAs<TimeOnly>(contents, out r, out t) ? r.Value :
-		// 	TrySeparateArgumentsAs<DateOnly>(contents, out r, out t) ? r.Value :
-		// 	TrySeparateArgumentsAs<DateTime>(contents, out r, out t) ? r.Value :
-		// 	SeparateArgumentsAs<string>(contents);
-
-		// SetContent(FunctionCollection.GetFunction(t ?? typeof(string), "const", args.Item1, args.Item2));
+		SetFunction(type, "const", contents);
 	}
 
 	[CommandFunction]
-	public void SetRectangleContentFunction(Shape2dOperator functionOperator, params string[] arguments)
+	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<Rectangle>(functionOperator, arguments);
+		SetFunction<Rectangle>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetEllipseContentFunction(Shape2dOperator functionOperator, params string[] arguments)
+	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<Ellipse>(functionOperator, arguments);
+		SetFunction<Ellipse>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, params string[] arguments)
+	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<RightTriangle>(functionOperator, arguments);
+		SetFunction<RightTriangle>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetStringContentFunction(StringFunctionOperator functionOperator, [PossibleValueTypes<string>] params IFunctionArgument[] arguments)
+	public void SetStringContentFunction(StringFunctionOperator functionOperator, [ValueTypes<string>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<string>(functionOperator, arguments);
+		SetFunction<string>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [PossibleValueTypes<long>] params IFunctionArgument[] arguments)
+	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [ValueTypes<long>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<long>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, params string[] arguments)
+	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, [ValueTypes<double>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<double>(functionOperator, arguments);
+		SetFunction<double>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, params string[] arguments)
+	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [ValueTypes<bool>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<bool>(functionOperator, arguments);
+		SetFunction<bool>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, params string[] arguments)
+	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [ValueTypes<char>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<char>(functionOperator, arguments);
+		SetFunction<char>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, params string[] arguments)
+	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateTime>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<DateTime>(functionOperator, arguments);
+		SetFunction<DateTime>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, params string[] arguments)
+	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateOnly>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<DateOnly>(functionOperator, arguments);
+		SetFunction<DateOnly>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, params string[] arguments)
+	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<TimeOnly>] params IFunctionArgument[] arguments)
 	{
-		// SetFunction<TimeOnly>(functionOperator, arguments);
+		SetFunction<TimeOnly>(functionOperator, arguments);
 	}
 
 	[CommandFunction]

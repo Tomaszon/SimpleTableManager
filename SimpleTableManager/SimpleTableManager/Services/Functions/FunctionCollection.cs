@@ -17,13 +17,20 @@ public static class FunctionCollection
 				(a.MappingType, FunctionType: f))).ToDictionary(k => k.MappingType, v => v.FunctionType);
 	}
 
-	public static IFunction GetFunction<T>(Enum functionOperator, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction(Type valueType, string functionOperator, IEnumerable<IFunctionArgument> arguments)
 	{
-		var functionType = Functions[typeof(T)];
+		var functionType = Functions[valueType];
 
 		var instance = (IFunction)Activator.CreateInstance(functionType)!;
 
-		instance.Operator = functionOperator;
+		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
+
+		var operatorProperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
+
+		var op = Enum.Parse(operatorProperty.PropertyType, functionOperator,
+		true);
+
+		operatorProperty.SetValue(instance, op);
 
 		if (arguments is not null)
 		{
@@ -31,6 +38,11 @@ public static class FunctionCollection
 		}
 
 		return instance;
+	}
+
+	public static IFunction GetFunction<T>(Enum functionOperator, IEnumerable<IFunctionArgument> arguments)
+	{
+		return GetFunction(typeof(T), functionOperator.ToString(), arguments);
 	}
 
 	private static Type GetRootClass(Type type)

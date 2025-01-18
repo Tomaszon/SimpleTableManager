@@ -56,7 +56,7 @@ public class ConstFunctionArgument<T>(T? value) :
 	public override string ToString()
 	{
 		return (RawValue is not null ? $"{Name}:{RawValue}" : null) ??
-			Value?.ToString() ?? 
+			Value?.ToString() ??
 			$"({typeof(T).GetFriendlyName()})null";
 	}
 }

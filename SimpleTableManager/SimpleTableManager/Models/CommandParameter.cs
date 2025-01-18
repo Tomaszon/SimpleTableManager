@@ -25,14 +25,14 @@ public struct CommandParameter
 
 	public IEnumerable<string> ParseFormats { get; set; }
 
-	public Type?[] ConstArgumentPossibleValueTypes { get; set; }
+	public Type?[] ValueTypes { get; set; }
 
 	public CommandParameter(ParameterInfo parameterInfo)
 	{
 		Type = parameterInfo.ParameterType;
 		Name = parameterInfo.Name!;
 
-		ConstArgumentPossibleValueTypes = parameterInfo.GetCustomAttribute<ConstArgumentPossibleValueTypesAttribute>()?.PossibleTypes ?? [null];
+		ValueTypes = parameterInfo.GetCustomAttribute<ValueTypesAttribute>()?.PossibleTypes ?? [null];
 
 		MinValue = parameterInfo.GetCustomAttribute<MinValueAttribute>()?.Value;
 		MaxValue = parameterInfo.GetCustomAttribute<MaxValueAttribute>()?.Value;

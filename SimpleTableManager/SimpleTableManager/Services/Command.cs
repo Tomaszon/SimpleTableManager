@@ -44,7 +44,11 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		List<object?> parsedArguments = [];
 		List<string> validationResults = [];
 
-		for (var i = 0; i < parameters.Count; i++)
+		Type? successfulValueType = null;
+
+		var autoTypeSelector = Reference?.WithSelector == true && Arguments?.FirstOrDefault() == "{autoTypeSelector}";
+
+		for (var i = autoTypeSelector ? 1 : 0; i < parameters.Count; i++)
 		{
 			List<FormatException> formatExceptions = [];
 
@@ -54,11 +58,11 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 			if (parameter.IsArray)
 			{
-				foreach (var possibleValueType in parameter.ConstArgumentPossibleValueTypes)
+				foreach (var valueType in parameter.ValueTypes)
 				{
 					try
 					{
-						var values = ParseArrayValues(parameters, i, paramType, possibleValueType);
+						var values = ParseArrayValues(parameters, i, paramType, valueType);
 
 						validationResults.AddRange(ValidateCollectionArgument(values, parameter));
 
@@ -72,6 +76,8 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 						parsedArguments.Add(values);
 
+						successfulValueType = valueType;
+
 						formatExceptions.Clear();
 
 						break;
@@ -84,16 +90,18 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 			}
 			else
 			{
-				foreach (var t in parameter.ConstArgumentPossibleValueTypes)
+				foreach (var valueType in parameter.ValueTypes)
 				{
 					try
 					{
 						var value = i < Arguments?.Count ?
-							ContentParser.ParseStringValue(paramType, Arguments[i], t) : parameter.DefaultValue;
+							ContentParser.ParseStringValue(paramType, Arguments[i], valueType) : parameter.DefaultValue;
 
 						validationResults.AddRange(ValidateArgumentElement(value, parameter));
 
 						parsedArguments.Add(value);
+
+						successfulValueType = valueType;
 
 						formatExceptions.Clear();
 
@@ -121,13 +129,18 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		try
 		{
+			if (autoTypeSelector)
+			{
+				parsedArguments.Insert(0, successfulValueType);
+			}
+
 			instances.ForEach(i =>
 			{
 				var attribute = method.GetCustomAttribute<CommandFunctionAttribute>()!;
 
 				var endReferencedObject = attribute.IgnoreReferencedObject ? i : i.GetEndReferencedObject();
 
-				results.Add(method.Invoke(endReferencedObject, [.. parsedArguments]));
+				results.Add(method.Invoke(endReferencedObject, parsedArguments.ToArray()));
 
 				if (attribute!.StateModifier)
 				{
@@ -253,7 +266,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		var methodName = GetReferenceMethodNameRecursive(CommandTree.Commands, keys.First(), keys, rawCommand, out arguments, out selector);
 
-		return new CommandReference(keys.First(), methodName);
+		return new CommandReference(keys.First(), methodName, selector is not null);
 	}
 
 	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments, out string? selector)
