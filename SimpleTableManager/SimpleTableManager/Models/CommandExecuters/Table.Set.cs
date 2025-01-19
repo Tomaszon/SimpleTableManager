@@ -3,7 +3,7 @@ namespace SimpleTableManager.Models.CommandExecuters;
 public partial class Table
 {
 	[CommandFunction]
-	public void SetName(string name)
+	public void SetName([MinLength(1)] string name)
 	{
 		Name = name;
 	}
@@ -38,13 +38,13 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SetColumnWidth(int index, int width)
+	public void SetColumnWidth([MinValue(0)] int index, [MinValue(0)] int width)
 	{
 		ColumnAt(index).ForEach(c => c.GivenSize = new(width, c.GivenSize.Height));
 	}
 
 	[CommandFunction]
-	public void SetRowHeight(int index, int height)
+	public void SetRowHeight([MinValue(0)] int index, [MinValue(0)] int height)
 	{
 		RowAt(index).ForEach(c => c.GivenSize = new(c.GivenSize.Width, height));
 	}
@@ -65,7 +65,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SetViewOptionsColumns(int x1, int x2)
+	public void SetViewOptionsColumns([MinValue(0)] int x1, [MinValue(0)] int x2)
 	{
 		SetViewOptions(new Position(x1, ViewOptions.StartPosition.Y), new Position(x2, ViewOptions.EndPosition.Y));
 
@@ -73,7 +73,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SetViewOptionsRows(int y1, int y2)
+	public void SetViewOptionsRows([MinValue(0)] int y1, [MinValue(0)] int y2)
 	{
 		SetViewOptions(new Position(ViewOptions.StartPosition.X, y1), new Position(ViewOptions.EndPosition.X, y2));
 

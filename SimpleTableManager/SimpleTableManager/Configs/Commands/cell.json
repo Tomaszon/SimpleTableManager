@@ -22,9 +22,6 @@
 				"avg": "setIntegerContentFunction/avg",
 				"min": "setIntegerContentFunction/min",
 				"max": "setIntegerContentFunction/max",
-				"floor": "setIntegerContentFunction/floor",
-				"ceiling": "setIntegerContentFunction/ceiling",
-				"round": "setIntegerContentFunction/round",
 				"mul": "setIntegerContentFunction/mul",
 				"div": "setIntegerContentFunction/div",
 				"rem": "setIntegerContentFunction/rem",
@@ -37,12 +34,56 @@
 				"loge": "setIntegerContentFunction/loge",
 				"logn": "setIntegerContentFunction/logn"
 			},
-			"fraction": "setFractionContentFunction",
-			"bool": "setBooleanContentFunction",
-			"char": "setCharacterContentFunction",
-			"dateTime": "setDateTimeContentFunction",
-			"date": "setDateContentFunction",
-			"time": "setTimeContentFunction",
+			"fraction": {
+				"const": "setFractionContentFunction/const",
+				"neg": "setFractionContentFunction/neg",
+				"abs": "setFractionContentFunction/abs",
+				"sum": "setFractionContentFunction/sum",
+				"sub": "setFractionContentFunction/sub",
+				"avg": "setFractionContentFunction/avg",
+				"min": "setFractionContentFunction/min",
+				"max": "setFractionContentFunction/max",
+				"floor": "setFractionContentFunction/floor",
+				"ceiling": "setFractionContentFunction/ceiling",
+				"round": "setFractionContentFunction/round",
+				"mul": "setFractionContentFunction/mul",
+				"div": "setFractionContentFunction/div",
+				"pow": "setFractionContentFunction/pow",
+				"sqrt": "setFractionContentFunction/sqrt",
+				"log2": "setFractionContentFunction/log2",
+				"log10": "setFractionContentFunction/log10",
+				"logE": "setFractionContentFunction/logE",
+				"log": "setFractionContentFunction/log"
+			},
+			"bool": {
+				"const": "setBooleanContentFunction/const",
+				"not": "setBooleanContentFunction/not",
+				"and": "setBooleanContentFunction/and",
+				"or": "setBooleanContentFunction/or",
+				"isNull": "setBooleanContentFunction/isNull",
+				"isNotNull": "setBooleanContentFunction/isNotNull"
+			},
+			"char": {
+				"const": "setCharacterContentFunction/const",
+				"concat": "setCharacterContentFunction/concat",
+				"join": "setCharacterContentFunction/join",
+				"repeat": "setCharacterContentFunction/repeat"
+			},
+			"dateTime": {
+				"const": "setDateTimeContentFunction/const",
+				"sum": "setDateTimeContentFunction/sum",
+				"now": "setDateTimeContentFunction/now"
+			},
+			"date": {
+				"const": "setDateContentFunction/const",
+				"sum": "setDateContentFunction/sum",
+				"now": "setDateContentFunction/now"
+			},
+			"time": {
+				"const": "setTimeContentFunction/const",
+				"sum": "setTimeContentFunction/sum",
+				"now": "setTimeContentFunction/now"
+			},
 			"rectangle": "setRectangleContentFunction",
 			"ellipse": "setEllipseContentFunction",
 			"rightTriangle": "setRightTriangleContentFunction"

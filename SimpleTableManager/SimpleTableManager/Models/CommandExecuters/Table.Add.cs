@@ -25,9 +25,9 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddRowAfter(int after, int count = 1)
+	public void AddRowAfter([MinValue(0)] int after, [MinValue(1)] int count = 1)
 	{
-		ThrowIfNot(after >= 0 && after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+		ThrowIfNot(after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
 
 		Shared.IndexArray(count).ForEach(i => AddRowAt(after + 1));
 	}
@@ -45,9 +45,9 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddColumnAt(int index)
+	public void AddColumnAt([MinValue(0)] int index)
 	{
-		ThrowIfNot(index >= 0 && index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
+		ThrowIfNot(index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
 		Header.Insert(index, new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
@@ -67,27 +67,27 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddColumnAfter(int after, int count = 1)
+	public void AddColumnAfter([MinValue(0)] int after, [MinValue(1)] int count = 1)
 	{
-		ThrowIfNot(after >= 0 && after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
+		ThrowIfNot(after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
 
 		Shared.IndexArray(count).ForEach(i => AddColumnAt(after + 1));
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddColumnFirst(int count = 1)
+	public void AddColumnFirst([MinValue(1)] int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddColumnAt(0));
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddColumnLast(int count = 1)
+	public void AddColumnLast([MinValue(1)] int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddColumnAt(Size.Width));
 	}
 
 	[CommandFunction]
-	public void AddRowFilter(int y, string filterExpression)
+	public void AddRowFilter([MinValue(0)] int y, string filterExpression)
 	{
 		RowFilters.Replace(y, filterExpression);
 
@@ -95,7 +95,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void AddColumnFilter(int x, string filterExpression)
+	public void AddColumnFilter([MinValue(0)] int x, string filterExpression)
 	{
 		ColumnFilters.Replace(x, filterExpression);
 

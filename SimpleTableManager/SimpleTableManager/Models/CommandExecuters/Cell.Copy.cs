@@ -48,7 +48,7 @@ public partial class Cell
 		));
 	}
 
-	private void CopyContentTo(Table table, IEnumerable<Position> positions)
+	private void CopyContentTo(Table table, [MinLength(1)] IEnumerable<Position> positions)
 	{
 		positions.ForEach(p =>
 		{

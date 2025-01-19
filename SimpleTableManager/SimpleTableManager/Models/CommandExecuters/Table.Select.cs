@@ -36,7 +36,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SelectColumn(int x, bool deselectCurrent = false)
+	public void SelectColumn([MinValue(0)] int x, bool deselectCurrent = false)
 	{
 		if (deselectCurrent)
 		{
@@ -47,7 +47,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void SelectRow(int y, bool deselectCurrent = false)
+	public void SelectRow([MinValue(0)] int y, bool deselectCurrent = false)
 	{
 		if (deselectCurrent)
 		{

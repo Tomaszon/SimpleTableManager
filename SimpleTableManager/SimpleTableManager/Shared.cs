@@ -18,7 +18,7 @@ public static class Shared
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)
 	{
-		return Enumerable.Repeat(from, size).Select((value, index) => value + index * step).ToList();
+		return [.. Enumerable.Repeat(from, size).Select((value, index) => value + index * step)];
 	}
 
 	public static int Max(params int[] values)

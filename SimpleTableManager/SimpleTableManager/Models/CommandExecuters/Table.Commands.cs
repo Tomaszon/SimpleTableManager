@@ -33,7 +33,7 @@ public partial class Table
 				{
 					action(i);
 				}
-			};
+			}
 		}
 	}
 
@@ -50,7 +50,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void HideColumnAt(int x)
+	public void HideColumnAt([MinValue(0)] int x)
 	{
 		HideColumnAtCore(x);
 
@@ -60,7 +60,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void HideRowAt(int y)
+	public void HideRowAt([MinValue(0)] int y)
 	{
 		HideRowAtCore(y);
 
@@ -70,7 +70,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void ShowColumnAt(int x)
+	public void ShowColumnAt([MinValue(0)] int x)
 	{
 		ShowColumnAtCore(x);
 
@@ -80,7 +80,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void ShowRowAt(int y)
+	public void ShowRowAt([MinValue(0)] int y)
 	{
 		ShowRowAtCore(y);
 
@@ -187,8 +187,8 @@ public partial class Table
 	[CommandFunction]
 	public Dictionary<Position, List<string>> ShowCellComments()
 	{
-		return Shared.IndexArray(Size.Width).SelectMany(x => 
-			Shared.IndexArray(Size.Height).Select(y => 
+		return Shared.IndexArray(Size.Width).SelectMany(x =>
+			Shared.IndexArray(Size.Height).Select(y =>
 				(Position: new Position(x, y), this[x, y].Comments)))
 					.Where(p => p.Comments.Count > 0).ToDictionary(k => k.Position, v => v.Comments);
 	}

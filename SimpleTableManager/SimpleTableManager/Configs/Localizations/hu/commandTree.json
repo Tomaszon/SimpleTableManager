@@ -97,7 +97,7 @@
 	"in": "-ban",
 	"activeTable": "aktív-tábla",
 	"const": "állandó",
-	"con": "egyesítés",
+	"concat": "egyesítés",
 	"join": "összefűzés",
 	"len": "hossz",
 	"split": "darabolás",
@@ -122,5 +122,10 @@
 	"log2": "log2",
 	"log10": "log10",
 	"loge": "loge",
-	"logn": "logn"
+	"logn": "logn",
+	"not": "nem",
+	"isNull": "üres",
+	"isNotNull": "nem-üres",
+	"repeat": "ismétlés",
+	"now": "most"
 }

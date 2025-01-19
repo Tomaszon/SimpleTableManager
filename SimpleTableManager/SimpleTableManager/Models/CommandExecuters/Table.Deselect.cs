@@ -26,13 +26,13 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void DeselectColumn(int x)
+	public void DeselectColumn([MinValue(0)] int x)
 	{
 		ColumnAt(x).ForEach(DeselectCell);
 	}
 
 	[CommandFunction]
-	public void DeselectRow(int y)
+	public void DeselectRow([MinValue(0)] int y)
 	{
 		RowAt(y).ForEach(DeselectCell);
 	}

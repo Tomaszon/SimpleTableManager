@@ -9,7 +9,7 @@ public partial class Cell
 		ContentFunction = new StringFunction()
 		{
 			Operator = StringFunctionOperator.Const,
-			Arguments = contents.Select(c => new ConstFunctionArgument<string>(c)).Cast<IFunctionArgument>().ToList()
+			Arguments = [.. contents.Select(c => new ConstFunctionArgument<string>(c)).Cast<IFunctionArgument>()]
 		};
 	}
 
@@ -56,79 +56,78 @@ public partial class Cell
 	}
 
 	[CommandFunction]
-	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
+	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<Rectangle>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
+	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<Ellipse>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
+	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<RightTriangle>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetStringContentFunction(StringFunctionOperator functionOperator, [ValueTypes<string>] params IFunctionArgument[] arguments)
+	public void SetStringContentFunction(StringFunctionOperator functionOperator, [MinLength(1), ValueTypes<string>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<string>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [ValueTypes<long>] params IFunctionArgument[] arguments)
+	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [MinLength(1), ValueTypes<long>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<long>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, [ValueTypes<double>] params IFunctionArgument[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, [MinLength(1), ValueTypes<double>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<double>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [ValueTypes<bool>] params IFunctionArgument[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<bool>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<bool>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [ValueTypes<char>] params IFunctionArgument[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [MinLength(1), ValueTypes<char>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<char>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateTime>] params IFunctionArgument[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [MinLength(1), ValueTypes<DateTime>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<DateTime>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateOnly>] params IFunctionArgument[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [MinLength(1), ValueTypes<DateOnly>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<DateOnly>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
-	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<TimeOnly>] params IFunctionArgument[] arguments)
+	[CommandFunction(WithSelector = true)]
+	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [MinLength(1), ValueTypes<TimeOnly>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<TimeOnly>(functionOperator, arguments);
 	}
 
 	[CommandFunction]
-	public void SetContentFunctionOperator(string @operator)
+	public void SetContentFunctionOperator([MinLength(1)] string @operator)
 	{
-		//REWORK
-		// ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
+		ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
 
-		// //TODO find a way to list possible values
-		// ContentFunction.Operator = (Enum)ContentParser.ParseStringValue(ContentFunction.Operator.GetType(), @operator, null);
+		//TODO find a way to list possible values
+		ContentFunction.Operator = (Enum)ContentParser.ParseStringValue(ContentFunction.Operator.GetType(), @operator, null)!;
 	}
 
 	[CommandFunction]
@@ -167,18 +166,14 @@ public partial class Cell
 	}
 
 	[CommandFunction]
-	public void SetVerticalPadding(int top, int bottom)
+	public void SetVerticalPadding([MinValue(0)] int top, [MinValue(0)] int bottom)
 	{
-		ThrowIf(top < 0 || bottom < 0, "Padding can not be less then 0!");
-
 		ContentPadding = new(top, bottom, ContentPadding.Left, ContentPadding.Right);
 	}
 
 	[CommandFunction]
-	public void SetHorizontalPadding(int left, int right)
+	public void SetHorizontalPadding([MinValue(0)] int left, [MinValue(0)] int right)
 	{
-		ThrowIf(left < 0 || right < 0, "Padding can not be less then 0!");
-
 		ContentPadding = new(ContentPadding.Top, ContentPadding.Bottom, left, right);
 	}
 

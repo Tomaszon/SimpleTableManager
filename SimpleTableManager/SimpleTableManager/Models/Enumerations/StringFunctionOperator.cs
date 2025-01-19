@@ -4,7 +4,7 @@ namespace SimpleTableManager.Models.Enumerations;
 public enum StringFunctionOperator
 {
 	Const,
-	Con,
+	Concat,
 	Join,
 	Len,
 	Split,

@@ -97,7 +97,7 @@
 	"in": "in",
 	"activeTable": "active-table",
 	"const": "const",
-	"con": "con",
+	"concat": "concat",
 	"join": "join",
 	"len": "len",
 	"split": "split",
@@ -122,5 +122,10 @@
 	"log2": "log2",
 	"log10": "log10",
 	"loge": "loge",
-	"logn": "logn"
+	"logn": "logn",
+	"not": "not",
+	"isNull": "is-null",
+	"isNotNull": "is-not-null",
+	"repeat": "repeat",
+	"now": "now"
 }

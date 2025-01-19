@@ -21,7 +21,7 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 		{
 			StringFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<object>(),
 
-			StringFunctionOperator.Con => string.Concat(UnwrappedUnnamedArguments).Wrap(),
+			StringFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 
 			StringFunctionOperator.Join => string.Join(separator, UnwrappedUnnamedArguments).Wrap(),
 

@@ -3,9 +3,9 @@
 public partial class Table
 {
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void RemoveRowAt(int index)
+	public void RemoveRowAt([MinValue(0)] int index)
 	{
-		ThrowIfNot(index >= 0 && index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+		ThrowIfNot(index <= Size.Height - 1, $"Index is not in the needed range: [0, {Size.Height - 1}]");
 		ThrowIfNot(Size.Height > 1, "Can not decrease table height under 1 row!");
 
 		Content.RemoveRange(index * Size.Width, Size.Width);
@@ -34,9 +34,9 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void RemoveColumnAt(int index)
+	public void RemoveColumnAt([MinValue(0)] int index)
 	{
-		ThrowIfNot(index >= 0 && index <= Size.Width - 1, $"Index is not in the needed range: [0, {Size.Width - 1}]");
+		ThrowIfNot(index <= Size.Width - 1, $"Index is not in the needed range: [0, {Size.Width - 1}]");
 		ThrowIfNot(Size.Width > 1, "Can not decrease table width under 1 column!");
 
 		for (int y = 0; y < Size.Height; y++)
@@ -75,7 +75,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void RemoveRowFilter(int y)
+	public void RemoveRowFilter([MinValue(0)] int y)
 	{
 		RowFilters.Remove(y);
 
@@ -83,7 +83,7 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void RemoveColumnFilter(int x)
+	public void RemoveColumnFilter([MinValue(0)] int x)
 	{
 		ColumnFilters.Remove(x);
 

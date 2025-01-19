@@ -9,9 +9,9 @@ public partial class Document
 	}
 
 	[CommandFunction("activateTableAt")]
-	public void ActivateTable(int index)
+	public void ActivateTable([MinValue(0)] int index)
 	{
-		ThrowIfNot(index >= 0 && index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
+		ThrowIfNot(index < Tables.Count, $"Index is not in the needed range: [0, {Tables.Count - 1}]");
 
 		Tables.ForEach(t => t.IsActive = false);
 		Tables[index].IsActive = true;
