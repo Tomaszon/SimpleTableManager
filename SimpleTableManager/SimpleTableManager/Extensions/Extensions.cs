@@ -4,8 +4,8 @@ public static class Extensions
 {
 	public static TOut ToType<TOut>(this IConvertible convertible)
 	{
-		return (TOut)convertible.ToType(typeof(TOut), null);
-	}
+        return convertible is TOut value ? value : (TOut)convertible.ToType(typeof(TOut), null);
+    }
 
 	public static IEnumerable<T> Wrap<T>(this T value)
 	{

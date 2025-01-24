@@ -19,7 +19,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public CellReference Reference { get; set; } = reference;
 
-	public IEnumerable<object>? Resolve()
+	public IEnumerable<IConvertible>? Resolve()
 	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 

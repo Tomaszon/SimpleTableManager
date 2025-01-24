@@ -1,10 +1,9 @@
 namespace SimpleTableManager.Services.Functions;
 
 public abstract class DateTimeFunctionBase<TIn, TOut> : FunctionBase<DateTimeFunctionOperator, TIn, TOut>
-	where TOut : struct
+	where TIn : IConvertible
+	where TOut : IConvertible
 {
-	protected TOut? NowProperty { get; set; }
-
 	public override IEnumerable<TOut> ExecuteCore()
 	{
 		return Operator switch

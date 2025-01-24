@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Models;
 
-public interface IShape2d
+public interface IShape2d : IConvertible
 {
 	double Area { get; }
 

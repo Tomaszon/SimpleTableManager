@@ -8,29 +8,29 @@ public class ConstFunctionArgument<T>(T? value) :
 	IParsable<ConstFunctionArgument<T>>,
 	IParseCore<ConstFunctionArgument<T>>,
 	IConstFunctionArgument
-	where T : IParsable<T>
+	where T : IParsable<T>, IConvertible
 {
 	public ArgumentName? Name { get; set; }
 
 	public T? Value { get; set; } = value;
 
-	public object? RawValue { get; set; }
+	public IConvertible? RawValue { get; set; }
 
-	object? IConstFunctionArgument.Value
+	IConvertible? IConstFunctionArgument.Value
 	{
 		get => Value!;
 		set => Value = (T?)value;
 	}
 
-	public ConstFunctionArgument(ArgumentName argumentName, object rawValue) : this(default)
+	public ConstFunctionArgument(ArgumentName argumentName, IConvertible? rawValue) : this(default)
 	{
 		Name = argumentName;
 		RawValue = rawValue;
 	}
 
-	IEnumerable<object> IFunctionArgument.Resolve()
+	public IEnumerable<IConvertible>? Resolve()
 	{
-		return (RawValue ?? Value).Wrap().Cast<object>();
+		return (RawValue ?? Value).Wrap()!;
 	}
 
 	public static ConstFunctionArgument<T> ParseCore(GroupCollection args, IFormatProvider? formatProvider)

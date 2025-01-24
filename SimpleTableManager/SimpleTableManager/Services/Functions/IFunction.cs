@@ -14,11 +14,9 @@ public interface IFunction
 
 	Enum Operator { get; set; }
 
-	IEnumerable<object> Execute();
+	IEnumerable<IConvertible> Execute();
 
 	IEnumerable<string> ExecuteAndFormat();
-
-	Type GetOutType();
 
 	TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
 
@@ -31,6 +29,8 @@ public interface IFunction
 	string GetFriendlyName();
 
 	Type GetInType();
+
+	Type GetOutType();
 
 	void ShiftReferenceArgumentPositions(Size size)
 	{

@@ -3,21 +3,21 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Separator, "")]
 [NamedArgument<int>(ArgumentName.Count, 1)]
 [FunctionMappingType(typeof(char))]
-public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, object>
+public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, IConvertible>
 {
 	public override string GetFriendlyName()
 	{
 		return typeof(char).GetFriendlyName();
 	}
 
-	public override IEnumerable<object> ExecuteCore()
+	public override IEnumerable<IConvertible> ExecuteCore()
 	{
 		var separator = GetNamedArgument<string>(ArgumentName.Separator);
 		var count = GetNamedArgument<int>(ArgumentName.Count);
 
 		return Operator switch
 		{
-			CharacterFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<object>(),
+			CharacterFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<IConvertible>(),
 
 			CharacterFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 

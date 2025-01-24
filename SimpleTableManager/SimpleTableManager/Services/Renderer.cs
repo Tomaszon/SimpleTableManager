@@ -74,8 +74,6 @@ public static class Renderer
 			infoTable[0, 0].SetStringContent("Fn:");
 			infoTable[1, 0].SetStringContent(cellContentLength > cellMaxWidth ? $"{cellContents?[0]![..cellMaxWidth]} ..." : cellContents?[0] ?? "None", cellContentLength > cellMaxWidth ? $"{cellContents?[1]![..cellMaxWidth]} ..." : cellContents?[1] ?? "");
 			infoTable[1, 0].GivenSize = new Size(cellMinWidth, 1);
-			// infoTable[0, 1].SetStringContent("Named args:");
-			// infoTable[1, 1].SetStringContent();
 
 			infoTable.Content.ForEach(cell =>
 			{

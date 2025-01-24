@@ -1,7 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
 [FunctionMappingType(typeof(DateTime))]
-public class DateTimeFunction : DateTimeFunctionBase<DateTime, DateTime>
+public class DateTimeFunction : NonNullableDateTimeFunctionBase<DateTime, DateTime>
 {
 	public override string GetFriendlyName()
 	{

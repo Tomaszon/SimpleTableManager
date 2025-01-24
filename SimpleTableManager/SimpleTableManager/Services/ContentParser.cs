@@ -49,24 +49,4 @@ public static class ContentParser
 
 		return converter.ConvertFromString(null, CultureInfo.CurrentUICulture, value);
 	}
-
-	[Obsolete]
-	public static List<IFunctionArgument> ParseFunctionArguments<TType>(IEnumerable<string> values)
-	where TType : IParsable<TType>
-	{
-		return [.. values.Select(v => ParseFunctionArgument<TType>(v))];
-	}
-
-	[Obsolete]
-	public static IFunctionArgument ParseFunctionArgument<TType>(string value)
-	where TType : IParsable<TType>
-	{
-
-		if (ReferenceFunctionArgument.TryParse(value, null, out var referenceFunctionArgument))
-		{
-			return referenceFunctionArgument;
-		}
-
-		return new ConstFunctionArgument<TType>(TType.Parse(value, CultureInfo.CurrentUICulture));
-	}
 }

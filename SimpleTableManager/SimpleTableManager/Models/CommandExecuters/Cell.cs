@@ -116,44 +116,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
-
-	[Obsolete]
-	public bool TrySeparateArgumentsAs<TType>(string[] arguments, [NotNullWhen(true)] out (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>)? result, [NotNullWhen(true)] out Type? resultType)
-	where TType : IParsable<TType>
-	{
-		try
-		{
-			result = SeparateArgumentsAs<TType>(arguments);
-
-			resultType = typeof(TType);
-
-			return true;
-		}
-		catch
-		{
-			result = null;
-
-			resultType = null;
-
-			return false;
-		}
-	}
-
-	[Obsolete]
-	public (Dictionary<ArgumentName, IFunctionArgument>, IEnumerable<IFunctionArgument>) SeparateArgumentsAs<TType>(string[] arguments)
-	where TType : IParsable<TType>
-	{
-		var namedArgs = arguments.Where(a => a.Contains(Shared.NAMED_ARG_SEPARATOR) == true);
-
-		var regularArgs = ContentParser.ParseFunctionArguments<TType>(arguments.Where(a => !namedArgs.Contains(a)));
-
-		var namedArgsDic = namedArgs.ToDictionary(
-			k => Enum.Parse<ArgumentName>(k.Split(Shared.NAMED_ARG_SEPARATOR)[0], true),
-			v => ContentParser.ParseFunctionArgument<string>(v.Split(Shared.NAMED_ARG_SEPARATOR)[1]));
-
-		return (namedArgsDic, regularArgs);
-	}
-
+	
 	public void Select()
 	{
 		Selection.SelectPrimary();

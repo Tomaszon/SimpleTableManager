@@ -5,6 +5,8 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Format, "")]
 public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	where TOpertor : struct, Enum
+	where TIn : IConvertible
+	where TOut : IConvertible
 {
 	public IEnumerable<IFunctionArgument> Arguments { get; set; } = [];
 
@@ -29,7 +31,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		Arguments.Where(a => a is ReferenceFunctionArgument && a.IsNamed)
 			.ToDictionary(k => (ArgumentName)k.Name!, v => (ReferenceFunctionArgument)v);
 
-	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<object, TIn>? transformation = null)
+	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<IConvertible, TIn>? transformation = null)
 	{
 		transformation ??= a => (TIn)a;
 
@@ -37,7 +39,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	}
 
 	protected IEnumerable<TIn> UnwrappedUnnamedArguments =>
-		UnwrapUnnamedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
+		UnwrapUnnamedArgumentsAs(a => a.ToType<TIn>());
 
 	public TOpertor Operator { get; set; }
 
@@ -49,9 +51,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public abstract string GetFriendlyName();
 
-	IEnumerable<object> IFunction.Execute()
+	IEnumerable<IConvertible> IFunction.Execute()
 	{
-		return ExecuteWrapper().Cast<object>();
+		return ExecuteWrapper().Cast<IConvertible>();
 	}
 
 	protected List<TOut> ExecuteWrapper()
@@ -165,7 +167,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		var refArgs = UnnamedReferenceArguments
 			.Select(a => a.Reference.ToShortString());
 
-		var constNamedArgs = NamedConstArguments.Select(p => $"{p.Key}:{p.Value.Value}");
+		var constNamedArgs = NamedConstArguments.Select(p => $"{p.Key}:{p.Value.RawValue}");
 
 		var refNamedArgs = NamedReferenceArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
 
