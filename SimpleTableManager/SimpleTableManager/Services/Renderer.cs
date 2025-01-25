@@ -15,7 +15,7 @@ public static class Renderer
 	private const int _MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
 
 	private const int _TABLE_GAP = 2;
-
+	
 	public static void Render(Document document)
 	{
 		var table = document.GetActiveTable(out var tableIndex);

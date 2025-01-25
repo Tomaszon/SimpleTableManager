@@ -8,9 +8,10 @@ public class DateTimeFunction : NonNullableDateTimeFunctionBase<DateTime, DateTi
 		return typeof(DateTime).GetFriendlyName();
 	}
 
+	//REWORK
 	protected override DateTime Sum()
 	{
-		return UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => a.Add(new TimeSpan(c.Ticks)));
+		return UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => a.AddTicks(c.Ticks));
 	}
 
 	protected override DateTime Now()

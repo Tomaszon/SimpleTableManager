@@ -14,13 +14,24 @@ public class FunctionTests : TestBase
 		CheckResults(fn.Execute(), results);
 	}
 
+	//REWORK
 	[Test]
-	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01 10:30", "0001-01-01 02:20" }, "0001-01-01 12:50")]
+	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0004-04-04 12:50")]
 	public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)));
 
 		CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)));
+	}
+
+
+	[Test]
+	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01", "0001-02-03" }, "0002-03-04")]
+	public void DateOnlyTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
+	{
+		var fn = CreateFunction(operation, values.Select(s => ConvertibleDateOnly.Parse(s, null)));
+
+		CheckResults(fn.Execute(), results.Select(s => ConvertibleDateOnly.Parse(s, null)));
 	}
 
 	[Test]
@@ -60,7 +71,7 @@ public class FunctionTests : TestBase
 	[Test]
 	public void FractionTest3()
 	{
-		var fn = CreateFunction(NumericFunctionOperator.LogN, [2d, 4d, 16d ]);
+		var fn = CreateFunction(NumericFunctionOperator.LogN, [2d, 4d, 16d]);
 
 		CheckResults(fn.Execute(), [1d, 2d, Math.Log2(16d)]);
 	}

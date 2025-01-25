@@ -4,8 +4,8 @@ public static class Extensions
 {
 	public static TOut ToType<TOut>(this IConvertible convertible)
 	{
-        return convertible is TOut value ? value : (TOut)convertible.ToType(typeof(TOut), null);
-    }
+		return convertible is TOut value ? value : (TOut)convertible.ToType(typeof(TOut), null);
+	}
 
 	public static IEnumerable<T> Wrap<T>(this T value)
 	{
@@ -34,5 +34,10 @@ public static class Extensions
 	public static Exception GetInnermostException(this Exception ex)
 	{
 		return ex.InnerException is null ? ex : ex.InnerException.GetInnermostException();
+	}
+
+	public static DateOnly ToDateOnly(this DateTime dateTime)
+	{
+		return new DateOnly(dateTime.Year, dateTime.Month, dateTime.Day);
 	}
 }
