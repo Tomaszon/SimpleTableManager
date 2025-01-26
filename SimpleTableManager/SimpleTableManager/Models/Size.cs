@@ -3,7 +3,7 @@
 [ParseFormat("width*height", "^(?<w>\\d+)\\*(?<h>\\d+)$")]
 [ParseFormat("widthxheight", "^(?<w>\\d+)x(?<h>\\d+)$")]
 [method: JsonConstructor]
-public class Size(int width, int height) : ParsableBase<Size>, IParsable<Size>, IParseCore<Size>
+public class Size(int width, int height) : ParsableBase<Size>, IParsable<Size>, IParsableCore<Size>
 {
 	public int Width { get; set; } = width;
 

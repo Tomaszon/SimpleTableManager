@@ -1,27 +1,27 @@
-// namespace SimpleTableManager.Services.Functions;
+namespace SimpleTableManager.Services.Functions;
 
-// [FunctionMappingType(typeof(TimeOnly))]
-// public class TimeFunction : DateTimeFunctionBase<TimeOnly, TimeOnly>
-// {
-// 	public override string GetFriendlyName()
-// 	{
-// 		return typeof(TimeOnly).GetFriendlyName();
-// 	}
+[FunctionMappingType(typeof(ConvertibleTimeOnly))]
+public class TimeFunction : NullableDateTimeFunctionBase<ConvertibleTimeOnly, ConvertibleTimeOnly>
+{
+	public override string GetFriendlyName()
+	{
+		return typeof(TimeOnly).GetFriendlyName();
+	}
 
-// 	protected override TimeOnly Sum()
-// 	{
-// 		return UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue, (a, c) => a.Add(c.ToTimeSpan()));
-// 	}
+	protected override ConvertibleTimeOnly Sum()
+	{
+		return UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue, (a, c) => a.Add(c.ToTimeSpan()));
+	}
 
-// 	protected override TimeOnly Now()
-// 	{
-// 		if (NowProperty is null)
-// 		{
-// 			(_, TimeOnly t) = DateTime.Now;
+	protected override ConvertibleTimeOnly Now()
+	{
+		if (NowProperty is null)
+		{
+			(_, var t) = DateTime.Now;
 
-// 			NowProperty = t;
-// 		}
+			NowProperty = t;
+		}
 
-// 		return NowProperty.Value;
-// 	}
-// }
+		return NowProperty;
+	}
+}

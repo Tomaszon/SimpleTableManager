@@ -6,7 +6,7 @@ namespace SimpleTableManager.Models;
 public class ConstFunctionArgument<T>(T? value) :
 	ParsableBase<ConstFunctionArgument<T>>,
 	IParsable<ConstFunctionArgument<T>>,
-	IParseCore<ConstFunctionArgument<T>>,
+	IParsableCore<ConstFunctionArgument<T>>,
 	IConstFunctionArgument
 	where T : IParsable<T>, IConvertible
 {

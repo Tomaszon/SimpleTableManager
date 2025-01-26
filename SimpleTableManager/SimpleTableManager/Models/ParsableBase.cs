@@ -1,7 +1,7 @@
 namespace SimpleTableManager.Models;
 
 public abstract class ParsableBase<T>
-	where T : class, IParsable<T>, IParseCore<T>
+	where T : class, IParsable<T>, IParsableCore<T>
 {
 	public static T Parse(string value, IFormatProvider? formatProvider)
 	{

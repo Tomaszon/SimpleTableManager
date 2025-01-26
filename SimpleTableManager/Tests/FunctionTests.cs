@@ -14,8 +14,8 @@ public class FunctionTests : TestBase
 		CheckResults(fn.Execute(), results);
 	}
 
-	//REWORK
 	[Test]
+	[TestCase(DateTimeFunctionOperator.Const, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0002-02-02 10:30", "0002-02-02 02:20" )]
 	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0004-04-04 12:50")]
 	public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
@@ -24,14 +24,24 @@ public class FunctionTests : TestBase
 		CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)));
 	}
 
-
 	[Test]
+	[TestCase(DateTimeFunctionOperator.Const, new[] { "0001-01-01", "0001-02-03" }, "0001-01-01", "0001-02-03")]
 	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0001-01-01", "0001-02-03" }, "0002-03-04")]
 	public void DateOnlyTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(s => ConvertibleDateOnly.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results.Select(s => ConvertibleDateOnly.Parse(s, null)));
+	}
+
+	[Test]
+	[TestCase(DateTimeFunctionOperator.Const, new[] { "01:02:03.001", "01:02:03.1", "01:02:03", "01:02" }, "01:02:03.001", "01:02:03.1", "01:02:03", "01:02")]
+	[TestCase(DateTimeFunctionOperator.Sum, new[] { "01:02:03.001", "01:02:03.1", "01:02:03", "01:02" }, "04:08:09.101")]
+	public void TimeOnlyTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
+	{
+		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+
+		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeOnly.Parse(s, null)));
 	}
 
 	[Test]

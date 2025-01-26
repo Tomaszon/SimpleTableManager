@@ -2,7 +2,8 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("yyyy-mm-dd", "^(?<y>\\d{4})-(?<m>\\d{2})-(?<d>\\d{2})$")]
-public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDateOnly>, IParsable<ConvertibleDateOnly>, IParseCore<ConvertibleDateOnly>
+[ParseFormat("yyyy.mm.dd", "^(?<y>\\d{4})\\.(?<m>\\d{2})\\.(?<d>\\d{2})$")]
+public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDateOnly>, IParsable<ConvertibleDateOnly>, IParsableCore<ConvertibleDateOnly>
 {
 	[JsonProperty]
 	private readonly DateOnly _value = value;
@@ -12,8 +13,6 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 	public int Month => _value.Month;
 
 	public int Day => _value.Day;
-
-	public long Ticks => new DateTime(Year, Month, Day).Ticks;
 
 	public static ConvertibleDateOnly ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
@@ -40,8 +39,8 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 		return _value.ToString();
 	}
 
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
+	public override int GetHashCode()
+	{
+		return base.GetHashCode();
+	}
 }

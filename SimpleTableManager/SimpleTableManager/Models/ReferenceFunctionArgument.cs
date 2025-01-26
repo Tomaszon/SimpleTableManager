@@ -12,7 +12,7 @@ namespace SimpleTableManager.Models;
 public class ReferenceFunctionArgument(CellReference reference, ArgumentName? name = null) :
 	ParsableBase<ReferenceFunctionArgument>,
 	IParsable<ReferenceFunctionArgument>,
-	IParseCore<ReferenceFunctionArgument>,
+	IParsableCore<ReferenceFunctionArgument>,
 	IFunctionArgument
 {
 	public ArgumentName? Name { get; set; } = name;
