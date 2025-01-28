@@ -3,6 +3,7 @@ namespace SimpleTableManager.Models;
 [ParseFormat("Type specific format",
 	"^((?<n>.+){0})?(?<v>.+)$",
 	[Shared.NAMED_ARG_SEPARATOR])]
+[method: JsonConstructor]
 public class ConstFunctionArgument<T>(T? value) :
 	ParsableBase<ConstFunctionArgument<T>>,
 	IParsable<ConstFunctionArgument<T>>,
@@ -14,7 +15,7 @@ public class ConstFunctionArgument<T>(T? value) :
 
 	public T? Value { get; set; } = value;
 
-	public IConvertible? RawValue { get; set; }
+	public IConvertible? NamedValue { get; set; }
 
 	IConvertible? IConstFunctionArgument.Value
 	{
@@ -22,15 +23,15 @@ public class ConstFunctionArgument<T>(T? value) :
 		set => Value = (T?)value;
 	}
 
-	public ConstFunctionArgument(ArgumentName argumentName, IConvertible? rawValue) : this(default)
+	public ConstFunctionArgument(ArgumentName argumentName, IConvertible? namedValue) : this(default)
 	{
 		Name = argumentName;
-		RawValue = rawValue;
+		NamedValue = namedValue;
 	}
 
 	public IEnumerable<IConvertible>? Resolve()
 	{
-		return (RawValue ?? Value).Wrap()!;
+		return (NamedValue ?? Value).Wrap()!;
 	}
 
 	public static ConstFunctionArgument<T> ParseCore(GroupCollection args, IFormatProvider? formatProvider)
@@ -55,7 +56,7 @@ public class ConstFunctionArgument<T>(T? value) :
 
 	public override string ToString()
 	{
-		return (RawValue is not null ? $"{Name}:{RawValue}" : null) ??
+		return (NamedValue is not null ? $"{Name}:{NamedValue}" : null) ??
 			Value?.ToString() ??
 			$"({typeof(T).GetFriendlyName()})null";
 	}

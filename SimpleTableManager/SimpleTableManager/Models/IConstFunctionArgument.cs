@@ -4,6 +4,6 @@ namespace SimpleTableManager.Models
 	{
 		IConvertible? Value { get; set; }
 
-		IConvertible? RawValue { get; set; }
+		IConvertible? NamedValue { get; set; }
 	}
 }

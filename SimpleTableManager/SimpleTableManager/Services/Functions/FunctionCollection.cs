@@ -34,7 +34,7 @@ public static class FunctionCollection
 
 		if (arguments is not null)
 		{
-			instance.Arguments = arguments;
+			instance.Arguments = [.. arguments];
 		}
 
 		return instance;

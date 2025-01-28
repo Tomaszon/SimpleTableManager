@@ -8,15 +8,12 @@ public abstract class DateTimeFunctionBase<TIn, TOut> : FunctionBase<DateTimeFun
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<TOut>(),
+			DateTimeFunctionOperator.Now or DateTimeFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<TOut>(),
 			DateTimeFunctionOperator.Sum => Sum().Wrap(),
-			DateTimeFunctionOperator.Now => Now().Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};
 	}
 
 	protected abstract TOut Sum();
-
-	protected abstract TOut Now();
 }

@@ -8,7 +8,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	where TIn : IConvertible
 	where TOut : IConvertible
 {
-	public IEnumerable<IFunctionArgument> Arguments { get; set; } = [];
+	public List<IFunctionArgument> Arguments { get; set; } = [];
 
 	public IEnumerable<IFunctionArgument> UnnamedArguments =>
 		Arguments.Where(a => !a.IsNamed);
@@ -167,7 +167,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 		var refArgs = UnnamedReferenceArguments
 			.Select(a => a.Reference.ToShortString());
 
-		var constNamedArgs = NamedConstArguments.Select(p => $"{p.Key}:{p.Value.RawValue}");
+		var constNamedArgs = NamedConstArguments.Select(p => $"{p.Key}:{p.Value.NamedValue}");
 
 		var refNamedArgs = NamedReferenceArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
 

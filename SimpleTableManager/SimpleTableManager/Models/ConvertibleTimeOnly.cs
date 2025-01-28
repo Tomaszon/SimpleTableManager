@@ -1,7 +1,7 @@
-
 namespace SimpleTableManager.Models;
 
 [ParseFormat("hh:mm:ss.fff", "^(?<h>\\d{2}):(?<m>\\d{2})(:(?<s>\\d{2})(\\.(?<f>\\d{1,3}))?)?$")]
+//TODO implement IFormattable
 public class ConvertibleTimeOnly(TimeOnly value) : ConvertibleBase<ConvertibleTimeOnly>, IParsable<ConvertibleTimeOnly>, IParsableCore<ConvertibleTimeOnly>
 {
 	[JsonProperty]

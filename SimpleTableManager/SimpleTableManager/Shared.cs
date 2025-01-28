@@ -12,8 +12,8 @@ public static class Shared
 		{ typeof(long), "int" },
 		{ typeof(bool), "bool" },
 		{ typeof(double), "fraction" },
-		{ typeof(DateOnly), "date" },
-		{ typeof(TimeOnly), "time" }
+		{ typeof(ConvertibleDateOnly), "date" },
+		{ typeof(ConvertibleTimeOnly), "time" }
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)
@@ -72,6 +72,7 @@ public static class Shared
 			ContractResolver = new ClearPropertyContractResolver()
 		};
 		serializer.Converters.Add(new AppVersionConverter());
+		serializer.Converters.Add(new ConvertibleJsonConverter());
 
 		serializer.Populate(new JsonTextReader(sr), target);
 	}

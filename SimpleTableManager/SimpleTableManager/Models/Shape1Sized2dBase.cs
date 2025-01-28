@@ -2,8 +2,9 @@ using System.Globalization;
 
 namespace SimpleTableManager.Models;
 
-[ParseFormat("size", "^(?<s>\\d+)$")]
+[ParseFormat("[size]", "^\\[(?<s>\\d+)\\]$")]
 [method: JsonConstructor]
+//TODO implement IFormattable
 public abstract class Shape1Sized2dBase<T>(double size1) : ConvertibleBase<T>, IShape2d, IShape1Sized, IParsableCore<T>
 where T : Shape1Sized2dBase<T>, IParsable<T>
 {
@@ -14,11 +15,12 @@ where T : Shape1Sized2dBase<T>, IParsable<T>
 	public abstract double Perimeter { get; }
 
 	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape) :
-		this(shape.Size1) { }
+		this(shape.Size1)
+	{ }
 
 	public override string ToString()
 	{
-		return $"{GetType().GetFriendlyName()}({Size1})";
+		return $"[{Size1}]";
 	}
 
 	public static T ParseCore(GroupCollection args, IFormatProvider? _)

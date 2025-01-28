@@ -104,21 +104,36 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [MinLength(1), ValueTypes<DateTime>] params IFunctionArgument[] arguments)
+	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateTime>] params IFunctionArgument[] arguments)
 	{
+		//TODO do not ignore named args
+		arguments = functionOperator == DateTimeFunctionOperator.Now ?
+			[new ConstFunctionArgument<DateTime>(DateTime.Now)] :
+			arguments;
+
 		SetFunction<DateTime>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [MinLength(1), ValueTypes<DateOnly>] params IFunctionArgument[] arguments)
+	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleDateOnly>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<DateOnly>(functionOperator, arguments);
+		//TODO do not ignore named args
+		arguments = functionOperator == DateTimeFunctionOperator.Now ?
+			[new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now))] :
+			arguments;
+
+		SetFunction<ConvertibleDateOnly>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [MinLength(1), ValueTypes<TimeOnly>] params IFunctionArgument[] arguments)
+	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleTimeOnly>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<TimeOnly>(functionOperator, arguments);
+		//TODO do not ignore named args
+		arguments = functionOperator == DateTimeFunctionOperator.Now ?
+			[new ConstFunctionArgument<ConvertibleTimeOnly>(TimeOnly.FromDateTime(DateTime.Now))] :
+			arguments;
+
+		SetFunction<ConvertibleTimeOnly>(functionOperator, arguments);
 	}
 
 	[CommandFunction]

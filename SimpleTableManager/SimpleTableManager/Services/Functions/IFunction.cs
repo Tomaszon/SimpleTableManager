@@ -2,7 +2,7 @@ namespace SimpleTableManager.Services.Functions;
 
 public interface IFunction
 {
-	IEnumerable<IFunctionArgument> Arguments { get; set; }
+	List<IFunctionArgument> Arguments { get; set; }
 
 	IEnumerable<IConstFunctionArgument> UnnamedConstArguments { get; }
 
