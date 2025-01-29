@@ -103,11 +103,27 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public IEnumerable<string> ExecuteAndFormat()
 	{
-		var format = GetNamedArgument<string>(ArgumentName.Format);
+		if (Error is null)
+		{
+			try
+			{
+				var format = GetNamedArgument<string>(ArgumentName.Format);
 
-		var formatter = new ContentFormatter(format);
+				var formatter = new ContentFormatter(format);
 
-		return ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n", StringSplitOptions.RemoveEmptyEntries));
+				return [.. ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n", StringSplitOptions.RemoveEmptyEntries))];
+			}
+			catch (FormatException)
+			{
+				SetError("Format error");
+
+				throw;
+			}
+		}
+		else
+		{
+			throw new OperationCanceledException(Error);
+		}
 	}
 
 	public virtual Type GetOutType()

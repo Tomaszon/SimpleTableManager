@@ -1,13 +1,13 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("TableName,{0}x1,{0}y1-{0}x2,{0}y2 ({0} for axis unlock)",
-	"^(?<t>.+),(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
+	"^(?<t>.+),(?<x1>Arg1?\\d+),(?<y1>Arg1?\\d+)-(?<x2>Arg1?\\d+),(?<y2>Arg1?\\d+)$",
 	[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 [ParseFormat("{0}x1,{0}y1-{0}x2,{0}y2 ({0} for axis unlock)",
-	"^(?<x1>{1}?\\d+),(?<y1>{1}?\\d+)-(?<x2>{1}?\\d+),(?<y2>{1}?\\d+)$",
+	"^(?<x1>Arg1?\\d+),(?<y1>Arg1?\\d+)-(?<x2>Arg1?\\d+),(?<y2>Arg1?\\d+)$",
 	[Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 [ParseFormat("ArgName{0}TableName,{1}x,{1}y ({1} for axis unlock, ArgName{0} for argument naming, TableName for referring to other tables)",
-	"^((?<n>.+){0})?((?<t>.+),)?(?<x>{2}?\\d+),(?<y>{2}?\\d+)$",
+	"^((?<n>.+)Arg0)?((?<t>.+),)?(?<x>Arg2?\\d+),(?<y>Arg2?\\d+)$",
 	[Shared.NAMED_ARG_SEPARATOR, Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
 public class ReferenceFunctionArgument(CellReference reference, ArgumentName? name = null) :
 	ParsableBase<ReferenceFunctionArgument>,

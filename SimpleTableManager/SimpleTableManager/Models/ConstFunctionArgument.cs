@@ -1,7 +1,7 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("Type specific format",
-	"^((?<n>.+){0})?(?<v>.+)$",
+	"^((?<n>.+)Arg0)?(?<v>.+)$",
 	[Shared.NAMED_ARG_SEPARATOR])]
 [method: JsonConstructor]
 public class ConstFunctionArgument<T>(T? value) :

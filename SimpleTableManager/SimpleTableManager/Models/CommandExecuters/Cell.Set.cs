@@ -106,34 +106,31 @@ public partial class Cell
 	[CommandFunction(WithSelector = true)]
 	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateTime>] params IFunctionArgument[] arguments)
 	{
-		//TODO do not ignore named args
-		arguments = functionOperator == DateTimeFunctionOperator.Now ?
-			[new ConstFunctionArgument<DateTime>(DateTime.Now)] :
+		var args = functionOperator == DateTimeFunctionOperator.Now ?
+			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<DateTime>(DateTime.Now)) :
 			arguments;
 
-		SetFunction<DateTime>(functionOperator, arguments);
+		SetFunction<DateTime>(functionOperator, args);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleDateOnly>] params IFunctionArgument[] arguments)
 	{
-		//TODO do not ignore named args
-		arguments = functionOperator == DateTimeFunctionOperator.Now ?
-			[new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now))] :
+		var args = functionOperator == DateTimeFunctionOperator.Now ?
+			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now))) :
 			arguments;
 
-		SetFunction<ConvertibleDateOnly>(functionOperator, arguments);
+		SetFunction<ConvertibleDateOnly>(functionOperator, args);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleTimeOnly>] params IFunctionArgument[] arguments)
 	{
-		//TODO do not ignore named args
-		arguments = functionOperator == DateTimeFunctionOperator.Now ?
-			[new ConstFunctionArgument<ConvertibleTimeOnly>(TimeOnly.FromDateTime(DateTime.Now))] :
+		var args = functionOperator == DateTimeFunctionOperator.Now ?
+			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleTimeOnly>(TimeOnly.FromDateTime(DateTime.Now))) :
 			arguments;
 
-		SetFunction<ConvertibleTimeOnly>(functionOperator, arguments);
+		SetFunction<ConvertibleTimeOnly>(functionOperator, args);
 	}
 
 	[CommandFunction]

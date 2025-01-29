@@ -44,7 +44,7 @@ public abstract class ConvertibleBase<T> : ParsableBase<T>, IConvertible
 		throw new InvalidCastException($"Can not cast {GetType().Name} to char");
 	}
 
-	public DateTime ToDateTime(IFormatProvider? provider)
+	public virtual DateTime ToDateTime(IFormatProvider? provider)
 	{
 		throw new InvalidCastException($"Can not cast {GetType().Name} to DateTime");
 	}
