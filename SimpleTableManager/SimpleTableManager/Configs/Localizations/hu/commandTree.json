@@ -127,5 +127,7 @@
 	"isNull": "üres",
 	"isNotNull": "nem-üres",
 	"repeat": "ismétlés",
-	"now": "most"
+	"now": "most",
+	"area": "terület",
+	"perimeter": "kerület"
 }

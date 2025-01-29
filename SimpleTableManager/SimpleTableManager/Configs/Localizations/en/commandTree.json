@@ -127,5 +127,7 @@
 	"isNull": "is-null",
 	"isNotNull": "is-not-null",
 	"repeat": "repeat",
-	"now": "now"
+	"now": "now",
+	"area": "area",
+	"perimeter": "perimeter"
 }

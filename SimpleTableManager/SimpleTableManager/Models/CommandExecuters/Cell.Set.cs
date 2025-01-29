@@ -50,24 +50,24 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, bool, TimeOnly, DateOnly, DateTime, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, bool, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string>] params IFunctionArgument[] contents)
 	{
 		SetFunction(type, "const", contents);
 	}
 
-	[CommandFunction]
+	[CommandFunction(WithSelector = true)]
 	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<Rectangle>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
+	[CommandFunction(WithSelector = true)]
 	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<Ellipse>(functionOperator, arguments);
 	}
 
-	[CommandFunction]
+	[CommandFunction(WithSelector = true)]
 	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<RightTriangle>(functionOperator, arguments);

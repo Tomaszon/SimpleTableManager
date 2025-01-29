@@ -84,9 +84,21 @@
 				"sum": "setTimeContentFunction/sum",
 				"now": "setTimeContentFunction/now"
 			},
-			"rectangle": "setRectangleContentFunction",
-			"ellipse": "setEllipseContentFunction",
-			"rightTriangle": "setRightTriangleContentFunction"
+			"rectangle": {
+				"const": "setRectangleContentFunction/const",
+				"area": "setRectangleContentFunction/area",
+				"perimeter": "setRectangleContentFunction/perimeter"
+			},
+			"ellipse": {
+				"const": "setEllipseContentFunction/const",
+				"area": "setEllipseContentFunction/area",
+				"perimeter": "setEllipseContentFunction/perimeter"
+			},
+			"rightTriangle": {
+				"const": "setRightTriangleContentFunction/const",
+				"area": "setRightTriangleContentFunction/area",
+				"perimeter": "setRightTriangleContentFunction/perimeter"
+			}
 		},
 		"contentFunctionOperator": "setContentFunctionOperator",
 		"contentFunctionArguments": "setContentFunctionArguments",
