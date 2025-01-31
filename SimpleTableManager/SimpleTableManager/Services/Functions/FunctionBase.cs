@@ -111,7 +111,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 				var formatter = new ContentFormatter(format);
 
-				return [.. ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\r\n", StringSplitOptions.RemoveEmptyEntries))];
+				return [.. ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\n", StringSplitOptions.RemoveEmptyEntries))];
 			}
 			catch (FormatException)
 			{

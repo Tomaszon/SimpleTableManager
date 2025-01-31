@@ -5,7 +5,6 @@ namespace SimpleTableManager.Models;
 [ParseFormat("[size1*size2] (fractions)", "^\\[(?<s>\\d*(\\.|,)?\\d+)\\*(?<s2>\\d*(\\.|,)?\\d+)\\]$")]
 [ParseFormat("[size1xsize2] (fractions)", "^\\[(?<s>\\d*(\\.|,)?\\d+)x(?<s2>\\d*(\\.|,)?\\d+)\\]$")]
 [method: JsonConstructor]
-//TODO implement IFormattable
 public abstract class Shape2Sized2dBase<T>(double size1, double size2) : Shape1Sized2dBase<T>(size1), IShape2Sized, IParsableCore<T>
 	where T : Shape2Sized2dBase<T>, IParsable<T>
 {
@@ -14,6 +13,11 @@ public abstract class Shape2Sized2dBase<T>(double size1, double size2) : Shape1S
 	public Shape2Sized2dBase(Shape2Sized2dBase<T> shape) :
 		this(shape.Size1, shape.Size2)
 	{ }
+
+	public override string ToString(string? format, IFormatProvider? formatProvider)
+	{
+		return $"[{Size1.ToString(format, formatProvider)}x{Size2.ToString(format, formatProvider)}]";
+	}
 
 	public override string ToString()
 	{

@@ -47,14 +47,6 @@ public class ContentFormatter(string? format) : IFormatProvider, ICustomFormatte
 				_ => b.ToString()
 			};
 		}
-		else if (arg is IShape2Sized shape2Sized)
-		{
-			return $"S1: {shape2Sized.Size1.ToString(_format)}, S2: {shape2Sized.Size2.ToString(_format)}";
-		}
-		else if (arg is IShape1Sized shape1Sized)
-		{
-			return $"S1: {shape1Sized.Size1.ToString(_format)}";
-		}
 
 		return arg!.ToString()!;
 	}
@@ -74,9 +66,9 @@ public class ContentFormatter(string? format) : IFormatProvider, ICustomFormatte
 		else
 		{
 			return
-				string.Join("\r\n", Enumerable.Repeat('░', e)) +
-				"\r\n" +
-				string.Join("\r\n", Enumerable.Repeat('█', f));
+				string.Join("\n", Enumerable.Repeat('░', e)) +
+				"\n" +
+				string.Join("\n", Enumerable.Repeat('█', f));
 		}
 	}
 }

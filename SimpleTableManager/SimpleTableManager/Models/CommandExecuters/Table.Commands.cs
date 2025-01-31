@@ -149,7 +149,7 @@ public partial class Table
 				var contents = r.Value.Select(c =>
 				{
 					var contents = c.GetFormattedContents().ToList();
-					var formatted = string.Join("\r\n", contents).Trim();
+					var formatted = string.Join("\n", contents).Trim();
 
 					return contents.Count > 1 || formatted.Contains(',') ? $"\"{formatted}\"" : formatted;
 				}).ToList();
