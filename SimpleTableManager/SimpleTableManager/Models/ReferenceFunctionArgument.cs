@@ -19,7 +19,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public CellReference Reference { get; set; } = reference;
 
-	public IEnumerable<IConvertible>? Resolve()
+	public IEnumerable<IConvertible> Resolve()
 	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
@@ -32,7 +32,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 	{
 		try
 		{
-			result = Resolve();
+			result = Resolve().ToList();
 
 			error = null;
 

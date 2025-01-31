@@ -121,19 +121,21 @@ public static class Renderer
 
 			var comment = comments.Count == 0 ? " - ".Wrap() : comments.Count == 1 ? comments.Single() : "Multiple".Wrap();
 
-			var infoTable = new Table(null!, "", 2, 4)
+			var infoTable = new Table(null!, "", 2, 5)
 			{
 				IsHeadLess = true
 			};
 
-			infoTable[0, 0].SetStringContent("Position:");
-			infoTable[1, 0].SetStringContent(position);
-			infoTable[0, 1].SetStringContent("Content:");
-			infoTable[1, 1].SetStringContent(outType);
-			infoTable[0, 2].SetStringContent("Layer:");
-			infoTable[1, 2].SetStringContent(layerIndex);
-			infoTable[0, 3].SetStringContent("Comment:");
-			infoTable[1, 3].SetStringContent(comment.SelectMany(c => c.Chunk(15)).Select(c => new string(c)));
+			infoTable[0,0].SetStringContent("Selected:");
+			infoTable[1,0].SetStringContent(cells.Count.ToString());
+			infoTable[0, 1].SetStringContent("Position:");
+			infoTable[1, 1].SetStringContent(position);
+			infoTable[0, 2].SetStringContent("Content:");
+			infoTable[1, 2].SetStringContent(outType);
+			infoTable[0, 3].SetStringContent("Layer:");
+			infoTable[1, 3].SetStringContent(layerIndex);
+			infoTable[0, 4].SetStringContent("Comment:");
+			infoTable[1, 4].SetStringContent(comment.SelectMany(c => c.Chunk(15)).Select(c => new string(c)));
 
 			infoTable.Content.ForEach(cell =>
 			{

@@ -29,7 +29,7 @@ public abstract class ConvertibleBase<T> : ParsableBase<T>, IConvertible
 		return TypeCode.Object;
 	}
 
-	public bool ToBoolean(IFormatProvider? provider)
+	public virtual bool ToBoolean(IFormatProvider? provider)
 	{
 		throw new InvalidCastException($"Can not cast {GetType().Name} to bool");
 	}
@@ -54,7 +54,7 @@ public abstract class ConvertibleBase<T> : ParsableBase<T>, IConvertible
 		throw new InvalidCastException($"Can not cast {GetType().Name} to decimal");
 	}
 
-	public double ToDouble(IFormatProvider? provider)
+	public virtual double ToDouble(IFormatProvider? provider)
 	{
 		throw new InvalidCastException($"Can not cast {GetType().Name} to double");
 	}
@@ -64,12 +64,12 @@ public abstract class ConvertibleBase<T> : ParsableBase<T>, IConvertible
 		throw new InvalidCastException($"Can not cast {GetType().Name} to short");
 	}
 
-	public int ToInt32(IFormatProvider? provider)
+	public virtual int ToInt32(IFormatProvider? provider)
 	{
 		throw new InvalidCastException($"Can not cast {GetType().Name} to int");
 	}
 
-	public long ToInt64(IFormatProvider? provider)
+	public virtual long ToInt64(IFormatProvider? provider)
 	{
 		throw new InvalidCastException($"Can not cast {GetType().Name} to long");
 	}

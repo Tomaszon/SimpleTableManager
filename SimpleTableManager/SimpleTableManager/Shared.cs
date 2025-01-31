@@ -13,7 +13,8 @@ public static class Shared
 		{ typeof(bool), "bool" },
 		{ typeof(double), "fraction" },
 		{ typeof(ConvertibleDateOnly), "date" },
-		{ typeof(ConvertibleTimeOnly), "time" }
+		{ typeof(ConvertibleTimeOnly), "time" },
+		{ typeof(FormattableBoolean), "bool" }
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)

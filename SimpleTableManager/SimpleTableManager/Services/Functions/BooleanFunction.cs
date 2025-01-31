@@ -1,14 +1,14 @@
 namespace SimpleTableManager.Services.Functions;
 
-[FunctionMappingType(typeof(bool))]
-public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
+[FunctionMappingType(typeof(FormattableBoolean))]
+public class BooleanFunction : FunctionBase<BooleanFunctionOperator, FormattableBoolean, FormattableBoolean>
 {
-    public override string GetFriendlyName()
-    {
-        return typeof(bool).GetFriendlyName();
-    }
+	public override string GetFriendlyName()
+	{
+		return typeof(FormattableBoolean).GetFriendlyName();
+	}
 
-    public override IEnumerable<bool> ExecuteCore()
+	public override IEnumerable<FormattableBoolean> ExecuteCore()
 	{
 		return Operator switch
 		{
@@ -16,13 +16,39 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, bool, bool>
 
 			BooleanFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
 
-			BooleanFunctionOperator.And => UnwrappedUnnamedArguments.All(a => a).Wrap(),
+			BooleanFunctionOperator.And => ((FormattableBoolean)UnwrappedUnnamedArguments.All(a => a)).Wrap(),
 
-			BooleanFunctionOperator.Or => UnwrappedUnnamedArguments.Any(a => a).Wrap(),
+			BooleanFunctionOperator.Or => ((FormattableBoolean)UnwrappedUnnamedArguments.Any(a => a)).Wrap(),
 
-			BooleanFunctionOperator.IsNotNull => Arguments.Any(a => a.Resolve() is not null).Wrap(),
-			
-			BooleanFunctionOperator.IsNull => Arguments.All(a => a.Resolve() is null).Wrap(),
+			BooleanFunctionOperator.IsNotNull => ((FormattableBoolean)Arguments.Any(a =>
+			{
+				try
+				{
+					_ = a.Resolve().GetEnumerator().MoveNext();
+
+					return true;
+				}
+				catch (NullReferenceException)
+				{
+					return false;
+				}
+			}))
+			.Wrap(),
+
+			BooleanFunctionOperator.IsNull => ((FormattableBoolean)Arguments.All(a =>
+			{
+				try
+				{
+                    _ = a.Resolve().GetEnumerator().MoveNext();
+
+					return false;
+
+				}
+				catch (NullReferenceException)
+				{
+					return true;
+				}
+			})).Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};

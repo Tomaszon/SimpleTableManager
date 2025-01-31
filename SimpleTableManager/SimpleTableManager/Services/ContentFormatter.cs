@@ -37,16 +37,6 @@ public class ContentFormatter(string? format) : IFormatProvider, ICustomFormatte
 
 			return p.ToString(_format, null);
 		}
-		else if (arg is bool b)
-		{
-			return _format.ToLower() switch
-			{
-				"yn" => b ? "Y" : "N",
-				"yesno" => b ? "Yes" : "No",
-
-				_ => b.ToString()
-			};
-		}
 
 		return arg!.ToString()!;
 	}

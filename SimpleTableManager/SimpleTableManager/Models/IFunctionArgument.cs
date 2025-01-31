@@ -7,6 +7,6 @@ namespace SimpleTableManager.Models
 		[MemberNotNullWhen(true, nameof(Name))]
 		bool IsNamed => Name is not null;
 
-		IEnumerable<IConvertible>? Resolve();
+		IEnumerable<IConvertible> Resolve();
 	}
 }

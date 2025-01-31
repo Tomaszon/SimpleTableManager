@@ -50,9 +50,9 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, bool, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string>] params IFunctionArgument[] contents)
 	{
-		SetFunction(type, "const", contents);
+		SetFunction(type, functionOperator: "const", contents);
 	}
 
 	[CommandFunction(WithSelector = true)]
@@ -92,9 +92,9 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<bool>] params IFunctionArgument[] arguments)
+	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<bool>(functionOperator, arguments);
+		SetFunction<FormattableBoolean>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
@@ -144,7 +144,7 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	//TODO check what happens in case of IShape
-	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, bool, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string, Ellipse>] params IEnumerable<IFunctionArgument> arguments)
+	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string, Ellipse>] params IEnumerable<IFunctionArgument> arguments)
 	{
 		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 

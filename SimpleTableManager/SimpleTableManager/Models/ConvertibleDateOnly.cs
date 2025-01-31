@@ -19,6 +19,11 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 		return DateOnly.Parse(args["0"].Value);
 	}
 
+	public static implicit operator DateOnly(ConvertibleDateOnly dateOnly)
+	{
+		return dateOnly._value;
+	}
+
 	public static implicit operator ConvertibleDateOnly(DateOnly dateOnly)
 	{
 		return new(dateOnly);

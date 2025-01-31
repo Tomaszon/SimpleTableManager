@@ -35,7 +35,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 	{
 		transformation ??= a => (TIn)a;
 
-		return UnnamedArguments.SelectMany(a => a.Resolve() is var result && result is not null ? result : throw new NullReferenceException()).Select(transformation);
+		return UnnamedArguments.SelectMany(a => a.Resolve()).Select(transformation);
 	}
 
 	protected IEnumerable<TIn> UnwrappedUnnamedArguments =>

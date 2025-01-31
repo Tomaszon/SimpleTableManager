@@ -29,7 +29,7 @@ public class ConstFunctionArgument<T>(T? value) :
 		NamedValue = namedValue;
 	}
 
-	public IEnumerable<IConvertible>? Resolve()
+	public IEnumerable<IConvertible> Resolve()
 	{
 		return (NamedValue ?? Value).Wrap()!;
 	}

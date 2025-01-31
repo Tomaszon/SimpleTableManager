@@ -46,7 +46,7 @@ public abstract class ParsableBase<T>
 
 		foreach (var regex in regexes)
 		{
-			var match = Regex.Match(value, regex);
+			var match = Regex.Match(value, regex, RegexOptions.IgnoreCase);
 
 			if (match.Success)
 			{

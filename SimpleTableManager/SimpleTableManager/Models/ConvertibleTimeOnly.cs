@@ -21,6 +21,11 @@ public class ConvertibleTimeOnly(TimeOnly value) : ConvertibleBase<ConvertibleTi
 		return TimeOnly.Parse(args["0"].Value);
 	}
 
+	public static implicit operator TimeOnly(ConvertibleTimeOnly timeOnly)
+	{
+		return timeOnly._value;
+	}
+
 	public static implicit operator ConvertibleTimeOnly(TimeOnly timeOnly)
 	{
 		return new(timeOnly);
