@@ -119,6 +119,16 @@
 		"Bottom": "Horizontal",
 		"BottomRight": "Horizontal, Up"
 	},
+	"contentRight": {
+		"TopLeft": "Down, Right",
+		"Top": "Horizontal",
+		"TopRight": "Horizontal, Down",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Right, Up",
+		"Bottom": "Horizontal",
+		"BottomRight": "Horizontal, Up"
+	},
 	"contentDownRight": {
 		"TopLeft": "Down, Right",
 		"Top": "Horizontal",
@@ -148,6 +158,16 @@
 		"BottomLeft": "Vertical, Horizontal",
 		"Bottom": "Horizontal",
 		"BottomRight": "Left, Vertical"
+	},
+	"contentLeft": {
+		"TopLeft": "Horizontal, Down",
+		"Top": "Horizontal",
+		"TopRight": "Down, Left",
+		"Left": "Vertical",
+		"Right": "Vertical",
+		"BottomLeft": "Horizontal, Up",
+		"Bottom": "Horizontal",
+		"BottomRight": "Left, Up"
 	},
 	"contentVerticalRight": {
 		"TopLeft": "Vertical, Right",

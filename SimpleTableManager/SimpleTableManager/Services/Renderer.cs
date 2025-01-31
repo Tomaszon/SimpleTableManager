@@ -15,14 +15,12 @@ public static class Renderer
 	private const int _MINIMUM_COLUMNS_FOR_CELL_INFOS = 100;
 
 	private const int _TABLE_GAP = 2;
-	
+
 	public static void Render(Document document)
 	{
 		var table = document.GetActiveTable(out var tableIndex);
 
-		var cells = table.GetPrimarySelectedCells();
-
-		var firstSelectedCell = cells.FirstOrDefault();
+		var selectedCells = table.GetPrimarySelectedCells();
 
 		ChangeToTextColors();
 
@@ -30,9 +28,9 @@ public static class Renderer
 
 		RenderDocumentInfos(document, logoBottomOffset, out var documentInfosBottomOffset);
 
-		RenderCellInfos(firstSelectedCell, firstSelectedCell is not null ? table[firstSelectedCell] : null, out var cellInfosLeftOffset);
+		RenderCellInfos([.. selectedCells], table, out var cellInfosLeftOffset);
 
-		RenderFunctionInfos(firstSelectedCell, documentInfosBottomOffset, out var functionInfosBottomOffset);
+		RenderFunctionInfos([.. selectedCells], documentInfosBottomOffset, out var functionInfosBottomOffset);
 
 		var tableSize = ShrinkTableViewToConsoleSize(table, functionInfosBottomOffset + _TABLE_GAP, Console.WindowWidth - cellInfosLeftOffset + _TABLE_GAP);
 
@@ -57,7 +55,7 @@ public static class Renderer
 		ChangeToTextColors();
 	}
 
-	private static void RenderFunctionInfos(Cell? cell, int verticalOffset, out int bottomOffset)
+	private static void RenderFunctionInfos(List<Cell> cells, int verticalOffset, out int bottomOffset)
 	{
 		if (Console.WindowHeight > _MINIMUM_LINES_FOR_FUNCTION_INFOS)
 		{
@@ -67,12 +65,24 @@ public static class Renderer
 			};
 
 			int cellMaxWidth = Console.WindowWidth - 20;
-			var cellContents = cell?.ContentFunction?.ToString()?.Split('\n');
+			var cellContents = cells.Count == 0 ? null :
+				(cells.Count == 1 ?
+					cells.First().ContentFunction?.ToString() :
+					cells.All(c => c.ContentFunction is null) ? 
+						null :
+						"Multiple\n")?
+				.Split('\n');
 			var cellMinWidth = Console.WindowWidth / 3;
 			var cellContentLength = cellContents?.Max(e => e.Length) ?? 0;
 
 			infoTable[0, 0].SetStringContent("Fn:");
-			infoTable[1, 0].SetStringContent(cellContentLength > cellMaxWidth ? $"{cellContents?[0]![..cellMaxWidth]} ..." : cellContents?[0] ?? "None", cellContentLength > cellMaxWidth ? $"{cellContents?[1]![..cellMaxWidth]} ..." : cellContents?[1] ?? "");
+			infoTable[1, 0].SetStringContent(
+				cellContentLength > cellMaxWidth ?
+					$"{cellContents?[0]![..cellMaxWidth]} ..." :
+					cellContents?[0] ?? "None",
+				cellContentLength > cellMaxWidth ?
+					$"{cellContents?[1]![..cellMaxWidth]} ..." :
+					cellContents?[1] ?? "");
 			infoTable[1, 0].GivenSize = new Size(cellMinWidth, 1);
 
 			infoTable.Content.ForEach(cell =>
@@ -93,13 +103,23 @@ public static class Renderer
 		}
 	}
 
-	private static void RenderCellInfos(Cell? cell, Position? position, out int leftOffset)
+	private static void RenderCellInfos(List<Cell> cells, Table table, out int leftOffset)
 	{
-		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cell is not null && position is not null)
+		if (Console.WindowWidth > _MINIMUM_COLUMNS_FOR_CELL_INFOS && cells.Count > 0)
 		{
-			var outType = cell.ContentFunction?.GetOutType().GetFriendlyName() ?? " - ";
-			var layerIndex = cell.LayerIndex.ToString();
-			var comments = cell.Comments.Count == 0 ? " - ".Wrap() : cell.Comments;
+			var outTypes = cells.Select(c => c.ContentFunction?.GetOutType().GetFriendlyName()).Where(t => t is not null).Cast<string>().Distinct().ToList();
+
+			var layerIndices = cells.Select(c => c.LayerIndex).Distinct();
+
+			var comments = cells.Select(c => c.Comments).Where(c => c.Count > 0).ToList();
+
+			var position = cells.Count == 1 ? table[cells.Single()].ToString() : "Multiple";
+
+			var outType = outTypes.Count == 0 ? " - " : outTypes.Count == 1 ? outTypes.Single() : "Multiple";
+
+			var layerIndex = layerIndices.Count() == 1 ? layerIndices.Single().ToString() : "Multiple";
+
+			var comment = comments.Count == 0 ? " - ".Wrap() : comments.Count == 1 ? comments.Single() : "Multiple".Wrap();
 
 			var infoTable = new Table(null!, "", 2, 4)
 			{
@@ -107,13 +127,13 @@ public static class Renderer
 			};
 
 			infoTable[0, 0].SetStringContent("Position:");
-			infoTable[1, 0].SetStringContent(position.ToString());
+			infoTable[1, 0].SetStringContent(position);
 			infoTable[0, 1].SetStringContent("Content:");
 			infoTable[1, 1].SetStringContent(outType);
 			infoTable[0, 2].SetStringContent("Layer:");
 			infoTable[1, 2].SetStringContent(layerIndex);
 			infoTable[0, 3].SetStringContent("Comment:");
-			infoTable[1, 3].SetStringContent(comments.SelectMany(c => c.Chunk(15)).Select(c => new string(c)));
+			infoTable[1, 3].SetStringContent(comment.SelectMany(c => c.Chunk(15)).Select(c => new string(c)));
 
 			infoTable.Content.ForEach(cell =>
 			{
@@ -443,7 +463,7 @@ public static class Renderer
 						matrix[i, 0] == -1 && matrix[i, 1] == 1, matrix[i, 0] == 1 && matrix[i, 1] == 1);
 				}
 			}
-		};
+		}
 
 		return border;
 	}
@@ -474,6 +494,11 @@ public static class Renderer
 	{
 		if (position.X == size.Width - 1 && position.Y == size.Height - 1)
 		{
+			if (headlessTable && size.Height == 1)
+			{
+				return CellBorderType.ContentLeft;
+			}
+
 			return CellBorderType.ContentUpLeft;
 		}
 		else if (position.X == size.Width - 1)
@@ -489,7 +514,7 @@ public static class Renderer
 		{
 			if (headlessTable && position.X == 0)
 			{
-				return CellBorderType.ContentUpRight;
+				return size.Height == 1 ? CellBorderType.ContentRight : CellBorderType.ContentUpRight;
 			}
 
 			return CellBorderType.ContentHorizontalUp;
