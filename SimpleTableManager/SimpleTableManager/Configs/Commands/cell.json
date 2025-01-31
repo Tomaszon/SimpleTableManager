@@ -101,7 +101,7 @@
 			}
 		},
 		"contentFunctionOperator": "setContentFunctionOperator",
-		"contentFunctionArguments": "setContentFunctionArguments",
+		"contentFunctionArguments": "setContentFunctionArguments/{autoTypeSelector}",
 		"verticalAlignment": "setVerticalAlignment",
 		"horizontalAlignment": "setHorizontalAlignment",
 		"padding": "setPadding",

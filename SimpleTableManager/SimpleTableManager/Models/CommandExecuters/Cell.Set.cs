@@ -142,21 +142,17 @@ public partial class Cell
 		ContentFunction.Operator = (Enum)ContentParser.ParseStringValue(ContentFunction.Operator.GetType(), @operator, null)!;
 	}
 
-	[CommandFunction]
-	public void SetContentFunctionArguments(params string[] arguments)
+	[CommandFunction(WithSelector = true)]
+	//TODO check what happens in case of IShape
+	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, bool, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string, Ellipse>] params IEnumerable<IFunctionArgument> arguments)
 	{
-		//REWORK
-		// ThrowIf<InvalidOperationException>(ContentFunction is null, "Content function is null!");
+		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 
-		// (var namedArgs, var args) = Shared.SeparateNamedArguments<string>(arguments);
+		var argType = ContentFunction.GetInType();
 
-		// ContentFunction.NamedArguments = namedArgs;
+		ThrowIf(argType != type, $"Arguments of type '{argType.GetFriendlyName()}' expected");
 
-		// var argType = ContentFunction.GetInType();
-
-		// var targetArray = FunctionCollection.ParseArgumentList(args, argType);
-
-		// ContentFunction.Arguments = targetArray.Cast<object>();
+		ContentFunction.Arguments = [.. arguments];
 	}
 
 	[CommandFunction]
