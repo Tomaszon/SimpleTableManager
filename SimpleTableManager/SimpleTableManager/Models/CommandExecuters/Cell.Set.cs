@@ -33,12 +33,11 @@ public partial class Cell
 		}
 	}
 
-	private void SetFunction<T>(Enum functionOperator, params IEnumerable<IFunctionArgument> arguments)
-		where T : IParsable<T>
+	private void SetFunction<T, T2>(T2 functionOperator, params IEnumerable<IFunctionArgument> arguments)
+		where T : IFunction, new()
+		where T2 : Enum
 	{
-		var newFunction = FunctionCollection.GetFunction<T>(functionOperator, arguments);
-
-		SetContent(newFunction);
+		SetContent(new T() { Arguments = [.. arguments], Operator = functionOperator });
 	}
 
 	private void SetFunction(Type valueType, string functionOperator, params IEnumerable<IFunctionArgument> arguments)
@@ -50,7 +49,7 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
 	{
 		SetFunction(type, functionOperator: "const", contents);
 	}
@@ -58,49 +57,49 @@ public partial class Cell
 	[CommandFunction(WithSelector = true)]
 	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<Rectangle>(functionOperator, arguments);
+		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<Ellipse>(functionOperator, arguments);
+		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<RightTriangle>(functionOperator, arguments);
+		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetStringContentFunction(StringFunctionOperator functionOperator, [MinLength(1), ValueTypes<string>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<string>(functionOperator, arguments);
+		SetFunction<StringFunction, StringFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [MinLength(1), ValueTypes<long>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<long>(functionOperator, arguments);
+		SetFunction<IntegerNumericFunction, NumericFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, [MinLength(1), ValueTypes<double>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<double>(functionOperator, arguments);
+		SetFunction<FractionNumericFunction, NumericFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<FormattableBoolean>(functionOperator, arguments);
+		SetFunction<BooleanFunction, BooleanFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
 	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [MinLength(1), ValueTypes<char>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<char>(functionOperator, arguments);
+		SetFunction<CharacterFunction, CharacterFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
@@ -110,7 +109,7 @@ public partial class Cell
 			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<DateTime>(DateTime.Now)) :
 			arguments;
 
-		SetFunction<DateTime>(functionOperator, args);
+		SetFunction<DateTimeFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
 
 	[CommandFunction(WithSelector = true)]
@@ -120,7 +119,7 @@ public partial class Cell
 			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now))) :
 			arguments;
 
-		SetFunction<ConvertibleDateOnly>(functionOperator, args);
+		SetFunction<DateFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
 
 	[CommandFunction(WithSelector = true)]
@@ -130,7 +129,7 @@ public partial class Cell
 			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleTimeOnly>(TimeOnly.FromDateTime(DateTime.Now))) :
 			arguments;
 
-		SetFunction<ConvertibleTimeOnly>(functionOperator, args);
+		SetFunction<TimeFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
 
 	[CommandFunction]
@@ -144,13 +143,13 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	//TODO check what happens in case of IShape
-	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, string, Ellipse>] params IEnumerable<IFunctionArgument> arguments)
+	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
 	{
 		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 
 		var argType = ContentFunction.GetInType();
 
-		ThrowIf(argType != type, $"Arguments of type '{argType.GetFriendlyName()}' expected");
+		ThrowIfNot(type.IsAssignableTo(argType), $"Arguments of type '{argType.GetFriendlyName()}' expected");
 
 		ContentFunction.Arguments = [.. arguments];
 	}

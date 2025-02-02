@@ -49,7 +49,10 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
 
 	public abstract IEnumerable<TOut> ExecuteCore();
 
-	public abstract string GetFriendlyName();
+	public virtual string GetFriendlyName()
+	{
+		return typeof(TIn).GetFriendlyName();
+	}
 
 	IEnumerable<IConvertible> IFunction.Execute()
 	{

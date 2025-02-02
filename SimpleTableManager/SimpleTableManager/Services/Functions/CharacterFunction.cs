@@ -5,11 +5,6 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(char))]
 public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, IConvertible>
 {
-	public override string GetFriendlyName()
-	{
-		return typeof(char).GetFriendlyName();
-	}
-
 	public override IEnumerable<IConvertible> ExecuteCore()
 	{
 		var separator = GetNamedArgument<string>(ArgumentName.Separator);

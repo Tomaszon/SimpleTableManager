@@ -3,11 +3,6 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(ConvertibleDateOnly))]
 public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, ConvertibleDateOnly>
 {
-	public override string GetFriendlyName()
-	{
-		return typeof(ConvertibleDateOnly).GetFriendlyName();
-	}
-
 	protected override ConvertibleDateOnly Sum()
 	{
 		return UnwrappedUnnamedArguments.Aggregate(DateOnly.MinValue, (a, c) => 

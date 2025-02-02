@@ -60,6 +60,18 @@ public class ValueTypesAttribute<T1, T2, T3, T4, T5, T6, T7, T8, T9>() :
 public class ValueTypesAttribute<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>() :
 	ValueTypesAttribute([typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9), typeof(T10)]);
 
+/// <summary>
+/// Indicates the possible types of a const argument's inner value. Tried in order, first successful type parse passes
+/// </summary>
+public class ValueTypesAttribute<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>() :
+	ValueTypesAttribute([typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9), typeof(T10), typeof(T11)]);
+
+/// <summary>
+/// Indicates the possible types of a const argument's inner value. Tried in order, first successful type parse passes
+/// </summary>
+public class ValueTypesAttribute<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>() :
+	ValueTypesAttribute([typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9), typeof(T10), typeof(T11), typeof(T12)]);
+
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
 public abstract class ValueTypesAttribute(params Type[] types) : Attribute
 {

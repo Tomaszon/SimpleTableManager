@@ -16,12 +16,12 @@ public abstract class Shape2Sized2dBase<T>(double size1, double size2) : Shape1S
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return $"[{Size1.ToString(format, formatProvider)}x{Size2.ToString(format, formatProvider)}]";
+		return $"{GetType().GetFriendlyName()}[{Size1.ToString(format, formatProvider)}x{Size2.ToString(format, formatProvider)}]";
 	}
 
 	public override string ToString()
 	{
-		return $"[{Size1}x{Size2}]";
+		return $"{GetType().GetFriendlyName()}[{Size1}x{Size2}]";
 	}
 
 	public new static T ParseCore(GroupCollection args, IFormatProvider? _)

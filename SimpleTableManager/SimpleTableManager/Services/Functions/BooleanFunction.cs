@@ -3,11 +3,6 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(FormattableBoolean))]
 public class BooleanFunction : FunctionBase<BooleanFunctionOperator, FormattableBoolean, FormattableBoolean>
 {
-	public override string GetFriendlyName()
-	{
-		return typeof(FormattableBoolean).GetFriendlyName();
-	}
-
 	public override IEnumerable<FormattableBoolean> ExecuteCore()
 	{
 		return Operator switch
@@ -39,7 +34,7 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, Formattable
 			{
 				try
 				{
-                    _ = a.Resolve().GetEnumerator().MoveNext();
+					_ = a.Resolve().GetEnumerator().MoveNext();
 
 					return false;
 
