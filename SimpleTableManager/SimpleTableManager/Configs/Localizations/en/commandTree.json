@@ -129,5 +129,6 @@
 	"repeat": "repeat",
 	"now": "now",
 	"area": "area",
-	"perimeter": "perimeter"
+	"perimeter": "perimeter",
+	"chart":"chart"
 }

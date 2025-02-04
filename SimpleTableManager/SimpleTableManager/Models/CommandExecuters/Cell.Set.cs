@@ -132,6 +132,12 @@ public partial class Cell
 		SetFunction<TimeFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
 
+	[CommandFunction(WithSelector = true)]
+	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>] IFunctionArgument x, [ValueTypes<int, string>] IFunctionArgument y)
+	{
+		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, [x, y]);
+	}
+
 	[CommandFunction]
 	public void SetContentFunctionOperator([MinLength(1)] string @operator)
 	{
