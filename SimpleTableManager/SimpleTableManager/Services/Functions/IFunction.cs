@@ -18,7 +18,8 @@ public interface IFunction
 
 	IEnumerable<string> ExecuteAndFormat();
 
-	TParse? GetNamedArgument<TParse>(ArgumentName key) where TParse : IParsable<TParse>;
+	TParse? GetNamedArgument<TParse>(ArgumentName key)
+		where TParse : IParsable<TParse>;
 
 	void SetError(string error);
 

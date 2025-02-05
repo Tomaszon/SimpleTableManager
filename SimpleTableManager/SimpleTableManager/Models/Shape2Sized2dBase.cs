@@ -5,7 +5,10 @@ namespace SimpleTableManager.Models;
 [ParseFormat("[size1*size2] (fractions)", "^\\[(?<s>\\d*(\\.|,)?\\d+)\\*(?<s2>\\d*(\\.|,)?\\d+)\\]$")]
 [ParseFormat("[size1xsize2] (fractions)", "^\\[(?<s>\\d*(\\.|,)?\\d+)x(?<s2>\\d*(\\.|,)?\\d+)\\]$")]
 [method: JsonConstructor]
-public abstract class Shape2Sized2dBase<T>(double size1, double size2) : Shape1Sized2dBase<T>(size1), IShape2Sized, IParsableCore<T>
+public abstract class Shape2Sized2dBase<T>(double size1, double size2) :
+	Shape1Sized2dBase<T>(size1),
+	IShape2Sized,
+	IParsableCore<T>
 	where T : Shape2Sized2dBase<T>, IParsable<T>
 {
 	public double Size2 { get; set; } = size2;

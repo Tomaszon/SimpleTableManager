@@ -130,5 +130,8 @@
 	"now": "now",
 	"area": "area",
 	"perimeter": "perimeter",
-	"chart":"chart"
+	"chart": "chart",
+	"raw": "raw",
+	"scatter": "scatter",
+	"bar": "bar"
 }

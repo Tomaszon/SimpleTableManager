@@ -4,7 +4,8 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<double>(ArgumentName.Base, 2)]
 [NamedArgument<int>(ArgumentName.Decimals, 2)]
-public abstract class NumericFunctionBase<TIn, TOut> : FunctionBase<NumericFunctionOperator, TIn, TOut>
+public abstract class NumericFunctionBase<TIn, TOut> :
+	FunctionBase<NumericFunctionOperator, TIn, TOut>
 	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, TOut
 	where TOut : IConvertible
 {

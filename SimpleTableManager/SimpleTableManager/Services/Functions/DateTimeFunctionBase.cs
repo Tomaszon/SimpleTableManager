@@ -1,6 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
-public abstract class DateTimeFunctionBase<TIn, TOut> : FunctionBase<DateTimeFunctionOperator, TIn, TOut>
+public abstract class DateTimeFunctionBase<TIn, TOut> :
+	FunctionBase<DateTimeFunctionOperator, TIn, TOut>
 	where TIn : IConvertible
 	where TOut : IConvertible
 {

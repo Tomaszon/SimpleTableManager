@@ -4,8 +4,13 @@ namespace SimpleTableManager.Models;
 
 [ParseFormat("[size]", "^\\[(?<s>\\d+)\\]$")]
 [method: JsonConstructor]
-public abstract class Shape1Sized2dBase<T>(double size1) : ConvertibleBase<T>, IShape2d, IShape1Sized, IParsableCore<T>, IFormattable
-where T : Shape1Sized2dBase<T>, IParsable<T>
+public abstract class Shape1Sized2dBase<T>(double size1) :
+	ConvertibleBase<T>,
+	IShape1Sized,
+	IShape2d,
+	IParsableCore<T>,
+	IFormattable
+	where T : Shape1Sized2dBase<T>, IParsable<T>
 {
 	public double Size1 { get; set; } = size1;
 

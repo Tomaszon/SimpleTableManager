@@ -26,7 +26,7 @@ public static class Extensions
 	}
 
 	public static bool NotHasFlag<T>(this T @enum, T flag)
-	where T : Enum
+		where T : Enum
 	{
 		return !@enum.HasFlag(flag);
 	}

@@ -17,7 +17,8 @@ public class InstanceMap
 	/// Adds new instances to storage
 	/// </summary>
 	/// <typeparam name="T">Type of instances</typeparam>
-	public void Add<T>(Func<IEnumerable<T>> func) where T : IStateModifierCommandExecuter
+	public void Add<T>(Func<IEnumerable<T>> func)
+		where T : IStateModifierCommandExecuter
 	{
 		_arrayMap.Add((LocalizeKey<T>(), typeof(T)), () => func.Invoke().Cast<IStateModifierCommandExecuter>());
 	}
@@ -26,7 +27,8 @@ public class InstanceMap
 	/// Adds new instance to storage
 	/// </summary>
 	/// <typeparam name="T">Type of instance</typeparam>
-	public void Add<T>(Func<T> func) where T : IStateModifierCommandExecuter
+	public void Add<T>(Func<T> func)
+		where T : IStateModifierCommandExecuter
 	{
 		_arrayMap.Add((LocalizeKey<T>(), typeof(T)), () => new[] { func.Invoke() }.Cast<IStateModifierCommandExecuter>());
 	}
@@ -35,7 +37,8 @@ public class InstanceMap
 	/// Removes instances from storage
 	/// </summary>
 	/// <typeparam name="T">Type of instances</typeparam>
-	public void Remove<T>() where T : IStateModifierCommandExecuter
+	public void Remove<T>()
+		where T : IStateModifierCommandExecuter
 	{
 		_arrayMap.Remove((LocalizeKey<T>(), typeof(T)));
 	}
@@ -57,7 +60,8 @@ public class InstanceMap
 	/// Returns stored instance based on type
 	/// </summary>
 	/// <typeparam name="T">Type of instance</typeparam>
-	public T? GetInstance<T>() where T : IStateModifierCommandExecuter
+	public T? GetInstance<T>()
+		where T : IStateModifierCommandExecuter
 	{
 		return GetInstances<T>().SingleOrDefault();
 	}
@@ -66,7 +70,8 @@ public class InstanceMap
 	/// Returns stored instances based on type
 	/// </summary>
 	/// <typeparam name="T">Type of instances</typeparam>
-	public IEnumerable<T?> GetInstances<T>() where T : IStateModifierCommandExecuter
+	public IEnumerable<T?> GetInstances<T>()
+		where T : IStateModifierCommandExecuter
 	{
 		return GetInstances(typeof(T)).Select(e => (T?)e);
 	}
@@ -84,7 +89,7 @@ public class InstanceMap
 	/// </summary>
 	/// <typeparam name="T">Type of instances</typeparam>
 	public bool TryGetInstances<T>([NotNullWhen(true)] out IEnumerable<T?>? instances)
-	where T : IStateModifierCommandExecuter
+		where T : IStateModifierCommandExecuter
 	{
 		try
 		{

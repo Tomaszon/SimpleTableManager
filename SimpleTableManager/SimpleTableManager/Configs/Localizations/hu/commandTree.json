@@ -130,5 +130,8 @@
 	"now": "most",
 	"area": "terület",
 	"perimeter": "kerület",
-	"chart": "diagram"
+	"chart": "diagram",
+	"raw": "nyers",
+	"scatter": "szétszórt",
+	"bar": "sáv"
 }

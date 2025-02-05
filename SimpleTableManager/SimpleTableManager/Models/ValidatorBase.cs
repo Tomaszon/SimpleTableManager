@@ -17,7 +17,7 @@ public abstract class ValidatorBase
 	}
 
 	public static void ThrowIf<T>([DoesNotReturnIf(true)] bool validator, string error)
-	where T : Exception
+		where T : Exception
 	{
 		if (validator)
 		{
@@ -31,7 +31,7 @@ public abstract class ValidatorBase
 	}
 
 	public static void ThrowIfNot<T>([DoesNotReturnIf(false)] bool validator, string error)
-	where T : Exception
+		where T : Exception
 	{
 		if (!validator)
 		{

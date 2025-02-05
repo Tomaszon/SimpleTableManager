@@ -99,8 +99,11 @@
 				"area": "setRightTriangleContentFunction/area",
 				"perimeter": "setRightTriangleContentFunction/perimeter"
 			},
-			"chart":{
-				"const":"setChartContentFunction/const"
+			"chart": {
+				"raw": "setChartContentFunction/raw",
+				"scatter": "setChartContentFunction/scatter",
+				"column": "setChartContentFunction/column",
+				"bar": "setChartContentFunction/bar"
 			}
 		},
 		"contentFunctionOperator": "setContentFunctionOperator",

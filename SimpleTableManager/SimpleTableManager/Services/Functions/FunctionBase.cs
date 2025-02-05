@@ -3,7 +3,8 @@ using System.Globalization;
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Format, "")]
-public abstract class FunctionBase<TOpertor, TIn, TOut> : IFunction
+public abstract class FunctionBase<TOpertor, TIn, TOut> :
+	IFunction
 	where TOpertor : struct, Enum
 	where TIn : IConvertible
 	where TOut : IConvertible

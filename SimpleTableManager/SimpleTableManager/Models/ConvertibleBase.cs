@@ -1,6 +1,8 @@
 namespace SimpleTableManager.Models;
 
-public abstract class ConvertibleBase<T> : ParsableBase<T>, IConvertible
+public abstract class ConvertibleBase<T> :
+	ParsableBase<T>,
+	IConvertible
 	where T : class, IParsable<T>, IParsableCore<T>
 {
 	public object ToType(Type conversionType, IFormatProvider? provider)

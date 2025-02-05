@@ -3,8 +3,9 @@ using System.Globalization;
 
 namespace SimpleTableManager.Services
 {
-	public class ParsableStringConverter<T> : TypeConverter
-	where T : IParsable<T>
+	public class ParsableStringConverter<T> :
+		TypeConverter
+		where T : IParsable<T>
 	{
 		public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
 		{
