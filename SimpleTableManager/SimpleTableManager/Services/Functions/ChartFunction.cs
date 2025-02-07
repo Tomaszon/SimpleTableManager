@@ -31,7 +31,11 @@ public class ChartFunction : FunctionBase<ChartFunctionOperator, IConvertible, I
 
 	public IChart BarChart()
 	{
-		return null;
+		//HACK
+		var xs = Arguments.First().Resolve();
+		var ys = Arguments.Last().Resolve();
+
+		return new BarChart(xs, ys);
 	}
 
 	public IChart ColumnChart()
@@ -51,7 +55,7 @@ public class ChartFunction : FunctionBase<ChartFunctionOperator, IConvertible, I
 			ChartFunctionOperator.Raw => typeof(RawChart),
 			ChartFunctionOperator.Scatter => typeof(IChart),
 			ChartFunctionOperator.Column => typeof(IChart),
-			ChartFunctionOperator.Bar => typeof(IChart),
+			ChartFunctionOperator.Bar => typeof(BarChart),
 
 			_ => throw GetInvalidOperatorException()
 		};
