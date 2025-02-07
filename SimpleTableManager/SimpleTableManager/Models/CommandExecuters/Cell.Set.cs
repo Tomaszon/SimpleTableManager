@@ -134,11 +134,9 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	//HACK find a way to use multiple args in charts x/y and use params
-	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>] IFunctionArgument x, [ValueTypes<int, string>] IFunctionArgument? y = null)
+	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>] IFunctionArgument[] x, [ValueTypes<int, string>] IFunctionArgument[]? y = null)
 	{
-		var args = y is null ? new IFunctionArgument[] { x } : [x, y];
-
-		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, args);
+		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x);
 	}
 
 	[CommandFunction]

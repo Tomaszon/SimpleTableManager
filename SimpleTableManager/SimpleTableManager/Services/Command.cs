@@ -2,11 +2,11 @@
 
 namespace SimpleTableManager.Services;
 
-public class Command(CommandReference? reference, string rawCommand, List<string>? arguments)
+public class Command(CommandReference? reference, string rawCommand, List<List<string>>? arguments)
 {
 	public CommandReference? Reference { get; set; } = reference;
 
-	public List<string>? Arguments { get; set; } = arguments;
+	public List<List<string>>? Arguments { get; set; } = arguments;
 
 	public List<string>? AvailableKeys { get; set; }
 
@@ -22,7 +22,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		if (selector is not null)
 		{
-			arguments?.Insert(0, selector);
+			arguments?.Insert(0, [selector]);
 		}
 
 		return new Command(reference, rawCommand, arguments);
@@ -46,7 +46,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 		Type? successfulValueType = null;
 
-		var autoTypeSelector = Reference?.WithSelector == true && Arguments?.FirstOrDefault() == "{autoTypeSelector}";
+		var autoTypeSelector = Reference?.WithSelector == true && Arguments?.FirstOrDefault()?.FirstOrDefault() == "{autoTypeSelector}";
 
 		for (var i = autoTypeSelector ? 1 : 0; i < parameters.Count; i++)
 		{
@@ -94,8 +94,13 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 				{
 					try
 					{
+						if (Arguments?.Count > i && Arguments?.ElementAt(i)?.Count > 1)
+						{
+							throw new ArgumentException("Collection of values can not be assigned to a non-collection argument");
+						}
+
 						var value = i < Arguments?.Count ?
-							ContentParser.ParseStringValue(paramType, Arguments[i], valueType) : parameter.DefaultValue;
+							ContentParser.ParseStringValue(paramType, Arguments[i][0], valueType) : parameter.DefaultValue;
 
 						validationResults.AddRange(ValidateArgumentElement(value, parameter));
 
@@ -111,6 +116,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 					{
 						formatExceptions.Add(fe);
 					}
+					//TODO argument exception?
 				}
 			}
 
@@ -211,11 +217,17 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 
 	private Array? ParseArrayValues(List<CommandParameter> parameters, int index, Type arrayType, Type? constArgumentValueType)
 	{
-		if (index < Arguments?.Count)
+		if (parameters.Count == index + 1 && index < Arguments?.Count)
 		{
 			var rest = Arguments.GetRange(index, Arguments.Count - index);
 
-			return ContentParser.ParseStringValues(arrayType, rest, constArgumentValueType);
+			return ContentParser.ParseStringValues(arrayType, [.. rest.SelectMany(r => r)], constArgumentValueType);
+		}
+		else if (index < Arguments?.Count)
+		{
+			var args = Arguments[index];
+
+			return ContentParser.ParseStringValues(arrayType, args, constArgumentValueType);
 		}
 		else
 		{
@@ -255,7 +267,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		return [.. parameters.Select(p => new CommandParameter(p))];
 	}
 
-	public static CommandReference GetCommandReference(string rawCommand, out List<string> arguments, out string? selector)
+	public static CommandReference GetCommandReference(string rawCommand, out List<List<string>> arguments, out string? selector)
 	{
 		var keys = rawCommand.Split(' ').ToList();
 
@@ -269,7 +281,7 @@ public class Command(CommandReference? reference, string rawCommand, List<string
 		return new CommandReference(keys.First(), methodName, selector is not null);
 	}
 
-	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<string> arguments, out string? selector)
+	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<List<string>> arguments, out string? selector)
 	{
 		if (obj is ExpandoObject o)
 		{
