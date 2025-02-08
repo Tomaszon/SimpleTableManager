@@ -193,9 +193,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 
 		var fnName = GetFriendlyName();
 
-		var jointRefArgs = string.Join(',', constArgs.Union(refArgs));
+		var jointRefArgs = Shared.Join(',', constArgs, refArgs);
 
-		var jointRefNamedArgs = string.Join(',', constNamedArgs.Union(refNamedArgs));
+		var jointRefNamedArgs = Shared.Join(',', constNamedArgs, refNamedArgs);
 
 		return $"{fnName}:{Operator}:({jointRefArgs})\n{jointRefNamedArgs}";
 	}

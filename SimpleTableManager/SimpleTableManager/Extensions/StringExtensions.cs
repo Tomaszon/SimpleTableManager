@@ -29,6 +29,6 @@ public static class StringExtensions
 
 	public static string ToUpperFirst(this string value)
 	{
-		return $"{value.First().ToString().ToUpper()}{new string(value.Skip(1).ToArray())}";
+		return $"{value.First().ToString().ToUpper()}{new string([.. value.Skip(1)])}";
 	}
 }

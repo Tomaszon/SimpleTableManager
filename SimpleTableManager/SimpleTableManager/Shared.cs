@@ -142,4 +142,20 @@ public static class Shared
 	{
 		return Assembly.GetExecutingAssembly().GetName().Version!;
 	}
+
+
+	public static Dictionary<string, MethodInfo> GetMethods<T>(Type type, Func<KeyValuePair<T, MethodInfo>, string> keySelector)
+		where T : Attribute
+	{
+		return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+			.Union(type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+			.Select(m =>
+				new KeyValuePair<T?, MethodInfo>(m.GetCustomAttribute<T>(false), m)).Where(e =>
+				e.Key is not null).ToDictionary(k => keySelector(k!), v => v.Value);
+	}
+
+	public static string Join<T>(char separator, params IEnumerable<IEnumerable<T>> values)
+	{
+		return string.Join(separator, values.Select(p => string.Join(separator, p))).TrimEnd(separator);
+	}
 }

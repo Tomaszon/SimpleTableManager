@@ -40,10 +40,6 @@ public static class CommandShortcuts
 
 	public static Dictionary<string, MethodInfo> GetMethods(Type type)
 	{
-		return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-			.Union(type.GetMethods(BindingFlags.Public | BindingFlags.Static))
-			.Select(m =>
-				(attribute: m.GetCustomAttribute<CommandShortcutAttribute>(false), method: m)).Where(e =>
-				e.attribute is not null).ToDictionary(k => k.attribute!.Key.ToLower(), v => v.method);
+		return Shared.GetMethods<CommandShortcutAttribute>(type, k => k.Key.Key.ToLower());
 	}
 }

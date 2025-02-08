@@ -251,11 +251,7 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 	public static Dictionary<string, MethodInfo> GetMethods(Type type)
 	{
-		return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-			.Union(type.GetMethods(BindingFlags.Public | BindingFlags.Static))
-			.Select(m =>
-				(attribute: m.GetCustomAttribute<CommandFunctionAttribute>(false), method: m)).Where(e =>
-				e.attribute is not null).ToDictionary(k => k.attribute!.MethodReference.ToLower(), v => v.method);
+		return Shared.GetMethods<CommandFunctionAttribute>(type, k => k.Key.MethodReference.ToLower());
 	}
 
 	public static List<CommandParameter> GetParameters(MethodInfo method, bool trimSelector)

@@ -80,7 +80,7 @@ public static class StackMata
 
 							mergingDepth--;
 
-							if (mergingDepth == 1)
+							if (mergingDepth == 0)
 							{
 								YieldResult(mergingDepth, groupingDepth, sb, results, c);
 							}
