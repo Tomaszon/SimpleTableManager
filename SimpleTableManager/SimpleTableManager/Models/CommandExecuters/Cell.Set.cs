@@ -33,10 +33,12 @@ public partial class Cell
 		}
 	}
 
-	private void SetFunction<T, T2>(T2 functionOperator, params IEnumerable<IFunctionArgument> arguments)
+	private void SetFunction<T, T2>(T2 functionOperator, IEnumerable<IFunctionArgument> arguments1, IEnumerable<IFunctionArgument>? arguments2 = null)
 		where T : IFunction, new()
 		where T2 : Enum
 	{
+		var arguments = arguments2 is not null ? arguments1.Union(arguments2) : arguments1;
+
 		SetContent(new T() { Arguments = [.. arguments], Operator = functionOperator });
 	}
 
@@ -136,7 +138,9 @@ public partial class Cell
 	//HACK find a way to use multiple args in charts x/y and use params
 	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>] IFunctionArgument[] x, [ValueTypes<int, string>] IFunctionArgument[]? y = null)
 	{
-		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x);
+		y?.ForEach(a => a.GroupingId = 1); //HACK use attribute instead
+
+		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);
 	}
 
 	[CommandFunction]
