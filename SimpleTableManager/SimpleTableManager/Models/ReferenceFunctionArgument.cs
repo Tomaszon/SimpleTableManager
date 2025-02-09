@@ -9,7 +9,7 @@ namespace SimpleTableManager.Models;
 [ParseFormat("ArgName{0}TableName,{1}x,{1}y ({1} for axis unlock, ArgName{0} for argument naming, TableName for referring to other tables)",
 	"^((?<n>.+)Arg0)?((?<t>.+),)?(?<x>Arg2?\\d+),(?<y>Arg2?\\d+)$",
 	[Shared.NAMED_ARG_SEPARATOR, Shared.REF_CHAR, Shared.REGEX_REF_CHAR])]
-public class ReferenceFunctionArgument(CellReference reference, ArgumentName? name = null, int groupingId = 0) :
+public class ReferenceFunctionArgument(CellReference reference, ArgumentName? name = null, object? groupingId = null) :
 	ParsableBase<ReferenceFunctionArgument>,
 	IParsable<ReferenceFunctionArgument>,
 	IParsableCore<ReferenceFunctionArgument>,
@@ -19,7 +19,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public CellReference Reference { get; set; } = reference;
 
-	public int GroupingId { get; set; } = groupingId;
+	public object? GroupingId { get; set; } = groupingId;
 
 	public IEnumerable<IConvertible> Resolve()
 	{

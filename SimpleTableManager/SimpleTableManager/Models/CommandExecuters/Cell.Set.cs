@@ -135,11 +135,9 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	//HACK find a way to use multiple args in charts x/y and use params
-	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>] IFunctionArgument[] x, [ValueTypes<int, string>] IFunctionArgument[]? y = null)
+	//TODO with only one array given as args Y is filled, X remains empty
+	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<int, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
 	{
-		y?.ForEach(a => a.GroupingId = 1); //HACK use attribute instead
-
 		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);
 	}
 

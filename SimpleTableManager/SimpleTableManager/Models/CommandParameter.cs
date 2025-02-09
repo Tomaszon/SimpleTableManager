@@ -27,12 +27,16 @@ public struct CommandParameter
 
 	public Type?[] ValueTypes { get; set; }
 
+	public object? GroupingId{ get; set; }
+
 	public CommandParameter(ParameterInfo parameterInfo)
 	{
 		Type = parameterInfo.ParameterType;
 		Name = parameterInfo.Name!;
 
 		ValueTypes = parameterInfo.GetCustomAttribute<ValueTypesAttribute>()?.PossibleTypes ?? [null];
+
+		GroupingId = parameterInfo.GetCustomAttribute<GroupingIdAttribute>()?.Id;
 
 		MinValue = parameterInfo.GetCustomAttribute<MinValueAttribute>()?.Value;
 		MaxValue = parameterInfo.GetCustomAttribute<MaxValueAttribute>()?.Value;

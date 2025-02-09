@@ -7,7 +7,7 @@ namespace SimpleTableManager.Models
 		[MemberNotNullWhen(true, nameof(Name))]
 		bool IsNamed => Name is not null;
 
-		public int GroupingId { get; set; }
+		public object? GroupingId { get; set; }
 
 		IEnumerable<IConvertible> Resolve();
 	}

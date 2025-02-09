@@ -182,21 +182,33 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 
 	public override string? ToString()
 	{
-		var constArgs = UnnamedConstArguments.Select(a => a.Value);
+		var args = UnnamedArguments
+			.OrderBy(a => a.GroupingId)
+			.ThenBy(a => a is IConstFunctionArgument ? 0 : 1)
+			.GroupBy(a => a.GroupingId);
 
-		var refArgs = UnnamedReferenceArguments
-			.Select(a => a.Reference.ToShortString());
+		var groupedArgs = args.Select(g => FormatArgGroup(g));
 
-		var constNamedArgs = NamedConstArguments.Select(p => $"{p.Key}:{p.Value.NamedValue}");
+		var constNamedArgs = NamedConstArguments
+			.Select(p => $"{p.Key}:{p.Value.NamedValue}");
 
-		var refNamedArgs = NamedReferenceArguments.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
+		var refNamedArgs = NamedReferenceArguments
+			.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");
 
 		var fnName = GetFriendlyName();
 
-		var jointRefArgs = Shared.Join(',', constArgs, refArgs);
+		var jointArgs = string.Join(' ', groupedArgs);
 
-		var jointRefNamedArgs = Shared.Join(',', constNamedArgs, refNamedArgs);
+		var jointNamedArgs = Shared.Join(',', constNamedArgs, refNamedArgs);
 
-		return $"{fnName}:{Operator}:({jointRefArgs})\n{jointRefNamedArgs}";
+		return $"{fnName}:{Operator}:({jointArgs})\n{jointNamedArgs}";
+	}
+
+	private static string FormatArgGroup(IGrouping<object?, IFunctionArgument> group)
+	{
+		return $"{(group.Key is not null ? $"{group.Key}:" : "")}{string.Join(',', group.ToList().Select(a =>
+			a is ReferenceFunctionArgument ra ?
+				ra.Reference.ToShortString() :
+				((IConstFunctionArgument)a).Value))}";
 	}
 }

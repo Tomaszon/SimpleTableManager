@@ -17,8 +17,8 @@ public class ChartFunction : FunctionBase<ChartFunctionOperator, IConvertible, I
 
 	public RawChart RawChart()
 	{
-		var xs = UnnamedArguments.Where(a => a.GroupingId == 0).SelectMany(a => a.Resolve());
-		var ys = UnnamedArguments.Where(a => a.GroupingId == 1).SelectMany(a => a.Resolve());
+		var xs = UnnamedArguments.Where(a => a.GroupingId is char x && x == 'X').SelectMany(a => a.Resolve());
+		var ys = UnnamedArguments.Where(a => a.GroupingId is char y && y == 'Y').SelectMany(a => a.Resolve());
 
 		return new RawChart(xs, ys);
 	}

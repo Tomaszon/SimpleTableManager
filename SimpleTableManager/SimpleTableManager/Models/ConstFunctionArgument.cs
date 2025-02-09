@@ -4,7 +4,7 @@ namespace SimpleTableManager.Models;
 	"^((?<n>.+)Arg0)?(?<v>.+)$",
 	[Shared.NAMED_ARG_SEPARATOR])]
 [method: JsonConstructor]
-public class ConstFunctionArgument<T>(T? value, int groupingId = 0) :
+public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 	ParsableBase<ConstFunctionArgument<T>>,
 	IParsable<ConstFunctionArgument<T>>,
 	IParsableCore<ConstFunctionArgument<T>>,
@@ -17,7 +17,7 @@ public class ConstFunctionArgument<T>(T? value, int groupingId = 0) :
 
 	public IConvertible? NamedValue { get; set; }
 
-	public int GroupingId { get; set; } = groupingId;
+	public object? GroupingId { get; set; } = groupingId;
 
 	IConvertible? IConstFunctionArgument.Value
 	{

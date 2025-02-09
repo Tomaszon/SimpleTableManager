@@ -29,6 +29,11 @@ public static class StackMata
 			{
 				case ' ':
 					{
+						if (groupingDepth == 0)
+						{
+							results.Add([]);
+						}
+						
 						YieldResult(mergingDepth, groupingDepth, sb, results, c);
 					}
 					break;

@@ -71,6 +71,11 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 							foreach (var e in values)
 							{
 								validationResults.AddRange(ValidateArgumentElement(e, parameter));
+
+								if (e is IFunctionArgument a)
+								{
+									a.GroupingId = parameter.GroupingId;
+								}
 							}
 						}
 
@@ -103,6 +108,11 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 							ContentParser.ParseStringValue(paramType, Arguments[i][0], valueType) : parameter.DefaultValue;
 
 						validationResults.AddRange(ValidateArgumentElement(value, parameter));
+
+						if (value is IFunctionArgument a)
+						{
+							a.GroupingId = parameter.GroupingId;
+						}
 
 						parsedArguments.Add(value);
 
