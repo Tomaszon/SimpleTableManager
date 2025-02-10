@@ -33,8 +33,8 @@ public static class StackMata
 						{
 							results.Add([]);
 						}
-						
-						YieldResult(mergingDepth, groupingDepth, sb, results, c);
+
+						YieldResult(mergingDepth, sb, results, c);
 					}
 					break;
 
@@ -87,7 +87,7 @@ public static class StackMata
 
 							if (mergingDepth == 0)
 							{
-								YieldResult(mergingDepth, groupingDepth, sb, results, c);
+								YieldResult(mergingDepth, sb, results, c);
 							}
 						}
 					}
@@ -132,7 +132,7 @@ public static class StackMata
 
 							if (groupingDepth == 1)
 							{
-								YieldResult(mergingDepth, groupingDepth, sb, results, c);
+								YieldResult(mergingDepth, sb, results, c);
 							}
 
 							groupingDepth--;
@@ -158,7 +158,9 @@ public static class StackMata
 			}
 		}
 
-		YieldResultCore(groupingDepth, results, sb);
+		results.Add([]);
+
+		YieldResultCore(results, sb);
 
 		if (mergingDepth != 0)
 		{
@@ -175,14 +177,14 @@ public static class StackMata
 			throw new ArgumentException("Invalid argument grouping syntax");
 		}
 
-		return results;
+		return [.. results.Where(a => a.Count > 0)];
 	}
 
-	private static void YieldResult(int mergingDepth, int groupingDepth, StringBuilder sb, List<List<string>> results, char c)
+	private static void YieldResult(int mergingDepth, StringBuilder sb, List<List<string>> results, char c)
 	{
 		if (mergingDepth == 0)
 		{
-			YieldResultCore(groupingDepth, results, sb);
+			YieldResultCore(results, sb);
 		}
 		else
 		{
@@ -190,7 +192,7 @@ public static class StackMata
 		}
 	}
 
-	private static void YieldResultCore(int groupingDepth, List<List<string>> results, StringBuilder sb)
+	private static void YieldResultCore(List<List<string>> results, StringBuilder sb)
 	{
 		if (sb.Length > 0)
 		{
