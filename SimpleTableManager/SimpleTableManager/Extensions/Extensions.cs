@@ -36,9 +36,4 @@ public static class Extensions
 	{
 		return ex.InnerException is null ? ex : ex.InnerException.GetInnermostException();
 	}
-
-	public static DateOnly ToDateOnly(this DateTime dateTime)
-	{
-		return new DateOnly(dateTime.Year, dateTime.Month, dateTime.Day);
-	}
 }

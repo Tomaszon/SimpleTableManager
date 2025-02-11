@@ -2,6 +2,7 @@ using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public class TestBase
 {
 	protected static IFunction CreateFunction<T>(Enum functionOperator, params IEnumerable<T> args)
@@ -18,11 +19,16 @@ public class TestBase
 		  args.Select(e => (IFunctionArgument)new ConstFunctionArgument<T>(e)).Union(namedArguments));
 	}
 
-	protected static void CheckResults<T>(IEnumerable<object> result, IEnumerable<T> expectedValues)
+	protected static void CheckResults<T>(IEnumerable<object> results, IEnumerable<T> expectedValues)
 	{
-		for (int i = 0; i < result.Count(); i++)
+		for (int i = 0; i < results.Count(); i++)
 		{
-			Assert.That(result.ElementAt(i), Is.EqualTo(expectedValues.ElementAt(i)));
+			CheckResult(results.ElementAt(i), expectedValues.ElementAt(i));
 		}
+	}
+
+	protected static void CheckResult<T>(object result, T expectedValue)
+	{
+		Assert.That(result, Is.EqualTo(expectedValue));
 	}
 }

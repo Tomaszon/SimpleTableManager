@@ -1,5 +1,6 @@
 ﻿namespace SimpleTableManager.Services;
 
+[ExcludeFromCodeCoverage]
 public static class Renderer
 {
 	public static RendererSettings RendererSettings { get; set; } = new();
@@ -68,7 +69,7 @@ public static class Renderer
 			var cellContents = cells.Count == 0 ? null :
 				(cells.Count == 1 ?
 					cells.First().ContentFunction?.ToString() :
-					cells.All(c => c.ContentFunction is null) ? 
+					cells.All(c => c.ContentFunction is null) ?
 						null :
 						"Multiple\n")?
 				.Split('\n');
@@ -126,8 +127,8 @@ public static class Renderer
 				IsHeadLess = true
 			};
 
-			infoTable[0,0].SetStringContent("Selected:");
-			infoTable[1,0].SetStringContent(cells.Count.ToString());
+			infoTable[0, 0].SetStringContent("Selected:");
+			infoTable[1, 0].SetStringContent(cells.Count.ToString());
 			infoTable[0, 1].SetStringContent("Position:");
 			infoTable[1, 1].SetStringContent(position);
 			infoTable[0, 2].SetStringContent("Content:");

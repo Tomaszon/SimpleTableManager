@@ -9,14 +9,4 @@ public static class IEnumerableExtensions
 			action(item);
 		}
 	}
-
-	public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action, int delay)
-	{
-		foreach (var item in collection)
-		{
-			action(item);
-
-			Task.Delay(delay).Wait();
-		}
-	}
 }

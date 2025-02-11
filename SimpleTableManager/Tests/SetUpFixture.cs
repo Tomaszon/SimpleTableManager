@@ -2,13 +2,14 @@ using SimpleTableManager.Models.CommandExecuters;
 
 namespace SimpleTableManager.Tests;
 
-[SetUpFixture]
+[SetUpFixture, ExcludeFromCodeCoverage]
 public class SetUpFixture
 {
 	[OneTimeSetUp]
 	public void Setup()
 	{
 		Settings.FromJson(@"Configs/settings.json");
+		Localizer.FromJson(@"Configs/Localizations");
 
 		var app = new App(new Document(Settings.Current.DefaultTableSize));
 

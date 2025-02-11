@@ -1,6 +1,7 @@
 namespace SimpleTableManager.Tests;
 
 [SuppressMessage("Usage", "CA1861")]
+[ExcludeFromCodeCoverage]
 public class FunctionTests : TestBase
 {
 	[Test]

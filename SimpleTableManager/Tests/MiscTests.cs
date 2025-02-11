@@ -2,6 +2,7 @@
 
 namespace SimpleTableManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public class MiscTests : TestBase
 {
 	[Test]

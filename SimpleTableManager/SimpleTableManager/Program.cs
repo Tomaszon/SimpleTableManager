@@ -1,5 +1,6 @@
 ﻿namespace SimpleTableManager;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
 	private static void Main(params string[] args)
