@@ -1,4 +1,4 @@
 {
 	"unsaved": "Document contains unsaved changes that will be lost! Set {0} to 'true' to force file load",
-	"load.info": "Loads the given document"
+	"open.info": "Opens the given document"
 }

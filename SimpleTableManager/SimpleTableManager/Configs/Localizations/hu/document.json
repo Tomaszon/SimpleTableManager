@@ -1,4 +1,4 @@
 {
 	"unsaved": "A nem mentett változások elvesznek! Állítsd a {0} változót 'true'-ra megerősítéshez",
-	"load.info": "Megadott dokumentumot megnyitása"
+	"open.info": "Adott dokumentum megnyitása"
 }
