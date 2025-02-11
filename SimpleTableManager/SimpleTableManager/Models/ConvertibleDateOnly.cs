@@ -31,7 +31,11 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 
 	public override bool Equals(object? obj)
 	{
-		if (obj is ConvertibleDateOnly cdo && cdo is not null)
+		if (obj is DateOnly d)
+		{
+			return _value.Equals(d);
+		}
+		else if (obj is ConvertibleDateOnly cdo && cdo is not null)
 		{
 			return _value.Equals(cdo._value);
 		}

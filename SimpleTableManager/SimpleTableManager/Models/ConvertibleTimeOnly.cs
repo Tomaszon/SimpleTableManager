@@ -33,7 +33,11 @@ public class ConvertibleTimeOnly(TimeOnly value) : ConvertibleBase<ConvertibleTi
 
 	public override bool Equals(object? obj)
 	{
-		if (obj is ConvertibleTimeOnly cto && cto is not null)
+		if (obj is TimeOnly t)
+		{
+			return _value.Equals(t);
+		}
+		else if (obj is ConvertibleTimeOnly cto && cto is not null)
 		{
 			return _value.Equals(cto._value);
 		}

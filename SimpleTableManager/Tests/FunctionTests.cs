@@ -9,13 +9,13 @@ public class FunctionTests : TestBase
 	[TestCase(BooleanFunctionOperator.Not, new[] { false, true }, new[] { true, false })]
 	public void BoolTest(BooleanFunctionOperator operation, bool[] values, params bool[] results)
 	{
-		var fn = CreateFunction(operation, values);
+		var fn = CreateFunction(operation, values.Select(e => (FormattableBoolean)e));
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.Select(e => (FormattableBoolean)e));
 	}
 
 	[Test]
-	[TestCase(DateTimeFunctionOperator.Const, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0002-02-02 10:30", "0002-02-02 02:20" )]
+	[TestCase(DateTimeFunctionOperator.Const, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0002-02-02 10:30", "0002-02-02 02:20")]
 	[TestCase(DateTimeFunctionOperator.Sum, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0004-04-04 12:50")]
 	public void DateTimeTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{

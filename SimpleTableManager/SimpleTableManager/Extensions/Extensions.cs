@@ -3,6 +3,7 @@
 public static class Extensions
 {
 	public static TOut ToType<TOut>(this IConvertible convertible)
+		where TOut : IConvertible
 	{
 		return convertible is TOut value ? value : (TOut)convertible.ToType(typeof(TOut), null);
 	}

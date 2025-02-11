@@ -34,6 +34,10 @@ public class FormattableBoolean(bool value) : ConvertibleBase<FormattableBoolean
 		{
 			return _value.Equals(b);
 		}
+		else if (obj is FormattableBoolean fb && fb is not null)
+		{
+			return _value.Equals(fb._value);
+		}
 
 		return false;
 	}
