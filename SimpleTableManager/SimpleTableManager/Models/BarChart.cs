@@ -3,8 +3,7 @@ using System.Text;
 namespace SimpleTableManager.Models;
 
 public class BarChart(IEnumerable<IConvertible> xs, IEnumerable<IConvertible> ys) :
-	ChartBase<BarChart>(xs, ys),
-	IParsable<BarChart>
+	ChartBase<BarChart>(xs, ys)
 {
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{

@@ -4,42 +4,18 @@ public class ChartFunction : FunctionBase<ChartFunctionOperator, IConvertible, I
 {
 	public override IEnumerable<IChart> ExecuteCore()
 	{
-		return Operator switch
-		{
-			ChartFunctionOperator.Raw => RawChart().Wrap(),
-			ChartFunctionOperator.Scatter => ScatterChart().Wrap(),
-			ChartFunctionOperator.Column => ColumnChart().Wrap(),
-			ChartFunctionOperator.Bar => BarChart().Wrap(),
-
-			_ => throw GetInvalidOperatorException()
-		};
-	}
-
-	public RawChart RawChart()
-	{
 		var xs = UnnamedArguments.Where(a => a.GroupingId is char x && x == 'X').SelectMany(a => a.Resolve());
 		var ys = UnnamedArguments.Where(a => a.GroupingId is char y && y == 'Y').SelectMany(a => a.Resolve());
 
-		return new RawChart(xs, ys);
-	}
+		return Operator switch
+		{
+			ChartFunctionOperator.Raw => new RawChart(xs, ys).Wrap(),
+			// ChartFunctionOperator.Scatter => .Wrap(),
+			// ChartFunctionOperator.Column => .Wrap(),
+			ChartFunctionOperator.Bar => new BarChart(xs, ys).Wrap(),
 
-	public IChart ScatterChart()
-	{
-		return null;
-	}
-
-	public IChart BarChart()
-	{
-		//HACK
-		var xs = Arguments.First().Resolve();
-		var ys = Arguments.Last().Resolve();
-
-		return new BarChart(xs, ys);
-	}
-
-	public IChart ColumnChart()
-	{
-		return null;
+			_ => throw GetInvalidOperatorException()
+		};
 	}
 
 	public override string GetFriendlyName()
