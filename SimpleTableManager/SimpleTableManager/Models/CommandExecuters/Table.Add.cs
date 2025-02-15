@@ -22,6 +22,10 @@ public partial class Table
 		{
 			ViewOptions.IncreaseHeight();
 		}
+		else
+		{
+			OnViewChanged();
+		}
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
@@ -63,6 +67,10 @@ public partial class Table
 		if (ViewOptions.EndPosition.X == Size.Width - 2)
 		{
 			ViewOptions.IncreaseWidth();
+		}
+		else
+		{
+			OnViewChanged();
 		}
 	}
 

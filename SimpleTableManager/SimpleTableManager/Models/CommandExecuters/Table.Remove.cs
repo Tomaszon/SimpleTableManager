@@ -17,6 +17,10 @@ public partial class Table
 		{
 			ViewOptions.DecreaseHeight();
 		}
+		else
+		{
+			OnViewChanged();
+		}
 
 		RemoveDeadCellReferences();
 	}
@@ -50,6 +54,10 @@ public partial class Table
 		if (ViewOptions.EndPosition.X == Size.Width)
 		{
 			ViewOptions.DecreaseWidth();
+		}
+		else
+		{
+			OnViewChanged();
 		}
 
 		RemoveDeadCellReferences();
