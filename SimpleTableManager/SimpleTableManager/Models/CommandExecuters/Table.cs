@@ -95,23 +95,23 @@ public partial class Table : CommandExecuterBase
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args)
 	{
-		var position = this[(Cell)sender];
+		// var position = this[(Cell)sender];
 
-		var referrerCells = Content.Where(c =>
-			c.ContentFunction?.UnnamedReferenceArguments.Union(c.ContentFunction!.NamedReferenceArguments.Values).Any(a =>
-				a.Reference.ReferencedPositions.Any(p => p.Equals(position))) == true);
+		// var referrerCells = Content.Where(c =>
+		// 	c.ContentFunction?.UnnamedReferenceArguments.Union(c.ContentFunction!.NamedReferenceArguments.Values).Any(a =>
+		// 		a.Reference.ReferencedPositions.Any(p => p.Equals(position))) == true);
 
-		referrerCells.ForEach(c =>
-		{
-			if (c == args.Root)
-			{
-				c.ContentFunction?.SetError("Circular reference");
-			}
-			else
-			{
-				c.InvokeStateModifierCommandExecutedEvent(args);
-			}
-		});
+		// referrerCells.ForEach(c =>
+		// {
+		// 	if (c == args.Root)
+		// 	{
+		// 		c.ContentFunction?.SetError("Circular reference");
+		// 	}
+		// 	else
+		// 	{
+		// 		c.InvokeStateModifierCommandExecutedEvent(args);
+		// 	}
+		// });
 
 		if (args.IsPropagable)
 		{

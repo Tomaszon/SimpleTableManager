@@ -25,6 +25,14 @@ public partial class Cell
 			Deselect();
 		}
 
+		ContentFunction?.ReferenceArguments.ForEach(a =>
+			a.GetReferencedCells().ForEach(c =>
+				c.StateModifierCommandExecutedEvent -= OnStateModifierCommandExecuted));
+
+		newFunction?.ReferenceArguments.ForEach(a =>
+			a.GetReferencedCells().ForEach(c =>
+				c.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted));
+
 		ContentFunction = newFunction;
 
 		if (selectDeselect)

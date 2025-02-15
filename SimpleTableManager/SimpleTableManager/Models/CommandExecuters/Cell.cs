@@ -116,7 +116,7 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
-	
+
 	public void Select()
 	{
 		Selection.SelectPrimary();
@@ -129,13 +129,13 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 			r.ReferencedPositions.ForEach(p =>
 			{
-                if (table.TryGetCellAt(p, out var c) && c != this)
-                {
-                    c.Selection.SelectSecondary();
+				if (table.TryGetCellAt(p, out var c) && c != this)
+				{
+					c.Selection.SelectSecondary();
 
-                    TertiarySelectionRecursive(c, false, this);
-                }
-            });
+					TertiarySelectionRecursive(c, false, this);
+				}
+			});
 		});
 	}
 
@@ -151,13 +151,13 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 			r.ReferencedPositions.ForEach(p =>
 			{
-                if (table.TryGetCellAt(p, out var c) && c != this)
-                {
-                    c.Selection.DeselectSecondary();
+				if (table.TryGetCellAt(p, out var c) && c != this)
+				{
+					c.Selection.DeselectSecondary();
 
-                    TertiaryDeselectionRecursive(c, false, this);
-                }
-            });
+					TertiaryDeselectionRecursive(c, false, this);
+				}
+			});
 		});
 	}
 
@@ -173,11 +173,11 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 				r.ReferencedPositions.ForEach(p =>
 				{
-                    if (table.TryGetCellAt(p, out var c) && c != cell && c != root)
-                    {
-                        TertiarySelectionRecursive(c, false, root);
-                    }
-                });
+					if (table.TryGetCellAt(p, out var c) && c != cell && c != root)
+					{
+						TertiarySelectionRecursive(c, false, root);
+					}
+				});
 			});
 
 			if (selectSelf)
@@ -232,6 +232,18 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		_cachedFormattedContent = [];
 
 		ContentFunction?.ClearError();
+
+		if (sender != this)
+		{
+			if (arg.Root != this)
+			{
+				InvokeStateModifierCommandExecutedEvent(arg);
+			}
+			else
+			{
+				ContentFunction?.SetError("Circular reference");
+			}
+		}
 	}
 
 	public object GetFormat(Type? formatType)

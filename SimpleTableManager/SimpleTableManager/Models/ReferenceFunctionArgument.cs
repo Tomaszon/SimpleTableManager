@@ -23,11 +23,16 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public IEnumerable<IConvertible> Resolve()
 	{
+		return GetReferencedCells().SelectMany(c => c.ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
+	}
+
+	public IEnumerable<Cell> GetReferencedCells()
+	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
 		var table = doc[Reference.ReferencedTableId];
 
-		return Reference.ReferencedPositions.SelectMany(r => table[r].ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
+		return Reference.ReferencedPositions.Select(p => table[p]);
 	}
 
 	public bool TryResolve(out IEnumerable<object>? result, [NotNullWhen(false)] out string? error)

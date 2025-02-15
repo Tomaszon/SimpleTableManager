@@ -11,6 +11,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 
+	public IEnumerable<ReferenceFunctionArgument> ReferenceArguments =>
+		Arguments.Where(a => a is ReferenceFunctionArgument).Cast<ReferenceFunctionArgument>();
+
 	public IEnumerable<IFunctionArgument> UnnamedArguments =>
 		Arguments.Where(a => !a.IsNamed);
 

@@ -4,6 +4,8 @@ public interface IFunction
 {
 	List<IFunctionArgument> Arguments { get; set; }
 
+	IEnumerable<ReferenceFunctionArgument> ReferenceArguments { get; }
+
 	IEnumerable<IConstFunctionArgument> UnnamedConstArguments { get; }
 
 	IEnumerable<ReferenceFunctionArgument> UnnamedReferenceArguments { get; }
