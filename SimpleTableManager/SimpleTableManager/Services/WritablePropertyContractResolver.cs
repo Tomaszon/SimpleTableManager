@@ -8,6 +8,6 @@ public class WritablePropertyContractResolver : DefaultContractResolver
 	{
 		var n = type.Name;
 		IList<JsonProperty> props = base.CreateProperties(type, memberSerialization);
-		return props.Where(p => p.Writable).ToList();
+		return [.. props.Where(p => p.Writable)];
 	}
 }

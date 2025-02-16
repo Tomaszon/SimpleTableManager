@@ -10,17 +10,10 @@ public class ConvertibleJsonConverter : JsonConverter<IConvertible>
 		}
 		else if (reader.ValueType == typeof(string))
 		{
-			if (reader.Value is null)
-			{
-				return null;
-			}
+			return reader.Value is null ? null : (IConvertible?)ContentParser.ParseConstStringValue(objectType, (string)reader.Value);
+		}
 
-			return (IConvertible?)ContentParser.ParseConstStringValue(objectType, (string)reader.Value);
-		}
-		else
-		{
-			return (IConvertible?)((IConvertible?)reader.Value)?.ToType(objectType, null);
-		}
+		return (IConvertible?)((IConvertible?)reader.Value)?.ToType(objectType, null);
 	}
 
 	public override void WriteJson(JsonWriter writer, IConvertible? value, JsonSerializer serializer)

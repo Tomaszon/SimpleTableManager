@@ -281,7 +281,7 @@ public partial class SmartConsole
 				return;
 			}
 
-			ShowHintRow(availableKeys.Skip(keyIndexAggregate).ToList(), nextKey, out var keyIndex, partialKey);
+			ShowHintRow([.. availableKeys.Skip(keyIndexAggregate)], nextKey, out var keyIndex, partialKey);
 			keyIndexAggregate += keyIndex;
 
 			Console.WriteLine();

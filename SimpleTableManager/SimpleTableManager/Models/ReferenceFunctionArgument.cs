@@ -90,20 +90,18 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 			return new ReferenceFunctionArgument(new(t.Id, new(x, y, hl, vl)), name);
 		}
-		else
-		{
-			var x1 = int.Parse(x1s.Trim(Shared.REF_CHAR));
-			var y1 = int.Parse(y1s.Trim(Shared.REF_CHAR));
-			var x2 = int.Parse(x2s.Trim(Shared.REF_CHAR));
-			var y2 = int.Parse(y2s.Trim(Shared.REF_CHAR));
 
-			var hl1 = !x1s.Contains(Shared.REF_CHAR);
-			var vl1 = !y1s.Contains(Shared.REF_CHAR);
-			var hl2 = !x2s.Contains(Shared.REF_CHAR);
-			var vl2 = !y2s.Contains(Shared.REF_CHAR);
+		var x1 = int.Parse(x1s.Trim(Shared.REF_CHAR));
+		var y1 = int.Parse(y1s.Trim(Shared.REF_CHAR));
+		var x2 = int.Parse(x2s.Trim(Shared.REF_CHAR));
+		var y2 = int.Parse(y2s.Trim(Shared.REF_CHAR));
 
-			return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, vl2, vl2)), name);
-		}
+		var hl1 = !x1s.Contains(Shared.REF_CHAR);
+		var vl1 = !y1s.Contains(Shared.REF_CHAR);
+		var hl2 = !x2s.Contains(Shared.REF_CHAR);
+		var vl2 = !y2s.Contains(Shared.REF_CHAR);
+
+		return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, vl2, vl2)), name);
 	}
 
 	public override string ToString()

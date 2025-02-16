@@ -41,14 +41,7 @@ public class AutoComplete
 
 	private void StepIndex(string? partialKey, bool backwards)
 	{
-		if (backwards)
-		{
-			_index = _index > 0 ? _index - 1 : _keys.Count - 1;
-		}
-		else
-		{
-			_index = _index < _keys.Count - 1 ? _index + 1 : 0;
-		}
+		_index = backwards ? _index > 0 ? _index - 1 : _keys.Count - 1 : _index < _keys.Count - 1 ? _index + 1 : 0;
 
 		if (partialKey is not null && !_keys[_index].StartsWith(partialKey))
 		{

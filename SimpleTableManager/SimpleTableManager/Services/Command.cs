@@ -126,7 +126,6 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 					{
 						formatExceptions.Add(fe);
 					}
-					//TODO argument exception?
 				}
 			}
 
@@ -188,37 +187,39 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 	{
 		var validationResults = new List<string>();
 
-		if (value is not null)
+		if (value is null)
 		{
-			var isNumber = value.GetType().GetInterface("INumber`1") is not null && value is not char;
-			var v = value is int p ? (double)p : value;
+			return validationResults;
+		}
 
-			if (parameter.MaxValue is var max && max is not null)
+		var isNumber = value.GetType().GetInterface("INumber`1") is not null && value is not char;
+		var v = value is int p ? (double)p : value;
+
+		if (parameter.MaxValue is var max && max is not null)
+		{
+			var m = max is int i ? (double)i : max;
+
+			if (m.CompareTo(v) < 0)
 			{
-				var m = max is int i ? (double)i : max;
-
-				if (m.CompareTo(v) < 0)
-				{
-					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be less then" : "precede")} '{max}'");
-				}
+				validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be less then" : "precede")} '{max}'");
 			}
+		}
 
-			if (parameter.MinValue is var min && min is not null)
+		if (parameter.MinValue is var min && min is not null)
+		{
+			var m = min is int i ? (double)i : min;
+
+			if (m.CompareTo(v) > 0)
 			{
-				var m = min is int i ? (double)i : min;
-
-				if (m.CompareTo(v) > 0)
-				{
-					validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be greater then" : "exceed")} '{min}'");
-				}
+				validationResults.Add($"Value for '{parameter.Name}' must {(isNumber ? "be greater then" : "exceed")} '{min}'");
 			}
+		}
 
-			if (v is string vs && vs is not null)
+		if (v is string vs && vs is not null)
+		{
+			if (vs.Length < parameter.MinLength)
 			{
-				if (vs.Length < parameter.MinLength)
-				{
-					validationResults.Add($"Value for {parameter.Name} must be at least {parameter.MinLength} long");
-				}
+				validationResults.Add($"Value for {parameter.Name} must be at least {parameter.MinLength} long");
 			}
 		}
 
@@ -239,10 +240,8 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 			return ContentParser.ParseStringValues(arrayType, args, constArgumentValueType);
 		}
-		else
-		{
-			return (Array?)parameters[index].DefaultValue;
-		}
+
+		return (Array?)parameters[index].DefaultValue;
 	}
 
 	public MethodInfo GetMethod(Type type)
@@ -253,10 +252,8 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 		{
 			return method;
 		}
-		else
-		{
-			throw new KeyNotFoundException($"Method '{Reference}' not found on object type of '{type}'");
-		}
+
+		throw new KeyNotFoundException($"Method '{Reference}' not found on object type of '{type}'");
 	}
 
 	public static Dictionary<string, MethodInfo> GetMethods(Type type)
@@ -293,61 +290,48 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 		{
 			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
 			{
-				throw new HelpRequestedException(rawCommand, o.Select(e => (e.Key, e.Value is not ExpandoObject)).ToList(), null);
+				throw new HelpRequestedException(rawCommand, [.. o.Select(e => (e.Key, e.Value is not ExpandoObject))], null);
 			}
-			else
+
+			var key = keys.First();
+
+			if (string.IsNullOrWhiteSpace(key))
 			{
-				var key = keys.First();
-
-				if (string.IsNullOrWhiteSpace(key))
-				{
-					return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
-				}
-				else
-				{
-					var matchingValue = o.FirstOrDefault(e =>
-						e.Key.Split(_ALTERNATIVE_KEY_SEPARATOR, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
-
-					var partialMatchingValue = o.FirstOrDefault(e =>
-						e.Key.Split(_ALTERNATIVE_KEY_SEPARATOR, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(p => p.StartsWith(key, StringComparison.OrdinalIgnoreCase))).Value;
-
-					if (matchingValue is null)
-					{
-						if (partialMatchingValue is not null)
-						{
-							throw new PartialKeyException(rawCommand, key);
-						}
-						else
-						{
-							throw new CommandKeyNotFoundException(rawCommand, key);
-						}
-					}
-
-					if (matchingValue is ExpandoObject && keys.Count <= 1 || matchingValue is not ExpandoObject && keys.Count < 1)
-					{
-						throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
-					}
-
-					return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
-				}
+				return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
 			}
+
+			var matchingValue = o.FirstOrDefault(e =>
+				e.Key.Split(_ALTERNATIVE_KEY_SEPARATOR, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(key, StringComparer.OrdinalIgnoreCase)).Value;
+
+			var partialMatchingValue = o.FirstOrDefault(e =>
+				e.Key.Split(_ALTERNATIVE_KEY_SEPARATOR, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(p => p.StartsWith(key, StringComparison.OrdinalIgnoreCase))).Value;
+
+			if (matchingValue is null)
+			{
+				throw partialMatchingValue is not null ?
+					new PartialKeyException(rawCommand, key) :
+					new CommandKeyNotFoundException(rawCommand, key);
+			}
+
+			if (matchingValue is ExpandoObject && keys.Count <= 1 || matchingValue is not ExpandoObject && keys.Count < 1)
+			{
+				throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
+			}
+
+			return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
 		}
-		else
+
+		if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
 		{
-			if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
-			{
-				throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!.Split(_SELECTOR_SEPARATOR)[0]));
-			}
-			else
-			{
-				arguments = StackMata.ProcessArguments(string.Join(' ', keys));
-
-				var values = ((string)obj).Split(_SELECTOR_SEPARATOR);
-
-				selector = values.ElementAtOrDefault(1);
-
-				return values[0];
-			}
+			throw new HelpRequestedException(rawCommand, null, new CommandReference(className, obj.ToString()!.Split(_SELECTOR_SEPARATOR)[0]));
 		}
+
+		arguments = StackMata.ProcessArguments(string.Join(' ', keys));
+
+		var values = ((string)obj).Split(_SELECTOR_SEPARATOR);
+
+		selector = values.ElementAtOrDefault(1);
+
+		return values[0];
 	}
 }

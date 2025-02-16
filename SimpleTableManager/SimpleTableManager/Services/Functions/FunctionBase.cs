@@ -65,71 +65,67 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 
 	protected List<TOut> ExecuteWrapper()
 	{
-		if (Error is null)
-		{
-			try
-			{
-				return [.. ExecuteCore()];
-			}
-			catch (InvalidCastException)
-			{
-				SetError("Invalid cast");
-
-				throw;
-			}
-			catch (NullReferenceException)
-			{
-				SetError("Null reference");
-
-				throw;
-			}
-			catch (InvalidOperationException)
-			{
-				SetError("Invalid position");
-
-				throw;
-			}
-			catch (ArgumentException)
-			{
-				SetError("Multiple values");
-
-				throw;
-			}
-			catch (FormatException)
-			{
-				SetError("Argument error");
-
-				throw;
-			}
-		}
-		else
+		if (Error is not null)
 		{
 			throw new OperationCanceledException(Error);
+		}
+
+		try
+		{
+			return [.. ExecuteCore()];
+		}
+		catch (InvalidCastException)
+		{
+			SetError("Invalid cast");
+
+			throw;
+		}
+		catch (NullReferenceException)
+		{
+			SetError("Null reference");
+
+			throw;
+		}
+		catch (InvalidOperationException)
+		{
+			SetError("Invalid position");
+
+			throw;
+		}
+		catch (ArgumentException)
+		{
+			SetError("Multiple values");
+
+			throw;
+		}
+		catch (FormatException)
+		{
+			SetError("Argument error");
+
+			throw;
 		}
 	}
 
 	public IEnumerable<string> ExecuteAndFormat()
 	{
-		if (Error is null)
-		{
-			try
-			{
-				var format = GetNamedArgument<string>(ArgumentName.Format);
-
-				var formatter = new ContentFormatter(format);
-
-				return [.. ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\n", StringSplitOptions.RemoveEmptyEntries))];
-			}
-			catch (FormatException)
-			{
-				SetError("Format error");
-
-				throw;
-			}
-		}
-		else
+		if (Error is not null)
 		{
 			throw new OperationCanceledException(Error);
+		}
+
+		try
+		{
+			var format = GetNamedArgument<string>(ArgumentName.Format);
+
+			var formatter = new ContentFormatter(format);
+
+			return [.. ExecuteWrapper().SelectMany(c => string.Format(formatter, "{0}", c).Split("\n", StringSplitOptions.RemoveEmptyEntries))];
+		}
+		catch (FormatException)
+		{
+			SetError("Format error");
+
+			throw;
 		}
 	}
 

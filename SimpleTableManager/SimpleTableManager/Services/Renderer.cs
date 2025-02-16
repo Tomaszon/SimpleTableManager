@@ -540,26 +540,12 @@ public static class Renderer
 
 	private static CellBorderType GetHeaderCellBorderType(int size, int position)
 	{
-		if (position == size - 1)
-		{
-			return CellBorderType.HeaderVertical;
-		}
-		else
-		{
-			return CellBorderType.HeaderOpen;
-		}
+		return position == size - 1 ? CellBorderType.HeaderVertical : CellBorderType.HeaderOpen;
 	}
 
 	private static CellBorderType GetSiderCellBorderType(int size, int position)
 	{
-		if (position == size - 1)
-		{
-			return CellBorderType.SiderHorizontal;
-		}
-		else
-		{
-			return CellBorderType.SiderOpen;
-		}
+		return position == size - 1 ? CellBorderType.SiderHorizontal : CellBorderType.SiderOpen;
 	}
 
 	private static void RenderCellBorders(Cell cell, Position position, Size size, CellBorder border)

@@ -10,14 +10,10 @@ public class AppVersionConverter : VersionConverter
 			{
 				return base.ReadJson(reader, objectType, existingValue, serializer);
 			}
-			else
-			{
-				throw new JsonSerializationException("Unsupported document version");
-			}
+
+			throw new JsonSerializationException("Unsupported document version");
 		}
-		else
-		{
-			return base.ReadJson(reader, objectType, existingValue, serializer);
-		}
+
+		return base.ReadJson(reader, objectType, existingValue, serializer);
 	}
 }

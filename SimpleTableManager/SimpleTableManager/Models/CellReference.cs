@@ -27,14 +27,9 @@ public class CellReference(Guid referencedTableId, LockablePosition positionFrom
 
 		var table = doc[ReferencedTableId].Name;
 
-		if (PositionFrom.Equals(PositionTo))
-		{
-			return $"T:{table},{PositionFrom}";
-		}
-		else
-		{
-			return $"T:{table},{PositionFrom}-{PositionTo}";
-		}
+		return PositionFrom.Equals(PositionTo) ?
+			$"T:{table},{PositionFrom}" :
+			$"T:{table},{PositionFrom}-{PositionTo}";
 	}
 
 	public string ToShortString()
@@ -43,13 +38,8 @@ public class CellReference(Guid referencedTableId, LockablePosition positionFrom
 
 		var table = doc[ReferencedTableId].Name;
 
-		if (PositionFrom.Equals(PositionTo))
-		{
-			return $"{table}:{PositionFrom.ToShortString()}";
-		}
-		else
-		{
-			return $"{table}:{PositionFrom.ToShortString()}-{PositionTo.ToShortString()}";
-		}
+		return PositionFrom.Equals(PositionTo) ?
+			$"{table}:{PositionFrom.ToShortString()}" :
+			$"{table}:{PositionFrom.ToShortString()}-{PositionTo.ToShortString()}";
 	}
 }

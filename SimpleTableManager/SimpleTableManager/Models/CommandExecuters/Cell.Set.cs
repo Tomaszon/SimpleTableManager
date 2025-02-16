@@ -143,7 +143,6 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	//TODO with only one array given as args Y is filled, X remains empty
 	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<int, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
 	{
 		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);

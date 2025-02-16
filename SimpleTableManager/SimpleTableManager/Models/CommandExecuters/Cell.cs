@@ -6,7 +6,7 @@ namespace SimpleTableManager.Models.CommandExecuters;
 
 [CommandInformation("Cell related commands")]
 [JsonObject(IsReference = true)]
-public partial class Cell : CommandExecuterBase, IFormatProvider
+public partial class Cell : CommandExecuterBase
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -55,14 +55,9 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 	{
 		var contents = GetFormattedContents();
 
-		if (contents is { } && contents.Any())
-		{
-			return new Size(contents.Max(e => e?.Length ?? 0), contents.Count());
-		}
-		else
-		{
-			return new Size(1, 1);
-		}
+		return contents is { } && contents.Any() ?
+			new Size(contents.Max(e => e?.Length ?? 0), contents.Count()) :
+			new Size(1, 1);
 	}
 
 	/// <summary>
@@ -85,20 +80,18 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 		{
 			return _cachedFormattedContent;
 		}
-		else
+
+		try
 		{
-			try
-			{
-				return _cachedFormattedContent = ContentFunction?.ExecuteAndFormat() ?? [];
-			}
-			catch (OperationCanceledException ex)
-			{
-				return _cachedFormattedContent = ex.Message.Wrap();
-			}
-			catch
-			{
-				return _cachedFormattedContent = ContentFunction!.GetError().Wrap();
-			}
+			return _cachedFormattedContent = ContentFunction?.ExecuteAndFormat() ?? [];
+		}
+		catch (OperationCanceledException ex)
+		{
+			return _cachedFormattedContent = ex.Message.Wrap();
+		}
+		catch
+		{
+			return _cachedFormattedContent = ContentFunction!.GetError().Wrap();
 		}
 	}
 
@@ -233,21 +226,18 @@ public partial class Cell : CommandExecuterBase, IFormatProvider
 
 		ContentFunction?.ClearError();
 
-		if (sender != this)
+		if (sender == this)
 		{
-			if (arg.Root != this)
-			{
-				InvokeStateModifierCommandExecutedEvent(arg);
-			}
-			else
-			{
-				ContentFunction?.SetError("Circular reference");
-			}
+			return;
 		}
-	}
 
-	public object GetFormat(Type? formatType)
-	{
-		return this;
+		if (arg.Root != this)
+		{
+			InvokeStateModifierCommandExecutedEvent(arg);
+		}
+		else
+		{
+			ContentFunction?.SetError("Circular reference");
+		}
 	}
 }

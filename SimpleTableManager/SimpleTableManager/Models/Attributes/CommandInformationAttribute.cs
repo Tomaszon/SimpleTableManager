@@ -13,13 +13,8 @@ public class CommandInformationAttribute<T> : CommandInformationAttribute
 	public CommandInformationAttribute([CallerMemberName] string method = null!) :
 		base(null!)
 	{
-		if (Localizer.TryLocalize<T>(method, "info", out var information))
-		{
-			Information = information;
-		}
-		else
-		{
-			Information = $"Translation not found: {information}";
-		}
+		Information = Localizer.TryLocalize<T>(method, "info", out var information) ?
+			information :
+			$"Translation not found: {information}";
 	}
 }

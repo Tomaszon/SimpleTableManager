@@ -16,10 +16,8 @@ public static class BorderCharacters
 		{
 			return Settings.Current.ModernTableBorder ? res.Modern : res.Retro;
 		}
-		else
-		{
-			return 'X';
-		}
+
+		return 'X';
 	}
 
 	public static char GetIntersection(BorderType? up = null, BorderType? down = null, BorderType? left = null, BorderType? right = null)

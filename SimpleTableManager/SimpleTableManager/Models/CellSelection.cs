@@ -25,22 +25,13 @@ public class CellSelection
 
 	public CellSelectionLevel GetHighestSelectionLevel()
 	{
-		if (IsPrimarySelected)
-		{
-			return CellSelectionLevel.Primary;
-		}
-		else if (IsSecondarySelected)
-		{
-			return CellSelectionLevel.Secondary;
-		}
-		else if (IsTertiarySelected)
-		{
-			return CellSelectionLevel.Tertiary;
-		}
-		else
-		{
-			return CellSelectionLevel.None;
-		}
+		return IsPrimarySelected ?
+			CellSelectionLevel.Primary :
+			IsSecondarySelected ?
+				CellSelectionLevel.Secondary :
+				IsTertiarySelected ?
+					CellSelectionLevel.Tertiary :
+					CellSelectionLevel.None;
 	}
 
 	public void SelectPrimary()

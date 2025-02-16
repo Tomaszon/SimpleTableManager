@@ -74,11 +74,9 @@ namespace SimpleTableManager.Services
 				result = result2;
 				return true;
 			}
-			else
-			{
-				result = result1;
-				return false;
-			}
+
+			result = result1;
+			return false;
 		}
 
 
@@ -99,10 +97,8 @@ namespace SimpleTableManager.Services
 			{
 				return result;
 			}
-			else
-			{
-				throw new LocalizationException(result);
-			}
+
+			throw new LocalizationException(result);
 		}
 
 
@@ -139,21 +135,19 @@ namespace SimpleTableManager.Services
 
 				return true;
 			}
-			else
-			{
-				result = $"{key}:";
-				if (typeName is not null && method is not null)
-				{
-					result += $" {key1}";
-				}
-				else if (typeName is not null)
-				{
-					result += $" -> {key2}";
-				}
-				result += $" -> {key3}";
 
-				return false;
+			result = $"{key}:";
+			if (typeName is not null && method is not null)
+			{
+				result += $" {key1}";
 			}
+			else if (typeName is not null)
+			{
+				result += $" -> {key2}";
+			}
+			result += $" -> {key3}";
+
+			return false;
 		}
 	}
 }
