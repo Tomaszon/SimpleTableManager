@@ -60,6 +60,7 @@ public class ConvertibleTimeOnly(TimeOnly value) : ConvertibleBase<ConvertibleTi
 		return _value.ToString();
 	}
 
+	[ExcludeFromCodeCoverage]
 	public override int GetHashCode()
 	{
 		return base.GetHashCode();

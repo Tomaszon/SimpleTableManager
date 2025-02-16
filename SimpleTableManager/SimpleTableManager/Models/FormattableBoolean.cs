@@ -79,6 +79,7 @@ public class FormattableBoolean(bool value) : ConvertibleBase<FormattableBoolean
 		return _value.ToString();
 	}
 
+	[ExcludeFromCodeCoverage]
 	public override int GetHashCode()
 	{
 		return base.GetHashCode();

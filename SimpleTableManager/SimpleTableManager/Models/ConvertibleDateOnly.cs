@@ -58,6 +58,7 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 		return _value.ToString();
 	}
 
+	[ExcludeFromCodeCoverage]
 	public override int GetHashCode()
 	{
 		return base.GetHashCode();
