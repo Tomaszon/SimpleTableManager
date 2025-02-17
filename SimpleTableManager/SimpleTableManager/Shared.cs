@@ -156,6 +156,6 @@ public static class Shared
 
 	public static string Join<T>(char separator, params IEnumerable<IEnumerable<T>> values)
 	{
-		return string.Join(separator, values.Select(p => string.Join(separator, p))).TrimEnd(separator);
+		return string.Join(separator, values.Where(v => v.Any()).Select(p => string.Join(separator, p)));
 	}
 }
