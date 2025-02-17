@@ -96,6 +96,19 @@ public class FunctionTests : TestBase
 	}
 
 	[Test]
+	[TestCase(NumericFunctionOperator.Round, 4.234, 4.23, typeof(double))]
+	[TestCase(NumericFunctionOperator.Round, 4.235, 4.24, typeof(double))]
+	[TestCase(NumericFunctionOperator.Ceiling, 4.235, 5, typeof(long))]
+	[TestCase(NumericFunctionOperator.Floor, 4.235, 4, typeof(long))]
+	public void FractionTest5(NumericFunctionOperator functionOperator, double number, double expected, Type expectedResultType)
+	{
+		var fn = CreateFunction(functionOperator, [number]);
+
+		CheckResults(fn.Execute(), [expected]);
+		CheckResult(fn.GetOutType(), expectedResultType);
+	}
+
+	[Test]
 	[TestCase(CharacterFunctionOperator.Concat, new[] { 'a', 'l', 'm', 'a' }, "alma")]
 	[TestCase(CharacterFunctionOperator.Join, new[] { 'a', 'b' }, "a,b")]
 	[TestCase(CharacterFunctionOperator.Repeat, new[] { 'a' }, "aaa")]
@@ -110,6 +123,7 @@ public class FunctionTests : TestBase
 		var fn = CreateFunction(operation, na, values);
 
 		CheckResults(fn.Execute(), results);
+		CheckResult(fn.GetOutType(), typeof(string));
 	}
 
 	[Test]

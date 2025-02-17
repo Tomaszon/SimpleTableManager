@@ -6,11 +6,9 @@ public class IntegerNumericFunction : NumericFunctionBase<long, long>
 {
 	public override IEnumerable<long> ExecuteCore()
 	{
-		var divider = GetNamedArgument<long>(ArgumentName.Divider);
-
 		return Operator switch
 		{
-			NumericFunctionOperator.Rem => UnwrappedUnnamedArguments.Select(p => DivRem(p, divider)),
+			NumericFunctionOperator.Rem => Rem(),
 
 			NumericFunctionOperator.And => And(UnwrappedUnnamedArguments).Wrap(),
 
@@ -18,6 +16,13 @@ public class IntegerNumericFunction : NumericFunctionBase<long, long>
 
 			_ => base.ExecuteCore()
 		};
+	}
+
+	private IEnumerable<long> Rem()
+	{
+		var divider = GetNamedArgument<long>(ArgumentName.Divider);
+
+		return UnwrappedUnnamedArguments.Select(p => DivRem(p, divider));
 	}
 
 	private static long And(IEnumerable<long> array)

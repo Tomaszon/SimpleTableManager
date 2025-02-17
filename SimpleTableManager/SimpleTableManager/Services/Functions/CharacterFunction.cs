@@ -7,21 +7,32 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, I
 {
 	public override IEnumerable<IConvertible> ExecuteCore()
 	{
-		var separator = GetNamedArgument<string>(ArgumentName.Separator);
-		var count = GetNamedArgument<int>(ArgumentName.Count);
-
 		return Operator switch
 		{
 			CharacterFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<IConvertible>(),
 
 			CharacterFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 
-			CharacterFunctionOperator.Join => string.Join(separator, UnwrappedUnnamedArguments).Wrap(),
+			CharacterFunctionOperator.Join => Join().Wrap(),
 
-			CharacterFunctionOperator.Repeat => UnwrappedUnnamedArguments.Select(c => new string(c, count)),
+			CharacterFunctionOperator.Repeat => Repeat(),
 
 			_ => throw GetInvalidOperatorException()
 		};
+	}
+
+	private string Join()
+	{
+		var separator = GetNamedArgument<string>(ArgumentName.Separator);
+
+		return string.Join(separator, UnwrappedUnnamedArguments);
+	}
+
+	private IEnumerable<string> Repeat()
+	{
+		var count = GetNamedArgument<int>(ArgumentName.Count);
+
+		return UnwrappedUnnamedArguments.Select(c => new string(c, count));
 	}
 
 	public override Type GetOutType()

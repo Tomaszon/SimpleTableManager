@@ -3,6 +3,8 @@ using System.Globalization;
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Format, "")]
+[NamedArgument<int>(ArgumentName.First, int.MaxValue)]
+[NamedArgument<int>(ArgumentName.Last, int.MaxValue)]
 public abstract class FunctionBase<TOpertor, TIn, TOut> :
 	IFunction
 	where TOpertor : struct, Enum
@@ -39,7 +41,10 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 	{
 		transformation ??= a => (TIn)a;
 
-		return UnnamedArguments.SelectMany(a => a.Resolve()).Select(transformation);
+		var first = GetNamedArgument<int>(ArgumentName.First);
+		var last = GetNamedArgument<int>(ArgumentName.Last);
+
+		return UnnamedArguments.TakeAround(first, last).SelectMany(a => a.Resolve()).Select(transformation);
 	}
 
 	protected IEnumerable<TIn> UnwrappedUnnamedArguments =>

@@ -90,4 +90,19 @@ public class ExtensionTests : TestBase
 		CheckResult(value.PadLeftRight(totalWidth), result);
 	}
 
+
+	[Test]
+	[TestCase(int.MaxValue, int.MaxValue, new[] { 1, 2, 3, 4, 5 })]
+	[TestCase(2, int.MaxValue, new[] { 1, 2 })]
+	[TestCase(int.MaxValue, 2, new[] { 4, 5 })]
+	[TestCase(2, 2, new[] { 1, 2, 4, 5 })]
+	[TestCase(-1,0, new int[] { })]
+	public void TakeAround(int first, int last, int[] expected)
+	{
+		var values = new int[] { 1, 2, 3, 4, 5 };
+
+		var results = values.TakeAround(first, last);
+
+		CheckResults([.. results], expected);
+	}
 }

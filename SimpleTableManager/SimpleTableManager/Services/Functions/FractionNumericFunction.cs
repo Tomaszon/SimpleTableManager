@@ -5,18 +5,23 @@ public class FractionNumericFunction : NumericFunctionBase<double, IConvertible>
 {
 	public override IEnumerable<IConvertible> ExecuteCore()
 	{
-		var decimals = GetNamedArgument<int>(ArgumentName.Decimals);
-
 		return Operator switch
 		{
 			NumericFunctionOperator.Floor => UnwrappedUnnamedArguments.Select(p => (long)double.Floor(p)).Cast<IConvertible>(),
 
 			NumericFunctionOperator.Ceiling => UnwrappedUnnamedArguments.Select(p => (long)double.Ceiling(p)).Cast<IConvertible>(),
 
-			NumericFunctionOperator.Round => UnwrappedUnnamedArguments.Select(p => double.Round(p, decimals)).Cast<IConvertible>(),
+			NumericFunctionOperator.Round => Round().Cast<IConvertible>(),
 
 			_ => base.ExecuteCore()
 		};
+	}
+
+	private IEnumerable<double> Round()
+	{
+		var decimals = GetNamedArgument<int>(ArgumentName.Decimals);
+
+		return UnwrappedUnnamedArguments.Select(p => double.Round(p, decimals));
 	}
 
 	public override Type GetOutType()

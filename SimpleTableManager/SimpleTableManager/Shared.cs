@@ -143,7 +143,6 @@ public static class Shared
 		return Assembly.GetExecutingAssembly().GetName().Version!;
 	}
 
-
 	public static Dictionary<string, MethodInfo> GetMethods<T>(Type type, Func<KeyValuePair<T, MethodInfo>, string> keySelector)
 		where T : Attribute
 	{

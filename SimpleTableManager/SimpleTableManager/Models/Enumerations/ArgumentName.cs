@@ -3,7 +3,6 @@ namespace SimpleTableManager.Models.Enumerations;
 [JsonConverter(typeof(StringEnumConverter))]
 public enum ArgumentName
 {
-	Type,
 	Divider,
 	Separator,
 	Decimals,
@@ -12,5 +11,7 @@ public enum ArgumentName
 	Power,
 	Base,
 	Format,
-	Pattern
+	Pattern,
+	First,
+	Last
 }
