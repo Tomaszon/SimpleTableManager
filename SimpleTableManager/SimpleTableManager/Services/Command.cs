@@ -155,7 +155,7 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 				var endReferencedObject = attribute.IgnoreReferencedObject ? i : i.GetEndReferencedObject();
 
-				results.Add(method.Invoke(endReferencedObject, parsedArguments.ToArray()));
+				results.Add(method.Invoke(endReferencedObject, [.. parsedArguments]));
 
 				if (attribute!.StateModifier)
 				{

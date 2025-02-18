@@ -70,7 +70,7 @@ public partial class Table : CommandExecuterBase
 	}
 
 	public List<Cell> this[int x1, int y1, int x2, int y2] =>
-        [.. Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
+		[.. Shared.IndexArray(y2 - y1 + 1, y1).SelectMany(y =>
 			Shared.IndexArray(x2 - x1 + 1, x1).Select(x => this[x, y]))];
 
 	public List<Cell> this[Position position1, Position position2] => this[position1.X, position1.Y, position2.X, position2.Y];

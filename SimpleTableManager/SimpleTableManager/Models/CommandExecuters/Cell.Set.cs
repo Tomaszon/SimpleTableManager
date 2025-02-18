@@ -25,13 +25,7 @@ public partial class Cell
 			Deselect();
 		}
 
-		ContentFunction?.ReferenceArguments.ForEach(a =>
-			a.GetReferencedCells().ForEach(c =>
-				c.StateModifierCommandExecutedEvent -= OnStateModifierCommandExecuted));
-
-		newFunction?.ReferenceArguments.ForEach(a =>
-			a.GetReferencedCells().ForEach(c =>
-				c.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted));
+		UpdateReferenceSubscription(ContentFunction, newFunction);
 
 		ContentFunction = newFunction;
 

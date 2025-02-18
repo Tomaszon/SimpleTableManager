@@ -26,6 +26,22 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 		return GetReferencedCells().SelectMany(c => c.ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
 	}
 
+	public bool TryGetReferencedCells([NotNullWhen(true)] out List<Cell>? referencedCells)
+	{
+		try
+		{
+			referencedCells = [.. GetReferencedCells()];
+
+			return true;
+		}
+		catch
+		{
+			referencedCells = null;
+
+			return false;
+		}
+	}
+
 	public IEnumerable<Cell> GetReferencedCells()
 	{
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;

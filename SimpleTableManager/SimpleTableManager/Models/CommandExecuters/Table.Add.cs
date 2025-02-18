@@ -24,7 +24,7 @@ public partial class Table
 		}
 		else
 		{
-			OnViewChanged();
+			ViewOptions.InvokeViewChangedEvent();
 		}
 	}
 
@@ -70,7 +70,7 @@ public partial class Table
 		}
 		else
 		{
-			OnViewChanged();
+			ViewOptions.InvokeViewChangedEvent();
 		}
 	}
 

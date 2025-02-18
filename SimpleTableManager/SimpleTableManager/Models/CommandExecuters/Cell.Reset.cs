@@ -6,6 +6,8 @@ namespace SimpleTableManager.Models.CommandExecuters
 		public void ResetContent()
 		{
 			Deselect();
+			
+			UpdateReferenceSubscription(ContentFunction, null);
 
 			ContentFunction = null;
 

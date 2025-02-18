@@ -19,7 +19,7 @@ public partial class Table
 		}
 		else
 		{
-			OnViewChanged();
+			ViewOptions.InvokeViewChangedEvent();
 		}
 
 		RemoveDeadCellReferences();
@@ -57,7 +57,7 @@ public partial class Table
 		}
 		else
 		{
-			OnViewChanged();
+			ViewOptions.InvokeViewChangedEvent();
 		}
 
 		RemoveDeadCellReferences();

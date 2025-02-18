@@ -107,6 +107,7 @@ public partial class Cell : CommandExecuterBase
 			SetStringContent(contents);
 		}
 
+		table.ViewOptions.ViewChanged += OnTableViewChanged;
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 	}
 
@@ -217,7 +218,10 @@ public partial class Cell : CommandExecuterBase
 	[OnDeserialized]
 	public void OnDeserialized(StreamingContext _)
 	{
+		Table.ViewOptions.ViewChanged += OnTableViewChanged;
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
+
+		UpdateReferenceSubscription();
 	}
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs arg)
@@ -239,5 +243,38 @@ public partial class Cell : CommandExecuterBase
 		{
 			ContentFunction?.SetError("Circular reference");
 		}
+	}
+
+	public void OnTableViewChanged()
+	{
+		UpdateReferenceSubscription();
+
+		InvokeStateModifierCommandExecutedEvent(new(this));
+	}
+
+	private void UpdateReferenceSubscription()
+	{
+		UpdateReferenceSubscription(ContentFunction, ContentFunction);
+	}
+
+	private void UpdateReferenceSubscription(IFunction? oldFunction, IFunction? newFunction)
+	{
+		oldFunction?.ReferenceArguments.ForEach(a =>
+		{
+			if (a.TryGetReferencedCells(out var referencedCells))
+			{
+				referencedCells.ForEach(c =>
+					c.StateModifierCommandExecutedEvent -= OnStateModifierCommandExecuted);
+			}
+		});
+
+		newFunction?.ReferenceArguments.ForEach(a =>
+		{
+			if (a.TryGetReferencedCells(out var referencedCells))
+			{
+				referencedCells.ForEach(c =>
+					c.StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted);
+			}
+		});
 	}
 }
