@@ -47,6 +47,8 @@ public class FunctionTests : TestBase
 
 	[Test]
 	[TestCase(NumericFunctionOperator.Sum, new long[] { 4, 3 }, 7)]
+	[TestCase(NumericFunctionOperator.And, new long[] { 2, 3 }, 2)]
+	[TestCase(NumericFunctionOperator.Or, new long[] { 4, 2 }, 6)]
 	[TestCase(NumericFunctionOperator.Neg, new long[] { 5 }, -5)]
 	[TestCase(NumericFunctionOperator.Div, new long[] { 10, 5 }, 2)]
 	[TestCase(NumericFunctionOperator.Max, new long[] { 1, 5, 3 }, 5)]
@@ -127,21 +129,25 @@ public class FunctionTests : TestBase
 	}
 
 	[Test]
-	[TestCase(StringFunctionOperator.Split, new[] { "al|ma" }, new[] { "al", "ma" })]
-	[TestCase(StringFunctionOperator.Len, new[] { "alma" }, 4)]
-	[TestCase(StringFunctionOperator.Join, new[] { "alma", "körte" }, new[] { "alma|körte" })]
-	[TestCase(StringFunctionOperator.Blow, new[] { "string" }, new object[] { 's', 't', 'r', 'i', 'n', 'g' })]
-	[TestCase(StringFunctionOperator.Trim, new[] { "a ", " b" }, new[] { "a", "b" })]
-	public void StringTest(StringFunctionOperator operation, string[] values, params object[] results)
+	[TestCase(StringFunctionOperator.Like, typeof(bool), new[] { "aaaa", "bbbb" }, true)]
+	[TestCase(StringFunctionOperator.Like, typeof(bool), new[] { "cc", "bbbb" }, false)]
+	[TestCase(StringFunctionOperator.Split, typeof(string), new[] { "al|ma" }, new[] { "al", "ma" })]
+	[TestCase(StringFunctionOperator.Len, typeof(int), new[] { "alma" }, 4)]
+	[TestCase(StringFunctionOperator.Join, typeof(string), new[] { "alma", "körte" }, new[] { "alma|körte" })]
+	[TestCase(StringFunctionOperator.Blow, typeof(char), new[] { "string" }, new object[] { 's', 't', 'r', 'i', 'n', 'g' })]
+	[TestCase(StringFunctionOperator.Trim, typeof(string), new[] { "a ", " b" }, new[] { "a", "b" })]
+	public void StringTest(StringFunctionOperator operation, Type outType, string[] values, params object[] results)
 	{
 		var na = new IFunctionArgument[]
 			{
-				new ConstFunctionArgument<string>(ArgumentName.Separator, "|")
+				new ConstFunctionArgument<string>(ArgumentName.Separator, "|"),
+				new ConstFunctionArgument<string>(ArgumentName.Pattern, "a{4}")
 			};
 
 		var fn = CreateFunction(operation, na, values);
 
 		CheckResults(fn.Execute(), results);
+		CheckResult(fn.GetOutType(), outType);
 	}
 
 	[Test]
@@ -155,22 +161,29 @@ public class FunctionTests : TestBase
 		CheckResults(fnd.Execute(), [result]);
 	}
 
-	// [Test]
-	// [TestCase(10, 5, 2, "HH:mm:ss", "10:05:02")]
-	// [TestCase(10, 0, 0, "HH", "10")]
-	// public void TimeFormatTest(int h, int m, int s, string format, string expectedResult)
-	// {
-	// 	var na = new Dictionary<ArgumentName, string>()
-	// 		{
-	// 			{ ArgumentName.Format, format }
-	// 		};
+	[Test]
+	[TestCase(10, 5, 2, "HH:mm:ss", "10:05:02")]
+	[TestCase(10, 0, 0, "HH", "10")]
+	public void TimeFormatTest(int h, int m, int s, string format, string expectedResult)
+	{
+		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new ConstFunctionArgument<ConvertibleTimeOnly>(ArgumentName.Format, format)], new ConvertibleTimeOnly(new(h, m, s)));
 
-	// 	var fn = CreateFunction(DateTimeFunctionOperator.Const, na, new TimeOnly(h, m, s));
+		var formattedResult = fn.ExecuteAndFormat();
 
-	// 	var formattedResult = fn.ExecuteAndFormat();
+		CheckResults(formattedResult, expectedResult.Wrap());
+	}
 
-	// 	CheckResults(formattedResult, expectedResult.Wrap());
-	// }
+	[Test]
+	[TestCase(1993, 12, 19, "yyyy.MM.dd", "1993.12.19")]
+	[TestCase(1993, 12, 19, "yyyy-MM-dd", "1993-12-19")]
+	public void DateFormatTest(int y, int m, int d, string format, string expectedResult)
+	{
+		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new ConstFunctionArgument<ConvertibleDateOnly>(ArgumentName.Format, format)], new ConvertibleDateOnly(new(y, m, d)));
+
+		var formattedResult = fn.ExecuteAndFormat();
+
+		CheckResults(formattedResult, expectedResult.Wrap());
+	}
 
 	// [Test]
 	// [TestCase(Shape2dOperator.Area, typeof(Rectangle), new string[] { "1", "2;3" }, new object[] { 1, 6 })]
@@ -182,35 +195,5 @@ public class FunctionTests : TestBase
 	// 	var fn = FunctionCollection.GetFunction(type.GetFriendlyName(), functionOperator.ToString(), null, shapes.Cast<object>());
 
 	// 	CheckResults(fn.Execute().Cast<decimal>().Select(d => Math.Round(d, 2)).Cast<object>(), results);
-	// }
-
-	// [Test]
-	// [TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
-	// public void InnerIntFunctionTest(int[] args1, int[] args2, int result)
-	// {
-	// 	var inner = new IntegerNumericFunction()
-	// 	{
-	// 		Operator = NumericFunctionOperator.Sum,
-	// 		Arguments = args1
-	// 	};
-
-	// 	var outer = new IntegerNumericFunction()
-	// 	{
-	// 		Operator = NumericFunctionOperator.Mul,
-	// 		Arguments = inner.Execute().Union(args2)
-	// 	};
-
-	// 	CheckResults(outer.Execute().Cast<object>(), result.Wrap());
-	// }
-
-	// [Test]
-	// [TestCase(new[] { 2, 3 }, new[] { 4 }, 20)]
-	// public void InnerIntFunctionTest2(int[] args1, int[] args2, int result)
-	// {
-	// 	var fn1 = CreateFunction(NumericFunctionOperator.Sum, args1);
-
-	// 	var fn2 = CreateFunction(NumericFunctionOperator.Mul, args2.Union(fn1.Execute().Cast<int>()));
-
-	// 	CheckResults(fn2.Execute(), result.Wrap());
 	// }
 }

@@ -64,6 +64,7 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, IConv
 		{
 			StringFunctionOperator.Len => typeof(int),
 			StringFunctionOperator.Blow => typeof(char),
+			StringFunctionOperator.Like => typeof(bool),
 
 			_ => typeof(string)
 		};

@@ -44,9 +44,4 @@ public static class FunctionCollection
 	{
 		return GetFunction(typeof(T), functionOperator.ToString(), arguments);
 	}
-
-	private static Type GetRootClass(Type type)
-	{
-		return type.BaseType is not null && type.BaseType != typeof(object) ? GetRootClass(type.BaseType) : type;
-	}
 }
