@@ -1,4 +1,5 @@
-﻿using NUnit.Framework.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
+using NUnit.Framework.Internal;
 
 namespace SimpleTableManager.Tests;
 
@@ -117,5 +118,131 @@ public class MiscTests : TestBase
 			Path = "SomeFolderName",
 			Size = 123456789
 		};
+	}
+
+	[Test]
+	[TestCase(true, true, true, false)]
+	[TestCase(false, false, false, true)]
+	[TestCase(false, true, true, false)]
+	[TestCase(true, false, true, false)]
+	public void CellVisibilityTest(bool isColumnHidden, bool isRowHidden, bool isHidden, bool isVisible)
+	{
+		var visibility = new CellVisibility()
+		{
+			IsColumnHidden = isColumnHidden,
+			IsRowHidden = isRowHidden
+		};
+
+		CheckResults([visibility.IsHidden, visibility.IsVisible], [isHidden, isVisible]);
+	}
+
+	[Test]
+	public void CellSelectionTest()
+	{
+		var selection = new CellSelection();
+
+		CheckResult(selection.GetHighestSelectionLevel(), CellSelectionLevel.None);
+		CheckResult(selection.IsPrimarySelected, false);
+		CheckResult(selection.IsNotPrimarySelected, true);
+
+		selection.SelectPrimary();
+
+		CheckResult(selection.IsPrimarySelected, true);
+		CheckResult(selection.IsNotPrimarySelected, false);
+
+		selection.SelectSecondary();
+
+		CheckResult(selection.IsSecondarySelected, true);
+		CheckResult(selection.IsNotSecondarySelected, false);
+
+		selection.SelectSecondary();
+		selection.SelectTertiary();
+
+		CheckResult(selection.GetHighestSelectionLevel(), CellSelectionLevel.Primary);
+		CheckResult(selection.IsTertiarySelected, true);
+		CheckResult(selection.IsNotTertiarySelected, false);
+
+		selection.DeselectPrimary();
+
+		CheckResult(selection.IsPrimarySelected, false);
+		CheckResult(selection.GetHighestSelectionLevel(), CellSelectionLevel.Secondary);
+
+		selection.DeselectSecondary();
+
+		CheckResult(selection.IsSecondarySelected, true);
+
+		selection.DeselectSecondary();
+
+		CheckResult(selection.IsSecondarySelected, false);
+		CheckResult(selection.GetHighestSelectionLevel(), CellSelectionLevel.Tertiary);
+
+		selection.DeselectTertiary();
+
+		CheckResult(selection.IsTertiarySelected, false);
+		CheckResult(selection.GetHighestSelectionLevel(), CellSelectionLevel.None);
+	}
+
+	[Test]
+	[TestCase(true, false, true, true, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.Horizontal)]
+	[TestCase(true, true, true, true, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None, BorderType.None)]
+	public void CellBorderTest1(bool trimTop, bool trimBottom, bool trimLeft, bool trimRight, params BorderType[] results)
+	{
+		var border = new CellBorder()
+		{
+			Bottom = BorderType.Horizontal,
+			BottomLeft = BorderType.Up | BorderType.Right,
+			BottomRight = BorderType.Up | BorderType.Left,
+			Left = BorderType.Vertical,
+			Right = BorderType.Vertical,
+			Top = BorderType.Horizontal,
+			TopLeft = BorderType.Down | BorderType.Right,
+			TopRight = BorderType.Down | BorderType.Left
+		};
+
+		border = border.TrimSide(trimTop, trimBottom, trimLeft, trimRight);
+
+		CheckResults([border.BottomLeft, border.BottomRight, border.Left, border.Right, border.Top, border.TopLeft, border.TopRight, border.Bottom], results);
+	}
+
+	[Test]
+	[TestCase(true, false, true, true, BorderType.Horizontal, BorderType.None, BorderType.None, BorderType.Vertical, BorderType.Vertical, BorderType.Horizontal, BorderType.None, BorderType.Down | BorderType.Left)]
+	[TestCase(true, true, true, true, BorderType.Horizontal, BorderType.None, BorderType.None, BorderType.Vertical, BorderType.Vertical, BorderType.Horizontal, BorderType.None, BorderType.None)]
+	public void CellBorderTest2(bool trimTopLeft, bool trimTopRight, bool trimBottomLeft, bool trimBottomRight, params BorderType[] results)
+	{
+		var border = new CellBorder()
+		{
+			Bottom = BorderType.Horizontal,
+			BottomLeft = BorderType.Up | BorderType.Right,
+			BottomRight = BorderType.Up | BorderType.Left,
+			Left = BorderType.Vertical,
+			Right = BorderType.Vertical,
+			Top = BorderType.Horizontal,
+			TopLeft = BorderType.Down | BorderType.Right,
+			TopRight = BorderType.Down | BorderType.Left
+		};
+
+		border = border.TrimCorner(trimTopLeft, trimTopRight, trimBottomLeft, trimBottomRight);
+
+		CheckResults([border.Bottom, border.BottomLeft, border.BottomRight, border.Left, border.Right, border.Top, border.TopLeft, border.TopRight], results);
+	}
+
+	[Test]
+	public void CommandReferenceTest()
+	{
+		_ = new CommandReference("SomeClassName", "SomeMethodName", true);
+	}
+
+	[Test]
+	public void ConsoleColorSetTest()
+	{
+		var colors1 = new ConsoleColorSet(ConsoleColor.Red, ConsoleColor.Green);
+		var colors2 = new ConsoleColorSet(ConsoleColor.Red, ConsoleColor.Green);
+		var colors3 = new ConsoleColorSet(ConsoleColor.Green, ConsoleColor.Green);
+
+		CheckResults([colors1 == colors2, colors1 == colors3], [true, false]);
+		CheckResults([colors1 != colors2, colors1 != colors3], [false, true]);
+		CheckResults([colors1.Equals(colors2), colors1.Equals(colors3), colors1.Equals(null)], [true, false, false]);
+
+		CheckResults([colors1.ToString(), colors1.ToString()], [colors2.ToString(), $"F:{colors1.Foreground}, B:{colors1.Background}"]);
 	}
 }
