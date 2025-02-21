@@ -14,6 +14,7 @@ public static class Shared
 		{ typeof(double), "fraction" },
 		{ typeof(ConvertibleDateOnly), "date" },
 		{ typeof(ConvertibleTimeOnly), "time" },
+		{ typeof(ConvertibleTimeSpan), "timeSpan" },
 		{ typeof(FormattableBoolean), "bool" }
 	};
 

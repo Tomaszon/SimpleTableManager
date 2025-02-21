@@ -4,7 +4,11 @@ namespace SimpleTableManager.Models;
 [ParseFormat("yyyy.mm.dd", "^(?<y>\\d{4})\\.(?<m>\\d{2})\\.(?<d>\\d{2})$")]
 [ParseFormat("yyyy/mm/dd", "^(?<y>\\d{4})/(?<m>\\d{2})/(?<d>\\d{2})$")]
 [ParseFormat("dd/mm/yyyy", "^(?<d>\\d{2})/(?<m>\\d{2})/(?<y>\\d{4})$")]
-public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDateOnly>, IParsable<ConvertibleDateOnly>, IParsableCore<ConvertibleDateOnly>, IFormattable
+public class ConvertibleDateOnly(DateOnly value) :
+	ConvertibleBase<ConvertibleDateOnly>,
+	IParsable<ConvertibleDateOnly>,
+	IParsableCore<ConvertibleDateOnly>,
+	IFormattable
 {
 	private readonly DateOnly _value = value;
 
@@ -13,6 +17,8 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 	public int Month => _value.Month;
 
 	public int Day => _value.Day;
+
+	public TimeSpan ToTimeSpan() => new(_value.ToDateTime(TimeOnly.MinValue).Ticks);
 
 	public static ConvertibleDateOnly ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
@@ -27,6 +33,11 @@ public class ConvertibleDateOnly(DateOnly value) : ConvertibleBase<ConvertibleDa
 	public static implicit operator ConvertibleDateOnly(DateOnly dateOnly)
 	{
 		return new(dateOnly);
+	}
+
+	public ConvertibleDateOnly Add(TimeSpan timeSpan)
+	{
+		return DateOnly.FromDateTime(_value.ToDateTime(TimeOnly.MinValue).Add(timeSpan));
 	}
 
 	public override bool Equals(object? obj)

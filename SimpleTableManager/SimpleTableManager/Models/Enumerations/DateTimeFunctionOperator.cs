@@ -4,6 +4,23 @@ namespace SimpleTableManager.Models.Enumerations;
 public enum DateTimeFunctionOperator
 {
 	Const,
+	Offset,
+	Difference,
 	Sum,
-	Now
+	Sub,
+	Now,
+	Years,
+	Months,
+	Days,
+	Hours,
+	Minutes,
+	Seconds,
+	Milliseconds,
+	TotalYears,
+	TotalMonths,
+	TotalDays,
+	TotalHours,
+	TotalMinutes,
+	TotalSeconds,
+	TotalMilliseconds
 }

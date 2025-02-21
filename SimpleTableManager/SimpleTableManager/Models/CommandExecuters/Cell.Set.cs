@@ -53,7 +53,7 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, ConvertibleTimeSpan, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
 	{
 		SetFunction(type, functionOperator: "const", contents);
 	}
@@ -137,6 +137,12 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
+	public void SetTimeSpanContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleTimeSpan>] params IFunctionArgument[] arguments)
+	{
+		SetFunction<TimeSpanFunction, DateTimeFunctionOperator>(functionOperator, arguments);
+	}
+
+	[CommandFunction(WithSelector = true)]
 	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<int, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
 	{
 		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);
@@ -157,6 +163,7 @@ public partial class Cell
 	{
 		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 
+		//allow positions too
 		var argType = ContentFunction.GetInType();
 
 		ThrowIfNot(type.IsAssignableTo(argType), $"Arguments of type '{argType.GetFriendlyName()}' expected");

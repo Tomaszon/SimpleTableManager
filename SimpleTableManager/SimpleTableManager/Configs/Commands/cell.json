@@ -82,7 +82,23 @@
 			"time": {
 				"const": "setTimeContentFunction/const",
 				"sum": "setTimeContentFunction/sum",
+				"sub": "setTimeContentFunction/sub",
 				"now": "setTimeContentFunction/now"
+			},
+			"timeSpan": {
+				"const": "setTimeSpanContentFunction/const",
+				"sum": "setTimeSpanContentFunction/sum",
+				"sub": "setTimeSpanContentFunction/sub",
+				"days": "setTimeSpanContentFunction/days",
+				"hours": "setTimeSpanContentFunction/hours",
+				"minutes": "setTimeSpanContentFunction/minutes",
+				"seconds": "setTimeSpanContentFunction/seconds",
+				"milliseconds": "setTimeSpanContentFunction/milliseconds",
+				"totalDays": "setTimeSpanContentFunction/totalDays",
+				"totalHours": "setTimeSpanContentFunction/totalHours",
+				"totalMinutes": "setTimeSpanContentFunction/totalMinutes",
+				"totalSeconds": "setTimeSpanContentFunction/totalSeconds",
+				"totalMilliseconds": "setTimeSpanContentFunction/totalMilliseconds"
 			},
 			"rectangle": {
 				"const": "setRectangleContentFunction/const",

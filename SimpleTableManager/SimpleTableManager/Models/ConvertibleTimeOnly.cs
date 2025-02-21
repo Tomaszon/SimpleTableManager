@@ -1,7 +1,11 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("hh:mm:ss.fff", "^(?<h>\\d{2}):(?<m>\\d{2})(:(?<s>\\d{2})(\\.(?<f>\\d{1,3}))?)?$")]
-public class ConvertibleTimeOnly(TimeOnly value) : ConvertibleBase<ConvertibleTimeOnly>, IParsable<ConvertibleTimeOnly>, IParsableCore<ConvertibleTimeOnly>, IFormattable
+public class ConvertibleTimeOnly(TimeOnly value) :
+	ConvertibleBase<ConvertibleTimeOnly>,
+	IParsable<ConvertibleTimeOnly>,
+	IParsableCore<ConvertibleTimeOnly>,
+	IFormattable
 {
 	[JsonProperty]
 	private readonly TimeOnly _value = value;
@@ -29,6 +33,11 @@ public class ConvertibleTimeOnly(TimeOnly value) : ConvertibleBase<ConvertibleTi
 	public static implicit operator ConvertibleTimeOnly(TimeOnly timeOnly)
 	{
 		return new(timeOnly);
+	}
+
+	public ConvertibleTimeOnly Add(TimeSpan timeSpan)
+	{
+		return _value.Add(timeSpan);
 	}
 
 	public override bool Equals(object? obj)

@@ -18,6 +18,7 @@
 	"dateTime": "dátum-idő",
 	"date": "dátum",
 	"time": "idő",
+	"timeSpan": "időtáv",
 	"rectangle": "téglalap",
 	"ellipse": "ellipszis",
 	"rightTriangle": "derékszögű-háromszög",
@@ -133,5 +134,15 @@
 	"chart": "diagram",
 	"raw": "nyers",
 	"scatter": "szétszórt",
-	"bar": "sáv"
+	"bar": "sáv",
+	"days": "napok",
+	"hours": "órák",
+	"minutes": "percek",
+	"seconds": "másodpercek",
+	"milliseconds": "ezredmásodpercek",
+	"totalDays": "teljes-napok",
+	"totalHours": "teljes-órák",
+	"totalMinutes": "teljes-percek",
+	"totalSeconds": "teljes-másodpercek",
+	"totalMilliseconds": "teljes-ezredmásodpercek"
 }

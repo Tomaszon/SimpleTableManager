@@ -18,6 +18,7 @@
 	"dateTime": "date-time",
 	"date": "date",
 	"time": "time",
+	"timeSpan":"time-span",
 	"rectangle": "rectangle",
 	"ellipse": "ellipse",
 	"rightTriangle": "right-triangle",
@@ -133,5 +134,15 @@
 	"chart": "chart",
 	"raw": "raw",
 	"scatter": "scatter",
-	"bar": "bar"
+	"bar": "bar",
+	"days": "days",
+	"hours": "hours",
+	"minutes": "minutes",
+	"seconds": "seconds",
+	"milliseconds": "milliseconds",
+	"totalDays": "total-days",
+	"totalHours": "total-hours",
+	"totalMinutes": "total-minutes",
+	"totalSeconds": "total-seconds",
+	"totalMilliseconds": "total-milliseconds"
 }

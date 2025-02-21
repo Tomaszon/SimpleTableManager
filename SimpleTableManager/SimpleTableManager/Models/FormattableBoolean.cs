@@ -66,9 +66,15 @@ public class FormattableBoolean(bool value) : ConvertibleBase<FormattableBoolean
 	{
 		return format switch
 		{
-			"yn" or "y" or "n" => _value ? "Y" : "N",
-			"yesno" or "yes" or "no" => _value ? "Yes" : "No",
-			"10" or "1" or "0" => _value ? "1" : "0",
+			"yn" or
+			"y" or
+			"n" => _value ? "Y" : "N",
+			"yesno" or
+			"yes" or
+			"no" => _value ? "Yes" : "No",
+			"10" or
+			"1" or
+			"0" => _value ? "1" : "0",
 
 			_ => _value.ToString()
 		};
