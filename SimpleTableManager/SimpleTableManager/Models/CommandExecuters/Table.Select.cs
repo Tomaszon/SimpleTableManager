@@ -7,6 +7,11 @@ public partial class Table
 		cell.Select();
 	}
 
+	public void SelectCells(IEnumerable<Cell> cells)
+	{
+		cells.ForEach(c => c.Select());
+	}
+
 	[CommandFunction]
 	public void SelectCell(Position position, bool deselectCurrent = false)
 	{

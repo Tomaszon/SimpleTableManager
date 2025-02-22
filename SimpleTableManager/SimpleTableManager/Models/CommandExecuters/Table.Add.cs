@@ -7,6 +7,10 @@ public partial class Table
 	{
 		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
+		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+
+		DeselectCells(selectedCells);
+
 		Sider.Insert(index, new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
 
 		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
@@ -26,6 +30,8 @@ public partial class Table
 		{
 			ViewOptions.InvokeViewChangedEvent();
 		}
+
+		SelectCells(selectedCells);
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
@@ -53,6 +59,10 @@ public partial class Table
 	{
 		ThrowIfNot(index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
+		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+
+		DeselectCells(selectedCells);
+
 		Header.Insert(index, new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
 
 		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
@@ -72,6 +82,8 @@ public partial class Table
 		{
 			ViewOptions.InvokeViewChangedEvent();
 		}
+
+		SelectCells(selectedCells);
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]

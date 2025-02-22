@@ -7,6 +7,11 @@ public partial class Table
 		cell.Deselect();
 	}
 
+	public void DeselectCells(IEnumerable<Cell> cells)
+	{
+		cells.ForEach(c => c.Deselect());
+	}
+
 	[CommandFunction]
 	public void DeselectCell(Position position)
 	{
