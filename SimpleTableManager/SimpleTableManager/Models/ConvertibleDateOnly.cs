@@ -4,13 +4,13 @@ namespace SimpleTableManager.Models;
 [ParseFormat("yyyy.mm.dd", "^(?<y>\\d{4})\\.(?<m>\\d{2})\\.(?<d>\\d{2})$")]
 [ParseFormat("yyyy/mm/dd", "^(?<y>\\d{4})/(?<m>\\d{2})/(?<d>\\d{2})$")]
 [ParseFormat("dd/mm/yyyy", "^(?<d>\\d{2})/(?<m>\\d{2})/(?<y>\\d{4})$")]
-public class ConvertibleDateOnly(DateOnly value) :
+public class ConvertibleDateOnly(int year = 1, int month = 1, int day = 1) :
 	ConvertibleBase<ConvertibleDateOnly>,
 	IParsable<ConvertibleDateOnly>,
 	IParsableCore<ConvertibleDateOnly>,
 	IFormattable
 {
-	private readonly DateOnly _value = value;
+	private readonly DateOnly _value = new(year, month, day);
 
 	public int Year => _value.Year;
 
@@ -19,6 +19,8 @@ public class ConvertibleDateOnly(DateOnly value) :
 	public int Day => _value.Day;
 
 	public TimeSpan ToTimeSpan() => new(_value.ToDateTime(TimeOnly.MinValue).Ticks);
+
+	public ConvertibleDateOnly(DateOnly dateOnly) : this(dateOnly.Year, dateOnly.Month, dateOnly.Day) { }
 
 	public static ConvertibleDateOnly ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{

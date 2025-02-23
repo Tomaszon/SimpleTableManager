@@ -12,6 +12,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertib
 			DateTimeFunctionOperator.Const or
 			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Offset => Offset(),
+			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 
 			_ => base.ExecuteCore()
 		};
@@ -27,7 +28,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertib
 
 	protected ConvertibleTimeSpan Sub()
 	{
-		throw new NotImplementedException();
+		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First().ToTimeSpan(), (a, c) => a.Subtract(c.ToTimeSpan()));
 	}
 
 	protected IEnumerable<ConvertibleDateOnly> Offset()

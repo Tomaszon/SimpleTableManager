@@ -79,8 +79,7 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, IConve
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Now => typeof(ConvertibleTimeSpan),
+			DateTimeFunctionOperator.Const => typeof(ConvertibleTimeSpan),
 
 			_ => base.GetOutType()
 		};

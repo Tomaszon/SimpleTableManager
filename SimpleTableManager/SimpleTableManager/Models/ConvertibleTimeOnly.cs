@@ -1,14 +1,14 @@
 namespace SimpleTableManager.Models;
 
 [ParseFormat("hh:mm:ss.fff", "^(?<h>\\d{2}):(?<m>\\d{2})(:(?<s>\\d{2})(\\.(?<f>\\d{1,3}))?)?$")]
-public class ConvertibleTimeOnly(TimeOnly value) :
+public class ConvertibleTimeOnly(int hour = 0, int minute = 0, int second = 0, int millisecond = 0) :
 	ConvertibleBase<ConvertibleTimeOnly>,
 	IParsable<ConvertibleTimeOnly>,
 	IParsableCore<ConvertibleTimeOnly>,
 	IFormattable
 {
 	[JsonProperty]
-	private readonly TimeOnly _value = value;
+	private readonly TimeOnly _value = new(hour, minute, second, millisecond);
 
 	public int Hour => _value.Hour;
 
@@ -19,6 +19,8 @@ public class ConvertibleTimeOnly(TimeOnly value) :
 	public int Millisecond => _value.Millisecond;
 
 	public TimeSpan ToTimeSpan() => _value.ToTimeSpan();
+
+	public ConvertibleTimeOnly(TimeOnly timeOnly) : this(timeOnly.Hour, timeOnly.Minute, timeOnly.Second, timeOnly.Millisecond) { }
 
 	public static ConvertibleTimeOnly ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{

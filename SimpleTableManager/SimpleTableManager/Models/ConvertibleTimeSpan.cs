@@ -4,14 +4,14 @@ namespace SimpleTableManager.Models;
 [ParseFormat("d", "^(?<d>\\d+)$")]
 [ParseFormat("d.hh", "^(?<d>\\d+)\\.(?<h>\\d{2})$")]
 [ParseFormat("d.hh:mm:ss.fff", "^((?<d>\\d+)\\.)?(?<h>\\d{2}):(?<m>\\d{2})(:(?<s>\\d{2})(\\.(?<f>\\d{1,3}))?)?$")]
-public class ConvertibleTimeSpan(TimeSpan value) :
+public class ConvertibleTimeSpan(int days = 0, int hours = 0, int minutes = 0, int seconds = 0, int milliseconds = 0) :
 	ConvertibleBase<ConvertibleTimeSpan>,
 	IParsable<ConvertibleTimeSpan>,
 	IParsableCore<ConvertibleTimeSpan>,
 	IFormattable
 {
 	[JsonProperty]
-	private readonly TimeSpan _value = value;
+	private readonly TimeSpan _value = new(days, hours, minutes, seconds, milliseconds);
 
 	public int Days => _value.Days;
 
@@ -32,6 +32,8 @@ public class ConvertibleTimeSpan(TimeSpan value) :
 	public int Milliseconds => _value.Milliseconds;
 
 	public double TotalMilliseconds => _value.TotalMilliseconds;
+
+	public ConvertibleTimeSpan(TimeSpan timeSpan) : this(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds) { }
 
 	public static ConvertibleTimeSpan ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
@@ -98,8 +100,8 @@ public class ConvertibleTimeSpan(TimeSpan value) :
 		return _value.Ticks;
 	}
 
-    public override DateTime ToDateTime(IFormatProvider? provider)
-    {
+	public override DateTime ToDateTime(IFormatProvider? provider)
+	{
 		return new DateTime(_value.Ticks);
-    }
+	}
 }
