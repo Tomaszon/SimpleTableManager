@@ -134,7 +134,7 @@ public partial class Document
 			using var f = File.Open(fileName, FileMode.Open);
 			using var sr = new StreamReader(f);
 
-			Shared.PopulateObject(sr, this);
+			Shared.PopulateDocument(sr, this);
 
 			IsSaved = true;
 
