@@ -12,18 +12,11 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
 			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<IConvertible>(),
 			DateTimeFunctionOperator.Offset => Offset().Cast<IConvertible>(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
+			DateTimeFunctionOperator.TotalDays => throw GetInvalidOperatorException(),
 
 			_ => base.ExecuteCore()
 		};
 	}
-
-	// protected ConvertibleTimeSpan Sum()
-	// {
-	// 	// return UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) =>
-	// 	// a.AddYears(c.Year).AddMonths(c.Month).AddDays(c.Day).Add(c.TimeOfDay))
-	// 	// .AddYears(-DateOnly.MinValue.Year).AddMonths(-DateOnly.MinValue.Month).AddDays(-DateOnly.MinValue.Day);
-	// 	throw new NotImplementedException();
-	// }
 
 	protected ConvertibleTimeSpan Sub()
 	{
@@ -52,21 +45,6 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
 		return UnwrappedUnnamedArguments.Select(a => a.Day);
 	}
 
-	protected override IEnumerable<double> TotalYears()
-	{
-		return UnwrappedUnnamedArguments.Select(a => a.Year + a.Month / (double)MONTHS_IN_A_YEAR + a.Day / DAYS_IN_A_MONTH);
-	}
-
-	protected override IEnumerable<double> TotalMonths()
-	{
-		return UnwrappedUnnamedArguments.Select(a => a.Year * MONTHS_IN_A_YEAR + a.Month + a.Day / DAYS_IN_A_MONTH);
-	}
-
-	protected override IEnumerable<double> TotalDays()
-	{
-		return UnwrappedUnnamedArguments.Select(a => a.Year * DAYS_IN_A_YEAR + a.Month * DAYS_IN_A_MONTH + a.Day);
-	}
-
 	protected override IEnumerable<int> Hours()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Hour);
@@ -89,20 +67,20 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
 
 	protected override IEnumerable<double> TotalHours()
 	{
-		return UnwrappedUnnamedArguments.Select(a => new TimeSpan(a.Ticks).TotalHours);
+		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalHours);
 	}
 
 	protected override IEnumerable<double> TotalMinutes()
 	{
-		return UnwrappedUnnamedArguments.Select(a => new TimeSpan(a.Ticks).TotalMinutes);
+		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalMinutes);
 	}
 	protected override IEnumerable<double> TotalSeconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => new TimeSpan(a.Ticks).TotalSeconds);
+		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalSeconds);
 	}
 	protected override IEnumerable<double> TotalMilliseconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => new TimeSpan(a.Ticks).TotalMilliseconds);
+		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalMilliseconds);
 	}
 
 	public override Type GetOutType()

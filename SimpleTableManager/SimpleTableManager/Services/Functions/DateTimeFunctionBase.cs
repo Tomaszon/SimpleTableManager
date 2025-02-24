@@ -5,10 +5,6 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 	where TIn : IConvertible
 	where TOut : IConvertible
 {
-	protected const int MONTHS_IN_A_YEAR = 12;
-	protected const double DAYS_IN_A_MONTH = 30.42;
-	protected const int DAYS_IN_A_YEAR = 365;
-
 	public override IEnumerable<TOut> ExecuteCore()
 	{
 		return Operator switch
@@ -20,8 +16,6 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 			DateTimeFunctionOperator.Minutes => Minutes().Cast<TOut>(),
 			DateTimeFunctionOperator.Seconds => Seconds().Cast<TOut>(),
 			DateTimeFunctionOperator.Milliseconds => Milliseconds().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalYears => TotalYears().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalMonths => TotalMonths().Cast<TOut>(),
 			DateTimeFunctionOperator.TotalDays => TotalDays().Cast<TOut>(),
 			DateTimeFunctionOperator.TotalHours => TotalHours().Cast<TOut>(),
 			DateTimeFunctionOperator.TotalMinutes => TotalMinutes().Cast<TOut>(),
@@ -37,19 +31,9 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 		return UnwrappedUnnamedArguments.Select(a => 0);
 	}
 
-	protected virtual IEnumerable<double> TotalYears()
-	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
-	}
-
 	protected virtual IEnumerable<int> Months()
 	{
 		return UnwrappedUnnamedArguments.Select(a => 0);
-	}
-
-	protected virtual IEnumerable<double> TotalMonths()
-	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
 	}
 
 	protected virtual IEnumerable<int> Days()
@@ -115,8 +99,6 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 			DateTimeFunctionOperator.Minutes or
 			DateTimeFunctionOperator.Seconds or
 			DateTimeFunctionOperator.Milliseconds => typeof(int),
-			DateTimeFunctionOperator.TotalYears or
-			DateTimeFunctionOperator.TotalMonths or
 			DateTimeFunctionOperator.TotalDays or
 			DateTimeFunctionOperator.TotalHours or
 			DateTimeFunctionOperator.TotalMinutes or

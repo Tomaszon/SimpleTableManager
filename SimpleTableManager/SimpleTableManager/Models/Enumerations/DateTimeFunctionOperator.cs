@@ -16,8 +16,6 @@ public enum DateTimeFunctionOperator
 	Minutes,
 	Seconds,
 	Milliseconds,
-	TotalYears,
-	TotalMonths,
 	TotalDays,
 	TotalHours,
 	TotalMinutes,
