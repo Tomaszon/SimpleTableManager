@@ -34,7 +34,12 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, IConvertib
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
-	protected override IEnumerable<int> Hours()
+    protected override ConvertibleTimeOnly Avg()
+    {
+        return TimeOnly.FromTimeSpan(UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue.ToTimeSpan(), (a, c) => a += c.ToTimeSpan()).Divide(UnwrappedUnnamedArguments.Count()));
+    }
+
+    protected override IEnumerable<int> Hours()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Hour);
 	}
@@ -79,6 +84,7 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, IConvertib
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Const or
+			DateTimeFunctionOperator.Avg or
 			DateTimeFunctionOperator.Now => typeof(ConvertibleTimeOnly),
 
 			_ => base.GetOutType()

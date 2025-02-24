@@ -6,6 +6,7 @@ public class TimeSpanFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Const, new[] { "1.12:50:01", "10:51:02" }, new[] { "1.12:50:01", "10:51:02" })]
 	[TestCase(DateTimeFunctionOperator.Sum, new[] { "1.12:50:01", "10:51:02" }, "1.23:41:03")]
 	[TestCase(DateTimeFunctionOperator.Sub, new[] { "1.23:41:03", "10:51:02" }, "1.12:50:01")]
+	[TestCase(DateTimeFunctionOperator.Avg, new[] { "1.01:01:01", "3.03:03:03" }, "2.02:02:02")]
 	public void TimeSpanTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeSpan.Parse(s, null)));

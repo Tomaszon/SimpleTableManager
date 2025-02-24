@@ -4,6 +4,7 @@ namespace SimpleTableManager.Tests.FunctionTests;
 public class DateFunctionTests : TestBase
 {
 	[TestCase(DateTimeFunctionOperator.Const, new[] { "0001-01-01", "0001-02-03" }, "0001-01-01", "0001-02-03")]
+	[TestCase(DateTimeFunctionOperator.Avg, new[] { "0001-01-31", "0001-02-02" }, "0001-02-01")]
 	public void DateOnlyTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(s => ConvertibleDateOnly.Parse(s, null)));

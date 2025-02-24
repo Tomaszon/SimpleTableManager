@@ -25,6 +25,11 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, IConve
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate((TimeSpan)UnwrappedUnnamedArguments.First(), (a, c) => a - c);
 	}
 
+	protected override ConvertibleTimeSpan Avg()
+	{
+		return Sum().Divide(UnwrappedUnnamedArguments.Count());
+	}
+
 	protected override IEnumerable<int> Days()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Days);
@@ -79,7 +84,8 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, IConve
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const => typeof(ConvertibleTimeSpan),
+			DateTimeFunctionOperator.Const or
+			DateTimeFunctionOperator.Avg => typeof(ConvertibleTimeSpan),
 
 			_ => base.GetOutType()
 		};

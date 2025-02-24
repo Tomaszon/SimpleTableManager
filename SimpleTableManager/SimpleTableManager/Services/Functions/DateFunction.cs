@@ -31,6 +31,11 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertib
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
+	protected override ConvertibleDateOnly Avg()
+	{
+		return DateOnly.FromDateTime(new DateTime(UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.ToDateTime(null).Ticks)).Ticks / UnwrappedUnnamedArguments.Count()).Date);
+	}
+
 	protected override IEnumerable<int> Years()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Year);
@@ -51,6 +56,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertib
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Const or
+			DateTimeFunctionOperator.Avg or
 			DateTimeFunctionOperator.Now => typeof(ConvertibleDateOnly),
 
 			_ => base.GetOutType()

@@ -5,7 +5,7 @@ public enum DateTimeFunctionOperator
 {
 	Const,
 	Offset,
-	Difference,
+	Avg,
 	Sum,
 	Sub,
 	Now,

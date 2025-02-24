@@ -4,6 +4,7 @@ namespace SimpleTableManager.Tests.FunctionTests;
 public class TimeFunctionTests : TestBase
 {
 	[TestCase(DateTimeFunctionOperator.Const, new[] { "01:02:03.001", "01:02:03.1", "01:02:03", "01:02" }, "01:02:03.001", "01:02:03.1", "01:02:03", "01:02")]
+	[TestCase(DateTimeFunctionOperator.Avg, new[] { "01:01:01", "03:03:03" }, "02:02:02")]
 	public void TimeOnlyTest1(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeOnly.Parse(s, null)));

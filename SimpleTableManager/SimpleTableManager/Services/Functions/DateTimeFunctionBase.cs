@@ -9,6 +9,7 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 	{
 		return Operator switch
 		{
+			DateTimeFunctionOperator.Avg => Avg().Wrap(),
 			DateTimeFunctionOperator.Years => Years().Cast<TOut>(),
 			DateTimeFunctionOperator.Months => Months().Cast<TOut>(),
 			DateTimeFunctionOperator.Days => Days().Cast<TOut>(),
@@ -25,6 +26,8 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 			_ => throw GetInvalidOperatorException()
 		};
 	}
+
+	protected abstract TOut Avg();
 
 	protected virtual IEnumerable<int> Years()
 	{
