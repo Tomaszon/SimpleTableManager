@@ -795,36 +795,42 @@ public static class Renderer
 	{
 		if (selected)
 		{
-			Console.ForegroundColor = Settings.Current.PrimarySelectionContentColor.Foreground;
+			// Console.ForegroundColor = Settings.Current.PrimarySelectionContentColor.Foreground;
 
-			Console.BackgroundColor = Settings.Current.PrimarySelectionContentColor.Background;
+			// Console.BackgroundColor = Settings.Current.PrimarySelectionContentColor.Background;
+
+			Console.Write(GetColorCode(Settings.Current.PrimarySelectionContentColor));
 		}
 	}
 
 	private static void ChangeToCommentContentColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.Selection.IsPrimarySelected ?
+		var fc = cell.Selection.IsPrimarySelected ?
 			Settings.Current.PrimarySelectionContentColor.Foreground :
 			Settings.Current.NotAvailableContentColor.Foreground;
 
-		Console.BackgroundColor = cell.Selection.IsPrimarySelected ?
+		var bc = cell.Selection.IsPrimarySelected ?
 			Settings.Current.PrimarySelectionContentColor.Background :
 			Settings.Current.NotAvailableContentColor.Background;
+
+		Console.Write(GetColorCode(fc, bc));
 	}
 
 	private static void ChangeToLayerIndexContentColors(Cell cell)
 	{
-		Console.ForegroundColor = cell.Selection.IsPrimarySelected ?
+		var fc = cell.Selection.IsPrimarySelected ?
 			Settings.Current.PrimarySelectionContentColor.Foreground :
 				cell.LayerIndex == 0 ?
 					Settings.Current.NotAvailableContentColor.Foreground :
 						cell.ContentColor.Foreground;
 
-		Console.BackgroundColor = cell.Selection.IsPrimarySelected ?
+		var bc = cell.Selection.IsPrimarySelected ?
 			Settings.Current.PrimarySelectionContentColor.Background :
 				cell.LayerIndex == 0 ?
 					Settings.Current.NotAvailableContentColor.Background :
 						cell.ContentColor.Background;
+
+		Console.Write(GetColorCode(fc, bc));
 	}
 
 	private static void ChangeToCellContentColors(Cell cell)
@@ -838,8 +844,10 @@ public static class Renderer
 			_ => new(cell.ContentColor.Foreground, cell.ContentColor.Background)
 		};
 
-		Console.ForegroundColor = colors.Foreground;
-		Console.BackgroundColor = colors.Background;
+		// Console.ForegroundColor = colors.Foreground;
+		// Console.BackgroundColor = colors.Background;
+
+		Console.Write(GetColorCode(colors));
 	}
 
 	private static void ChangeToCellBackgroundColors(Cell cell)
@@ -853,8 +861,10 @@ public static class Renderer
 			_ => new(cell.BackgroundColor.Foreground, cell.BackgroundColor.Background)
 		};
 
-		Console.ForegroundColor = colors.Foreground;
-		Console.BackgroundColor = colors.Background;
+		// Console.ForegroundColor = colors.Foreground;
+		// Console.BackgroundColor = colors.Background;
+
+		Console.Write(GetColorCode(colors));
 	}
 
 	private static void ChangeToCellBorderColors(Cell cell)
@@ -869,31 +879,87 @@ public static class Renderer
 			_ => new(cell.BorderColor.Foreground, cell.BorderColor.Background)
 		};
 
-		Console.ForegroundColor = colors.Foreground;
-		Console.BackgroundColor = colors.Background;
+		// Console.ForegroundColor = colors.Foreground;
+		// Console.BackgroundColor = colors.Background;
+		Console.Write(GetColorCode(colors));
 	}
 
 	public static void ChangeToTextColors()
 	{
-		Console.ForegroundColor = Settings.Current.TextColor.Foreground;
-		Console.BackgroundColor = Settings.Current.TextColor.Background;
+		// Console.ForegroundColor = Settings.Current.TextColor.Foreground;
+		// Console.BackgroundColor = Settings.Current.TextColor.Background;
+
+		Console.Write(GetColorCode(Settings.Current.TextColor));
 	}
 
 	public static void ChangeToOkLabelColors()
 	{
-		Console.ForegroundColor = Settings.Current.OkLabelColor.Foreground;
-		Console.BackgroundColor = Settings.Current.OkLabelColor.Background;
+		// Console.ForegroundColor = Settings.Current.OkLabelColor.Foreground;
+		// Console.BackgroundColor = Settings.Current.OkLabelColor.Background;
+		Console.Write(GetColorCode(Settings.Current.OkLabelColor));
 	}
 
 	public static void ChangeToNotOkLabelColors()
 	{
-		Console.ForegroundColor = Settings.Current.NotOkLabelColor.Foreground;
-		Console.BackgroundColor = Settings.Current.NotOkLabelColor.Background;
+		// Console.ForegroundColor = Settings.Current.NotOkLabelColor.Foreground;
+		// Console.BackgroundColor = Settings.Current.NotOkLabelColor.Background;
+		Console.Write(GetColorCode(Settings.Current.NotOkLabelColor));
 	}
 
 	public static void ChangeToDefaultBorderColors()
 	{
-		Console.ForegroundColor = Settings.Current.DefaultBorderColor.Foreground;
-		Console.BackgroundColor = Settings.Current.DefaultBorderColor.Background;
+		// Console.ForegroundColor = Settings.Current.DefaultBorderColor.Foreground;
+		// Console.BackgroundColor = Settings.Current.DefaultBorderColor.Background;
+		Console.Write(GetColorCode(Settings.Current.DefaultBorderColor));
 	}
+
+	private static string GetColorCode(ConsoleColorSet consoleColorSet)
+	{
+		return $"\x1B[{ForegroundColorCodes[consoleColorSet.Foreground]};{BackgroundColorCodes[consoleColorSet.Background]}m";
+	}
+
+	private static string GetColorCode(ConsoleColor foreground, ConsoleColor background)
+	{
+		return $"\x1B[{ForegroundColorCodes[foreground]};{BackgroundColorCodes[background]}m";
+	}
+
+	private static readonly Dictionary<ConsoleColor, int> ForegroundColorCodes = new()
+	{
+		{ ConsoleColor.Black, 30 },
+		{ ConsoleColor.Gray, 37 },
+		{ ConsoleColor.Red, 91 },
+		{ ConsoleColor.Green, 92 },
+		{ ConsoleColor.Blue, 94 },
+		{ ConsoleColor.Cyan, 96 },
+		{ ConsoleColor.Magenta, 95 },
+		{ ConsoleColor.Yellow, 93 },
+		{ ConsoleColor.DarkGray, 90 },
+		{ ConsoleColor.DarkRed, 31 },
+		{ ConsoleColor.DarkGreen, 32 },
+		{ ConsoleColor.DarkBlue, 34 },
+		{ ConsoleColor.DarkCyan, 36 },
+		{ ConsoleColor.DarkMagenta, 35 },
+		{ ConsoleColor.DarkYellow, 33 },
+		{ ConsoleColor.White, 97 }
+	};
+
+	private static readonly Dictionary<ConsoleColor, int> BackgroundColorCodes = new()
+	{
+		{ ConsoleColor.Black, 40 },
+		{ ConsoleColor.Gray, 47 },
+		{ ConsoleColor.Red, 101 },
+		{ ConsoleColor.Green, 102 },
+		{ ConsoleColor.Blue, 104 },
+		{ ConsoleColor.Cyan, 106 },
+		{ ConsoleColor.Magenta, 105 },
+		{ ConsoleColor.Yellow, 103 },
+		{ ConsoleColor.DarkGray, 100 },
+		{ ConsoleColor.DarkRed, 41 },
+		{ ConsoleColor.DarkGreen, 42 },
+		{ ConsoleColor.DarkBlue, 44 },
+		{ ConsoleColor.DarkCyan, 46 },
+		{ ConsoleColor.DarkMagenta, 45 },
+		{ ConsoleColor.DarkYellow, 43 },
+		{ ConsoleColor.White, 107 }
+	};
 }
