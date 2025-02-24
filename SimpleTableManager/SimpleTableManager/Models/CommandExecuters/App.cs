@@ -53,7 +53,7 @@ public class App : CommandExecuterBase
 
 			ms.Position = 0;
 
-			Shared.PopulateObject(sr, Document);
+			Shared.PopulateDocument(sr, Document);
 
 			sr.Close();
 			sw.Close();
@@ -76,8 +76,8 @@ public class App : CommandExecuterBase
 
 			ms.Position = 0;
 
-			Shared.PopulateObject(sr, Document);
-			
+			Shared.PopulateDocument(sr, Document);
+
 			sr.Close();
 			sw.Close();
 			ms.Close();

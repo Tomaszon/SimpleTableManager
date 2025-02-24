@@ -66,6 +66,13 @@ public static class Shared
 		serializer.Serialize(new JsonTextWriter(sw) { Indentation = 1, Formatting = Formatting.Indented, IndentChar = '\t' }, source);
 	}
 
+	public static void PopulateDocument(StreamReader sr, Document document)
+	{
+		PopulateObject(sr, document);
+
+		document.Tables.ForEach(t => t.ViewOptions.InvokeViewChangedEvent());
+	}
+
 	public static void PopulateObject(StreamReader sr, object target)
 	{
 		var serializer = new JsonSerializer
@@ -124,6 +131,8 @@ public static class Shared
 			TypeNameHandling = TypeNameHandling.Auto,
 			ContractResolver = new ClearPropertyContractResolver()
 		};
+
+		serializer.Converters.Add(new ConvertibleJsonConverter());
 
 		var result = serializer.Deserialize(new JsonTextReader(sr), type);
 
