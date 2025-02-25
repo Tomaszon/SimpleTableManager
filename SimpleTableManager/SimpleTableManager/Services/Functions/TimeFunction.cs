@@ -1,10 +1,10 @@
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
-[FunctionMappingType(typeof(ConvertibleTimeOnly))]
-public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, IConvertible>
+[FunctionMappingType(typeof(TimeType))]
+public class TimeFunction : DateTimeFunctionBase<TimeType, IType>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<IType> ExecuteCore()
 	{
 		return Operator switch
 		{
@@ -22,61 +22,61 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, IConvertib
 	// 	throw new NotImplementedException();
 	// }
 
-	protected ConvertibleTimeSpan Sub()
+	protected TimeSpanType Sub()
 	{
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate(((TimeOnly)UnwrappedUnnamedArguments.First()).ToTimeSpan(), (a, c) => a -= c.ToTimeSpan());
 	}
 
-	protected IEnumerable<ConvertibleTimeOnly> Offset()
+	protected IEnumerable<TimeType> Offset()
 	{
 		var offset = TimeSpan.Parse(GetNamedArgument<string>(ArgumentName.Offset));
 
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
-    protected override ConvertibleTimeOnly Avg()
+    protected override TimeType Avg()
     {
         return TimeOnly.FromTimeSpan(UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue.ToTimeSpan(), (a, c) => a += c.ToTimeSpan()).Divide(UnwrappedUnnamedArguments.Count()));
     }
 
-    protected override IEnumerable<int> Hours()
+    protected override IEnumerable<IntegerType> Hours()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Hour);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Hour);
 	}
 
-	protected override IEnumerable<int> Minutes()
+	protected override IEnumerable<IntegerType> Minutes()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Minute);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Minute);
 	}
 
-	protected override IEnumerable<int> Seconds()
+	protected override IEnumerable<IntegerType> Seconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Second);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Second);
 	}
 
-	protected override IEnumerable<int> Milliseconds()
+	protected override IEnumerable<IntegerType> Milliseconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Millisecond);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Millisecond);
 	}
 
-	protected override IEnumerable<double> TotalHours()
+	protected override IEnumerable<FractionType> TotalHours()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.ToTimeSpan().TotalHours);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)a.ToTimeSpan().TotalHours);
 	}
 
-	protected override IEnumerable<double> TotalMinutes()
+	protected override IEnumerable<FractionType> TotalMinutes()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.ToTimeSpan().TotalMinutes);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)a.ToTimeSpan().TotalMinutes);
 	}
 
-	protected override IEnumerable<double> TotalSeconds()
+	protected override IEnumerable<FractionType> TotalSeconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.ToTimeSpan().TotalSeconds);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)a.ToTimeSpan().TotalSeconds);
 	}
 
-	protected override IEnumerable<double> TotalMilliseconds()
+	protected override IEnumerable<FractionType> TotalMilliseconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.ToTimeSpan().TotalMilliseconds);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)a.ToTimeSpan().TotalMilliseconds);
 	}
 
 	public override Type GetOutType()
@@ -85,7 +85,7 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, IConvertib
 		{
 			DateTimeFunctionOperator.Const or
 			DateTimeFunctionOperator.Avg or
-			DateTimeFunctionOperator.Now => typeof(ConvertibleTimeOnly),
+			DateTimeFunctionOperator.Now => typeof(TimeType),
 
 			_ => base.GetOutType()
 		};

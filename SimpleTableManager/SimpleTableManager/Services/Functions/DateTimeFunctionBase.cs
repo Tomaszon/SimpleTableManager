@@ -2,8 +2,8 @@ namespace SimpleTableManager.Services.Functions;
 
 public abstract class DateTimeFunctionBase<TIn, TOut> :
 	FunctionBase<DateTimeFunctionOperator, TIn, TOut>
-	where TIn : IConvertible
-	where TOut : IConvertible
+	where TIn : IType
+	where TOut : IType
 {
 	public override IEnumerable<TOut> ExecuteCore()
 	{
@@ -29,72 +29,72 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 
 	protected abstract TOut Avg();
 
-	protected virtual IEnumerable<int> Years()
+	protected virtual IEnumerable<IntegerType> Years()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<int> Months()
+	protected virtual IEnumerable<IntegerType> Months()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<int> Days()
+	protected virtual IEnumerable<IntegerType> Days()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<double> TotalDays()
+	protected virtual IEnumerable<FractionType> TotalDays()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)0d);
 	}
 
-	protected virtual IEnumerable<int> Hours()
+	protected virtual IEnumerable<IntegerType> Hours()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<double> TotalHours()
+	protected virtual IEnumerable<FractionType> TotalHours()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)0d);
 	}
 
-	protected virtual IEnumerable<int> Minutes()
+	protected virtual IEnumerable<IntegerType> Minutes()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<double> TotalMinutes()
+	protected virtual IEnumerable<FractionType> TotalMinutes()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)0d);
 	}
 
-	protected virtual IEnumerable<int> Seconds()
+	protected virtual IEnumerable<IntegerType> Seconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<double> TotalSeconds()
+	protected virtual IEnumerable<FractionType> TotalSeconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)0d);
 	}
 
-	protected virtual IEnumerable<int> Milliseconds()
+	protected virtual IEnumerable<IntegerType> Milliseconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)0);
 	}
 
-	protected virtual IEnumerable<double> TotalMilliseconds()
+	protected virtual IEnumerable<FractionType> TotalMilliseconds()
 	{
-		return UnwrappedUnnamedArguments.Select(a => 0d);
+		return UnwrappedUnnamedArguments.Select(a => (FractionType)0d);
 	}
 
-    public override Type GetOutType()
-    {
-        return Operator switch
+	public override Type GetOutType()
+	{
+		return Operator switch
 		{
 			DateTimeFunctionOperator.Sum or
-			DateTimeFunctionOperator.Sub => typeof(ConvertibleTimeSpan),
+			DateTimeFunctionOperator.Sub => typeof(TimeSpanType),
 			DateTimeFunctionOperator.Years or
 			DateTimeFunctionOperator.Months or
 			DateTimeFunctionOperator.Days or
@@ -111,5 +111,5 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 
 			_ => throw GetInvalidOperatorException()
 		};
-    }
+	}
 }

@@ -1,11 +1,10 @@
-
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
-[FunctionMappingType(typeof(ConvertibleDateOnly))]
-public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertible>
+[FunctionMappingType(typeof(DateType))]
+public class DateFunction : DateTimeFunctionBase<DateType, IType>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<IType> ExecuteCore()
 	{
 		return Operator switch
 		{
@@ -19,36 +18,36 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertib
 		};
 	}
 
-	protected ConvertibleTimeSpan Sub()
+	protected TimeSpanType Sub()
 	{
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First().ToTimeSpan(), (a, c) => a.Subtract(c.ToTimeSpan()));
 	}
 
-	protected IEnumerable<ConvertibleDateOnly> Offset()
+	protected IEnumerable<DateType> Offset()
 	{
 		var offset = TimeSpan.Parse(GetNamedArgument<string>(ArgumentName.Offset));
 
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
-	protected override ConvertibleDateOnly Avg()
+	protected override DateType Avg()
 	{
 		return DateOnly.FromDateTime(new DateTime(UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.ToDateTime(null).Ticks)).Ticks / UnwrappedUnnamedArguments.Count()).Date);
 	}
 
-	protected override IEnumerable<int> Years()
+	protected override IEnumerable<IntegerType> Years()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Year);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Year);
 	}
 
-	protected override IEnumerable<int> Months()
+	protected override IEnumerable<IntegerType> Months()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Month);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Month);
 	}
 
-	protected override IEnumerable<int> Days()
+	protected override IEnumerable<IntegerType> Days()
 	{
-		return UnwrappedUnnamedArguments.Select(a => a.Day);
+		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Day);
 	}
 
 	public override Type GetOutType()
@@ -57,7 +56,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, IConvertib
 		{
 			DateTimeFunctionOperator.Const or
 			DateTimeFunctionOperator.Avg or
-			DateTimeFunctionOperator.Now => typeof(ConvertibleDateOnly),
+			DateTimeFunctionOperator.Now => typeof(DateType),
 
 			_ => base.GetOutType()
 		};

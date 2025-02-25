@@ -18,7 +18,7 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
 		};
 	}
 
-	protected ConvertibleTimeSpan Sub()
+	protected TimeSpanType Sub()
 	{
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate(new TimeSpan(UnwrappedUnnamedArguments.First().Ticks), (a, c) => a.Subtract(new TimeSpan(c.Ticks)));
 	}

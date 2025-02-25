@@ -9,9 +9,9 @@ public class TimeSpanFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Avg, new[] { "1.01:01:01", "3.03:03:03" }, "2.02:02:02")]
 	public void TimeSpanTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		var fn = CreateFunction(operation, values.Select(s => TimeSpanType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		CheckResults(fn.Execute(), results.Select(s => TimeSpanType.Parse(s, null)));
 	}
 
 	[TestCase(DateTimeFunctionOperator.Days, new[] { "1.02:03:04.005" }, 1)]
@@ -26,18 +26,18 @@ public class TimeSpanFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.TotalMilliseconds, new[] { "1.02:03:04.005" }, 93_784_005)]
 	public void TimeSpanTest2(DateTimeFunctionOperator operation, string[] values, params double[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		var fn = CreateFunction(operation, values.Select(s => TimeSpanType.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results);
 	}
 
-	[TestCase(DateTimeFunctionOperator.Const, typeof(ConvertibleTimeSpan))]
-	[TestCase(DateTimeFunctionOperator.Sub, typeof(ConvertibleTimeSpan))]
+	[TestCase(DateTimeFunctionOperator.Const, typeof(TimeSpanType))]
+	[TestCase(DateTimeFunctionOperator.Sub, typeof(TimeSpanType))]
 	[TestCase(DateTimeFunctionOperator.Days, typeof(int))]
 	[TestCase(DateTimeFunctionOperator.TotalDays, typeof(double))]
 	public void TimeSpanTest3(DateTimeFunctionOperator operation, Type result)
 	{
-		var fn = CreateFunction<ConvertibleTimeSpan>(operation);
+		var fn = CreateFunction<TimeSpanType>(operation);
 
 		CheckResult(fn.GetOutType(), result);
 	}

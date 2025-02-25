@@ -2,43 +2,63 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<long>(ArgumentName.Divider, 2)]
 [FunctionMappingType(typeof(long))]
-public class IntegerNumericFunction : NumericFunctionBase<long, long>
+public class IntegerNumericFunction : NumericFunctionBase<IntegerType, long, IType>
 {
-	public override IEnumerable<long> ExecuteCore()
+	public override IEnumerable<IType> ExecuteCore()
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Rem => Rem(),
+			NumericFunctionOperator.Rem => Rem().Cast<IType>(),
 
-			NumericFunctionOperator.And => And(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.And => And().Wrap(),
 
-			NumericFunctionOperator.Or => Or(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Or => Or().Wrap(),
+
+			NumericFunctionOperator.Sqrt => Sqrt(),
+
+			NumericFunctionOperator.Log2 => LogN(2).Select(e => e.ToType<IntegerType>()),
+
+			NumericFunctionOperator.Log10 => LogN(10).Select(e => e.ToType<IntegerType>()),
+
+			NumericFunctionOperator.LogE => LogN(double.E).Select(e => e.ToType<IntegerType>()),
+
+			NumericFunctionOperator.LogN => LogN(GetNamedArgument<double>(ArgumentName.Base)).Select(e => e.ToType<IntegerType>()),
 
 			_ => base.ExecuteCore()
 		};
 	}
 
-	private IEnumerable<long> Rem()
+	private IEnumerable<IntegerType> Rem()
 	{
 		var divider = GetNamedArgument<long>(ArgumentName.Divider);
 
 		return UnwrappedUnnamedArguments.Select(p => DivRem(p, divider));
 	}
 
-	private static long And(IEnumerable<long> array)
+	private IntegerType And()
 	{
-		return array.Aggregate(~0L, (a, c) => a &= c);
+		return UnwrappedUnnamedArguments.Aggregate(~0L, (a, c) => a &= c);
 	}
 
-	private static long Or(IEnumerable<long> array)
+	private IntegerType Or()
 	{
-		return array.Aggregate(0L, (a, c) => a |= c);
+		return UnwrappedUnnamedArguments.Aggregate(0L, (a, c) => a |= c);
 	}
 
-	private static long DivRem(long a, long b)
+	private static IntegerType DivRem(IntegerType a, IntegerType b)
 	{
 		Math.DivRem(a, b, out var rem);
 
 		return rem;
+	}
+
+	public override Type GetOutType()
+	{
+		return Operator switch
+		{
+			< NumericFunctionOperator.Greater => typeof(IntegerType),
+
+			_ => base.GetOutType()
+		};
 	}
 }

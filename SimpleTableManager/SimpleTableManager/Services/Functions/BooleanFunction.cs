@@ -1,21 +1,21 @@
 namespace SimpleTableManager.Services.Functions;
 
-[FunctionMappingType(typeof(FormattableBoolean))]
-public class BooleanFunction : FunctionBase<BooleanFunctionOperator, FormattableBoolean, FormattableBoolean>
+[FunctionMappingType(typeof(BooleanType))]
+public class BooleanFunction : FunctionBase<BooleanFunctionOperator, BooleanType, BooleanType>
 {
-	public override IEnumerable<FormattableBoolean> ExecuteCore()
+	public override IEnumerable<BooleanType> ExecuteCore()
 	{
 		return Operator switch
 		{
-			BooleanFunctionOperator.Const => UnwrappedUnnamedArguments,
+            BooleanFunctionOperator.Const => UnwrappedUnnamedArguments,
 
-			BooleanFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
+            BooleanFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
 
-			BooleanFunctionOperator.And => ((FormattableBoolean)UnwrappedUnnamedArguments.All(a => a)).Wrap(),
+            BooleanFunctionOperator.And => ((BooleanType)UnwrappedUnnamedArguments.All(a => a)).Wrap(),
 
-			BooleanFunctionOperator.Or => ((FormattableBoolean)UnwrappedUnnamedArguments.Any(a => a)).Wrap(),
+            BooleanFunctionOperator.Or => ((BooleanType)UnwrappedUnnamedArguments.Any(a => a)).Wrap(),
 
-			BooleanFunctionOperator.IsNotNull => ((FormattableBoolean)Arguments.Any(a =>
+            BooleanFunctionOperator.IsNotNull => ((BooleanType)Arguments.Any(a =>
 			{
 				try
 				{
@@ -30,7 +30,7 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, Formattable
 			}))
 			.Wrap(),
 
-			BooleanFunctionOperator.IsNull => ((FormattableBoolean)Arguments.All(a =>
+            BooleanFunctionOperator.IsNull => ((BooleanType)Arguments.All(a =>
 			{
 				try
 				{

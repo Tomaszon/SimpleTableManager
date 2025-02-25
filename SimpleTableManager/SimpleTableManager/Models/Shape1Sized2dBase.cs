@@ -1,41 +1,41 @@
-using System.Globalization;
+// using System.Globalization;
 
-namespace SimpleTableManager.Models;
+// namespace SimpleTableManager.Models;
 
-[ParseFormat("[size]", "^\\[(?<s>\\d+)\\]$")]
-[method: JsonConstructor]
-public abstract class Shape1Sized2dBase<T>(double size1) :
-	ConvertibleBase<T>,
-	IShape1Sized,
-	IShape2d,
-	IParsableCore<T>,
-	IFormattable
-	where T : Shape1Sized2dBase<T>, IParsable<T>
-{
-	public double Size1 { get; set; } = size1;
+// [ParseFormat("[size]", "^\\[(?<s>\\d+)\\]$")]
+// [method: JsonConstructor]
+// public abstract class Shape1Sized2dBase<T>(double size1) :
+// 	TypeBase<T>,
+// 	IShape1Sized,
+// 	IShape2d,
+// 	IParsableCore<T>,
+// 	IFormattable
+// 	where T : Shape1Sized2dBase<T>, IParsable<T>
+// {
+// 	public double Size1 { get; set; } = size1;
 
-	public abstract double Area { get; }
+// 	public abstract double Area { get; }
 
-	public abstract double Perimeter { get; }
+// 	public abstract double Perimeter { get; }
 
-	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape) :
-		this(shape.Size1)
-	{ }
+// 	public Shape1Sized2dBase(Shape1Sized2dBase<T> shape) :
+// 		this(shape.Size1)
+// 	{ }
 
-	public virtual string ToString(string? format, IFormatProvider? formatProvider)
-	{
-		return $"[{Size1.ToString(format, formatProvider)}]";
-	}
+// 	public virtual string ToString(string? format, IFormatProvider? formatProvider)
+// 	{
+// 		return $"[{Size1.ToString(format, formatProvider)}]";
+// 	}
 
-	public override string ToString()
-	{
-		return $"[{Size1}]";
-	}
+// 	public override string ToString()
+// 	{
+// 		return $"[{Size1}]";
+// 	}
 
-	public static T ParseCore(GroupCollection args, IFormatProvider? _)
-	{
-		var size1 = double.Parse(args["s"].Value, CultureInfo.CurrentUICulture);
+// 	public static T ParseCore(GroupCollection args, IFormatProvider? _)
+// 	{
+// 		var size1 = double.Parse(args["s"].Value, CultureInfo.CurrentUICulture);
 
-		return (T)Activator.CreateInstance(typeof(T), size1)!;
-	}
-}
+// 		return (T)Activator.CreateInstance(typeof(T), size1)!;
+// 	}
+// }

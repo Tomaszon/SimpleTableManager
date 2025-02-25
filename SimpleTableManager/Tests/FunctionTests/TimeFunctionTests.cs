@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Types;
+
 namespace SimpleTableManager.Tests.FunctionTests;
 
 [ExcludeFromCodeCoverage]
@@ -7,24 +9,24 @@ public class TimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Avg, new[] { "01:01:01", "03:03:03" }, "02:02:02")]
 	public void TimeOnlyTest1(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		var fn = CreateFunction(operation, values.Select(s => TimeType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		CheckResults(fn.Execute(), results.Select(s => TimeType.Parse(s, null)));
 	}
 
 	[TestCase(DateTimeFunctionOperator.Sub, new[] { "06:05:04.003", "01:01:01.001" }, "05:04:03.002")]
 	public void TimeOnlyTest2(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		var fn = CreateFunction(operation, values.Select(s => TimeType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		CheckResults(fn.Execute(), results.Select(s => TimeSpanType.Parse(s, null)));
 	}
 
 	[TestCase(10, 5, 2, "HH:mm:ss", "10:05:02")]
 	[TestCase(10, 0, 0, "HH", "10")]
 	public void TimeOnlyTest3(int h, int m, int s, string format, string expectedResult)
 	{
-		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new ConstFunctionArgument<ConvertibleTimeOnly>(ArgumentName.Format, format)], new ConvertibleTimeOnly(h, m, s));
+		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new ConstFunctionArgument<TimeType>(ArgumentName.Format, format)], new TimeType(h, m, s));
 
 		var formattedResult = fn.ExecuteAndFormat();
 
@@ -45,18 +47,18 @@ public class TimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.TotalMilliseconds, new[] { "02:03:04.005" }, 7_384_005)]
 	public void TimeOnlyTest4(DateTimeFunctionOperator operation, string[] values, params double[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		var fn = CreateFunction(operation, values.Select(s => TimeType.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results);
 	}
 
-	[TestCase(DateTimeFunctionOperator.Const, typeof(ConvertibleTimeOnly))]
-	[TestCase(DateTimeFunctionOperator.Now, typeof(ConvertibleTimeOnly))]
+	[TestCase(DateTimeFunctionOperator.Const, typeof(TimeType))]
+	[TestCase(DateTimeFunctionOperator.Now, typeof(TimeType))]
 	[TestCase(DateTimeFunctionOperator.Days, typeof(int))]
 	[TestCase(DateTimeFunctionOperator.TotalDays, typeof(double))]
 	public void TimeOnlyTest5(DateTimeFunctionOperator operation, Type result)
 	{
-		var fn = CreateFunction<ConvertibleTimeOnly>(operation);
+		var fn = CreateFunction<TimeType>(operation);
 
 		CheckResult(fn.GetOutType(), expectedValue: result);
 	}
@@ -64,8 +66,8 @@ public class TimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Offset, new[] { "01:02:03.001", "01:02:03.1", "01:02:03", "01:02" }, "02:04:06.001", "02:04:06.1", "02:04:06", "02:04:03")]
 	public void TimeOnlyTest6(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, [new ConstFunctionArgument<string>(ArgumentName.Offset, "01:02:03")], values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		var fn = CreateFunction(operation, [new ConstFunctionArgument<string>(ArgumentName.Offset, "01:02:03")], values.Select(s => TimeType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		CheckResults(fn.Execute(), results.Select(s => TimeType.Parse(s, null)));
 	}
 }

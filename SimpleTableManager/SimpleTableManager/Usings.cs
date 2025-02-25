@@ -11,4 +11,5 @@ global using SimpleTableManager.Models.Attributes;
 global using SimpleTableManager.Models.CommandExecuters;
 global using SimpleTableManager.Models.Enumerations;
 global using SimpleTableManager.Models.Exceptions;
+global using SimpleTableManager.Models.Types;
 global using SimpleTableManager.Services;

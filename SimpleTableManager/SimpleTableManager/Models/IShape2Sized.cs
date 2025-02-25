@@ -1,6 +1,6 @@
-namespace SimpleTableManager.Models;
+// namespace SimpleTableManager.Models;
 
-public interface IShape2Sized : IShape1Sized
-{
-	double Size2 { get; set; }
-}
+// public interface IShape2Sized : IShape1Sized
+// {
+// 	double Size2 { get; set; }
+// }

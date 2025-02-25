@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework.Internal;
+using SimpleTableManager.Models.Types;
 
 namespace SimpleTableManager.Tests;
 
@@ -66,7 +67,7 @@ public class MiscTests : TestBase
 	{
 		var to = new TimeOnly(1, 2, 3, 4);
 
-		ConvertibleTimeOnly cto = to;
+		TimeType cto = to;
 
 		var to2 = (TimeOnly)cto;
 
@@ -84,7 +85,7 @@ public class MiscTests : TestBase
 	{
 		var doy = new DateOnly(1993, 12, 19);
 
-		ConvertibleDateOnly cdo = doy;
+		DateType cdo = doy;
 
 		var do2 = (DateOnly)cdo;
 
@@ -101,7 +102,7 @@ public class MiscTests : TestBase
 	[Test]
 	public void BooleanTest()
 	{
-		var fb = FormattableBoolean.Parse("yes", null);
+		var fb = Models.BooleanType.Parse("yes", null);
 
 		CheckResults([fb.Equals(true), fb.Equals(null)], [true, false]);
 		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt32(null), fb!.ToInt64(null), fb!.ToDouble(null)], [true, 1, 1L, 1d]);

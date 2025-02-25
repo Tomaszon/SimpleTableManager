@@ -4,10 +4,11 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<double>(ArgumentName.Base, 2)]
 [NamedArgument<int>(ArgumentName.Decimals, 2)]
-public abstract class NumericFunctionBase<TIn, TOut> :
+public abstract class NumericFunctionBase<TIn, TUnderLying, TOut> :
 	FunctionBase<NumericFunctionOperator, TIn, TOut>
-	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, TOut
-	where TOut : IConvertible
+	where TIn : INumericType<TIn, TUnderLying>, IParsable<TIn>, IParsableCore<TIn>
+	where TUnderLying : IComparable, INumber<TUnderLying>, IMinMaxValue<TUnderLying>
+	where TOut : IType
 {
 	public override IEnumerable<TOut> ExecuteCore()
 	{
@@ -19,87 +20,89 @@ public abstract class NumericFunctionBase<TIn, TOut> :
 
 			NumericFunctionOperator.Abs => UnwrappedUnnamedArguments.Select(TIn.Abs).Cast<TOut>(),
 
-			NumericFunctionOperator.Sum => Sum(UnwrappedUnnamedArguments).Wrap<TOut>(),
+			NumericFunctionOperator.Sum => Sum().Wrap().Cast<TOut>(),
 
-			NumericFunctionOperator.Sub => Sub(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Sub => Sub().Wrap(),
 
-			NumericFunctionOperator.Avg => Avg(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Avg => Avg().Wrap(),
 
-			NumericFunctionOperator.Min => Min(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Min => Min().Wrap(),
 
-			NumericFunctionOperator.Max => Max(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Max => Max().Wrap(),
 
-			NumericFunctionOperator.Mul => Multiply(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Mul => Multiply().Wrap(),
 
-			NumericFunctionOperator.Div => Divide(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Div => Divide().Wrap(),
 
-			NumericFunctionOperator.Pow => Power(UnwrappedUnnamedArguments, GetNamedArgument<int>(ArgumentName.Power)),
+			NumericFunctionOperator.Pow => Power(GetNamedArgument<int>(ArgumentName.Power)),
 
-			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedUnnamedArguments),
+			NumericFunctionOperator.Greater => Greater().Wrap().Cast<TOut>(),
 
-			NumericFunctionOperator.Log2 => LogN(UnwrappedUnnamedArguments, 2),
+			NumericFunctionOperator.Less => Less().Wrap().Cast<TOut>(),
 
-			NumericFunctionOperator.Log10 => LogN(UnwrappedUnnamedArguments, 10),
+			NumericFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap().Cast<TOut>(),
 
-			NumericFunctionOperator.LogE => LogN(UnwrappedUnnamedArguments, double.E),
+			NumericFunctionOperator.LessOrEquals => LessOrEquals().Wrap().Cast<TOut>(),
 
-			NumericFunctionOperator.LogN => LogN(UnwrappedUnnamedArguments, GetNamedArgument<double>(ArgumentName.Base)),
+			NumericFunctionOperator.Equals => Equals().Wrap().Cast<TOut>(),
+
+			NumericFunctionOperator.NotEquals => NotEquals().Wrap().Cast<TOut>(),
 
 			_ => throw GetInvalidOperatorException()
 		};
 	}
 
-	private IEnumerable<TOut> LogN(IEnumerable<TIn> array, double @base)
+	protected IEnumerable<TOut> LogN(FractionType @base)
 	{
-		return array.Select(p =>
+		return UnwrappedUnnamedArguments.Select(p =>
 			double.Round(Math.Log(p.ToDouble(null), @base), GetNamedArgument<int>(ArgumentName.Decimals)).ToType<TOut>());
 	}
 
-	private static IEnumerable<TOut> Sqrt(IEnumerable<TIn> array)
+	protected IEnumerable<TOut> Sqrt()
 	{
-		return array.Select(p =>
+		return UnwrappedUnnamedArguments.Select(p =>
 			Math.Sqrt(p.ToDouble(null)).ToType<TOut>());
 	}
 
-	private static IEnumerable<TOut> Power(IEnumerable<TIn> array, int power)
+	private IEnumerable<TOut> Power(int power)
 	{
-		return array.Select(p =>
+		return UnwrappedUnnamedArguments.Select(p =>
 			Shared.IndexArray(power).Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= p).ToType<TOut>());
 	}
 
-	private static TOut Avg(IEnumerable<TIn> array)
+	private TOut Avg()
 	{
-		return (Sum(array) / array.Count().ToType<TIn>()).ToType<TOut>();
+		return (Sum() / UnwrappedUnnamedArguments.Count().ToType<TIn>()).ToType<TOut>();
 	}
 
-	private static TOut Multiply(IEnumerable<TIn> array)
+	private TOut Multiply()
 	{
-		return array.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c).ToType<TOut>();
+		return UnwrappedUnnamedArguments.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c).ToType<TOut>();
 	}
 
-	protected static TOut Divide(IEnumerable<TIn> array)
+	protected TOut Divide()
 	{
-		return array.Skip(1).Aggregate(array.First(), (a, c) => a /= c).ToType<TOut>();
+		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a /= c).ToType<TOut>();
 	}
 
-	protected static TIn Sum(IEnumerable<TIn> array)
+	protected TIn Sum()
 	{
-		return array.Aggregate(TIn.AdditiveIdentity, (a, c) => a += c);
+		return UnwrappedUnnamedArguments.Aggregate(TIn.AdditiveIdentity, (a, c) => a += c);
 	}
 
-	protected static TOut Sub(IEnumerable<TIn> array)
+	protected TOut Sub()
 	{
-		return array.Skip(1).Aggregate(array.First(), (a, c) => a -= c).ToType<TOut>();
+		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a -= c).ToType<TOut>();
 	}
 
-	private static TOut Min(IEnumerable<TIn> array)
+	private TOut Min()
 	{
-		return (array.Any() ? array.Min() : TIn.MaxValue).ToType<TOut>();
+		return (UnwrappedUnnamedArguments.Any() ? UnwrappedUnnamedArguments.Min()! : TIn.MaxValue).ToType<TOut>();
 	}
 
-	private static TOut Max(IEnumerable<TIn> array)
+	private TOut Max()
 	{
-		return (array.Any() ? array.Max() : TIn.MinValue).ToType<TOut>();
+		return (UnwrappedUnnamedArguments.Any() ? UnwrappedUnnamedArguments.Max()! : TIn.MinValue).ToType<TOut>();
 	}
 
 	public override Type GetOutType()

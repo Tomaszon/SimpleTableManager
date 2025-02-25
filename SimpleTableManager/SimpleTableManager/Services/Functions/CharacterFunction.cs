@@ -3,13 +3,13 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Separator, "")]
 [NamedArgument<int>(ArgumentName.Count, 1)]
 [FunctionMappingType(typeof(char))]
-public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, IConvertible>
+public class CharacterFunction : FunctionBase<CharacterFunctionOperator, CharacterType, IType>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<IType> ExecuteCore()
 	{
 		return Operator switch
 		{
-			CharacterFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<IConvertible>(),
+			CharacterFunctionOperator.Const => UnwrappedUnnamedArguments,
 
 			CharacterFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 

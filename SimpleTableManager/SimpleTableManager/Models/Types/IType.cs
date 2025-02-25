@@ -1,6 +1,9 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.Types;
 
-public interface IConvertibleBase : IConvertible
+public interface IType :
+	IConvertible,
+	IFormattable,
+	IComparable
 {
 	TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 

@@ -17,12 +17,12 @@ public class DateTimeFunctionTests : TestBase
 	{
 		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)));
 
-		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		CheckResults(fn.Execute(), results.Select(s => TimeSpanType.Parse(s, null)));
 	}
 
 
 	[TestCase(DateTimeFunctionOperator.Const, typeof(DateTime))]
-	[TestCase(DateTimeFunctionOperator.Sub, typeof(ConvertibleTimeSpan))]
+	[TestCase(DateTimeFunctionOperator.Sub, typeof(TimeSpanType))]
 	[TestCase(DateTimeFunctionOperator.Days, typeof(int))]
 	public void DateTimeTest3(DateTimeFunctionOperator operation, Type result)
 	{

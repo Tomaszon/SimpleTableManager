@@ -1,4 +1,5 @@
 using NUnit.Framework.Internal;
+using SimpleTableManager.Models.Types;
 
 namespace SimpleTableManager.Tests;
 
@@ -6,9 +7,9 @@ namespace SimpleTableManager.Tests;
 public class ExtensionTests : TestBase
 {
 	[Test]
-	[TestCase(typeof(ConvertibleDateOnly), "date")]
-	[TestCase(typeof(ConvertibleTimeOnly), "time")]
-	[TestCase(typeof(FormattableBoolean), "bool")]
+	[TestCase(typeof(DateType), "date")]
+	[TestCase(typeof(TimeType), "time")]
+	[TestCase(typeof(Models.BooleanType), "bool")]
 	[TestCase(typeof(string), "string")]
 	public void TypeFriendlyNames(Type type, string name)
 	{

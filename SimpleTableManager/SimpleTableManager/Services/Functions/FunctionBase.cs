@@ -8,8 +8,8 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOpertor, TIn, TOut> :
 	IFunction
 	where TOpertor : struct, Enum
-	where TIn : IConvertible
-	where TOut : IConvertible
+	where TIn : IType
+	where TOut : IType
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 
@@ -214,5 +214,41 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 			a is ReferenceFunctionArgument ra ?
 				ra.Reference.ToShortString() :
 				((IConstFunctionArgument)a).Value))}";
+	}
+
+	protected BooleanType Greater()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Min() == 1;
+	}
+
+	protected BooleanType Less()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Max() == -1;
+	}
+
+	protected BooleanType GreaterOrEquals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Min() >= 0;
+	}
+
+	protected BooleanType LessOrEquals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Max() <= 0;
+	}
+
+	protected BooleanType Equals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).All(e => e == 0);
+	}
+
+	protected BooleanType NotEquals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).All(e => e != 0);
 	}
 }

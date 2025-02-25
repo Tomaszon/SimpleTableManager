@@ -1,4 +1,5 @@
-﻿using SimpleTableManager.Services.Functions;
+﻿using SimpleTableManager.Models.Types;
+using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Models.CommandExecuters;
 
@@ -53,7 +54,7 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, ConvertibleTimeSpan, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, BooleanType, TimeType, DateType, DateTime, TimeSpanType, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
 	{
 		SetFunction(type, functionOperator: "const", contents);
 	}
@@ -95,7 +96,7 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
+	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<BooleanType>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<BooleanFunction, BooleanFunctionOperator>(functionOperator, arguments);
 	}
@@ -117,27 +118,27 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleDateOnly>] params IFunctionArgument[] arguments)
+	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateType>] params IFunctionArgument[] arguments)
 	{
 		var args = functionOperator == DateTimeFunctionOperator.Now ?
-			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now))) :
+			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<DateType>(DateOnly.FromDateTime(DateTime.Now))) :
 			arguments;
 
 		SetFunction<DateFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleTimeOnly>] params IFunctionArgument[] arguments)
+	public void SetTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<TimeType>] params IFunctionArgument[] arguments)
 	{
 		var args = functionOperator == DateTimeFunctionOperator.Now ?
-			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleTimeOnly>(TimeOnly.FromDateTime(DateTime.Now))) :
+			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<TimeType>(TimeOnly.FromDateTime(DateTime.Now))) :
 			arguments;
 
 		SetFunction<TimeFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetTimeSpanContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleTimeSpan>] params IFunctionArgument[] arguments)
+	public void SetTimeSpanContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<TimeSpanType>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<TimeSpanFunction, DateTimeFunctionOperator>(functionOperator, arguments);
 	}
@@ -159,7 +160,7 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	//TODO check what happens in case of IShape
-	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
+	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, BooleanType, TimeType, DateType, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
 	{
 		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 

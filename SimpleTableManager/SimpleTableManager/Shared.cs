@@ -1,4 +1,6 @@
-﻿namespace SimpleTableManager;
+﻿using SimpleTableManager.Models.Types;
+
+namespace SimpleTableManager;
 
 public static class Shared
 {
@@ -12,10 +14,10 @@ public static class Shared
 		{ typeof(long), "int" },
 		{ typeof(bool), "bool" },
 		{ typeof(double), "fraction" },
-		{ typeof(ConvertibleDateOnly), "date" },
-		{ typeof(ConvertibleTimeOnly), "time" },
-		{ typeof(ConvertibleTimeSpan), "timeSpan" },
-		{ typeof(FormattableBoolean), "bool" }
+		{ typeof(DateType), "date" },
+		{ typeof(TimeType), "time" },
+		{ typeof(TimeSpanType), "timeSpan" },
+		{ typeof(BooleanType), "bool" }
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)
