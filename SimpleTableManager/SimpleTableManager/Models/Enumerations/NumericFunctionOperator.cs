@@ -24,5 +24,11 @@ public enum NumericFunctionOperator
 	Log2,
 	Log10,
 	LogE,
-	LogN
+	LogN,
+	Greater,
+	Less,
+	Equals,
+	NotEquals,
+	GreaterOrEquals,
+	LessOrEquals
 }

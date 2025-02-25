@@ -101,4 +101,19 @@ public abstract class NumericFunctionBase<TIn, TOut> :
 	{
 		return (array.Any() ? array.Max() : TIn.MinValue).ToType<TOut>();
 	}
+
+	public override Type GetOutType()
+	{
+		return Operator switch
+		{
+			NumericFunctionOperator.Greater or
+			NumericFunctionOperator.Less or
+			NumericFunctionOperator.GreaterOrEquals or
+			NumericFunctionOperator.LessOrEquals or
+			NumericFunctionOperator.Equals or
+			NumericFunctionOperator.NotEquals => typeof(BooleanType),
+
+			_ => throw GetInvalidOperatorException()
+		};
+	}
 }

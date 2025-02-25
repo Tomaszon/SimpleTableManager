@@ -32,7 +32,13 @@
 				"log2": "setIntegerContentFunction/log2",
 				"log10": "setIntegerContentFunction/log10",
 				"loge": "setIntegerContentFunction/loge",
-				"logn": "setIntegerContentFunction/logn"
+				"logn": "setIntegerContentFunction/logn",
+				"greater": "setIntegerContentFunction/greater",
+				"less": "setIntegerContentFunction/less",
+				"greaterOrEquals": "setIntegerContentFunction/greaterOrEquals",
+				"lessOrEquals": "setIntegerContentFunction/lessOrEquals",
+				"equals": "setIntegerContentFunction/equals",
+				"notEquals": "setIntegerContentFunction/notEquals"
 			},
 			"fraction": {
 				"const": "setFractionContentFunction/const",
@@ -53,7 +59,13 @@
 				"log2": "setFractionContentFunction/log2",
 				"log10": "setFractionContentFunction/log10",
 				"logE": "setFractionContentFunction/logE",
-				"log": "setFractionContentFunction/log"
+				"log": "setFractionContentFunction/log",
+				"greater": "setFractionContentFunction/greater",
+				"less": "setFractionContentFunction/less",
+				"greaterOrEquals": "setFractionContentFunction/greaterOrEquals",
+				"lessOrEquals": "setFractionContentFunction/lessOrEquals",
+				"equals": "setFractionContentFunction/equals",
+				"notEquals": "setFractionContentFunction/notEquals"
 			},
 			"bool": {
 				"const": "setBooleanContentFunction/const",
