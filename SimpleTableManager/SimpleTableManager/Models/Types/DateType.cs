@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.Types;
 
 [ParseFormat("yyyy-mm-dd", "^(?<y>\\d{4})-(?<m>\\d{2})-(?<d>\\d{2})$")]
 [ParseFormat("yyyy.mm.dd", "^(?<y>\\d{4})\\.(?<m>\\d{2})\\.(?<d>\\d{2})$")]
@@ -10,11 +10,11 @@ public class DateType(DateOnly dateOnly) :
 	IParsableCore<DateType>,
 	IFormattable
 {
-	public int Year => _value.Year;
+	public IntegerType Year => _value.Year;
 
-	public int Month => _value.Month;
+	public IntegerType Month => _value.Month;
 
-	public int Day => _value.Day;
+	public IntegerType Day => _value.Day;
 
 	public TimeSpan ToTimeSpan() => new(_value.ToDateTime(TimeOnly.MinValue).Ticks);
 
@@ -22,7 +22,7 @@ public class DateType(DateOnly dateOnly) :
 
 	public static DateType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
-		return DateOnly.Parse(args["0"].Value);
+		return DateOnly.Parse(args["0"].Value, formatProvider);
 	}
 
 	public static implicit operator DateOnly(DateType dateOnly)

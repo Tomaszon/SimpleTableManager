@@ -11,7 +11,7 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, Charact
 		{
 			CharacterFunctionOperator.Const => UnwrappedUnnamedArguments,
 
-			CharacterFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
+			CharacterFunctionOperator.Concat => StringType.Concat(UnwrappedUnnamedArguments).Wrap(),
 
 			CharacterFunctionOperator.Join => Join().Wrap(),
 
@@ -21,27 +21,27 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, Charact
 		};
 	}
 
-	private string Join()
+	private StringType Join()
 	{
 		var separator = GetNamedArgument<string>(ArgumentName.Separator);
 
 		return string.Join(separator, UnwrappedUnnamedArguments);
 	}
 
-	private IEnumerable<string> Repeat()
+	private IEnumerable<StringType> Repeat()
 	{
 		var count = GetNamedArgument<int>(ArgumentName.Count);
 
-		return UnwrappedUnnamedArguments.Select(c => new string(c, count));
+		return UnwrappedUnnamedArguments.Select(c => (StringType)new string(c, count));
 	}
 
 	public override Type GetOutType()
 	{
 		return Operator switch
 		{
-			CharacterFunctionOperator.Const => typeof(char),
+			CharacterFunctionOperator.Const => typeof(CharacterType),
 
-			_ => typeof(string)
+			_ => typeof(StringType)
 		};
 	}
 }

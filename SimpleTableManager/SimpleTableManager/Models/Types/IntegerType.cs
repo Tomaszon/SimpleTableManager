@@ -15,6 +15,7 @@ public class IntegerType(long value) :
 
 	// public static IntegerType MultiplicativeIdentity => 1;
 
+	public static IntegerType Zero => 0;
 
 	public static IntegerType Abs(IntegerType value)
 	{
@@ -25,7 +26,7 @@ public class IntegerType(long value) :
 	{
 		var value = args.Values.Single(g => g.Success && g.Name != "0").Value;
 
-		return long.Parse(value);
+		return long.Parse(value, formatProvider);
 	}
 
 	public static implicit operator long(IntegerType value)
@@ -82,5 +83,4 @@ public class IntegerType(long value) :
 	{
 		return _value.ToString(format, formatProvider);
 	}
-
 }

@@ -8,31 +8,31 @@ public class TimeSpanType(TimeSpan timeSpan) :
 	IParsable<TimeSpanType>,
 	IParsableCore<TimeSpanType>
 {
-	public int Days => _value.Days;
+	public IntegerType Days => _value.Days;
 
-	public double TotalDays => _value.TotalDays;
+	public FractionType TotalDays => _value.TotalDays;
 
-	public int Hours => _value.Hours;
+	public IntegerType Hours => _value.Hours;
 
-	public double TotalHours => _value.TotalHours;
+	public FractionType TotalHours => _value.TotalHours;
 
-	public int Minutes => _value.Minutes;
+	public IntegerType Minutes => _value.Minutes;
 
-	public double TotalMinutes => _value.TotalMinutes;
+	public FractionType TotalMinutes => _value.TotalMinutes;
 
-	public int Seconds => _value.Seconds;
+	public IntegerType Seconds => _value.Seconds;
 
-	public double TotalSeconds => _value.TotalSeconds;
+	public FractionType TotalSeconds => _value.TotalSeconds;
 
-	public int Milliseconds => _value.Milliseconds;
+	public IntegerType Milliseconds => _value.Milliseconds;
 
-	public double TotalMilliseconds => _value.TotalMilliseconds;
+	public FractionType TotalMilliseconds => _value.TotalMilliseconds;
 
 	public TimeSpanType(int days = 0, int hours = 0, int minutes = 0, int seconds = 0, int milliseconds = 0) : this(new(days, hours, minutes, seconds, milliseconds)) { }
 
 	public static TimeSpanType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
-		return TimeSpan.Parse(args["0"].Value);
+		return TimeSpan.Parse(args["0"].Value, formatProvider);
 	}
 
 	public static implicit operator TimeSpan(TimeSpanType timeSpan)

@@ -5,6 +5,11 @@ public interface IType :
 	IFormattable,
 	IComparable
 {
+	public static virtual implicit operator IntegerType(long value)
+	{
+
+	}
+
 	TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
 	object IConvertible.ToType(Type conversionType, IFormatProvider? provider)

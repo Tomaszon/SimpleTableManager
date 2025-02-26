@@ -10,14 +10,24 @@ public static class Shared
 
 	public static Dictionary<Type, string> FRIENDLY_TYPE_NAMES { get; } = new()
 	{
-		{ typeof(int), "int" },
-		{ typeof(long), "int" },
-		{ typeof(bool), "bool" },
-		{ typeof(double), "fraction" },
+		{ typeof(BooleanType), "bool" },
+		{ typeof(CharacterType), "char" },
+		{ typeof(DateTimeType), "date-time" },
 		{ typeof(DateType), "date" },
+		{ typeof(IntegerType), "int" },
+		{ typeof(FractionType), "fraction" },
+		{ typeof(StringType), "string" },
+		{ typeof(TimeSpanType), "time-span" },
 		{ typeof(TimeType), "time" },
-		{ typeof(TimeSpanType), "timeSpan" },
-		{ typeof(BooleanType), "bool" }
+		{ typeof(bool), "bool" },
+		{ typeof(char), "char" },
+		{ typeof(DateTime), "date-time" },
+		{ typeof(DateOnly), "date" },
+		{ typeof(double), "fraction" },
+		{ typeof(int), "int" },
+		{ typeof(string), "string" },
+		{ typeof(TimeSpan), "time-span" },
+		{ typeof(TimeOnly), "time" },
 	};
 
 	public static List<int> IndexArray(int size, int from = 0, int step = 1)

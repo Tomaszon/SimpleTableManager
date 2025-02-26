@@ -37,17 +37,17 @@ public class DateFunction : DateTimeFunctionBase<DateType, IType>
 
 	protected override IEnumerable<IntegerType> Years()
 	{
-		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Year);
+		return UnwrappedUnnamedArguments.Select(a => a.Year);
 	}
 
 	protected override IEnumerable<IntegerType> Months()
 	{
-		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Month);
+		return UnwrappedUnnamedArguments.Select(a => a.Month);
 	}
 
 	protected override IEnumerable<IntegerType> Days()
 	{
-		return UnwrappedUnnamedArguments.Select(a => (IntegerType)a.Day);
+		return UnwrappedUnnamedArguments.Select(a => a.Day);
 	}
 
 	public override Type GetOutType()

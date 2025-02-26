@@ -18,7 +18,7 @@ public class FunctionTests : TestBase
 
         CheckResult(fn.GetError(), "ASD");
 
-        var ex = ((FunctionBase<NumericFunctionOperator, long, long>)fn).GetInvalidOperatorException();
+        var ex = ((FunctionBase<NumericFunctionOperator, FractionType, FractionType>)fn).GetInvalidOperatorException();
 
         CheckResult(ex.GetType(), typeof(InvalidOperationException));
     }

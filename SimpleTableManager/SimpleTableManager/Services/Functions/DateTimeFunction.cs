@@ -2,15 +2,15 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
 [FunctionMappingType(typeof(DateTime))]
-public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
+public class DateTimeFunction : DateTimeFunctionBase<DateTimeType, IType>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<IType> ExecuteCore()
 	{
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<IConvertible>(),
-			DateTimeFunctionOperator.Offset => Offset().Cast<IConvertible>(),
+			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
+			DateTimeFunctionOperator.Offset => Offset(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 			DateTimeFunctionOperator.TotalDays => throw GetInvalidOperatorException(),
 
@@ -23,70 +23,69 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate(new TimeSpan(UnwrappedUnnamedArguments.First().Ticks), (a, c) => a.Subtract(new TimeSpan(c.Ticks)));
 	}
 
-	protected IEnumerable<DateTime> Offset()
+	protected IEnumerable<DateTimeType> Offset()
 	{
 		var offset = TimeSpan.Parse(GetNamedArgument<string>(ArgumentName.Offset));
 
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
-	protected override IConvertible Avg()
+	protected override DateTimeType Avg()
 	{
-		var a = UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.Ticks));
-		var t = a.Ticks;
+		var a = UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => a.AddTicks(c.Ticks));
 
-		return new DateTime(t / UnwrappedUnnamedArguments.Count());
+		return new DateTime(a.Ticks / UnwrappedUnnamedArguments.Count());
 	}
 
-	protected override IEnumerable<int> Years()
+	protected override IEnumerable<IntegerType> Years()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Year);
 	}
 
-	protected override IEnumerable<int> Months()
+	protected override IEnumerable<IntegerType> Months()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Month);
 	}
 
-	protected override IEnumerable<int> Days()
+	protected override IEnumerable<IntegerType> Days()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Day);
 	}
 
-	protected override IEnumerable<int> Hours()
+	protected override IEnumerable<IntegerType> Hours()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Hour);
 	}
 
-	protected override IEnumerable<int> Minutes()
+	protected override IEnumerable<IntegerType> Minutes()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Minute);
 	}
 
-	protected override IEnumerable<int> Seconds()
+	protected override IEnumerable<IntegerType> Seconds()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Second);
 	}
 
-	protected override IEnumerable<int> Milliseconds()
+	protected override IEnumerable<IntegerType> Milliseconds()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Millisecond);
 	}
 
-	protected override IEnumerable<double> TotalHours()
+	protected override IEnumerable<FractionType> TotalHours()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalHours);
 	}
 
-	protected override IEnumerable<double> TotalMinutes()
+	protected override IEnumerable<FractionType> TotalMinutes()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalMinutes);
 	}
-	protected override IEnumerable<double> TotalSeconds()
+	protected override IEnumerable<FractionType> TotalSeconds()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalSeconds);
 	}
-	protected override IEnumerable<double> TotalMilliseconds()
+	protected override IEnumerable<FractionType> TotalMilliseconds()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.TimeOfDay.TotalMilliseconds);
 	}

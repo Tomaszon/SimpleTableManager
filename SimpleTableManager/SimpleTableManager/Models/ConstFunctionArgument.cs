@@ -9,7 +9,7 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 	IParsable<ConstFunctionArgument<T>>,
 	IParsableCore<ConstFunctionArgument<T>>,
 	IConstFunctionArgument
-	where T : IParsable<T>, IConvertible
+	where T : IType
 {
 	public ArgumentName? Name { get; set; }
 

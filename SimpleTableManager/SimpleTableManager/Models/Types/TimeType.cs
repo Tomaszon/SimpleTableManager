@@ -6,13 +6,13 @@ public class TimeType(TimeOnly timeOnly) :
 	IParsable<TimeType>,
 	IParsableCore<TimeType>
 {
-	public int Hour => _value.Hour;
+	public IntegerType Hour => _value.Hour;
 
-	public int Minute => _value.Minute;
+	public IntegerType Minute => _value.Minute;
 
-	public int Second => _value.Second;
+	public IntegerType Second => _value.Second;
 
-	public int Millisecond => _value.Millisecond;
+	public IntegerType Millisecond => _value.Millisecond;
 
 	public TimeSpan ToTimeSpan() => _value.ToTimeSpan();
 
@@ -20,7 +20,7 @@ public class TimeType(TimeOnly timeOnly) :
 
 	public static TimeType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
-		return TimeOnly.Parse(args["0"].Value);
+		return TimeOnly.Parse(args["0"].Value, formatProvider);
 	}
 
 	public static implicit operator TimeOnly(TimeType timeOnly)

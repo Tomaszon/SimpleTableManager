@@ -8,6 +8,8 @@ public class FractionType(double value) :
 	IParsable<FractionType>,
 	IParsableCore<FractionType>
 {
+	public static FractionType Zero => 0;
+
 	public static FractionType Abs(FractionType value)
 	{
 		return new(double.Abs(value._value));
@@ -17,7 +19,7 @@ public class FractionType(double value) :
 	{
 		var value = args.Values.Single(g => g.Success && g.Name != "0").Value;
 
-		return double.Parse(value);
+		return double.Parse(value, formatProvider);
 	}
 
 	public static implicit operator double(FractionType value)

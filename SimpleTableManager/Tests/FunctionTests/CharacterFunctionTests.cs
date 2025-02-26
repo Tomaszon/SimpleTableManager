@@ -10,8 +10,8 @@ public class CharacterFunctionTests : TestBase
 	{
 		var na = new IFunctionArgument[]
 		{
-			new ConstFunctionArgument<char>(ArgumentName.Separator, ","),
-			new ConstFunctionArgument<char>(ArgumentName.Count, 3)
+			new ConstFunctionArgument<CharacterType>(ArgumentName.Separator, ","),
+			new ConstFunctionArgument<CharacterType>(ArgumentName.Count, 3)
 		};
 
 		var fn = CreateFunction(operation, na, values);

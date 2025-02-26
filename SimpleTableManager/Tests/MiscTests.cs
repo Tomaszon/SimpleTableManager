@@ -102,10 +102,10 @@ public class MiscTests : TestBase
 	[Test]
 	public void BooleanTest()
 	{
-		var fb = Models.BooleanType.Parse("yes", null);
+		var fb = BooleanType.Parse("yes", null);
 
 		CheckResults([fb.Equals(true), fb.Equals(null)], [true, false]);
-		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt32(null), fb!.ToInt64(null), fb!.ToDouble(null)], [true, 1, 1L, 1d]);
+		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt32(null), fb!.ToInt64(null), fb!.ToDouble(null)], expectedValues: [true, 1, 1L, 1d]);
 		CheckResults([fb.ToString(), fb.ToString("yn", null), fb.ToString("yesno", null), fb.ToString("10", null)], ["True", "Y", "Yes", "1"]);
 	}
 

@@ -1,5 +1,4 @@
 using NUnit.Framework.Internal;
-using SimpleTableManager.Models.Types;
 
 namespace SimpleTableManager.Tests;
 
@@ -7,10 +6,15 @@ namespace SimpleTableManager.Tests;
 public class ExtensionTests : TestBase
 {
 	[Test]
+	[TestCase(typeof(BooleanType), "bool")]
+	[TestCase(typeof(CharacterType), "char")]
+	[TestCase(typeof(DateTimeType), "date-time")]
 	[TestCase(typeof(DateType), "date")]
+	[TestCase(typeof(FractionType), "fraction")]
+	[TestCase(typeof(IntegerType), "int")]
+	[TestCase(typeof(StringType), "string")]
+	[TestCase(typeof(TimeSpanType), "time-span")]
 	[TestCase(typeof(TimeType), "time")]
-	[TestCase(typeof(Models.BooleanType), "bool")]
-	[TestCase(typeof(string), "string")]
 	public void TypeFriendlyNames(Type type, string name)
 	{
 		CheckResult(type.GetFriendlyName().ToLower(), name);

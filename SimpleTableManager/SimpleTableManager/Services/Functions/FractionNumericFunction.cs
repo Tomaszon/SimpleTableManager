@@ -39,8 +39,8 @@ public class FractionNumericFunction : NumericFunctionBase<FractionType ,double,
 		return Operator switch
 		{
 			NumericFunctionOperator.Floor or
-			NumericFunctionOperator.Ceiling => typeof(long),
-			< NumericFunctionOperator.Greater => typeof(double),
+			NumericFunctionOperator.Ceiling => typeof(IntegerType),
+			< NumericFunctionOperator.Greater => typeof(FractionType),
 
 			_ => base.GetOutType()
 		};

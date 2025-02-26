@@ -10,7 +10,7 @@ public partial class Cell
 		ContentFunction = new StringFunction()
 		{
 			Operator = StringFunctionOperator.Const,
-			Arguments = [.. contents.Select(c => new ConstFunctionArgument<string>(c)).Cast<IFunctionArgument>()]
+			Arguments = [.. contents.Select(c => new ConstFunctionArgument<StringType>(c)).Cast<IFunctionArgument>()]
 		};
 	}
 
@@ -54,28 +54,28 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, BooleanType, TimeType, DateType, DateTime, TimeSpanType, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, BooleanType, TimeType, DateType, DateTime, TimeSpanType,/* Rectangle, Ellipse, RightTriangle,*/ string>] params IFunctionArgument[] contents)
 	{
 		SetFunction(type, functionOperator: "const", contents);
 	}
 
-	[CommandFunction(WithSelector = true)]
-	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
-	{
-		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
+	// {
+	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
+	// }
 
-	[CommandFunction(WithSelector = true)]
-	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
-	{
-		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
+	// {
+	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
+	// }
 
-	[CommandFunction(WithSelector = true)]
-	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
-	{
-		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
+	// {
+	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
+	// }
 
 	[CommandFunction(WithSelector = true)]
 	public void SetStringContentFunction(StringFunctionOperator functionOperator, [MinLength(1), ValueTypes<string>] params IFunctionArgument[] arguments)
@@ -111,7 +111,7 @@ public partial class Cell
 	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateTime>] params IFunctionArgument[] arguments)
 	{
 		var args = functionOperator == DateTimeFunctionOperator.Now ?
-			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<DateTime>(DateTime.Now)) :
+			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<DateTimeType>(DateTime.Now)) :
 			arguments;
 
 		SetFunction<DateTimeFunction, DateTimeFunctionOperator>(functionOperator, args);
@@ -143,11 +143,11 @@ public partial class Cell
 		SetFunction<TimeSpanFunction, DateTimeFunctionOperator>(functionOperator, arguments);
 	}
 
-	[CommandFunction(WithSelector = true)]
-	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<int, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
-	{
-		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<int, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
+	// {
+	// 	SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);
+	// }
 
 	[CommandFunction]
 	public void SetContentFunctionOperator([MinLength(1)] string @operator)
@@ -160,7 +160,7 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	//TODO check what happens in case of IShape
-	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, BooleanType, TimeType, DateType, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
+	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, BooleanType, TimeType, DateType, DateTime, /*Rectangle, Ellipse, RightTriangle,*/ string>] params IEnumerable<IFunctionArgument> arguments)
 	{
 		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 
