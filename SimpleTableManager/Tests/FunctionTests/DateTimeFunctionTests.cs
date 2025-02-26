@@ -7,15 +7,15 @@ public class DateTimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Avg, new[] { "0001-01-31 02:02", "0001-02-02 03:03" }, "0001-02-01 02:32:30")]
 	public void DateTimeTest1(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)));
+		var fn = CreateFunction(operation, values.Select(s => DateTimeType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results.Select(s => DateTime.Parse(s)));
+		CheckResults(fn.Execute(), results.Select(s => DateTimeType.Parse(s, null)));
 	}
 
 	[TestCase(DateTimeFunctionOperator.Sub, new[] { "0005-03-05 10:30", "0005-03-04 02:20" }, "1.08:10")]
 	public void DateTimeTest2(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)));
+		var fn = CreateFunction(operation, values.Select(s => DateTimeType.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results.Select(s => TimeSpanType.Parse(s, null)));
 	}
@@ -26,7 +26,7 @@ public class DateTimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Days, typeof(int))]
 	public void DateTimeTest3(DateTimeFunctionOperator operation, Type result)
 	{
-		var fn = CreateFunction<DateTime>(operation);
+		var fn = CreateFunction<DateTimeType>(operation);
 
 		CheckResult(fn.GetOutType(), result);
 	}
@@ -34,9 +34,9 @@ public class DateTimeFunctionTests : TestBase
 	[Test]
 	public void DateTimeTest4()
 	{
-		var fn = CreateFunction(DateTimeFunctionOperator.Offset, [new ConstFunctionArgument<DateTime>(ArgumentName.Offset, "3.12:30:15")], new DateTime(1993, 12, 19));
+		var fn = CreateFunction(DateTimeFunctionOperator.Offset, [new ConstFunctionArgument<DateTimeType>(ArgumentName.Offset, "3.12:30:15")], new DateTimeType(1993, 12, 19));
 
-		CheckResults(fn.Execute(), [new DateTime(1993, 12, 22, 12, 30, 15)]);
+		CheckResults(fn.Execute(), [new DateTimeType(1993, 12, 22, 12, 30, 15)]);
 	}
 
 	[TestCase(DateTimeFunctionOperator.Years, new[] { "1993.12.19" }, 1993)]
@@ -53,7 +53,7 @@ public class DateTimeFunctionTests : TestBase
 
 	public void DateTimeTest5(DateTimeFunctionOperator operation, string[] values, params double[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s, null)));
+		var fn = CreateFunction(operation, values.Select(s => DateTimeType.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results);
 	}

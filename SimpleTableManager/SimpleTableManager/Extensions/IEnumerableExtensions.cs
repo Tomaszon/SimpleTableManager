@@ -1,9 +1,17 @@
-using System.Runtime.CompilerServices;
-
 namespace SimpleTableManager.Extensions;
+
+using System.Collections;
 
 public static class IEnumerableExtensions
 {
+	public static IEnumerable<T2> CastTo<T2>(this IEnumerable collection)
+	{
+		foreach (var item in collection)
+		{
+			yield return (T2)item;
+		}
+	}
+
 	public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
 	{
 		foreach (var item in collection)

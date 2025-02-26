@@ -22,7 +22,12 @@ public class IntegerFunctionTests : TestBase
 	[TestCase(NumericFunctionOperator.Mul, new long[] { 4, 2, 3 }, 24)]
 	public void IntegerTest(NumericFunctionOperator operation, long[] values, params long[] results)
 	{
-		var fn = CreateFunction(operation, [new ConstFunctionArgument<int>(ArgumentName.Power, 2)], values);
+		var na = new IConstFunctionArgument[]
+		{
+			new ConstFunctionArgument<IntegerType>(ArgumentName.Power, 2)
+		};
+
+		var fn = CreateFunction(operation, na, values.CastTo<IntegerType>());
 
 		CheckResults(fn.Execute(), results);
 	}

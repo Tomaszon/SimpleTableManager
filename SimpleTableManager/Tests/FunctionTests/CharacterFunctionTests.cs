@@ -14,7 +14,7 @@ public class CharacterFunctionTests : TestBase
 			new ConstFunctionArgument<CharacterType>(ArgumentName.Count, 3)
 		};
 
-		var fn = CreateFunction(operation, na, values);
+		var fn = CreateFunction(operation, na, values.CastTo<CharacterType>());
 
 		CheckResults(fn.Execute(), results);
 		CheckResult(fn.GetOutType(), typeof(string));

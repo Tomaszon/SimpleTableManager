@@ -66,7 +66,12 @@ public class TimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Offset, new[] { "01:02:03.001", "01:02:03.1", "01:02:03", "01:02" }, "02:04:06.001", "02:04:06.1", "02:04:06", "02:04:03")]
 	public void TimeOnlyTest6(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, [new ConstFunctionArgument<string>(ArgumentName.Offset, "01:02:03")], values.Select(s => TimeType.Parse(s, null)));
+		var na = new IConstFunctionArgument[]
+		{
+			new ConstFunctionArgument<StringType>(ArgumentName.Offset, "01:02:03")
+		};
+
+		var fn = CreateFunction(operation, na, values.Select(s => TimeType.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results.Select(s => TimeType.Parse(s, null)));
 	}

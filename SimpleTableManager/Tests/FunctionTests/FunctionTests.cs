@@ -8,7 +8,7 @@ public class FunctionTests : TestBase
     [Test]
     public void ExceptionTest()
     {
-        var fn = CreateFunction(NumericFunctionOperator.Const, 1L, 2L);
+        var fn = CreateFunction<IntegerType>(NumericFunctionOperator.Const, 1);
 
         CheckResults([fn.GetInType(), fn.GetOutType()], [typeof(long), typeof(long)]);
 

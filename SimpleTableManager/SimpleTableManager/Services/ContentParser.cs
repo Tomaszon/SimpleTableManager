@@ -27,7 +27,7 @@ public static class ContentParser
 			var genType = typeof(ConstFunctionArgument<>).MakeGenericType(valueType);
 
 			//TODO change to nameof unbound generic in dotnet10
-			var method = genType.GetMethod(nameof(ParsableBase<ConstFunctionArgument<int>>.TryParse),
+			var method = genType.GetMethod(nameof(ParsableBase<ConstFunctionArgument<IntegerType>>.TryParse),
 				BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)!;
 
 			var args = new object?[] { value, null, null };

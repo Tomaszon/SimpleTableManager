@@ -5,9 +5,9 @@ public interface IType :
 	IFormattable,
 	IComparable
 {
-	public static virtual implicit operator IntegerType(long value)
+	public static IntegerType From(long value)
 	{
-
+		return new IntegerType(value);
 	}
 
 	TypeCode IConvertible.GetTypeCode() => TypeCode.Object;

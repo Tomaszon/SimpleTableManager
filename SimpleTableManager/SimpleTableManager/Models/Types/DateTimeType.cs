@@ -31,6 +31,8 @@ public class DateTimeType(DateTime value) :
 
 	public IntegerType Ticks => _value.Ticks;
 
+	public DateTimeType(int year = 1, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0, int millisecond = 0) : this(new DateTime(year, month, day, hour, minute, second, millisecond)) { }
+
 	public static DateTimeType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
 		var value = args.Values.Single(g => g.Success && g.Name != "0").Value;
