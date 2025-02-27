@@ -16,7 +16,7 @@ public class CharacterFunctionTests : TestBase
 
 		var fn = CreateFunction(operation, na, values.CastTo<CharacterType>());
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.CastTo<StringType>());
 		CheckResult(fn.GetOutType(), typeof(string));
 	}
 }

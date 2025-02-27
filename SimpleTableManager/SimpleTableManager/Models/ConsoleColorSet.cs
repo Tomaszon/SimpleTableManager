@@ -34,12 +34,6 @@ public struct ConsoleColorSet(ConsoleColor? foreground, ConsoleColor? background
 		return false;
 	}
 
-	[ExcludeFromCodeCoverage]
-	public override readonly int GetHashCode()
-	{
-		return base.GetHashCode();
-	}
-
 	public override readonly string ToString()
 	{
 		return $"F:{Foreground}, B:{Background}";

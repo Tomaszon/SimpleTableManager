@@ -29,12 +29,6 @@ public class Position(int x, int y) : ParsableBase<Position>, IParsable<Position
 		return false;
 	}
 
-	[ExcludeFromCodeCoverage]
-	public override int GetHashCode()
-	{
-		return base.GetHashCode();
-	}
-
 	public void Deconstruct(out int x, out int y)
 	{
 		x = X;

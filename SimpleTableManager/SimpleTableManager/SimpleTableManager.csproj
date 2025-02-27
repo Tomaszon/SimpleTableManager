@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
+		<NoWarn>0660,0661,0659</NoWarn>
 		<OutputType>Exe</OutputType>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<TargetFramework>net9.0</TargetFramework>

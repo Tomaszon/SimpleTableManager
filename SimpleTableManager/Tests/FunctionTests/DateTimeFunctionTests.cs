@@ -55,6 +55,6 @@ public class DateTimeFunctionTests : TestBase
 	{
 		var fn = CreateFunction(operation, values.Select(s => DateTimeType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.CastTo<FractionType>());
 	}
 }

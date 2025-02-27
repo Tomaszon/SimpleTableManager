@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace SimpleTableManager.Models.Types;
 
 [ParseFormat("+-value", "^-?\\d+$")]
@@ -5,7 +7,8 @@ public class IntegerType(long value) :
 	TypeBase<IntegerType, long>(value),
 	INumericType<IntegerType, long>,
 	IParsable<IntegerType>,
-	IParsableCore<IntegerType>
+	IParsableCore<IntegerType>,
+	IEqualityOperators<IntegerType, IntegerType, bool>
 {
 	// public static IntegerType MaxValue => throw new NotImplementedException();
 
@@ -34,7 +37,17 @@ public class IntegerType(long value) :
 		return value._value;
 	}
 
+	public static implicit operator int(IntegerType value)
+	{
+		return (int)value._value;
+	}
+
 	public static implicit operator IntegerType(long value)
+	{
+		return new(value);
+	}
+
+	public static implicit operator IntegerType(int value)
 	{
 		return new(value);
 	}
@@ -64,7 +77,22 @@ public class IntegerType(long value) :
 		return new(-value._value);
 	}
 
-	public override bool ToBoolean(IFormatProvider? provider)
+	public static bool operator ==(IntegerType? left, IntegerType? right)
+	{
+		return left?._value == right?._value;
+	}
+
+	public static bool operator !=(IntegerType? left, IntegerType? right)
+	{
+		return !(left == right);
+	}
+
+    public override int ToInt32(IFormatProvider? provider)
+    {
+        return (int)_value;
+    }
+
+    public override bool ToBoolean(IFormatProvider? provider)
 	{
 		return this != 0;
 	}

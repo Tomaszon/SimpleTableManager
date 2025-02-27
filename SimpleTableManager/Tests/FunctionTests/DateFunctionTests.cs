@@ -64,6 +64,6 @@ public class DateFunctionTests : TestBase
 	{
 		var fn = CreateFunction(operation, values.Select(s => DateType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.CastTo<FractionType>());
 	}
 }

@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using SimpleTableManager.Services.Functions;
 
 namespace SimpleTableManager.Tests;
@@ -19,7 +20,7 @@ public class TestBase
 		  args.Select(e => (IFunctionArgument)new ConstFunctionArgument<T>(e)).Union(namedArguments));
 	}
 
-	protected static void CheckResults<T>(IEnumerable<object> results, IEnumerable<T> expectedValues)
+	protected static void CheckResults<T>(IEnumerable<T> results, params IEnumerable<T> expectedValues)
 	{
 		for (int i = 0; i < results.Count(); i++)
 		{
@@ -27,7 +28,7 @@ public class TestBase
 		}
 	}
 
-	protected static void CheckResult<T>(object result, T expectedValue)
+	protected static void CheckResult<T>(T result, T expectedValue)
 	{
 		Assert.That(result, Is.EqualTo(expectedValue));
 	}

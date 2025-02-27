@@ -63,9 +63,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 		return typeof(TIn).GetFriendlyName();
 	}
 
-	IEnumerable<IConvertible> IFunction.Execute()
+	IEnumerable<IType> IFunction.Execute()
 	{
-		return ExecuteWrapper().Cast<IConvertible>();
+		return ExecuteWrapper().Cast<IType>();
 	}
 
 	protected List<TOut> ExecuteWrapper()

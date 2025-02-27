@@ -28,7 +28,7 @@ public class TimeSpanFunctionTests : TestBase
 	{
 		var fn = CreateFunction(operation, values.Select(s => TimeSpanType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.CastTo<FractionType>());
 	}
 
 	[TestCase(DateTimeFunctionOperator.Const, typeof(TimeSpanType))]

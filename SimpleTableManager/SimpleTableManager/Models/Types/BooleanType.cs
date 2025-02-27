@@ -31,7 +31,7 @@ public class BooleanType(bool value) :
 
 	public override bool ToBoolean(IFormatProvider? provider)
 	{
-		return this;
+		return _value;
 	}
 
 	public override long ToInt64(IFormatProvider? provider)

@@ -11,9 +11,6 @@ public class Program
 
 		Settings.FromJson(@"Configs/settings.json");
 
-		// CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture(Settings.Current.Culture);
-		// Localizer.FromJson(@"Configs/Localizations");
-
 		var app = new App(new Document(Settings.Current.DefaultTableSize));
 
 		app.Reconfig();

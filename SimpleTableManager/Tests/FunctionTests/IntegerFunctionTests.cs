@@ -29,6 +29,6 @@ public class IntegerFunctionTests : TestBase
 
 		var fn = CreateFunction(operation, na, values.CastTo<IntegerType>());
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.CastTo<FractionType>());
 	}
 }

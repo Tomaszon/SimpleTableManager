@@ -8,7 +8,7 @@ public class FractionFunctionTests : TestBase
 	{
 		var fn = CreateFunction<FractionType>(NumericFunctionOperator.Sum, 4, 3);
 
-		CheckResults(fn.Execute(), 7d.Wrap());
+		CheckResults(fn.Execute(), (FractionType)7d);
 	}
 
 	[Test]
@@ -16,7 +16,7 @@ public class FractionFunctionTests : TestBase
 	{
 		var fn = CreateFunction<FractionType>(NumericFunctionOperator.Sqrt, 4, 9, 16);
 
-		CheckResults(fn.Execute(), [2d, 3d, Math.Sqrt(16d)]);
+		CheckResults(fn.Execute(), new FractionType[] { 2d, 3d, Math.Sqrt(16d) });
 	}
 
 	[Test]
@@ -24,7 +24,7 @@ public class FractionFunctionTests : TestBase
 	{
 		var fn = CreateFunction<FractionType>(NumericFunctionOperator.LogN, 2, 4, 16);
 
-		CheckResults(fn.Execute(), [1d, 2d, Math.Log2(16d)]);
+		CheckResults(fn.Execute(), new FractionType[] { 1d, 2d, Math.Log2(16d) });
 	}
 
 	[Test]
@@ -32,7 +32,7 @@ public class FractionFunctionTests : TestBase
 	{
 		var fn = CreateFunction<FractionType>(NumericFunctionOperator.LogE, double.E, double.E * double.E);
 
-		CheckResults(fn.Execute(), [1d, 2d]);
+		CheckResults(fn.Execute(), (FractionType)1d, (FractionType)2d);
 	}
 
 	[TestCase(NumericFunctionOperator.Round, 4.234, 4.23, typeof(double))]
@@ -43,7 +43,7 @@ public class FractionFunctionTests : TestBase
 	{
 		var fn = CreateFunction<FractionType>(functionOperator, number);
 
-		CheckResults(fn.Execute(), [expected]);
+		CheckResults(fn.Execute(), (FractionType)expected);
 		CheckResult(fn.GetOutType(), expectedResultType);
 	}
 }

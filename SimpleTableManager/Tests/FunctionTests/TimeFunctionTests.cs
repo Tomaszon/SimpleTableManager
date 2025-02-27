@@ -49,7 +49,7 @@ public class TimeFunctionTests : TestBase
 	{
 		var fn = CreateFunction(operation, values.Select(s => TimeType.Parse(s, null)));
 
-		CheckResults(fn.Execute(), results);
+		CheckResults(fn.Execute(), results.CastTo<FractionType>());
 	}
 
 	[TestCase(DateTimeFunctionOperator.Const, typeof(TimeType))]

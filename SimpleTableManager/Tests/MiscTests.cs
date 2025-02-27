@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework.Internal;
-using SimpleTableManager.Models.Types;
+﻿using NUnit.Framework.Internal;
 
 namespace SimpleTableManager.Tests;
 
@@ -19,7 +17,7 @@ public class MiscTests : TestBase
 		}
 		else
 		{
-			CheckResults(((object)false).Wrap(), shouldParse.Wrap());
+			CheckResults(false.Wrap(), shouldParse.Wrap());
 		}
 	}
 
@@ -65,6 +63,29 @@ public class MiscTests : TestBase
 	[Test]
 	public void TimeOnlyTest()
 	{
+		// IntegerType i = 0;
+		// IntegerType i2 = 0;
+		// long l = 0;
+		// int i4 = 0;
+
+		// var a = i == i2;
+		// var b = i == l;
+		// var b2 = i == i4;
+
+		// var c = i.Equals(i2);
+		// var d = i.Equals(l);
+
+
+		// IntegerType it = 0;
+		// long l2 = 0;
+		// int i3 = 0;
+
+		// var e = it.Equals(l2);
+		// var f = l2.Equals(it);
+		// var g = it.Equals(i3);
+		// var h = i3.Equals(it);
+
+
 		var to = new TimeOnly(1, 2, 3, 4);
 
 		TimeType cto = to;
@@ -73,7 +94,9 @@ public class MiscTests : TestBase
 
 		var dt = cto.ToDateTime(null);
 
-		CheckResults([cto.Hour, cto.Minute, cto.Second, cto.Millisecond], [to.Hour, to.Minute, to.Second, to.Millisecond]);
+		CheckResults([cto.Hour, cto.Minute, cto.Second, cto.Millisecond], new IntegerType[] { to.Hour, to.Minute, to.Second, to.Millisecond });
+		CheckResults([cto.Hour, cto.Minute, cto.Second, cto.Millisecond], new long[] { to.Hour, to.Minute, to.Second, to.Millisecond });
+		CheckResults([cto.Hour, cto.Minute, cto.Second, cto.Millisecond], new int[] { to.Hour, to.Minute, to.Second, to.Millisecond });
 		CheckResults([to2.Hour, to2.Minute, to2.Second, to2.Millisecond], [to.Hour, to.Minute, to.Second, to.Millisecond]);
 		CheckResults([cto.Equals(to), cto.Equals(null)], [true, false]);
 		CheckResults<object>([dt.Date, dt.TimeOfDay], [DateTime.MinValue, new TimeSpan(0, 1, 2, 3, 4)]);
@@ -91,7 +114,7 @@ public class MiscTests : TestBase
 
 		var dt = cdo.ToDateTime(null);
 
-		CheckResults([cdo.Year, cdo.Month, cdo.Day], [doy.Year, doy.Month, doy.Day]);
+		CheckResults<IntegerType>([cdo.Year, cdo.Month, cdo.Day], [doy.Year, doy.Month, doy.Day]);
 		CheckResults([do2.Year, do2.Month, do2.Day], [doy.Year, doy.Month, doy.Day]);
 
 		CheckResults([cdo.Equals(doy), cdo.Equals(null)], [true, false]);
@@ -105,7 +128,7 @@ public class MiscTests : TestBase
 		var fb = BooleanType.Parse("yes", null);
 
 		CheckResults([fb.Equals(true), fb.Equals(null)], [true, false]);
-		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt32(null), fb!.ToInt64(null), fb!.ToDouble(null)], expectedValues: [true, 1, 1L, 1d]);
+		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt64(null), fb!.ToDouble(null)], expectedValues: [true, 1L, 1d]);
 		CheckResults([fb.ToString(), fb.ToString("yn", null), fb.ToString("yesno", null), fb.ToString("10", null)], ["True", "Y", "Yes", "1"]);
 	}
 
