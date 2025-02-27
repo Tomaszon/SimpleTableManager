@@ -12,7 +12,7 @@ public class IntegerFunctionTests : TestBase
 	[TestCase(NumericFunctionOperator.Min, new long[] { 1, 5, 3 }, 1)]
 	[TestCase(NumericFunctionOperator.Max, new long[] { 1, 5, 3 }, 5)]
 	[TestCase(NumericFunctionOperator.Abs, new long[] { -1 }, 1)]
-	[TestCase(NumericFunctionOperator.Rem, new long[] { 10, 3 }, new long[] { 0, 1 })]
+	[TestCase(NumericFunctionOperator.Rem, new long[] { 10, 3 }, new long[]{ 0, 1 })]
 	[TestCase(NumericFunctionOperator.Sqrt, new long[] { 4, 9, 16 }, new long[] { 2, 3, 4 })]
 	[TestCase(NumericFunctionOperator.LogN, new long[] { 2, 4, 8 }, new long[] { 1, 2, 3 })]
 	[TestCase(NumericFunctionOperator.Log2, new long[] { 2, 4, 8 }, new long[] { 1, 2, 3 })]
@@ -24,11 +24,11 @@ public class IntegerFunctionTests : TestBase
 	{
 		var na = new IConstFunctionArgument[]
 		{
-			new ConstFunctionArgument<IntegerType>(ArgumentName.Power, 2)
+			new ConstFunctionArgument<IntegerType>(ArgumentName.Power, (IntegerType)2)
 		};
-
-		var fn = CreateFunction(operation, na, values.CastTo<IntegerType>());
-
-		CheckResults(fn.Execute(), results.CastTo<FractionType>());
+		
+		var fn = CreateFunction(operation, na, values.Select(a => (IntegerType)a));
+		
+		CheckResults(fn.Execute(), results.Select(a => (IntegerType)a));
 	}
 }

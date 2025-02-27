@@ -3,7 +3,7 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Separator, " ")]
 [NamedArgument<char>(ArgumentName.Trim, ' ')]
 [NamedArgument<string>(ArgumentName.Pattern, ".*")]
-[FunctionMappingType(typeof(string))]
+[FunctionMappingType(typeof(StringType))]
 public class StringFunction : FunctionBase<StringFunctionOperator, StringType, IType>
 {
 	public override IEnumerable<IType> ExecuteCore()

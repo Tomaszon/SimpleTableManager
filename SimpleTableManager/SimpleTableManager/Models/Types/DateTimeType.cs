@@ -13,23 +13,23 @@ public class DateTimeType(DateTime value) :
 	IParsable<DateTimeType>,
 	IParsableCore<DateTimeType>
 {
-	public IntegerType Year => _value.Year;
+	public IntegerType Year => Value.Year;
 
-	public IntegerType Month => _value.Month;
+	public IntegerType Month => Value.Month;
 
-	public IntegerType Day => _value.Day;
+	public IntegerType Day => Value.Day;
 
-	public IntegerType Hour => _value.Hour;
+	public IntegerType Hour => Value.Hour;
 
-	public IntegerType Minute => _value.Minute;
+	public IntegerType Minute => Value.Minute;
 
-	public IntegerType Second => _value.Second;
+	public IntegerType Second => Value.Second;
 
-	public IntegerType Millisecond => _value.Millisecond;
+	public IntegerType Millisecond => Value.Millisecond;
 
-	public TimeSpanType TimeOfDay => _value.TimeOfDay;
+	public TimeSpanType TimeOfDay => Value.TimeOfDay;
 
-	public IntegerType Ticks => _value.Ticks;
+	public IntegerType Ticks => Value.Ticks;
 
 	public DateTimeType(int year = 1, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0, int millisecond = 0) : this(new DateTime(year, month, day, hour, minute, second, millisecond)) { }
 
@@ -42,7 +42,7 @@ public class DateTimeType(DateTime value) :
 
 	public static implicit operator DateTime(DateTimeType value)
 	{
-		return value._value;
+		return value.Value;
 	}
 
 	public static implicit operator DateTimeType(DateTime value)
@@ -52,11 +52,11 @@ public class DateTimeType(DateTime value) :
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(formatProvider);
+		return Value.ToString(formatProvider);
 	}
 
 	public DateTimeType Add(TimeSpanType timeSpan)
 	{
-		return _value.Add(timeSpan);
+		return Value.Add(timeSpan);
 	}
 }

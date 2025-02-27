@@ -1,7 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
-[FunctionMappingType(typeof(double))]
-public class FractionNumericFunction : NumericFunctionBase<FractionType ,double, IType>
+[FunctionMappingType(typeof(FractionType))]
+public class FractionNumericFunction : NumericFunctionBase<FractionType, double, IType>
 {
 	public override IEnumerable<IType> ExecuteCore()
 	{

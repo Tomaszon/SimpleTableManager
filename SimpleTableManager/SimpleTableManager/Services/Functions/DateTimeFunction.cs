@@ -1,7 +1,7 @@
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
-[FunctionMappingType(typeof(DateTime))]
+[FunctionMappingType(typeof(DateTimeType))]
 public class DateTimeFunction : DateTimeFunctionBase<DateTimeType, IType>
 {
 	public override IEnumerable<IType> ExecuteCore()

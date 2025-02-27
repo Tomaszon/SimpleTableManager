@@ -8,7 +8,7 @@ public abstract class TypeBase<TSelf, TUnderlying>(TUnderlying value) :
 	where TSelf : TypeBase<TSelf, TUnderlying>, IParsable<TSelf>, IParsableCore<TSelf>
 	where TUnderlying : IComparable
 {
-	protected readonly TUnderlying _value = value;
+	public TUnderlying Value { get; init; } = value;
 
 	public abstract string ToString(string? format, IFormatProvider? formatProvider);
 
@@ -19,7 +19,7 @@ public abstract class TypeBase<TSelf, TUnderlying>(TUnderlying value) :
 			return false;
 		}
 
-		return _value.Equals(other._value);
+		return Value.Equals(other.Value);
 	}
 
 	// public override bool Equals(object? obj)
@@ -53,11 +53,11 @@ public abstract class TypeBase<TSelf, TUnderlying>(TUnderlying value) :
 	{
 		if (obj is TUnderlying uv)
 		{
-			return _value.CompareTo(uv);
+			return Value.CompareTo(uv);
 		}
 		else if (obj is TSelf v && v is not null)
 		{
-			return _value.CompareTo(v._value);
+			return Value.CompareTo(v.Value);
 		}
 
 		return 1;
@@ -65,7 +65,7 @@ public abstract class TypeBase<TSelf, TUnderlying>(TUnderlying value) :
 
 	public override string ToString()
 	{
-		return _value.ToString()!;
+		return Value.ToString()!;
 	}
 
 	public TypeCode GetTypeCode() => TypeCode.Object;

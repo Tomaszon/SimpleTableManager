@@ -22,7 +22,7 @@ public class IntegerType(long value) :
 
 	public static IntegerType Abs(IntegerType value)
 	{
-		return new(long.Abs(value._value));
+		return new(long.Abs(value.Value));
 	}
 
 	public static IntegerType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
@@ -34,12 +34,12 @@ public class IntegerType(long value) :
 
 	public static implicit operator long(IntegerType value)
 	{
-		return value._value;
+		return value.Value;
 	}
 
 	public static implicit operator int(IntegerType value)
 	{
-		return (int)value._value;
+		return (int)value.Value;
 	}
 
 	public static implicit operator IntegerType(long value)
@@ -54,32 +54,32 @@ public class IntegerType(long value) :
 
 	public static IntegerType operator +(IntegerType left, IntegerType right)
 	{
-		return new(left._value + right._value);
+		return new(left.Value + right.Value);
 	}
 
 	public static IntegerType operator -(IntegerType left, IntegerType right)
 	{
-		return new(left._value - right._value);
+		return new(left.Value - right.Value);
 	}
 
 	public static IntegerType operator *(IntegerType left, IntegerType right)
 	{
-		return new(left._value * right._value);
+		return new(left.Value * right.Value);
 	}
 
 	public static IntegerType operator /(IntegerType left, IntegerType right)
 	{
-		return new(left._value / right._value);
+		return new(left.Value / right.Value);
 	}
 
 	public static IntegerType operator -(IntegerType value)
 	{
-		return new(-value._value);
+		return new(-value.Value);
 	}
 
 	public static bool operator ==(IntegerType? left, IntegerType? right)
 	{
-		return left?._value == right?._value;
+		return left?.Value == right?.Value;
 	}
 
 	public static bool operator !=(IntegerType? left, IntegerType? right)
@@ -89,7 +89,7 @@ public class IntegerType(long value) :
 
     public override int ToInt32(IFormatProvider? provider)
     {
-        return (int)_value;
+        return (int)Value;
     }
 
     public override bool ToBoolean(IFormatProvider? provider)
@@ -109,6 +109,6 @@ public class IntegerType(long value) :
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(format, formatProvider);
+		return Value.ToString(format, formatProvider);
 	}
 }

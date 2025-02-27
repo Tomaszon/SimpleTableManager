@@ -8,25 +8,25 @@ public class TimeSpanType(TimeSpan timeSpan) :
 	IParsable<TimeSpanType>,
 	IParsableCore<TimeSpanType>
 {
-	public IntegerType Days => _value.Days;
+	public IntegerType Days => Value.Days;
 
-	public FractionType TotalDays => _value.TotalDays;
+	public FractionType TotalDays => Value.TotalDays;
 
-	public IntegerType Hours => _value.Hours;
+	public IntegerType Hours => Value.Hours;
 
-	public FractionType TotalHours => _value.TotalHours;
+	public FractionType TotalHours => Value.TotalHours;
 
-	public IntegerType Minutes => _value.Minutes;
+	public IntegerType Minutes => Value.Minutes;
 
-	public FractionType TotalMinutes => _value.TotalMinutes;
+	public FractionType TotalMinutes => Value.TotalMinutes;
 
-	public IntegerType Seconds => _value.Seconds;
+	public IntegerType Seconds => Value.Seconds;
 
-	public FractionType TotalSeconds => _value.TotalSeconds;
+	public FractionType TotalSeconds => Value.TotalSeconds;
 
-	public IntegerType Milliseconds => _value.Milliseconds;
+	public IntegerType Milliseconds => Value.Milliseconds;
 
-	public FractionType TotalMilliseconds => _value.TotalMilliseconds;
+	public FractionType TotalMilliseconds => Value.TotalMilliseconds;
 
 	public TimeSpanType(int days = 0, int hours = 0, int minutes = 0, int seconds = 0, int milliseconds = 0) : this(new(days, hours, minutes, seconds, milliseconds)) { }
 
@@ -37,7 +37,7 @@ public class TimeSpanType(TimeSpan timeSpan) :
 
 	public static implicit operator TimeSpan(TimeSpanType timeSpan)
 	{
-		return timeSpan._value;
+		return timeSpan.Value;
 	}
 
 	public static implicit operator TimeSpanType(TimeSpan timeSpan)
@@ -61,22 +61,22 @@ public class TimeSpanType(TimeSpan timeSpan) :
 			"S" => TotalSeconds.ToString(),
 			"MS" => TotalMilliseconds.ToString(),
 
-			_ => _value.ToString(format, formatProvider)
+			_ => Value.ToString(format, formatProvider)
 		};
 	}
 
 	public TimeSpanType Divide(double value)
 	{
-		return _value.Divide(value);
+		return Value.Divide(value);
 	}
 
 	public override long ToInt64(IFormatProvider? provider)
 	{
-		return _value.Ticks;
+		return Value.Ticks;
 	}
 
 	public override DateTime ToDateTime(IFormatProvider? provider)
 	{
-		return new DateTime(_value.Ticks);
+		return new DateTime(Value.Ticks);
 	}
 }

@@ -15,7 +15,7 @@ public class CharacterType(char c) :
 
 	public static implicit operator char(CharacterType value)
 	{
-		return value._value;
+		return value.Value;
 	}
 
 	public static implicit operator CharacterType(char value)
@@ -25,6 +25,6 @@ public class CharacterType(char c) :
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(formatProvider);
+		return Value.ToString(formatProvider);
 	}
 }

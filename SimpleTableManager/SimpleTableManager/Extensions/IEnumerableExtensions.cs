@@ -4,14 +4,13 @@ using System.Collections;
 
 public static class IEnumerableExtensions
 {
-	public static IEnumerable<T2> CastTo<T2>(this IEnumerable collection)
+	public static List<T> ConvertAll<TFrom, T>(this TFrom[] collection, Converter<TFrom, T> converter)
 	{
-		foreach (var item in collection)
-		{
-			yield return (T2)item;
-		}
+		var list = new List<TFrom>(collection);
+		
+		return list.ConvertAll(converter);
 	}
-
+	
 	public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
 	{
 		foreach (var item in collection)

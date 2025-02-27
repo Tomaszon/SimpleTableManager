@@ -16,7 +16,7 @@ public class BooleanType(bool value) :
 
 	public static implicit operator bool(BooleanType value)
 	{
-		return value._value;
+		return value.Value;
 	}
 
 	public static implicit operator BooleanType(bool value)
@@ -26,12 +26,12 @@ public class BooleanType(bool value) :
 
 	public static BooleanType operator !(BooleanType value)
 	{
-		return new BooleanType(!value._value);
+		return new BooleanType(!value.Value);
 	}
 
 	public override bool ToBoolean(IFormatProvider? provider)
 	{
-		return _value;
+		return Value;
 	}
 
 	public override long ToInt64(IFormatProvider? provider)
@@ -50,15 +50,15 @@ public class BooleanType(bool value) :
 		{
 			"yn" or
 			"y" or
-			"n" => _value ? "Y" : "N",
+			"n" => Value ? "Y" : "N",
 			"yesno" or
 			"yes" or
-			"no" => _value ? "Yes" : "No",
+			"no" => Value ? "Yes" : "No",
 			"10" or
 			"1" or
-			"0" => _value ? "1" : "0",
+			"0" => Value ? "1" : "0",
 
-			_ => _value.ToString()
+			_ => Value.ToString()
 		};
 	}
 }

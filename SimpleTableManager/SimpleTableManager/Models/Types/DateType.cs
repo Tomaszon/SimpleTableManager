@@ -10,13 +10,13 @@ public class DateType(DateOnly dateOnly) :
 	IParsableCore<DateType>,
 	IFormattable
 {
-	public IntegerType Year => _value.Year;
+	public IntegerType Year => Value.Year;
 
-	public IntegerType Month => _value.Month;
+	public IntegerType Month => Value.Month;
 
-	public IntegerType Day => _value.Day;
+	public IntegerType Day => Value.Day;
 
-	public TimeSpan ToTimeSpan() => new(_value.ToDateTime(TimeOnly.MinValue).Ticks);
+	public TimeSpan ToTimeSpan() => new(Value.ToDateTime(TimeOnly.MinValue).Ticks);
 
 	public DateType(int year = 1, int month = 1, int day = 1) : this(new(year, month, day)) { }
 
@@ -27,7 +27,7 @@ public class DateType(DateOnly dateOnly) :
 
 	public static implicit operator DateOnly(DateType dateOnly)
 	{
-		return dateOnly._value;
+		return dateOnly.Value;
 	}
 
 	public static implicit operator DateType(DateOnly dateOnly)
@@ -37,16 +37,16 @@ public class DateType(DateOnly dateOnly) :
 
 	public DateType Add(TimeSpan timeSpan)
 	{
-		return DateOnly.FromDateTime(_value.ToDateTime(TimeOnly.MinValue).Add(timeSpan));
+		return DateOnly.FromDateTime(Value.ToDateTime(TimeOnly.MinValue).Add(timeSpan));
 	}
 
 	public override DateTime ToDateTime(IFormatProvider? provider)
 	{
-		return new DateTime(_value, TimeOnly.MinValue);
+		return new DateTime(Value, TimeOnly.MinValue);
 	}
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(format, formatProvider);
+		return Value.ToString(format, formatProvider);
 	}
 }

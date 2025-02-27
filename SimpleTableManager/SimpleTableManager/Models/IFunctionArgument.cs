@@ -9,6 +9,6 @@ namespace SimpleTableManager.Models
 
 		public object? GroupingId { get; set; }
 
-		IEnumerable<IConvertible> Resolve();
+		IEnumerable<IType> Resolve();
 	}
 }

@@ -12,7 +12,7 @@ public class FractionType(double value) :
 
 	public static FractionType Abs(FractionType value)
 	{
-		return new(double.Abs(value._value));
+		return new(double.Abs(value.Value));
 	}
 
 	public static FractionType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
@@ -24,7 +24,7 @@ public class FractionType(double value) :
 
 	public static implicit operator double(FractionType value)
 	{
-		return value._value;
+		return value.Value;
 	}
 
 	public static implicit operator FractionType(double value)
@@ -34,27 +34,32 @@ public class FractionType(double value) :
 
 	public static FractionType operator +(FractionType left, FractionType right)
 	{
-		return new(left._value + right._value);
+		return new(left.Value + right.Value);
 	}
 
 	public static FractionType operator -(FractionType left, FractionType right)
 	{
-		return new(left._value - right._value);
+		return new(left.Value - right.Value);
 	}
 
 	public static FractionType operator *(FractionType left, FractionType right)
 	{
-		return new(left._value * right._value);
+		return new(left.Value * right.Value);
 	}
 
 	public static FractionType operator /(FractionType left, FractionType right)
 	{
-		return new(left._value / right._value);
+		return new(left.Value / right.Value);
+	}
+
+	public static IntegerType operator /(FractionType left, IntegerType right)
+	{
+		return new((int)left.Value / right.Value);
 	}
 
 	public static FractionType operator -(FractionType value)
 	{
-		return new(-value._value);
+		return new(-value.Value);
 	}
 
 	public override bool ToBoolean(IFormatProvider? provider)
@@ -74,6 +79,6 @@ public class FractionType(double value) :
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(format, formatProvider);
+		return Value.ToString(format, formatProvider);
 	}
 }

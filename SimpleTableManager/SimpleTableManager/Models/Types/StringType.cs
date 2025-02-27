@@ -6,7 +6,7 @@ public class StringType(string value) :
 	IParsable<StringType>,
 	IParsableCore<StringType>
 {
-	public IntegerType Length => _value.Length;
+	public IntegerType Length => Value.Length;
 
 	public static StringType ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
@@ -17,7 +17,7 @@ public class StringType(string value) :
 
 	public static implicit operator string(StringType value)
 	{
-		return value._value;
+		return value.Value;
 	}
 
 	public static implicit operator StringType(string value)
@@ -27,22 +27,22 @@ public class StringType(string value) :
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(formatProvider);
+		return Value.ToString(formatProvider);
 	}
 
 	public CharacterType[] ToArray()
 	{
-		return [.. _value.Select(c => (CharacterType)c)];
+		return [.. Value.Select(c => (CharacterType)c)];
 	}
 
 	public StringType[] Split(string separator)
 	{
-		return [.. _value.Split(separator).Select(s => (StringType)s)];
+		return [.. Value.Split(separator).Select(s => (StringType)s)];
 	}
 
 	public StringType Trim(char trim)
 	{
-		return _value.Trim(trim);
+		return Value.Trim(trim);
 	}
 
 	public static StringType Concat(IEnumerable<IType> array)

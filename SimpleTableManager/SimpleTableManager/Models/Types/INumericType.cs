@@ -26,5 +26,5 @@ public interface INumericType<T, TUnderlying> :
 
 	static T IMinMaxValue<T>.MinValue => (T)(object)TUnderlying.MaxValue;
 
-	static abstract T Abs(T value);
+	static abstract T Abs(T value);	
 }

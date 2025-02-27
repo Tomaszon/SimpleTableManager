@@ -21,7 +21,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public object? GroupingId { get; set; } = groupingId;
 
-	public IEnumerable<IConvertible> Resolve()
+	public IEnumerable<IType> Resolve()
 	{
 		return GetReferencedCells().SelectMany(c => c.ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
 	}

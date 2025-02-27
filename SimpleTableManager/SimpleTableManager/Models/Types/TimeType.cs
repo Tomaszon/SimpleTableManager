@@ -6,15 +6,15 @@ public class TimeType(TimeOnly timeOnly) :
 	IParsable<TimeType>,
 	IParsableCore<TimeType>
 {
-	public IntegerType Hour => _value.Hour;
+	public IntegerType Hour => Value.Hour;
 
-	public IntegerType Minute => _value.Minute;
+	public IntegerType Minute => Value.Minute;
 
-	public IntegerType Second => _value.Second;
+	public IntegerType Second => Value.Second;
 
-	public IntegerType Millisecond => _value.Millisecond;
+	public IntegerType Millisecond => Value.Millisecond;
 
-	public TimeSpan ToTimeSpan() => _value.ToTimeSpan();
+	public TimeSpan ToTimeSpan() => Value.ToTimeSpan();
 
 	public TimeType(int hour = 0, int minute = 0, int second = 0, int millisecond = 0) : this(new(hour, minute, second, millisecond)) { }
 
@@ -25,7 +25,7 @@ public class TimeType(TimeOnly timeOnly) :
 
 	public static implicit operator TimeOnly(TimeType timeOnly)
 	{
-		return timeOnly._value;
+		return timeOnly.Value;
 	}
 
 	public static implicit operator TimeType(TimeOnly timeOnly)
@@ -35,16 +35,16 @@ public class TimeType(TimeOnly timeOnly) :
 
 	public TimeType Add(TimeSpan timeSpan)
 	{
-		return _value.Add(timeSpan);
+		return Value.Add(timeSpan);
 	}
 
 	public override DateTime ToDateTime(IFormatProvider? provider)
 	{
-		return new DateTime(DateOnly.MinValue, _value);
+		return new DateTime(DateOnly.MinValue, Value);
 	}
 
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		return _value.ToString(format, formatProvider);
+		return Value.ToString(format, formatProvider);
 	}
 }

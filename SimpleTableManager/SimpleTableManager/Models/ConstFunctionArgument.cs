@@ -15,23 +15,23 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 
 	public T? Value { get; set; } = value;
 
-	public IConvertible? NamedValue { get; set; }
+	public IType? NamedValue { get; set; }
 
 	public object? GroupingId { get; set; } = groupingId;
 
-	IConvertible? IConstFunctionArgument.Value
+	IType? IConstFunctionArgument.Value
 	{
 		get => Value!;
 		set => Value = (T?)value;
 	}
 
-	public ConstFunctionArgument(ArgumentName argumentName, IConvertible? namedValue) : this(default)
+	public ConstFunctionArgument(ArgumentName argumentName, IType? namedValue) : this(default)
 	{
 		Name = argumentName;
 		NamedValue = namedValue;
 	}
 
-	public IEnumerable<IConvertible> Resolve()
+	public IEnumerable<IType> Resolve()
 	{
 		return (NamedValue ?? Value).Wrap()!;
 	}
@@ -46,7 +46,7 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 			var name = Enum.TryParse<ArgumentName>(narg.Value, true, out var n) ?
 				n : throw new FormatException($"Argument name '{narg.Value}' not found. Possible values: {string.Join("' '", Enum.GetValues<ArgumentName>())}");
 
-			return new ConstFunctionArgument<T>(name, varg.Value);
+			return new ConstFunctionArgument<T>(name, (StringType)varg.Value);
 		}
 		else
 		{

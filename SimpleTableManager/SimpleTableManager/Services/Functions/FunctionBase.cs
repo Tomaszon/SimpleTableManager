@@ -37,7 +37,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 		Arguments.Where(a => a is ReferenceFunctionArgument && a.IsNamed)
 			.ToDictionary(k => (ArgumentName)k.Name!, v => (ReferenceFunctionArgument)v);
 
-	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<IConvertible, TIn>? transformation = null)
+	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<IType, TIn>? transformation = null)
 	{
 		transformation ??= a => (TIn)a;
 
@@ -168,7 +168,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 
 			var result = results.Count() == 1 ? results.Single() : throw new ArgumentException("");
 
-			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
+			return result is StringType s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
 		}
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })
@@ -213,7 +213,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 		return $"{(group.Key is not null ? $"{group.Key}:" : "")}{string.Join(',', group.ToList().Select(a =>
 			a is ReferenceFunctionArgument ra ?
 				ra.Reference.ToShortString() :
-				((IConstFunctionArgument)a).Value))}";
+				((IConstFunctionArgument)a).Value?.ToString()))}";
 	}
 
 	protected BooleanType Greater()
