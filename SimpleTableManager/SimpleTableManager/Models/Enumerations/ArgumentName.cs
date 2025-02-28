@@ -14,5 +14,6 @@ public enum ArgumentName
 	Pattern,
 	First,
 	Last,
-	Offset
+	Offset,
+	Reference
 }

@@ -3,9 +3,9 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Separator, "")]
 [NamedArgument<int>(ArgumentName.Count, 1)]
 [FunctionMappingType(typeof(char))]
-public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, IConvertible>
+public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, object>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{

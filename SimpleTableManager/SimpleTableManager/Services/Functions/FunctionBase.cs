@@ -8,7 +8,7 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOperator, TIn, TOut> :
 	IFunction
 	where TOperator : struct, Enum
-	where TIn : IConvertible, IComparable
+	where TIn : IConvertible, IComparable, IParsable<TIn>
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 
@@ -135,19 +135,9 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 
 	public virtual Type GetOutType()
 	{
-		return Operator switch
-		{
-			NumericFunctionOperator.Greater or
-			NumericFunctionOperator.Less or
-			NumericFunctionOperator.GreaterOrEquals or
-			NumericFunctionOperator.LessOrEquals or
-			NumericFunctionOperator.Equals or
-			NumericFunctionOperator.NotEquals => typeof(bool),	
-
-			_ => throw GetInvalidOperatorException()
-		};
+		return typeof(TOut);
 	}
-	
+
 	public void SetError(string error)
 	{
 		Error = error;
@@ -168,16 +158,33 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		return typeof(TIn);
 	}
 
+	public bool TryGetNamedArgument<T>(ArgumentName key, [NotNullWhen(true)] out T? value)
+		where T : IParsable<T>, IConvertible
+	{
+		try
+		{
+			value = GetNamedArgument<T>(key);
+
+			return true;
+		}
+		catch (ArgumentNullException)
+		{
+			value = default;
+
+			return false;
+		}
+	}
+
 	public T GetNamedArgument<T>(ArgumentName key)
-		where T : IParsable<T>
+		where T : IParsable<T>, IConvertible
 	{
 		if (NamedArguments.TryGetValue(key, out var argument))
 		{
 			var results = argument.Resolve() ?? throw new NullReferenceException();
 
-			var result = results.Count() == 1 ? results.Single() : throw new ArgumentException("");
+			var result = results.Single();
 
-			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : (T)result;
+			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : ((IConvertible)result).ToType<T>();
 		}
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })
@@ -224,40 +231,53 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 				ra.Reference.ToShortString() :
 				((IConstFunctionArgument)a).Value))}";
 	}
-	
+
 	protected bool Greater()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
-			UnwrappedUnnamedArguments.First().CompareTo(e)).Min() == 1;
+		return CompareCore(e => e == 1);
 	}
 
 	protected bool Less()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
-			UnwrappedUnnamedArguments.First().CompareTo(e)).Max() == -1;
+		return CompareCore(e => e == -1);
 	}
 
 	protected bool GreaterOrEquals()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
-			UnwrappedUnnamedArguments.First().CompareTo(e)).Min() >= 0;
+		return CompareCore(e => e >= 0);
 	}
 
 	protected bool LessOrEquals()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
-			UnwrappedUnnamedArguments.First().CompareTo(e)).Max() <= 0;
+		return CompareCore(e => e <= 0);
 	}
 
 	protected bool Equals()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
-			UnwrappedUnnamedArguments.First().CompareTo(e)).All(e => e == 0);
+		return CompareCore(e => e == 0);
 	}
 
 	protected bool NotEquals()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
-			UnwrappedUnnamedArguments.First().CompareTo(e)).All(e => e != 0);
+		return CompareCore(e => e != 0);
+	}
+
+	private bool CompareCore(Func<int, bool> comparer)
+	{
+		if (TryGetNamedArgument<TIn>(ArgumentName.Reference, out var reference))
+		{
+			return UnwrappedUnnamedArguments.Select(e =>
+				e.CompareTo(reference)).All(comparer);
+		}
+		else
+		{
+			if (UnwrappedUnnamedArguments.Count() > 1)
+			{
+				return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+					UnwrappedUnnamedArguments.First().CompareTo(e)).All(comparer);
+			}
+
+			return true;
+		}
 	}
 }

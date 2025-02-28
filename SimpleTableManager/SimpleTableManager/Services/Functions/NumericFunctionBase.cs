@@ -43,7 +43,7 @@ public abstract class NumericFunctionBase<TIn> :
 			NumericFunctionOperator.LogE => LogN(UnwrappedUnnamedArguments, double.E),
 
 			NumericFunctionOperator.LogN => LogN(UnwrappedUnnamedArguments, GetNamedArgument<double>(ArgumentName.Base)),
-			
+
 			NumericFunctionOperator.Greater => Greater().Wrap().Cast<object>(),
 
 			NumericFunctionOperator.Less => Less().Wrap().Cast<object>(),
@@ -105,11 +105,26 @@ public abstract class NumericFunctionBase<TIn> :
 
 	private static object Min(IEnumerable<TIn> array)
 	{
-		return (array.Any() ? array.Min() : TIn.MaxValue);
+		return array.Any() ? array.Min() : TIn.MaxValue;
 	}
 
 	private static object Max(IEnumerable<TIn> array)
 	{
-		return (array.Any() ? array.Max() : TIn.MinValue);
+		return array.Any() ? array.Max() : TIn.MinValue;
 	}
+
+    public override Type GetOutType()
+    {
+        return Operator switch
+		{
+			NumericFunctionOperator.Greater or
+			NumericFunctionOperator.Less or
+			NumericFunctionOperator.GreaterOrEquals or
+			NumericFunctionOperator.LessOrEquals or
+			NumericFunctionOperator.Equals or
+			NumericFunctionOperator.NotEquals => typeof(bool),	
+
+			_ => throw GetInvalidOperatorException()
+		};
+    }
 }

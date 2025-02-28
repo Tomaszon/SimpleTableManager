@@ -25,7 +25,7 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 		set => Value = (T?)value;
 	}
 
-	public ConstFunctionArgument(ArgumentName argumentName, IConvertible? namedValue) : this(default)
+	public ConstFunctionArgument(ArgumentName argumentName, object namedValue) : this(default)
 	{
 		Name = argumentName;
 		NamedValue = namedValue;

@@ -58,23 +58,23 @@ public partial class Cell
 		SetFunction(type, functionOperator: "const", contents);
 	}
 
-	[CommandFunction(WithSelector = true)]
-	public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
-	{
-		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
+	// {
+	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
+	// }
 
-	[CommandFunction(WithSelector = true)]
-	public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
-	{
-		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
+	// {
+	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
+	// }
 
-	[CommandFunction(WithSelector = true)]
-	public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
-	{
-		SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
-	}
+	// [CommandFunction(WithSelector = true)]
+	// public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
+	// {
+	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
+	// }
 
 	[CommandFunction(WithSelector = true)]
 	public void SetStringContentFunction(StringFunctionOperator functionOperator, [MinLength(1), ValueTypes<string>] params IFunctionArgument[] arguments)

@@ -2,7 +2,7 @@ namespace SimpleTableManager.Services.Functions;
 
 public abstract class DateTimeFunctionBase<TIn, TOut> :
 	FunctionBase<DateTimeFunctionOperator, TIn, TOut>
-	where TIn : IConvertible, IComparable
+	where TIn : IParsable<TIn>, IConvertible, IComparable
 	//where TOut : IConvertible
 {
 	public override IEnumerable<TOut> ExecuteCore()
