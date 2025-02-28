@@ -2,17 +2,17 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<long>(ArgumentName.Divider, 2)]
 [FunctionMappingType(typeof(long))]
-public class IntegerNumericFunction : NumericFunctionBase<long, long>
+public class IntegerNumericFunction : NumericFunctionBase<long>
 {
-	public override IEnumerable<long> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Rem => Rem(),
+			NumericFunctionOperator.Rem => Rem().Cast<object>(),
 
-			NumericFunctionOperator.And => And(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.And => And(UnwrappedUnnamedArguments).Wrap<object>(),
 
-			NumericFunctionOperator.Or => Or(UnwrappedUnnamedArguments).Wrap(),
+			NumericFunctionOperator.Or => Or(UnwrappedUnnamedArguments).Wrap<object>(),
 
 			_ => base.ExecuteCore()
 		};
@@ -40,5 +40,10 @@ public class IntegerNumericFunction : NumericFunctionBase<long, long>
 		Math.DivRem(a, b, out var rem);
 
 		return rem;
+	}
+
+	public override Type GetOutType()
+	{
+		return base.GetOutType();
 	}
 }

@@ -4,22 +4,21 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<int>(ArgumentName.Power, 1), NamedArgument<double>(ArgumentName.Base, 2)]
 [NamedArgument<int>(ArgumentName.Decimals, 2)]
-public abstract class NumericFunctionBase<TIn, TOut> :
-	FunctionBase<NumericFunctionOperator, TIn, TOut>
-	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, TOut
-	where TOut : IConvertible
+public abstract class NumericFunctionBase<TIn> :
+	FunctionBase<NumericFunctionOperator, TIn, object>
+	where TIn : struct, INumber<TIn>, IMinMaxValue<TIn>, IConvertible
 {
-	public override IEnumerable<TOut> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<TOut>(),
+			NumericFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<object>(),
 
-			NumericFunctionOperator.Neg => UnwrappedUnnamedArguments.Select(a => -a).Cast<TOut>(),
+			NumericFunctionOperator.Neg => UnwrappedUnnamedArguments.Select(a => -a).Cast<object>(),
 
-			NumericFunctionOperator.Abs => UnwrappedUnnamedArguments.Select(TIn.Abs).Cast<TOut>(),
+			NumericFunctionOperator.Abs => UnwrappedUnnamedArguments.Select(TIn.Abs).Cast<object>(),
 
-			NumericFunctionOperator.Sum => Sum(UnwrappedUnnamedArguments).Wrap<TOut>(),
+			NumericFunctionOperator.Sum => Sum(UnwrappedUnnamedArguments).Wrap<object>(),
 
 			NumericFunctionOperator.Sub => Sub(UnwrappedUnnamedArguments).Wrap(),
 
@@ -44,42 +43,54 @@ public abstract class NumericFunctionBase<TIn, TOut> :
 			NumericFunctionOperator.LogE => LogN(UnwrappedUnnamedArguments, double.E),
 
 			NumericFunctionOperator.LogN => LogN(UnwrappedUnnamedArguments, GetNamedArgument<double>(ArgumentName.Base)),
+			
+			NumericFunctionOperator.Greater => Greater().Wrap().Cast<object>(),
+
+			NumericFunctionOperator.Less => Less().Wrap().Cast<object>(),
+
+			NumericFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap().Cast<object>(),
+
+			NumericFunctionOperator.LessOrEquals => LessOrEquals().Wrap().Cast<object>(),
+
+			NumericFunctionOperator.Equals => Equals().Wrap().Cast<object>(),
+
+			NumericFunctionOperator.NotEquals => NotEquals().Wrap().Cast<object>(),
 
 			_ => throw GetInvalidOperatorException()
 		};
 	}
 
-	private IEnumerable<TOut> LogN(IEnumerable<TIn> array, double @base)
+	private IEnumerable<object> LogN(IEnumerable<TIn> array, double @base)
 	{
 		return array.Select(p =>
-			double.Round(Math.Log(p.ToDouble(null), @base), GetNamedArgument<int>(ArgumentName.Decimals)).ToType<TOut>());
+			(object)double.Round(Math.Log(p.ToDouble(null), @base), GetNamedArgument<int>(ArgumentName.Decimals)));
 	}
 
-	private static IEnumerable<TOut> Sqrt(IEnumerable<TIn> array)
+	private static IEnumerable<object> Sqrt(IEnumerable<TIn> array)
 	{
 		return array.Select(p =>
-			Math.Sqrt(p.ToDouble(null)).ToType<TOut>());
+			(object)Math.Sqrt(p.ToDouble(null)));
 	}
 
-	private static IEnumerable<TOut> Power(IEnumerable<TIn> array, int power)
+	private static IEnumerable<object> Power(IEnumerable<TIn> array, int power)
 	{
 		return array.Select(p =>
-			Shared.IndexArray(power).Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= p).ToType<TOut>());
+			(object)Shared.IndexArray(power).Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= p));
 	}
 
-	private static TOut Avg(IEnumerable<TIn> array)
+	private static object Avg(IEnumerable<TIn> array)
 	{
-		return (Sum(array) / array.Count().ToType<TIn>()).ToType<TOut>();
+		return Sum(array) / array.Count().ToType<TIn>();
 	}
 
-	private static TOut Multiply(IEnumerable<TIn> array)
+	private static object Multiply(IEnumerable<TIn> array)
 	{
-		return array.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c).ToType<TOut>();
+		return array.Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= c);
 	}
 
-	protected static TOut Divide(IEnumerable<TIn> array)
+	protected static object Divide(IEnumerable<TIn> array)
 	{
-		return array.Skip(1).Aggregate(array.First(), (a, c) => a /= c).ToType<TOut>();
+		return array.Skip(1).Aggregate(array.First(), (a, c) => a /= c);
 	}
 
 	protected static TIn Sum(IEnumerable<TIn> array)
@@ -87,33 +98,18 @@ public abstract class NumericFunctionBase<TIn, TOut> :
 		return array.Aggregate(TIn.AdditiveIdentity, (a, c) => a += c);
 	}
 
-	protected static TOut Sub(IEnumerable<TIn> array)
+	protected static object Sub(IEnumerable<TIn> array)
 	{
-		return array.Skip(1).Aggregate(array.First(), (a, c) => a -= c).ToType<TOut>();
+		return array.Skip(1).Aggregate(array.First(), (a, c) => a -= c);
 	}
 
-	private static TOut Min(IEnumerable<TIn> array)
+	private static object Min(IEnumerable<TIn> array)
 	{
-		return (array.Any() ? array.Min() : TIn.MaxValue).ToType<TOut>();
+		return (array.Any() ? array.Min() : TIn.MaxValue);
 	}
 
-	private static TOut Max(IEnumerable<TIn> array)
+	private static object Max(IEnumerable<TIn> array)
 	{
-		return (array.Any() ? array.Max() : TIn.MinValue).ToType<TOut>();
-	}
-
-	public override Type GetOutType()
-	{
-		return Operator switch
-		{
-			NumericFunctionOperator.Greater or
-			NumericFunctionOperator.Less or
-			NumericFunctionOperator.GreaterOrEquals or
-			NumericFunctionOperator.LessOrEquals or
-			NumericFunctionOperator.Equals or
-			NumericFunctionOperator.NotEquals => typeof(BooleanType),
-
-			_ => throw GetInvalidOperatorException()
-		};
+		return (array.Any() ? array.Max() : TIn.MinValue);
 	}
 }

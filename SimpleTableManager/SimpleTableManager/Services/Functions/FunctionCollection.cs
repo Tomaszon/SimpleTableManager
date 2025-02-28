@@ -32,10 +32,7 @@ public static class FunctionCollection
 
 		operatorProperty.SetValue(instance, op);
 
-		if (arguments is not null)
-		{
-			instance.Arguments = [.. arguments];
-		}
+		instance.Arguments = [.. arguments];
 
 		return instance;
 	}

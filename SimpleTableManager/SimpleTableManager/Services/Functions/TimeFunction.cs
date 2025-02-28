@@ -2,9 +2,9 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
 [FunctionMappingType(typeof(ConvertibleTimeOnly))]
-public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, IConvertible>
+public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, object>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{

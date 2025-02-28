@@ -1,9 +1,9 @@
 namespace SimpleTableManager.Services.Functions;
 
 [FunctionMappingType(typeof(double))]
-public class FractionNumericFunction : NumericFunctionBase<double, IConvertible>
+public class FractionNumericFunction : NumericFunctionBase<double>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{

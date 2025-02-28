@@ -8,8 +8,7 @@ public abstract class Shape1Sized2dBase<T>(double size1) :
 	ConvertibleBase<T>,
 	IShape1Sized,
 	IShape2d,
-	IParsableCore<T>,
-	IFormattable
+	IParsableCore<T>
 	where T : Shape1Sized2dBase<T>, IParsable<T>
 {
 	public double Size1 { get; set; } = size1;
@@ -30,6 +29,11 @@ public abstract class Shape1Sized2dBase<T>(double size1) :
 	public override string ToString()
 	{
 		return $"[{Size1}]";
+	}
+
+	public int CompareTo(object? obj)
+	{
+		throw new NotImplementedException();
 	}
 
 	public static T ParseCore(GroupCollection args, IFormatProvider? _)

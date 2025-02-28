@@ -20,10 +20,31 @@ public class IntegerFunctionTests : TestBase
 	[TestCase(NumericFunctionOperator.Pow, new long[] { 4, 3 }, new long[] { 16, 9 })]
 	[TestCase(NumericFunctionOperator.Avg, new long[] { 4, 2 }, 3)]
 	[TestCase(NumericFunctionOperator.Mul, new long[] { 4, 2, 3 }, 24)]
-	public void IntegerTest(NumericFunctionOperator operation, long[] values, params long[] results)
+	public void IntegerTest1(NumericFunctionOperator operation, long[] values, params long[] results)
 	{
 		var fn = CreateFunction(operation, [new ConstFunctionArgument<int>(ArgumentName.Power, 2)], values);
 
 		CheckResults(fn.Execute(), results);
+	}
+	
+	[TestCase(NumericFunctionOperator.Greater, new long[] { 4, 3 }, true)]
+	[TestCase(NumericFunctionOperator.Greater, new long[] { 2, 3 }, false)]
+	[TestCase(NumericFunctionOperator.Less, new long[] { 2, 3 }, true)]
+	[TestCase(NumericFunctionOperator.Less, new long[] { 4, 3 }, false)]
+	[TestCase(NumericFunctionOperator.GreaterOrEquals, new long[] { 4, 3 }, true)]
+	[TestCase(NumericFunctionOperator.GreaterOrEquals, new long[] { 3, 3 }, true)]
+	[TestCase(NumericFunctionOperator.GreaterOrEquals, new long[] { 2, 3 }, false)]
+	[TestCase(NumericFunctionOperator.LessOrEquals, new long[] { 2, 3 }, true)]
+	[TestCase(NumericFunctionOperator.LessOrEquals, new long[] { 3, 3 }, true)]
+	[TestCase(NumericFunctionOperator.LessOrEquals, new long[] { 4, 3 }, false)]
+	[TestCase(NumericFunctionOperator.Equals, new long[] { 3, 3 }, true)]
+	[TestCase(NumericFunctionOperator.Equals, new long[] { 2, 3 }, false)]
+	[TestCase(NumericFunctionOperator.NotEquals, new long[] { 3, 3 }, false)]
+	[TestCase(NumericFunctionOperator.NotEquals, new long[] { 2, 3 }, true)]
+	public void IntegerTest2(NumericFunctionOperator operation, long[] values, bool result)
+	{
+		var fn = CreateFunction(operation, values);
+
+		CheckResult(fn.Execute().Single(), result);
 	}
 }

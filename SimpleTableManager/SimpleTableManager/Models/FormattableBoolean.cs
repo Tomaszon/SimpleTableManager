@@ -2,7 +2,12 @@ namespace SimpleTableManager.Models;
 
 [ParseFormat("true|false", "^(?<true>true)|(?<false>false)$")]
 [ParseFormat("yes|no", "^(?<true>yes)|(?<false>no)$")]
-public class FormattableBoolean(bool value) : ConvertibleBase<FormattableBoolean>, IParsable<FormattableBoolean>, IParsableCore<FormattableBoolean>, IFormattable
+public class FormattableBoolean(bool value) :
+	ConvertibleBase<FormattableBoolean>,
+	IParsable<FormattableBoolean>,
+	IParsableCore<FormattableBoolean>,
+	IComparable,
+	IFormattable
 {
 	private readonly bool _value = value;
 
@@ -83,6 +88,11 @@ public class FormattableBoolean(bool value) : ConvertibleBase<FormattableBoolean
 	public override string ToString()
 	{
 		return _value.ToString();
+	}
+
+	public int CompareTo(object? obj)
+	{
+		throw new NotImplementedException();
 	}
 
 	[ExcludeFromCodeCoverage]

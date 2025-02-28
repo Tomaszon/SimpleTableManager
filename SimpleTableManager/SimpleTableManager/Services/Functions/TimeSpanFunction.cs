@@ -1,9 +1,9 @@
 namespace SimpleTableManager.Services.Functions;
 
 [FunctionMappingType(typeof(ConvertibleTimeSpan))]
-public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, IConvertible>
+public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, object>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{

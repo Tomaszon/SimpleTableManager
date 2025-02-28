@@ -8,7 +8,8 @@ public class ConvertibleDateOnly(int year = 1, int month = 1, int day = 1) :
 	ConvertibleBase<ConvertibleDateOnly>,
 	IParsable<ConvertibleDateOnly>,
 	IParsableCore<ConvertibleDateOnly>,
-	IFormattable
+	IFormattable,
+	IComparable
 {
 	private readonly DateOnly _value = new(year, month, day);
 
@@ -69,6 +70,11 @@ public class ConvertibleDateOnly(int year = 1, int month = 1, int day = 1) :
 	public override string ToString()
 	{
 		return _value.ToString();
+	}
+
+	public int CompareTo(object? obj)
+	{
+		throw new NotImplementedException();
 	}
 
 	[ExcludeFromCodeCoverage]

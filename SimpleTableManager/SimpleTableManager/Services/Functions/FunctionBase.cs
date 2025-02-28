@@ -5,11 +5,10 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Format, "")]
 [NamedArgument<int>(ArgumentName.First, int.MaxValue)]
 [NamedArgument<int>(ArgumentName.Last, int.MaxValue)]
-public abstract class FunctionBase<TOpertor, TIn, TOut> :
+public abstract class FunctionBase<TOperator, TIn, TOut> :
 	IFunction
-	where TOpertor : struct, Enum
-	where TIn : IConvertible
-	where TOut : IConvertible
+	where TOperator : struct, Enum
+	where TIn : IConvertible, IComparable
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 
@@ -37,7 +36,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 		Arguments.Where(a => a is ReferenceFunctionArgument && a.IsNamed)
 			.ToDictionary(k => (ArgumentName)k.Name!, v => (ReferenceFunctionArgument)v);
 
-	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<IConvertible, TIn>? transformation = null)
+	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<object, TIn>? transformation = null)
 	{
 		transformation ??= a => (TIn)a;
 
@@ -48,11 +47,11 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 	}
 
 	protected IEnumerable<TIn> UnwrappedUnnamedArguments =>
-		UnwrapUnnamedArgumentsAs(a => a.ToType<TIn>());
+		UnwrapUnnamedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
 
-	public TOpertor Operator { get; set; }
+	public TOperator Operator { get; set; }
 
-	Enum IFunction.Operator { get => Operator; set => Operator = (TOpertor)value; }
+	Enum IFunction.Operator { get => Operator; set => Operator = (TOperator)value; }
 
 	protected string? Error { get; set; }
 
@@ -63,9 +62,9 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 		return typeof(TIn).GetFriendlyName();
 	}
 
-	IEnumerable<IConvertible> IFunction.Execute()
+	IEnumerable<object> IFunction.Execute()
 	{
-		return ExecuteWrapper().Cast<IConvertible>();
+		return ExecuteWrapper().Cast<object>();
 	}
 
 	protected List<TOut> ExecuteWrapper()
@@ -136,9 +135,19 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 
 	public virtual Type GetOutType()
 	{
-		return typeof(TOut);
-	}
+		return Operator switch
+		{
+			NumericFunctionOperator.Greater or
+			NumericFunctionOperator.Less or
+			NumericFunctionOperator.GreaterOrEquals or
+			NumericFunctionOperator.LessOrEquals or
+			NumericFunctionOperator.Equals or
+			NumericFunctionOperator.NotEquals => typeof(bool),	
 
+			_ => throw GetInvalidOperatorException()
+		};
+	}
+	
 	public void SetError(string error)
 	{
 		Error = error;
@@ -191,7 +200,7 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 			.ThenBy(a => a is IConstFunctionArgument ? 0 : 1)
 			.GroupBy(a => a.GroupingId);
 
-		var groupedArgs = args.Select(g => FormatArgGroup(g));
+		var groupedArgs = args.Select(FormatArgGroup);
 
 		var constNamedArgs = NamedConstArguments
 			.Select(p => $"{p.Key}:{p.Value.NamedValue}");
@@ -214,5 +223,41 @@ public abstract class FunctionBase<TOpertor, TIn, TOut> :
 			a is ReferenceFunctionArgument ra ?
 				ra.Reference.ToShortString() :
 				((IConstFunctionArgument)a).Value))}";
+	}
+	
+	protected bool Greater()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Min() == 1;
+	}
+
+	protected bool Less()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Max() == -1;
+	}
+
+	protected bool GreaterOrEquals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Min() >= 0;
+	}
+
+	protected bool LessOrEquals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).Max() <= 0;
+	}
+
+	protected bool Equals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).All(e => e == 0);
+	}
+
+	protected bool NotEquals()
+	{
+		return UnwrappedUnnamedArguments.Skip(1).Select(e =>
+			UnwrappedUnnamedArguments.First().CompareTo(e)).All(e => e != 0);
 	}
 }

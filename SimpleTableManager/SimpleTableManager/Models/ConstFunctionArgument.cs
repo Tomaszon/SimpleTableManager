@@ -9,17 +9,17 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 	IParsable<ConstFunctionArgument<T>>,
 	IParsableCore<ConstFunctionArgument<T>>,
 	IConstFunctionArgument
-	where T : IParsable<T>, IConvertible
+	where T : IParsable<T>, IConvertible, IComparable
 {
 	public ArgumentName? Name { get; set; }
 
 	public T? Value { get; set; } = value;
 
-	public IConvertible? NamedValue { get; set; }
+	public object? NamedValue { get; set; }
 
 	public object? GroupingId { get; set; } = groupingId;
 
-	IConvertible? IConstFunctionArgument.Value
+	object? IConstFunctionArgument.Value
 	{
 		get => Value!;
 		set => Value = (T?)value;
@@ -31,7 +31,7 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 		NamedValue = namedValue;
 	}
 
-	public IEnumerable<IConvertible> Resolve()
+	public IEnumerable<object> Resolve()
 	{
 		return (NamedValue ?? Value).Wrap()!;
 	}

@@ -4,13 +4,13 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<char>(ArgumentName.Trim, ' ')]
 [NamedArgument<string>(ArgumentName.Pattern, ".*")]
 [FunctionMappingType(typeof(string))]
-public class StringFunction : FunctionBase<StringFunctionOperator, string, IConvertible>
+public class StringFunction : FunctionBase<StringFunctionOperator, string, object>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{
-			StringFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<IConvertible>(),
+			StringFunctionOperator.Const => UnwrappedUnnamedArguments,
 
 			StringFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 
@@ -24,7 +24,7 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, IConv
 
 			StringFunctionOperator.Blow => UnwrappedUnnamedArguments.SelectMany(p => p.ToArray()).Cast<IConvertible>(),
 
-			StringFunctionOperator.Like => Like().Wrap<IConvertible>(),
+			StringFunctionOperator.Like => Like().Wrap<object>(),
 
 			_ => throw GetInvalidOperatorException()
 		};

@@ -2,8 +2,8 @@ namespace SimpleTableManager.Models
 {
 	public interface IConstFunctionArgument : IFunctionArgument
 	{
-		IConvertible? Value { get; set; }
+		object? Value { get; set; }
 
-		IConvertible? NamedValue { get; set; }
+		object? NamedValue { get; set; }
 	}
 }

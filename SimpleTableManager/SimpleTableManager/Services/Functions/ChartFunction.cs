@@ -1,6 +1,6 @@
 namespace SimpleTableManager.Services.Functions;
 
-public class ChartFunction : FunctionBase<ChartFunctionOperator, IConvertible, IChart>
+public class ChartFunction : FunctionBase<ChartFunctionOperator, double, IChart>//HACK double
 {
 	public override IEnumerable<IChart> ExecuteCore()
 	{
@@ -28,8 +28,8 @@ public class ChartFunction : FunctionBase<ChartFunctionOperator, IConvertible, I
 		return Operator switch
 		{
 			ChartFunctionOperator.Raw => typeof(RawChart),
-			ChartFunctionOperator.Scatter => typeof(IChart),
-			ChartFunctionOperator.Column => typeof(IChart),
+			// ChartFunctionOperator.Scatter => typeof(IChart),
+			// ChartFunctionOperator.Column => typeof(IChart),
 			ChartFunctionOperator.Bar => typeof(BarChart),
 
 			_ => throw GetInvalidOperatorException()

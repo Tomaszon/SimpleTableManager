@@ -8,7 +8,8 @@ public class ConvertibleTimeSpan(int days = 0, int hours = 0, int minutes = 0, i
 	ConvertibleBase<ConvertibleTimeSpan>,
 	IParsable<ConvertibleTimeSpan>,
 	IParsableCore<ConvertibleTimeSpan>,
-	IFormattable
+	IFormattable,
+	IComparable
 {
 	[JsonProperty]
 	private readonly TimeSpan _value = new(days, hours, minutes, seconds, milliseconds);
@@ -92,6 +93,11 @@ public class ConvertibleTimeSpan(int days = 0, int hours = 0, int minutes = 0, i
 	public override string ToString()
 	{
 		return _value.ToString();
+	}
+
+	public int CompareTo(object? obj)
+	{
+		throw new NotImplementedException();
 	}
 
 	[ExcludeFromCodeCoverage]

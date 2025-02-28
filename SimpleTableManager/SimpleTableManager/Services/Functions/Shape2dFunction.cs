@@ -4,7 +4,7 @@ namespace SimpleTableManager.Services.Functions;
 [FunctionMappingType(typeof(Rectangle))]
 [FunctionMappingType(typeof(Ellipse))]
 [FunctionMappingType(typeof(RightTriangle))]
-public class Shape2dFunction : FunctionBase<Shape2dOperator, IShape2d, IConvertible>
+public class Shape2dFunction : FunctionBase<Shape2dOperator, IShape2d, object>
 {
 	public override string GetFriendlyName()
 	{

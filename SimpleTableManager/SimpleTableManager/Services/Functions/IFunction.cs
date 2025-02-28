@@ -16,7 +16,7 @@ public interface IFunction
 
 	Enum Operator { get; set; }
 
-	IEnumerable<IConvertible> Execute();
+	IEnumerable<object> Execute();
 
 	IEnumerable<string> ExecuteAndFormat();
 

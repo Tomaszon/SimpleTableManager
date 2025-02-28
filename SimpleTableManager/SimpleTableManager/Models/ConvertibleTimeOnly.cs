@@ -5,9 +5,9 @@ public class ConvertibleTimeOnly(int hour = 0, int minute = 0, int second = 0, i
 	ConvertibleBase<ConvertibleTimeOnly>,
 	IParsable<ConvertibleTimeOnly>,
 	IParsableCore<ConvertibleTimeOnly>,
-	IFormattable
+	IFormattable,
+	IComparable
 {
-	[JsonProperty]
 	private readonly TimeOnly _value = new(hour, minute, second, millisecond);
 
 	public int Hour => _value.Hour;
@@ -69,6 +69,11 @@ public class ConvertibleTimeOnly(int hour = 0, int minute = 0, int second = 0, i
 	public override string ToString()
 	{
 		return _value.ToString();
+	}
+
+	public int CompareTo(object? obj)
+	{
+		throw new NotImplementedException();
 	}
 
 	[ExcludeFromCodeCoverage]
