@@ -44,8 +44,10 @@ public partial class Cell
 		SetContent(new T() { Arguments = [.. arguments], Operator = functionOperator });
 	}
 
-	private void SetFunction(Type valueType, string functionOperator, params IEnumerable<IFunctionArgument> arguments)
+	private void SetFunction(Type valueType, string functionOperator, IEnumerable<IFunctionArgument> arguments1, IEnumerable<IFunctionArgument>? arguments2 = null)
 	{
+		var arguments = arguments2 is not null ? arguments1.Union(arguments2) : arguments1;
+
 		var newFunction = FunctionCollection.GetFunction(valueType, functionOperator, arguments);
 
 		SetContent(newFunction);
@@ -143,9 +145,11 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetChartContentFunction(ChartFunctionOperator functionOperator, [ValueTypes<int, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<int, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
+	public void SetChartContentFunction(Type dataType, ChartFunctionOperator functionOperator, [ValueTypes<long, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<long, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
 	{
-		SetFunction<ChartFunction, ChartFunctionOperator>(functionOperator, x, y);
+		var fnType = typeof(ChartFunction<>).MakeGenericType(dataType);
+
+		SetFunction(fnType, functionOperator.ToString(), x, y);
 	}
 
 	[CommandFunction]

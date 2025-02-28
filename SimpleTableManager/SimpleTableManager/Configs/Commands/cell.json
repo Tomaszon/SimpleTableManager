@@ -171,10 +171,10 @@
 				"perimeter": "setRightTriangleContentFunction/perimeter"
 			},
 			"chart": {
-				"raw": "setChartContentFunction/raw",
-				"scatter": "setChartContentFunction/scatter",
-				"column": "setChartContentFunction/column",
-				"bar": "setChartContentFunction/bar"
+				"raw": "setChartContentFunction/{autoTypeSelector}/raw",
+				"scatter": "setChartContentFunction/{autoTypeSelector}/scatter",
+				"column": "setChartContentFunction/{autoTypeSelector}/column",
+				"bar": "setChartContentFunction/{autoTypeSelector}/bar"
 			}
 		},
 		"contentFunctionOperator": "setContentFunctionOperator",

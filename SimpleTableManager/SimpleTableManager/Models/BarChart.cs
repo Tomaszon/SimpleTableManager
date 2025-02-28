@@ -2,8 +2,9 @@ using System.Text;
 
 namespace SimpleTableManager.Models;
 
-public class BarChart(IEnumerable<object> xs, IEnumerable<object> ys) :
-	ChartBase<BarChart>(xs, ys)
+public class BarChart<TData>(IEnumerable<TData> xs, IEnumerable<TData> ys) :
+	ChartBase<BarChart<TData>, TData>(xs, ys)
+	where TData: IParsable<TData>, IConvertible, IComparable
 {
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
@@ -14,7 +15,7 @@ public class BarChart(IEnumerable<object> xs, IEnumerable<object> ys) :
 		foreach (var x in Xs)
 		{
 			//HACK
-			if (((IConvertible)x).ToDouble(null) is var xd)
+			if (x.ToDouble(null) is var xd)
 			{
 				var i = (int)double.Round(xd);
 				var f = size - i;
