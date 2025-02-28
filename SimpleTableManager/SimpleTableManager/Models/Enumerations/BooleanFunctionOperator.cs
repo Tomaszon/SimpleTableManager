@@ -8,5 +8,11 @@ public enum BooleanFunctionOperator
 	And,
 	Or,
 	IsNull,
-	IsNotNull
+	IsNotNull,
+	Greater,
+	Less,
+	GreaterOrEquals,
+	LessOrEquals,
+	Equals,
+	NotEquals
 }

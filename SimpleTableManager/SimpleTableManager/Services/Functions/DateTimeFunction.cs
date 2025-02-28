@@ -2,15 +2,15 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
 [FunctionMappingType(typeof(DateTime))]
-public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
+public class DateTimeFunction : DateTimeFunctionBase<DateTime, object>
 {
-	public override IEnumerable<IConvertible> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<IConvertible>(),
-			DateTimeFunctionOperator.Offset => Offset().Cast<IConvertible>(),
+			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<object>(),
+			DateTimeFunctionOperator.Offset => Offset().Cast<object>(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 			DateTimeFunctionOperator.TotalDays => throw GetInvalidOperatorException(),
 
@@ -30,7 +30,7 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, IConvertible>
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
-	protected override IConvertible Avg()
+	protected override object Avg()
 	{
 		var a = UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.Ticks));
 		var t = a.Ticks;

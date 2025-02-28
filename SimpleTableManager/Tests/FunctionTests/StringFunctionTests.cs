@@ -3,8 +3,6 @@ namespace SimpleTableManager.Tests.FunctionTests;
 [ExcludeFromCodeCoverage]
 public class StringFunctionTests : TestBase
 {
-	[TestCase(StringFunctionOperator.Like, typeof(bool), new[] { "aaaa", "bbbb" }, true)]
-	[TestCase(StringFunctionOperator.Like, typeof(bool), new[] { "cc", "bbbb" }, false)]
 	[TestCase(StringFunctionOperator.Split, typeof(string), new[] { "al|ma" }, new[] { "al", "ma" })]
 	[TestCase(StringFunctionOperator.Len, typeof(int), new[] { "alma" }, 4)]
 	[TestCase(StringFunctionOperator.Join, typeof(string), new[] { "alma", "körte" }, new[] { "alma|körte" })]
@@ -15,12 +13,26 @@ public class StringFunctionTests : TestBase
 		var na = new IFunctionArgument[]
 			{
 				new ConstFunctionArgument<string>(ArgumentName.Separator, "|"),
-				new ConstFunctionArgument<string>(ArgumentName.Pattern, "a{4}")
 			};
 
 		var fn = CreateFunction(operation, na, values);
 
 		CheckResults(fn.Execute(), results);
+		CheckResult(fn.GetOutType(), outType);
+	}
+
+	[TestCase(StringFunctionOperator.Like, typeof(FormattableBoolean), new[] { "aaaa", "bbbb" }, true)]
+	[TestCase(StringFunctionOperator.Like, typeof(FormattableBoolean), new[] { "cc", "bbbb" }, false)]
+	public void StringTest2(StringFunctionOperator operation, Type outType, string[] values, bool result)
+	{
+		var na = new IFunctionArgument[]
+			{
+				new ConstFunctionArgument<string>(ArgumentName.Pattern, "a{4}")
+			};
+
+		var fn = CreateFunction(operation, na, values);
+
+		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
 		CheckResult(fn.GetOutType(), outType);
 	}
 

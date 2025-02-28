@@ -232,32 +232,32 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 				((IConstFunctionArgument)a).Value))}";
 	}
 
-	protected bool Greater()
+	protected FormattableBoolean Greater()
 	{
 		return CompareCore(e => e == 1);
 	}
 
-	protected bool Less()
+	protected FormattableBoolean Less()
 	{
 		return CompareCore(e => e == -1);
 	}
 
-	protected bool GreaterOrEquals()
+	protected FormattableBoolean GreaterOrEquals()
 	{
 		return CompareCore(e => e >= 0);
 	}
 
-	protected bool LessOrEquals()
+	protected FormattableBoolean LessOrEquals()
 	{
 		return CompareCore(e => e <= 0);
 	}
 
-	protected bool Equals()
+	protected FormattableBoolean Equals()
 	{
 		return CompareCore(e => e == 0);
 	}
 
-	protected bool NotEquals()
+	protected FormattableBoolean NotEquals()
 	{
 		return CompareCore(e => e != 0);
 	}

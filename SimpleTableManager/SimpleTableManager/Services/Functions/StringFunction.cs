@@ -51,7 +51,7 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 		return UnwrappedUnnamedArguments.Select(p => p.Trim(trim));
 	}
 
-	private bool Like()
+	private FormattableBoolean Like()
 	{
 		var pattern = new Regex(GetNamedArgument<string>(ArgumentName.Pattern));
 
@@ -64,7 +64,7 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 		{
 			StringFunctionOperator.Len => typeof(int),
 			StringFunctionOperator.Blow => typeof(char),
-			StringFunctionOperator.Like => typeof(bool),
+			StringFunctionOperator.Like => typeof(FormattableBoolean),
 
 			_ => typeof(string)
 		};

@@ -45,6 +45,18 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, Formattable
 				}
 			})).Wrap(),
 
+			BooleanFunctionOperator.Greater => Greater().Wrap(),
+
+			BooleanFunctionOperator.Less => Less().Wrap(),
+
+			BooleanFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
+
+			BooleanFunctionOperator.LessOrEquals => LessOrEquals().Wrap(),
+
+			BooleanFunctionOperator.Equals => Equals().Wrap(),
+
+			BooleanFunctionOperator.NotEquals => NotEquals().Wrap(),
+
 			_ => throw GetInvalidOperatorException()
 		};
 	}

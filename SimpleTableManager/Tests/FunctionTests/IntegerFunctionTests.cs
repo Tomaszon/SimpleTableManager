@@ -45,7 +45,7 @@ public class IntegerFunctionTests : TestBase
 	{
 		var fn = CreateFunction(operation, values);
 
-		CheckResult(fn.Execute().Single(), result);
+		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
 	}
 
 	[TestCase(NumericFunctionOperator.Greater, new long[] { 4, 3 }, false)]
@@ -71,6 +71,6 @@ public class IntegerFunctionTests : TestBase
 
 		var fn = CreateFunction(operation, na, values);
 
-		CheckResult(fn.Execute().Single(), result);
+		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
 	}
 }

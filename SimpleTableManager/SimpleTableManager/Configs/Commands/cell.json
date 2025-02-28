@@ -11,7 +11,13 @@
 				"split": "setStringContentFunction/split",
 				"trim": "setStringContentFunction/trim",
 				"blow": "setStringContentFunction/blow",
-				"like": "setStringContentFunction/like"
+				"like": "setStringContentFunction/like",
+				"greater": "setStringContentFunction/greater",
+				"less": "setStringContentFunction/less",
+				"greaterOrEquals": "setStringContentFunction/greaterOrEquals",
+				"lessOrEquals": "setStringContentFunction/lessOrEquals",
+				"equals": "setStringContentFunction/equals",
+				"notEquals": "setStringContentFunction/notEquals"
 			},
 			"int": {
 				"const": "setIntegerContentFunction/const",
@@ -73,29 +79,59 @@
 				"and": "setBooleanContentFunction/and",
 				"or": "setBooleanContentFunction/or",
 				"isNull": "setBooleanContentFunction/isNull",
-				"isNotNull": "setBooleanContentFunction/isNotNull"
+				"isNotNull": "setBooleanContentFunction/isNotNull",
+				"greater": "setBooleanContentFunction/greater",
+				"less": "setBooleanContentFunction/less",
+				"greaterOrEquals": "setBooleanContentFunction/greaterOrEquals",
+				"lessOrEquals": "setBooleanContentFunction/lessOrEquals",
+				"equals": "setBooleanContentFunction/equals",
+				"notEquals": "setBooleanContentFunction/notEquals"
 			},
 			"char": {
 				"const": "setCharacterContentFunction/const",
 				"concat": "setCharacterContentFunction/concat",
 				"join": "setCharacterContentFunction/join",
-				"repeat": "setCharacterContentFunction/repeat"
+				"repeat": "setCharacterContentFunction/repeat",
+				"greater": "setCharacterContentFunction/greater",
+				"less": "setCharacterContentFunction/less",
+				"greaterOrEquals": "setCharacterContentFunction/greaterOrEquals",
+				"lessOrEquals": "setCharacterContentFunction/lessOrEquals",
+				"equals": "setCharacterContentFunction/equals",
+				"notEquals": "setCharacterContentFunction/notEquals"
 			},
 			"dateTime": {
 				"const": "setDateTimeContentFunction/const",
 				"sum": "setDateTimeContentFunction/sum",
-				"now": "setDateTimeContentFunction/now"
+				"now": "setDateTimeContentFunction/now",
+				"greater": "setDateTimeContentFunction/greater",
+				"less": "setDateTimeContentFunction/less",
+				"greaterOrEquals": "setDateTimeContentFunction/greaterOrEquals",
+				"lessOrEquals": "setDateTimeContentFunction/lessOrEquals",
+				"equals": "setDateTimeContentFunction/equals",
+				"notEquals": "setDateTimeContentFunction/notEquals"
 			},
 			"date": {
 				"const": "setDateContentFunction/const",
 				"sum": "setDateContentFunction/sum",
-				"now": "setDateContentFunction/now"
+				"now": "setDateContentFunction/now",
+				"greater": "setDateContentFunction/greater",
+				"less": "setDateContentFunction/less",
+				"greaterOrEquals": "setDateContentFunction/greaterOrEquals",
+				"lessOrEquals": "setDateContentFunction/lessOrEquals",
+				"equals": "setDateContentFunction/equals",
+				"notEquals": "setDateContentFunction/notEquals"
 			},
 			"time": {
 				"const": "setTimeContentFunction/const",
 				"sum": "setTimeContentFunction/sum",
 				"sub": "setTimeContentFunction/sub",
-				"now": "setTimeContentFunction/now"
+				"now": "setTimeContentFunction/now",
+				"greater": "setTimeContentFunction/greater",
+				"less": "setTimeContentFunction/less",
+				"greaterOrEquals": "setTimeContentFunction/greaterOrEquals",
+				"lessOrEquals": "setTimeContentFunction/lessOrEquals",
+				"equals": "setTimeContentFunction/equals",
+				"notEquals": "setTimeContentFunction/notEquals"
 			},
 			"timeSpan": {
 				"const": "setTimeSpanContentFunction/const",
@@ -111,7 +147,13 @@
 				"totalHours": "setTimeSpanContentFunction/totalHours",
 				"totalMinutes": "setTimeSpanContentFunction/totalMinutes",
 				"totalSeconds": "setTimeSpanContentFunction/totalSeconds",
-				"totalMilliseconds": "setTimeSpanContentFunction/totalMilliseconds"
+				"totalMilliseconds": "setTimeSpanContentFunction/totalMilliseconds",
+				"greater": "setTimeSpanContentFunction/greater",
+				"less": "setTimeSpanContentFunction/less",
+				"greaterOrEquals": "setTimeSpanContentFunction/greaterOrEquals",
+				"lessOrEquals": "setTimeSpanContentFunction/lessOrEquals",
+				"equals": "setTimeSpanContentFunction/equals",
+				"notEquals": "setTimeSpanContentFunction/notEquals"
 			},
 			"rectangle": {
 				"const": "setRectangleContentFunction/const",
