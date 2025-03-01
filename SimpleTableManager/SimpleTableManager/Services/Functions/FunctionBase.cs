@@ -8,7 +8,7 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOperator, TIn, TOut> :
 	IFunction
 	where TOperator : struct, Enum
-	where TIn : IConvertible, IComparable, IParsable<TIn>
+	where TIn :  IParsable<TIn>, IConvertible, IComparable
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 

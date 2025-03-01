@@ -1,19 +1,20 @@
 namespace SimpleTableManager.Services.Functions;
 
-public class ChartFunction<TIn> : FunctionBase<ChartFunctionOperator, TIn, IChart>
-	where TIn: IParsable<TIn>, IComparable, IConvertible
+public class ChartFunction<TDataX, TDataY> : FunctionBase<ChartFunctionOperator, TDataX, IChart>//HACK use TDataY somehow
+	where TDataX : IParsable<TDataX>, IComparable, IConvertible
+	where TDataY : IParsable<TDataY>, IComparable, IConvertible
 {
 	public override IEnumerable<IChart> ExecuteCore()
 	{
-		var xs = UnnamedArguments.Where(a => a.GroupingId is char x && x == 'X').SelectMany(a => a.Resolve().Cast<TIn>());
-		var ys = UnnamedArguments.Where(a => a.GroupingId is char y && y == 'Y').SelectMany(a => a.Resolve().Cast<TIn>());
+		var xs = UnnamedArguments.Where(a => a.GroupingId is char x && x == 'X').SelectMany(a => a.Resolve().Cast<TDataX>());
+		var ys = UnnamedArguments.Where(a => a.GroupingId is char y && y == 'Y').SelectMany(a => a.Resolve().Cast<TDataY>());
 
 		return Operator switch
 		{
-			ChartFunctionOperator.Raw => new RawChart<TIn>(xs, ys).Wrap(),
+			ChartFunctionOperator.Raw => new RawChart<TDataX, TDataY>(xs, ys).Wrap(),
 			// ChartFunctionOperator.Scatter => .Wrap(),
 			// ChartFunctionOperator.Column => .Wrap(),
-			ChartFunctionOperator.Bar => new BarChart<TIn>(xs, ys).Wrap(),
+			ChartFunctionOperator.Bar => new BarChart<TDataX, TDataY>(xs, ys).Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};
@@ -28,10 +29,10 @@ public class ChartFunction<TIn> : FunctionBase<ChartFunctionOperator, TIn, IChar
 	{
 		return Operator switch
 		{
-			ChartFunctionOperator.Raw => typeof(RawChart<>),
+			ChartFunctionOperator.Raw => typeof(RawChart<TDataX, TDataY>),
 			// ChartFunctionOperator.Scatter => typeof(IChart),
 			// ChartFunctionOperator.Column => typeof(IChart),
-			ChartFunctionOperator.Bar => typeof(BarChart<>),
+			ChartFunctionOperator.Bar => typeof(BarChart<TDataX, TDataY>),
 
 			_ => throw GetInvalidOperatorException()
 		};

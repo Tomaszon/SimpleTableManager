@@ -1,4 +1,5 @@
 using System.Data;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SimpleTableManager.Services.Functions;
 
@@ -17,24 +18,33 @@ public static class FunctionCollection
 				(a.MappingType, FunctionType: f))).ToDictionary(k => k.MappingType, v => v.FunctionType);
 	}
 
-	public static IFunction GetFunction(Type valueType, string functionOperator, IEnumerable<IFunctionArgument> arguments)
+	public static IFunction GetFunction(Type functionType, Enum functionOperator, IEnumerable<IFunctionArgument> arguments)
 	{
-		var functionType = Functions[valueType];
-
 		var instance = (IFunction)Activator.CreateInstance(functionType)!;
 
 		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
 
 		var operatorProperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
 
-		var op = Enum.Parse(operatorProperty.PropertyType, functionOperator,
-		true);
-
-		operatorProperty.SetValue(instance, op);
+		operatorProperty.SetValue(instance, functionOperator);
 
 		instance.Arguments = [.. arguments];
 
 		return instance;
+	}
+
+	public static IFunction GetFunction(Type valueType, string functionOperator, IEnumerable<IFunctionArgument> arguments)
+	{
+		var functionType = Functions[valueType];
+
+		var bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public;
+
+		var operatorProperty = functionType.GetProperty(nameof(IFunction.Operator), bindingFlags)!;
+
+		var op = (Enum)Enum.Parse(operatorProperty.PropertyType, functionOperator,
+		true);
+
+		return GetFunction(functionType, op, arguments);
 	}
 
 	public static IFunction GetFunction<T>(Enum functionOperator, IEnumerable<IFunctionArgument> arguments)

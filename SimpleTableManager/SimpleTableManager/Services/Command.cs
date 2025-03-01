@@ -18,11 +18,16 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 	public static Command FromString(string rawCommand)
 	{
-		var reference = GetCommandReference(rawCommand, out var arguments, out var selector);
+		var reference = GetCommandReference(rawCommand, out var arguments, out var selector1, out var selector2);
 
-		if (selector is not null)
+		if (selector2 is not null)
 		{
-			arguments?.Insert(0, [selector]);
+			arguments?.Insert(0, [selector2]);
+		}
+
+		if (selector1 is not null)
+		{
+			arguments?.Insert(0, [selector1]);
 		}
 
 		return new Command(reference, rawCommand, arguments);
@@ -46,9 +51,9 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 		Type? successfulValueType = null;
 
-		var autoTypeSelector = Reference?.WithSelector == true && Arguments?.FirstOrDefault()?.FirstOrDefault() == "{autoTypeSelector}";
+		var typeSelector = Reference?.WithSelector1 == true && Arguments?.FirstOrDefault()?.FirstOrDefault() == "{typeSelector}";
 
-		for (var i = autoTypeSelector ? 1 : 0; i < parameters.Count; i++)
+		for (var i = typeSelector ? 1 : 0; i < parameters.Count; i++)
 		{
 			List<FormatException> formatExceptions = [];
 
@@ -144,7 +149,7 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 		try
 		{
-			if (autoTypeSelector)
+			if (typeSelector)
 			{
 				parsedArguments.Insert(0, successfulValueType);
 			}
@@ -270,7 +275,7 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 		return [.. parameters.Select(p => new CommandParameter(p))];
 	}
 
-	public static CommandReference GetCommandReference(string rawCommand, out List<List<string>> arguments, out string? selector)
+	public static CommandReference GetCommandReference(string rawCommand, out List<List<string>> arguments, out string? selector1, out string? selector2)
 	{
 		var keys = rawCommand.Split(' ').ToList();
 
@@ -279,12 +284,12 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 			throw new IncompleteCommandException(rawCommand, [.. CommandTree.Commands.Keys]);
 		}
 
-		var methodName = GetReferenceMethodNameRecursive(CommandTree.Commands, keys.First(), keys, rawCommand, out arguments, out selector);
+		var methodName = GetReferenceMethodNameRecursive(CommandTree.Commands, keys.First(), keys, rawCommand, out arguments, out selector1, out selector2);
 
-		return new CommandReference(keys.First(), methodName, selector is not null);
+		return new CommandReference(keys.First(), methodName, selector1 is not null, selector2 is not null);
 	}
 
-	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<List<string>> arguments, out string? selector)
+	private static string GetReferenceMethodNameRecursive(object obj, string className, List<string> keys, string rawCommand, out List<List<string>> arguments, out string? selector1, out string? selector2)
 	{
 		if (obj is ExpandoObject o)
 		{
@@ -297,7 +302,7 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 			if (string.IsNullOrWhiteSpace(key))
 			{
-				return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
+				return GetReferenceMethodNameRecursive(obj, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector1, out selector2);
 			}
 
 			var matchingValue = o.FirstOrDefault(e =>
@@ -318,7 +323,7 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 				throw new IncompleteCommandException(rawCommand, (matchingValue as ExpandoObject)?.Select(e => e.Key).ToList());
 			}
 
-			return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector);
+			return GetReferenceMethodNameRecursive(matchingValue, className, keys.GetRange(1, keys.Count - 1), rawCommand, out arguments, out selector1, out selector2);
 		}
 
 		if (keys.FirstOrDefault() == SmartConsole.HELP_COMMAND)
@@ -330,7 +335,8 @@ public class Command(CommandReference? reference, string rawCommand, List<List<s
 
 		var values = ((string)obj).Split(_SELECTOR_SEPARATOR);
 
-		selector = values.ElementAtOrDefault(1);
+		selector1 = values.ElementAtOrDefault(1);
+		selector2 = values.ElementAtOrDefault(2);
 
 		return values[0];
 	}

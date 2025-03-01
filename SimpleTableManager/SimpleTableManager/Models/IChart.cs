@@ -1,8 +1,9 @@
 namespace SimpleTableManager.Models;
 
 public interface IChart :
-	IConvertible,
-	IComparable
+	IConvertibleBase,
+	IComparable,
+	IFormattable
 {
 	public object[] Xs { get; set; }
 

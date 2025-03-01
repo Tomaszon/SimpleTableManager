@@ -2,9 +2,10 @@ using System.Text;
 
 namespace SimpleTableManager.Models;
 
-public class BarChart<TData>(IEnumerable<TData> xs, IEnumerable<TData> ys) :
-	ChartBase<BarChart<TData>, TData>(xs, ys)
-	where TData: IParsable<TData>, IConvertible, IComparable
+public class BarChart<TDataX, TDataY>(IEnumerable<TDataX> xs, IEnumerable<TDataY> ys) :
+	ChartBase<TDataX, TDataY>(xs, ys)
+	where TDataX: IParsable<TDataX>, IConvertible, IComparable
+	where TDataY: IParsable<TDataY>, IConvertible, IComparable
 {
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{

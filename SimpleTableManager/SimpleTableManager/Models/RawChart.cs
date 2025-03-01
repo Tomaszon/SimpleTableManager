@@ -1,8 +1,9 @@
 namespace SimpleTableManager.Models;
 
-public class RawChart<TData>(IEnumerable<TData> xs, IEnumerable<TData> ys) :
-	ChartBase<RawChart<TData>, TData>(xs, ys)
-	where TData: IParsable<TData>, IConvertible, IComparable
+public class RawChart<TDataX, TDataY>(IEnumerable<TDataX> xs, IEnumerable<TDataY> ys) :
+	ChartBase<TDataX, TDataY>(xs, ys)
+	where TDataX: IParsable<TDataX>, IConvertible, IComparable
+	where TDataY : IParsable<TDataY>, IComparable, IConvertible
 {
 	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{

@@ -1,26 +1,20 @@
 namespace SimpleTableManager.Models;
 
-public abstract class ChartBase<T, TData>(IEnumerable<TData> xs, IEnumerable<TData> ys) :
-	IConvertibleBase,
-	IFormattable,
+public abstract class ChartBase<TDataX, TDataY>(IEnumerable<TDataX> xs, IEnumerable<TDataY> ys) :
 	IChart
-	where T : ChartBase<T, TData>
-	where TData : IParsable<TData>, IComparable, IConvertible
+	where TDataX : IParsable<TDataX>, IComparable, IConvertible
+	where TDataY : IParsable<TDataY>, IComparable, IConvertible
 {
-	public TData[] Xs { get; set; } = [.. xs];
+	public TDataX[] Xs { get; set; } = [.. xs];
 
-	public TData[] Ys { get; set; } = [.. ys];
+	public TDataY[] Ys { get; set; } = [.. ys];
 
-	object[] IChart.Xs { get => [.. Xs.Cast<object>()]; set => Xs = [.. value.Select(e => (TData)e)]; }
+	object[] IChart.Xs { get => [.. Xs.Cast<object>()]; set => Xs = [.. value.Select(e => (TDataX)e)]; }
 
-	object[] IChart.Ys { get => [.. Ys.Cast<object>()]; set => Ys = [.. value.Select(e => (TData)e)]; }
-
-	public abstract string ToString(string? format, IFormatProvider? formatProvider);
+	object[] IChart.Ys { get => [.. Ys.Cast<object>()]; set => Ys = [.. value.Select(e => (TDataY)e)]; }
 
 	public abstract int CompareTo(object? obj);
 
-	int IComparable.CompareTo(object? obj)
-	{
-		throw new NotImplementedException();
-	}
+    public abstract string ToString(string? format, IFormatProvider? formatProvider);
+
 }

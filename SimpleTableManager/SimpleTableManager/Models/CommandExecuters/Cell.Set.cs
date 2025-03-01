@@ -52,6 +52,15 @@ public partial class Cell
 
 		SetContent(newFunction);
 	}
+	
+	private void SetFunction(Type functionType, Enum functionOperator, IEnumerable<IFunctionArgument> arguments1, IEnumerable<IFunctionArgument>? arguments2 = null)
+	{
+		var arguments = arguments2 is not null ? arguments1.Union(arguments2) : arguments1;
+
+		var newFunction = FunctionCollection.GetFunction(functionType, functionOperator, arguments);
+
+		SetContent(newFunction);
+	}
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
@@ -145,11 +154,12 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetChartContentFunction(Type dataType, ChartFunctionOperator functionOperator, [ValueTypes<long, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<long, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
+	public void SetChartContentFunction(Type dataType, ChartFunctionOperator functionOperator, [ValueTypes<long, char, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<long, char, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
 	{
-		var fnType = typeof(ChartFunction<>).MakeGenericType(dataType);
+		//TODO get second data type
+		var fnType = typeof(ChartFunction<,>).MakeGenericType(dataType, dataType);
 
-		SetFunction(fnType, functionOperator.ToString(), x, y);
+		SetFunction(fnType, functionOperator, x, y);
 	}
 
 	[CommandFunction]

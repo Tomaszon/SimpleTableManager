@@ -1,6 +1,6 @@
 {
 	"set": {
-		"content": "setContent/{autoTypeSelector}",
+		"content": "setContent/{typeSelector}",
 		"comment": "setComment",
 		"contentFunction": {
 			"string": {
@@ -171,14 +171,14 @@
 				"perimeter": "setRightTriangleContentFunction/perimeter"
 			},
 			"chart": {
-				"raw": "setChartContentFunction/{autoTypeSelector}/raw",
-				"scatter": "setChartContentFunction/{autoTypeSelector}/scatter",
-				"column": "setChartContentFunction/{autoTypeSelector}/column",
-				"bar": "setChartContentFunction/{autoTypeSelector}/bar"
+				"raw": "setChartContentFunction/{typeSelector}/raw",
+				"scatter": "setChartContentFunction/{typeSelector}/scatter",
+				"column": "setChartContentFunction/{typeSelector}/column",
+				"bar": "setChartContentFunction/{typeSelector}/bar"
 			}
 		},
 		"contentFunctionOperator": "setContentFunctionOperator",
-		"contentFunctionArguments": "setContentFunctionArguments/{autoTypeSelector}",
+		"contentFunctionArguments": "setContentFunctionArguments/{typeSelector}",
 		"verticalAlignment": "setVerticalAlignment",
 		"horizontalAlignment": "setHorizontalAlignment",
 		"padding": "setPadding",
