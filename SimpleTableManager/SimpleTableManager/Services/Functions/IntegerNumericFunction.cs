@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<long>(ArgumentName.Divider, 2)]
@@ -9,9 +11,7 @@ public class IntegerNumericFunction : NumericFunctionBase<long>
 		return Operator switch
 		{
 			NumericFunctionOperator.Rem => Rem().Cast<object>(),
-
 			NumericFunctionOperator.And => And(UnwrappedUnnamedArguments).Wrap<object>(),
-
 			NumericFunctionOperator.Or => Or(UnwrappedUnnamedArguments).Wrap<object>(),
 
 			_ => base.ExecuteCore()

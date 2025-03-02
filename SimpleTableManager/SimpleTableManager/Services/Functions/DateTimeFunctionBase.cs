@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 public abstract class DateTimeFunctionBase<TIn, TOut> :
@@ -21,6 +23,12 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 			DateTimeFunctionOperator.TotalMinutes => TotalMinutes().Cast<TOut>(),
 			DateTimeFunctionOperator.TotalSeconds => TotalSeconds().Cast<TOut>(),
 			DateTimeFunctionOperator.TotalMilliseconds => TotalMilliseconds().Cast<TOut>(),
+			DateTimeFunctionOperator.Greater => Greater().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.Less => Less().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.LessOrEquals => LessOrEquals().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.Equals => Equals().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.NotEquals => NotEquals().Wrap().Cast<TOut>(),
 
 			_ => throw GetInvalidOperatorException()
 		};
@@ -88,9 +96,9 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 		return UnwrappedUnnamedArguments.Select(a => 0d);
 	}
 
-    public override Type GetOutType()
-    {
-        return Operator switch
+	public override Type GetOutType()
+	{
+		return Operator switch
 		{
 			DateTimeFunctionOperator.Sum or
 			DateTimeFunctionOperator.Sub => typeof(ConvertibleTimeSpan),
@@ -110,5 +118,5 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 
 			_ => throw GetInvalidOperatorException()
 		};
-    }
+	}
 }

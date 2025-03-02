@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 [FunctionMappingType(typeof(double))]
@@ -8,9 +10,7 @@ public class FractionNumericFunction : NumericFunctionBase<double>
 		return Operator switch
 		{
 			NumericFunctionOperator.Floor => UnwrappedUnnamedArguments.Select(p => (long)double.Floor(p)).Cast<IConvertible>(),
-
 			NumericFunctionOperator.Ceiling => UnwrappedUnnamedArguments.Select(p => (long)double.Ceiling(p)).Cast<IConvertible>(),
-
 			NumericFunctionOperator.Round => Round().Cast<IConvertible>(),
 
 			_ => base.ExecuteCore()

@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models.Enumerations;
+namespace SimpleTableManager.Models.Enumerations.FunctionOperators;
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum DateTimeFunctionOperator
@@ -20,5 +20,11 @@ public enum DateTimeFunctionOperator
 	TotalHours,
 	TotalMinutes,
 	TotalSeconds,
-	TotalMilliseconds
+	TotalMilliseconds,
+	Greater,
+	Less,
+	GreaterOrEquals,
+	LessOrEquals,
+	Equals,
+	NotEquals
 }

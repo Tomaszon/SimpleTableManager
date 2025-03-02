@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]

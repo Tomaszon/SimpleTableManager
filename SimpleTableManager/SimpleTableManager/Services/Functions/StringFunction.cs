@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Separator, " ")]
@@ -11,19 +13,12 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 		return Operator switch
 		{
 			StringFunctionOperator.Const => UnwrappedUnnamedArguments,
-
 			StringFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
-
 			StringFunctionOperator.Join => Join().Wrap(),
-
 			StringFunctionOperator.Len => string.Concat(UnwrappedUnnamedArguments).Length.Wrap<IConvertible>(),
-
 			StringFunctionOperator.Split => Split(),
-
 			StringFunctionOperator.Trim => Trim(),
-
 			StringFunctionOperator.Blow => UnwrappedUnnamedArguments.SelectMany(p => p.ToArray()).Cast<IConvertible>(),
-
 			StringFunctionOperator.Like => Like().Wrap<object>(),
 
 			_ => throw GetInvalidOperatorException()

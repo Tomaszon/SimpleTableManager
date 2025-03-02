@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 public class ChartFunction<TDataX, TDataY> : FunctionBase<ChartFunctionOperator, TDataX, IChart>//HACK use TDataY somehow

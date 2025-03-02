@@ -1,4 +1,6 @@
 
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
+
 namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
@@ -13,7 +15,6 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, object>
 			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Offset => Offset(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
-			DateTimeFunctionOperator.TotalDays => throw GetInvalidOperatorException(),
 
 			_ => base.ExecuteCore()
 		};

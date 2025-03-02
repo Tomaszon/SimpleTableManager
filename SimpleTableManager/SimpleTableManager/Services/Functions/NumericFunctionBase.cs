@@ -1,4 +1,5 @@
 using System.Numerics;
+using SimpleTableManager.Models.Enumerations.FunctionOperators;
 
 namespace SimpleTableManager.Services.Functions;
 
@@ -13,47 +14,26 @@ public abstract class NumericFunctionBase<TIn> :
 		return Operator switch
 		{
 			NumericFunctionOperator.Const => UnwrappedUnnamedArguments.Cast<object>(),
-
 			NumericFunctionOperator.Neg => UnwrappedUnnamedArguments.Select(a => -a).Cast<object>(),
-
 			NumericFunctionOperator.Abs => UnwrappedUnnamedArguments.Select(TIn.Abs).Cast<object>(),
-
 			NumericFunctionOperator.Sum => Sum(UnwrappedUnnamedArguments).Wrap<object>(),
-
 			NumericFunctionOperator.Sub => Sub(UnwrappedUnnamedArguments).Wrap(),
-
 			NumericFunctionOperator.Avg => Avg(UnwrappedUnnamedArguments).Wrap(),
-
 			NumericFunctionOperator.Min => Min(UnwrappedUnnamedArguments).Wrap(),
-
 			NumericFunctionOperator.Max => Max(UnwrappedUnnamedArguments).Wrap(),
-
 			NumericFunctionOperator.Mul => Multiply(UnwrappedUnnamedArguments).Wrap(),
-
 			NumericFunctionOperator.Div => Divide(UnwrappedUnnamedArguments).Wrap(),
-
 			NumericFunctionOperator.Pow => Power(UnwrappedUnnamedArguments, GetNamedArgument<int>(ArgumentName.Power)),
-
 			NumericFunctionOperator.Sqrt => Sqrt(UnwrappedUnnamedArguments),
-
 			NumericFunctionOperator.Log2 => LogN(UnwrappedUnnamedArguments, 2),
-
 			NumericFunctionOperator.Log10 => LogN(UnwrappedUnnamedArguments, 10),
-
 			NumericFunctionOperator.LogE => LogN(UnwrappedUnnamedArguments, double.E),
-
 			NumericFunctionOperator.LogN => LogN(UnwrappedUnnamedArguments, GetNamedArgument<double>(ArgumentName.Base)),
-
 			NumericFunctionOperator.Greater => Greater().Wrap().Cast<object>(),
-
 			NumericFunctionOperator.Less => Less().Wrap().Cast<object>(),
-
 			NumericFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap().Cast<object>(),
-
 			NumericFunctionOperator.LessOrEquals => LessOrEquals().Wrap().Cast<object>(),
-
 			NumericFunctionOperator.Equals => Equals().Wrap().Cast<object>(),
-
 			NumericFunctionOperator.NotEquals => NotEquals().Wrap().Cast<object>(),
 
 			_ => throw GetInvalidOperatorException()
@@ -117,12 +97,8 @@ public abstract class NumericFunctionBase<TIn> :
     {
         return Operator switch
 		{
-			NumericFunctionOperator.Greater or
-			NumericFunctionOperator.Less or
-			NumericFunctionOperator.GreaterOrEquals or
-			NumericFunctionOperator.LessOrEquals or
-			NumericFunctionOperator.Equals or
-			NumericFunctionOperator.NotEquals => typeof(bool),	
+			>= NumericFunctionOperator.Greater and
+			<= NumericFunctionOperator.NotEquals => typeof(FormattableBoolean),
 
 			_ => throw GetInvalidOperatorException()
 		};

@@ -2,6 +2,7 @@ using System.Text;
 
 namespace SimpleTableManager.Services;
 
+[ExcludeFromCodeCoverage]
 public partial class SmartConsole
 {
 	public const string HELP_COMMAND = "--help";

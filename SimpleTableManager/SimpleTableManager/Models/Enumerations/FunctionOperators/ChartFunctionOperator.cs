@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models.Enumerations;
+namespace SimpleTableManager.Models.Enumerations.FunctionOperators;
 
 [JsonConverter(typeof(StringEnumConverter))]
 public enum ChartFunctionOperator
