@@ -46,7 +46,7 @@ public class IntegerNumericFunction : NumericFunctionBase<long>
 	{
 		return Operator switch
 		{
-			< NumericFunctionOperator.Greater => typeof(int),
+			< NumericFunctionOperator.Greater => typeof(long),
 
 			_ => base.GetOutType()
 		};

@@ -28,25 +28,12 @@ public class FractionNumericFunction : NumericFunctionBase<double>
 	{
 		return Operator switch
 		{
-			NumericFunctionOperator.Const or
-			NumericFunctionOperator.Neg or
-			NumericFunctionOperator.Abs or
-			NumericFunctionOperator.Sum or
-			NumericFunctionOperator.Sub or
-			NumericFunctionOperator.Avg or
-			NumericFunctionOperator.Min or
-			NumericFunctionOperator.Max or
-			NumericFunctionOperator.Round or
-			NumericFunctionOperator.Mul or
-			NumericFunctionOperator.Div or
-			NumericFunctionOperator.Pow or
-			NumericFunctionOperator.Sqrt or
-			NumericFunctionOperator.Log2 or
-			NumericFunctionOperator.Log10 or
-			NumericFunctionOperator.LogE or
-			NumericFunctionOperator.LogN => typeof(double),
+			>= NumericFunctionOperator.Const and
+			<= NumericFunctionOperator.Round => typeof(double),
 			NumericFunctionOperator.Floor or
-			NumericFunctionOperator.Ceiling => typeof(long),
+			NumericFunctionOperator.Ceiling => typeof(long),			
+			>= NumericFunctionOperator.Mul and
+			<= NumericFunctionOperator.LogN => typeof(double),
 
 			_ => base.GetOutType()
 		};

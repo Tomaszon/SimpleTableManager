@@ -102,19 +102,12 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 		{
 			DateTimeFunctionOperator.Sum or
 			DateTimeFunctionOperator.Sub => typeof(ConvertibleTimeSpan),
-			DateTimeFunctionOperator.Years or
-			DateTimeFunctionOperator.Months or
-			DateTimeFunctionOperator.Days or
-			DateTimeFunctionOperator.Hours or
-			DateTimeFunctionOperator.Minutes or
-			DateTimeFunctionOperator.Seconds or
-			DateTimeFunctionOperator.Milliseconds => typeof(int),
-			DateTimeFunctionOperator.TotalDays or
-			DateTimeFunctionOperator.TotalHours or
-			DateTimeFunctionOperator.TotalMinutes or
-			DateTimeFunctionOperator.TotalSeconds or
-			DateTimeFunctionOperator.TotalMilliseconds => typeof(double),
-
+			>= DateTimeFunctionOperator.Years and
+			<= DateTimeFunctionOperator.Milliseconds => typeof(int),
+			>= DateTimeFunctionOperator.TotalDays and
+			<= DateTimeFunctionOperator.TotalMilliseconds => typeof(double),
+			>= DateTimeFunctionOperator.Greater and
+			<= DateTimeFunctionOperator.NotEquals => typeof(FormattableBoolean),
 
 			_ => throw GetInvalidOperatorException()
 		};

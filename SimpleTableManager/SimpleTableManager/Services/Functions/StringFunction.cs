@@ -14,12 +14,18 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 		{
 			StringFunctionOperator.Const => UnwrappedUnnamedArguments,
 			StringFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
-			StringFunctionOperator.Join => Join().Wrap(),
-			StringFunctionOperator.Len => string.Concat(UnwrappedUnnamedArguments).Length.Wrap<IConvertible>(),
 			StringFunctionOperator.Split => Split(),
 			StringFunctionOperator.Trim => Trim(),
+			StringFunctionOperator.Join => Join().Wrap(),
+			StringFunctionOperator.Len => string.Concat(UnwrappedUnnamedArguments).Length.Wrap<IConvertible>(),
 			StringFunctionOperator.Blow => UnwrappedUnnamedArguments.SelectMany(p => p.ToArray()).Cast<IConvertible>(),
 			StringFunctionOperator.Like => Like().Wrap<object>(),
+			StringFunctionOperator.Greater => Greater().Wrap(),
+			StringFunctionOperator.Less => Less().Wrap(),
+			StringFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
+			StringFunctionOperator.LessOrEquals => LessOrEquals().Wrap(),
+			StringFunctionOperator.Equals => Equals().Wrap(),
+			StringFunctionOperator.NotEquals => NotEquals().Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};
@@ -57,9 +63,10 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 	{
 		return Operator switch
 		{
-			StringFunctionOperator.Len => typeof(int),
+			StringFunctionOperator.Len => typeof(long),
 			StringFunctionOperator.Blow => typeof(char),
-			StringFunctionOperator.Like => typeof(FormattableBoolean),
+			>= StringFunctionOperator.Like and
+			<= StringFunctionOperator.NotEquals => typeof(FormattableBoolean),
 
 			_ => typeof(string)
 		};

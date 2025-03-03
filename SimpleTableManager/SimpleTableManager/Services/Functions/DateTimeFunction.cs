@@ -14,7 +14,6 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime, object>
 			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<object>(),
 			DateTimeFunctionOperator.Offset => Offset().Cast<object>(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
-			DateTimeFunctionOperator.TotalDays => throw GetInvalidOperatorException(),
 
 			_ => base.ExecuteCore()
 		};

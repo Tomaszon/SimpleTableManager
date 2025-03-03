@@ -4,16 +4,16 @@ namespace SimpleTableManager.Tests.FunctionTests;
 public class StringFunctionTests : TestBase
 {
 	[TestCase(StringFunctionOperator.Split, typeof(string), new[] { "al|ma" }, new[] { "al", "ma" })]
-	[TestCase(StringFunctionOperator.Len, typeof(int), new[] { "alma" }, 4)]
+	[TestCase(StringFunctionOperator.Len, typeof(long), new[] { "alma" }, 4)]
 	[TestCase(StringFunctionOperator.Join, typeof(string), new[] { "alma", "körte" }, new[] { "alma|körte" })]
 	[TestCase(StringFunctionOperator.Blow, typeof(char), new[] { "string" }, new object[] { 's', 't', 'r', 'i', 'n', 'g' })]
 	[TestCase(StringFunctionOperator.Trim, typeof(string), new[] { "a ", " b" }, new[] { "a", "b" })]
 	public void StringTest(StringFunctionOperator operation, Type outType, string[] values, params object[] results)
 	{
 		var na = new IFunctionArgument[]
-			{
-				new ConstFunctionArgument<string>(ArgumentName.Separator, "|"),
-			};
+		{
+			new ConstFunctionArgument<string>(ArgumentName.Separator, "|"),
+		};
 
 		var fn = CreateFunction(operation, na, values);
 
@@ -26,9 +26,9 @@ public class StringFunctionTests : TestBase
 	public void StringTest2(StringFunctionOperator operation, Type outType, string[] values, bool result)
 	{
 		var na = new IFunctionArgument[]
-			{
-				new ConstFunctionArgument<string>(ArgumentName.Pattern, "a{4}")
-			};
+		{
+			new ConstFunctionArgument<string>(ArgumentName.Pattern, "a{4}")
+		};
 
 		var fn = CreateFunction(operation, na, values);
 
