@@ -42,7 +42,7 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, Formattable
 		{
 			try
 			{
-				_ = a.Resolve().GetEnumerator().MoveNext();
+				_ = a.Resolve(false).GetEnumerator().MoveNext();
 
 				return false;
 
@@ -60,7 +60,7 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, Formattable
 		{
 			try
 			{
-				_ = a.Resolve().GetEnumerator().MoveNext();
+				_ = a.Resolve(false).GetEnumerator().MoveNext();
 
 				return true;
 			}

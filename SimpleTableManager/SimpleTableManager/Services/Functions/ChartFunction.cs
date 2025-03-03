@@ -8,8 +8,10 @@ public class ChartFunction<TDataX, TDataY> : FunctionBase<ChartFunctionOperator,
 {
 	public override IEnumerable<IChart> ExecuteCore()
 	{
-		var xs = UnnamedArguments.Where(a => a.GroupingId is char x && x == 'X').SelectMany(a => a.Resolve().Cast<TDataX>());
-		var ys = UnnamedArguments.Where(a => a.GroupingId is char y && y == 'Y').SelectMany(a => a.Resolve().Cast<TDataY>());
+		var ignoreNullReference = GetNamedArgument<bool>(ArgumentName.IgnoreNullReference);
+
+		var xs = UnnamedArguments.Where(a => a.GroupingId is char x && x == 'X').SelectMany(a => a.Resolve(ignoreNullReference).Cast<TDataX>());
+		var ys = UnnamedArguments.Where(a => a.GroupingId is char y && y == 'Y').SelectMany(a => a.Resolve(ignoreNullReference).Cast<TDataY>());
 
 		return Operator switch
 		{

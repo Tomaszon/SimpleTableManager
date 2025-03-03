@@ -9,6 +9,6 @@ namespace SimpleTableManager.Models
 
 		public object? GroupingId { get; set; }
 
-		IEnumerable<object> Resolve();
+		IEnumerable<object> Resolve(bool ignoreNullReference);
 	}
 }

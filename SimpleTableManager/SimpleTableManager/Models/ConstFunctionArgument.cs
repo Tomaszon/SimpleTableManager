@@ -31,7 +31,7 @@ public class ConstFunctionArgument<T>(T? value, object? groupingId = null) :
 		NamedValue = namedValue;
 	}
 
-	public IEnumerable<object> Resolve()
+	public IEnumerable<object> Resolve(bool ignoreNullReference)
 	{
 		return (NamedValue ?? Value).Wrap()!;
 	}

@@ -5,10 +5,11 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<string>(ArgumentName.Format, "")]
 [NamedArgument<int>(ArgumentName.First, int.MaxValue)]
 [NamedArgument<int>(ArgumentName.Last, int.MaxValue)]
+[NamedArgument<bool>(ArgumentName.IgnoreNullReference, false)]
 public abstract class FunctionBase<TOperator, TIn, TOut> :
 	IFunction
 	where TOperator : struct, Enum
-	where TIn :  IParsable<TIn>, IConvertible, IComparable
+	where TIn : IParsable<TIn>, IConvertible, IComparable
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 
@@ -36,18 +37,17 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		Arguments.Where(a => a is ReferenceFunctionArgument && a.IsNamed)
 			.ToDictionary(k => (ArgumentName)k.Name!, v => (ReferenceFunctionArgument)v);
 
-	protected IEnumerable<TIn> UnwrapUnnamedArgumentsAs(Func<object, TIn>? transformation = null)
+	protected IEnumerable<TIn> UnwrappedUnnamedArguments
 	{
-		transformation ??= a => (TIn)a;
+		get
+		{
+			var first = GetNamedArgument<int>(ArgumentName.First);
+			var last = GetNamedArgument<int>(ArgumentName.Last);
+			var ignoreNullReference = GetNamedArgument<bool>(ArgumentName.IgnoreNullReference);
 
-		var first = GetNamedArgument<int>(ArgumentName.First);
-		var last = GetNamedArgument<int>(ArgumentName.Last);
-
-		return UnnamedArguments.TakeAround(first, last).SelectMany(a => a.Resolve()).Select(transformation);
+			return UnnamedArguments.TakeAround(first, last).SelectMany(a => a.Resolve(ignoreNullReference)).Select(a => ((IConvertible)a).ToType<TIn>());
+		}
 	}
-
-	protected IEnumerable<TIn> UnwrappedUnnamedArguments =>
-		UnwrapUnnamedArgumentsAs(a => ((IConvertible)a).ToType<TIn>());
 
 	public TOperator Operator { get; set; }
 
@@ -180,7 +180,7 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 	{
 		if (NamedArguments.TryGetValue(key, out var argument))
 		{
-			var results = argument.Resolve() ?? throw new NullReferenceException();
+			var results = argument.Resolve(false) ?? throw new NullReferenceException();
 
 			var result = results.Single();
 

@@ -21,9 +21,19 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 
 	public object? GroupingId { get; set; } = groupingId;
 
-	public IEnumerable<object> Resolve()
+	public IEnumerable<object> Resolve(bool ignoreNullReference)
 	{
-		return GetReferencedCells().SelectMany(c => c.ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException());
+		return GetReferencedCells().SelectMany(c =>
+		{
+			try
+			{
+				return c.ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException();
+			}
+			catch (NullReferenceException) when (ignoreNullReference)
+			{
+				return [];
+			}
+		});
 	}
 
 	public bool TryGetReferencedCells([NotNullWhen(true)] out List<Cell>? referencedCells)
@@ -55,7 +65,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 	{
 		try
 		{
-			result = Resolve().ToList();
+			result = [.. Resolve(true)];
 
 			error = null;
 

@@ -15,5 +15,6 @@ public enum ArgumentName
 	First,
 	Last,
 	Offset,
-	Reference
+	Reference,
+	IgnoreNullReference
 }
