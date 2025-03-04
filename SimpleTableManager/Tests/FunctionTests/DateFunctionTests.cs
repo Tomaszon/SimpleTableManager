@@ -66,4 +66,17 @@ public class DateFunctionTests : TestBase
 
 		CheckResults(fn.Execute(), results);
 	}
+
+	[TestCase(DateTimeFunctionOperator.Greater, new[] { "1993.12.19", "1993.12.18" }, true)]
+	[TestCase(DateTimeFunctionOperator.GreaterOrEquals, new[] { "1993.12.18", "1993.12.18" }, true)]
+	[TestCase(DateTimeFunctionOperator.Less, new[] { "1993.12.17", "1993.12.18" }, true)]
+	[TestCase(DateTimeFunctionOperator.LessOrEquals, new[] { "1993.12.18", "1993.12.18" }, true)]
+	[TestCase(DateTimeFunctionOperator.Equals, new[] { "1993.12.18", "1993.12.18" }, true)]
+	[TestCase(DateTimeFunctionOperator.NotEquals, new[] { "1993.12.19", "1993.12.18" }, true)]
+	public void DateOnlyTest7(DateTimeFunctionOperator operation, string[] values, bool result)
+	{
+		var fn = CreateFunction(operation, values.Select(s => ConvertibleDateOnly.Parse(s, null)));
+
+		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
+	}
 }

@@ -97,7 +97,12 @@ public class ConvertibleTimeSpan(int days = 0, int hours = 0, int minutes = 0, i
 
 	public int CompareTo(object? obj)
 	{
-		throw new NotImplementedException();
+		if (obj is ConvertibleTimeSpan cts && cts is not null)
+		{
+			return _value.CompareTo(cts._value);
+		}
+
+		return _value.CompareTo(obj);
 	}
 
 	[ExcludeFromCodeCoverage]

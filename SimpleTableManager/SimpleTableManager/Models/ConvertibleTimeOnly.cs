@@ -73,7 +73,12 @@ public class ConvertibleTimeOnly(int hour = 0, int minute = 0, int second = 0, i
 
 	public int CompareTo(object? obj)
 	{
-		throw new NotImplementedException();
+		if (obj is ConvertibleTimeOnly cto && cto is not null)
+		{
+			return _value.CompareTo(cto._value);
+		}
+
+		return _value.CompareTo(obj);
 	}
 
 	[ExcludeFromCodeCoverage]

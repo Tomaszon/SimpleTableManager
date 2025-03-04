@@ -92,7 +92,12 @@ public class FormattableBoolean(bool value) :
 
 	public int CompareTo(object? obj)
 	{
-		throw new NotImplementedException();
+		if (obj is FormattableBoolean fb && fb is not null)
+		{
+			return _value.CompareTo(fb._value);
+		}
+
+		return _value.CompareTo(obj);
 	}
 
 	[ExcludeFromCodeCoverage]

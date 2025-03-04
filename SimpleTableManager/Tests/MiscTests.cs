@@ -245,4 +245,15 @@ public class MiscTests : TestBase
 
 		CheckResults([colors1.ToString(), colors1.ToString()], [colors2.ToString(), $"F:{colors1.Foreground}, B:{colors1.Background}"]);
 	}
+
+	[Test]
+	public void CompareToTest()
+	{
+		var timeSpanResult = ConvertibleTimeSpan.Parse("1.02:03:05", null).CompareTo(null);
+		var timeResult = ConvertibleTimeOnly.Parse("02:03:05", null).CompareTo(null);
+		var dateResult = ConvertibleDateOnly.Parse("1993.12.19", null).CompareTo(null);
+		var boolResult = FormattableBoolean.Parse("true", null).CompareTo(null);
+
+		CheckResults([timeResult, timeSpanResult, dateResult, boolResult], [1, 1, 1, 1]);
+	}
 }

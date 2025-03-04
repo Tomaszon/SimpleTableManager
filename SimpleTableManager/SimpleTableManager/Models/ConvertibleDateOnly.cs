@@ -74,7 +74,12 @@ public class ConvertibleDateOnly(int year = 1, int month = 1, int day = 1) :
 
 	public int CompareTo(object? obj)
 	{
-		throw new NotImplementedException();
+		if (obj is ConvertibleDateOnly cdo && cdo is not null)
+		{
+			return _value.CompareTo(cdo._value);
+		}
+
+		return _value.CompareTo(obj);
 	}
 
 	[ExcludeFromCodeCoverage]

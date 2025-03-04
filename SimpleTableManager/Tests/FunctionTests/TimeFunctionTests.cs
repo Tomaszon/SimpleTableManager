@@ -68,4 +68,17 @@ public class TimeFunctionTests : TestBase
 
 		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeOnly.Parse(s, null)));
 	}
+
+	[TestCase(DateTimeFunctionOperator.Greater, new[] { "02:03:05", "02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.GreaterOrEquals, new[] { "02:03:04", "02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.Less, new[] { "02:03:03", "02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.LessOrEquals, new[] { "02:03:04", "02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.Equals, new[] { "02:03:04", "02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.NotEquals, new[] { "02:03:05", "02:03:04" }, true)]
+	public void TimeOnlyTest7(DateTimeFunctionOperator operation, string[] values, bool result)
+	{
+		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+
+		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
+	}
 }

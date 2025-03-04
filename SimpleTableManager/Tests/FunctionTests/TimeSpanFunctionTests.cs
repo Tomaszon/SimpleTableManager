@@ -41,4 +41,17 @@ public class TimeSpanFunctionTests : TestBase
 
 		CheckResult(fn.GetOutType(), result);
 	}
+
+	[TestCase(DateTimeFunctionOperator.Greater, new[] { "1.02:03:05", "1.02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.GreaterOrEquals, new[] { "1.02:03:04", "1.02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.Less, new[] { "1.02:03:03", "1.02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.LessOrEquals, new[] { "1.02:03:04", "1.02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.Equals, new[] { "1.02:03:04", "1.02:03:04" }, true)]
+	[TestCase(DateTimeFunctionOperator.NotEquals, new[] { "1.02:03:05", "1.02:03:04" }, true)]
+	public void TimeSpanTest4(DateTimeFunctionOperator operation, string[] values, bool result)
+	{
+		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+
+		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
+	}
 }
