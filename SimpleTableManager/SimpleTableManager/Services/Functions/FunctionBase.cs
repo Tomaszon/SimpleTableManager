@@ -210,7 +210,7 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		var groupedArgs = args.Select(FormatArgGroup);
 
 		var constNamedArgs = NamedConstArguments
-			.Select(p => $"{p.Key}:{p.Value.NamedValue}");
+			.Select(p => $"{p.Key}:{p.Value.Value}");
 
 		var refNamedArgs = NamedReferenceArguments
 			.Select(p => $"{p.Key}:{p.Value.Reference.ToShortString()}");

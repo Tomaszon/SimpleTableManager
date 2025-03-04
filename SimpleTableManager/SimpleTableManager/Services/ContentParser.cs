@@ -22,7 +22,13 @@ public static class ContentParser
 		{
 			return referenceFunctionArgument;
 		}
-		else if (dataType == typeof(IFunctionArgument) && valueType is not null)
+
+		if (NamedConstFunctionArgument.TryParse(value, null, out var namedConstFunctionArgument))
+		{
+			return namedConstFunctionArgument;
+		}
+
+		if (dataType == typeof(IFunctionArgument) && valueType is not null)
 		{
 			var genType = typeof(ConstFunctionArgument<>).MakeGenericType(valueType);
 

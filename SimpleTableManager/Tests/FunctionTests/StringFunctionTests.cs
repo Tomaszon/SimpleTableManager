@@ -10,9 +10,9 @@ public class StringFunctionTests : TestBase
 	[TestCase(StringFunctionOperator.Trim, typeof(string), new[] { "a ", " b" }, new[] { "a", "b" })]
 	public void StringTest(StringFunctionOperator operation, Type outType, string[] values, params object[] results)
 	{
-		var na = new IFunctionArgument[]
+		var na = new NamedConstFunctionArgument[]
 		{
-			new ConstFunctionArgument<string>(ArgumentName.Separator, "|"),
+			new(ArgumentName.Separator, "|"),
 		};
 
 		var fn = CreateFunction(operation, na, values);
@@ -25,9 +25,9 @@ public class StringFunctionTests : TestBase
 	[TestCase(StringFunctionOperator.Like, typeof(FormattableBoolean), new[] { "cc", "bbbb" }, false)]
 	public void StringTest2(StringFunctionOperator operation, Type outType, string[] values, bool result)
 	{
-		var na = new IFunctionArgument[]
+		var na = new NamedConstFunctionArgument[]
 		{
-			new ConstFunctionArgument<string>(ArgumentName.Pattern, "a{4}")
+			new(ArgumentName.Pattern, "a{4}")
 		};
 
 		var fn = CreateFunction(operation, na, values);

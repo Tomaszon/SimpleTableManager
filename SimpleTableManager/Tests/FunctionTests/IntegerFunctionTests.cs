@@ -22,7 +22,7 @@ public class IntegerFunctionTests : TestBase
 	[TestCase(NumericFunctionOperator.Mul, new long[] { 4, 2, 3 }, 24)]
 	public void IntegerTest1(NumericFunctionOperator operation, long[] values, params long[] results)
 	{
-		var fn = CreateFunction(operation, [new ConstFunctionArgument<int>(ArgumentName.Power, 2)], values);
+		var fn = CreateFunction(operation, [new NamedConstFunctionArgument(ArgumentName.Power, 2)], values);
 
 		CheckResults(fn.Execute(), results);
 	}
@@ -64,7 +64,7 @@ public class IntegerFunctionTests : TestBase
 	[TestCase(NumericFunctionOperator.NotEquals, new long[] { 2, 4 }, true)]
 	public void IntegerTest3(NumericFunctionOperator operation, long[] values, bool result)
 	{
-		var na = new ConstFunctionArgument<int>[]
+		var na = new NamedConstFunctionArgument[]
 		{
 			new(ArgumentName.Reference, 3)
 		};

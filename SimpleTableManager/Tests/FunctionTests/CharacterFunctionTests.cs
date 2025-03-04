@@ -8,10 +8,10 @@ public class CharacterFunctionTests : TestBase
 	[TestCase(CharacterFunctionOperator.Repeat, new[] { 'a' }, "aaa")]
 	public void CharTest(CharacterFunctionOperator operation, char[] values, params string[] results)
 	{
-		var na = new IFunctionArgument[]
+		var na = new NamedConstFunctionArgument[]
 		{
-			new ConstFunctionArgument<char>(ArgumentName.Separator, ","),
-			new ConstFunctionArgument<char>(ArgumentName.Count, 3)
+			new(ArgumentName.Separator, ","),
+			new(ArgumentName.Count, 3)
 		};
 
 		var fn = CreateFunction(operation, na, values);

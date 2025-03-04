@@ -12,7 +12,7 @@ public class TestBase
 		  args.Select(e => new ConstFunctionArgument<T>(e)));
 	}
 
-	protected static IFunction CreateFunction<T>(Enum functionOperator, IEnumerable<IFunctionArgument> namedArguments, params IEnumerable<T> args)
+	protected static IFunction CreateFunction<T>(Enum functionOperator, IEnumerable<NamedConstFunctionArgument> namedArguments, params IEnumerable<T> args)
 		where T : IParsable<T>, IConvertible, IComparable
 	{
 		return FunctionCollection.GetFunction<T>(functionOperator,

@@ -24,7 +24,7 @@ public class TimeFunctionTests : TestBase
 	[TestCase(10, 0, 0, "HH", "10")]
 	public void TimeOnlyTest3(int h, int m, int s, string format, string expectedResult)
 	{
-		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new ConstFunctionArgument<ConvertibleTimeOnly>(ArgumentName.Format, format)], new ConvertibleTimeOnly(h, m, s));
+		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new NamedConstFunctionArgument(ArgumentName.Format, format)], new ConvertibleTimeOnly(h, m, s));
 
 		var formattedResult = fn.ExecuteAndFormat();
 
@@ -64,7 +64,7 @@ public class TimeFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Offset, new[] { "01:02:03.001", "01:02:03.1", "01:02:03", "01:02" }, "02:04:06.001", "02:04:06.1", "02:04:06", "02:04:03")]
 	public void TimeOnlyTest6(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, [new ConstFunctionArgument<string>(ArgumentName.Offset, "01:02:03")], values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
+		var fn = CreateFunction(operation, [new NamedConstFunctionArgument(ArgumentName.Offset, "01:02:03")], values.Select(s => ConvertibleTimeOnly.Parse(s, null)));
 
 		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeOnly.Parse(s, null)));
 	}

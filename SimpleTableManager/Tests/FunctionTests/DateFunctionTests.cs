@@ -24,7 +24,7 @@ public class DateFunctionTests : TestBase
 	[TestCase(1993, 12, 19, "yyyy-MM-dd", "1993-12-19")]
 	public void DateOnlyTest3(int y, int m, int d, string format, string expectedResult)
 	{
-		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new ConstFunctionArgument<ConvertibleDateOnly>(ArgumentName.Format, format)], new ConvertibleDateOnly(y, m, d));
+		var fn = CreateFunction(DateTimeFunctionOperator.Const, [new NamedConstFunctionArgument(ArgumentName.Format, format)], new ConvertibleDateOnly(y, m, d));
 
 		var formattedResult = fn.ExecuteAndFormat();
 
@@ -44,7 +44,7 @@ public class DateFunctionTests : TestBase
 	[Test]
 	public void DateOnlyTest5()
 	{
-		var fn = CreateFunction(DateTimeFunctionOperator.Offset, [new ConstFunctionArgument<ConvertibleDateOnly>(ArgumentName.Offset, "3")], new ConvertibleDateOnly(1993, 12, 19));
+		var fn = CreateFunction(DateTimeFunctionOperator.Offset, [new NamedConstFunctionArgument(ArgumentName.Offset, "3")], new ConvertibleDateOnly(1993, 12, 19));
 
 		CheckResults(fn.Execute(), [new ConvertibleDateOnly(1993, 12, 22)]);
 	}

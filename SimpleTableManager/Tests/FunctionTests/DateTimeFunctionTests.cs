@@ -34,7 +34,7 @@ public class DateTimeFunctionTests : TestBase
 	[Test]
 	public void DateTimeTest4()
 	{
-		var fn = CreateFunction(DateTimeFunctionOperator.Offset, [new ConstFunctionArgument<DateTime>(ArgumentName.Offset, "3.12:30:15")], new DateTime(1993, 12, 19));
+		var fn = CreateFunction(DateTimeFunctionOperator.Offset, [new NamedConstFunctionArgument(ArgumentName.Offset, "3.12:30:15")], new DateTime(1993, 12, 19));
 
 		CheckResults(fn.Execute(), [new DateTime(1993, 12, 22, 12, 30, 15)]);
 	}
