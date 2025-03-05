@@ -46,4 +46,13 @@ public class FractionFunctionTests : TestBase
 		CheckResults(fn.Execute(), [expected]);
 		CheckResult(fn.GetOutType(), expectedResultType);
 	}
+
+	[TestCase(NumericFunctionOperator.Greater, 4.235, 4, true, typeof(FormattableBoolean))]
+	public void FractionTest6(NumericFunctionOperator functionOperator, double number1, double number2, bool result, Type expectedResultType)
+	{
+		var fn = CreateFunction(functionOperator, [number1, number2]);
+
+		CheckResults(fn.Execute(), [(FormattableBoolean)result]);
+		CheckResult(fn.GetOutType(), expectedResultType);
+	}
 }

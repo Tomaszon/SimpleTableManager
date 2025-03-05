@@ -40,7 +40,6 @@ public interface IFunction
 
 	void ShiftReferenceArgumentPositions(Size size)
 	{
-		UnnamedReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPositions(size));
-		NamedReferenceArguments.ForEach(a => a.Value.Reference.ShiftReferencedPositions(size));
+		ReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPositions(size));
 	}
 }

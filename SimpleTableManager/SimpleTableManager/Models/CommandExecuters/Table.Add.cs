@@ -43,13 +43,13 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddRowFirst(int count = 1)
+	public void AddRowFirst([MinValue(1)] int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddRowAt(0));
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddRowLast(int count = 1)
+	public void AddRowLast([MinValue(1)] int count = 1)
 	{
 		Shared.IndexArray(count).ForEach(i => AddRowAt(Size.Height));
 	}

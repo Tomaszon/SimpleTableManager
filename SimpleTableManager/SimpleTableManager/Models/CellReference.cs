@@ -18,7 +18,11 @@ public class CellReference(Guid referencedTableId, LockablePosition positionFrom
 	public void ShiftReferencedPositions(Size size)
 	{
 		PositionFrom.Shift(size);
-		PositionTo.Shift(size);
+		
+		if (!ReferenceEquals(PositionFrom, PositionTo))
+		{
+			PositionTo.Shift(size);
+		}
 	}
 
 	public override string ToString()

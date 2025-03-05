@@ -27,9 +27,22 @@ public class CellReferenceTests : TestBase
 	[Test]
 	[TestCase(1, 2, 3, 4, 6, 8, 8, 10, 5, 6, false, false)]
 	[TestCase(1, 2, 3, 4, 6, 8, 3, 4, 5, 6, true, true)]
+	[TestCase(1, 2, 1, 2, 2, 3, 2, 3, 1, 1, false, false)]
+
 	public void ShiftReferencedPosition(int x1, int y1, int x2, int y2, int rX1, int rY1, int rX2, int rY2, int shiftX, int shiftY, bool lockX2, bool lockY2)
 	{
 		var reference = new CellReference(Guid.Empty, new(x1, y1, false, false), new(x2, y2, lockX2, lockY2));
+
+		reference.ShiftReferencedPositions(new(shiftX, shiftY));
+
+		CheckResults([reference.PositionFrom.X, reference.PositionFrom.Y, reference.PositionTo.X, reference.PositionTo.Y], [rX1, rY1, rX2, rY2]);
+	}
+
+	[TestCase(1, 2, 2, 3, 2, 3, 1, 1, false, false)]
+
+	public void ShiftReferencedPosition(int x1, int y1, int rX1, int rY1, int rX2, int rY2, int shiftX, int shiftY, bool lockX2, bool lockY2)
+	{
+		var reference = new CellReference(Guid.Empty, new(x1, y1, false, false));
 
 		reference.ShiftReferencedPositions(new(shiftX, shiftY));
 

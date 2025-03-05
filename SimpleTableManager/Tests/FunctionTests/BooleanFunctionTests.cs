@@ -1,3 +1,5 @@
+using SimpleTableManager.Services.Functions;
+
 namespace SimpleTableManager.Tests.FunctionTests;
 
 [ExcludeFromCodeCoverage]
@@ -17,5 +19,15 @@ public class BooleanFunctionTests : TestBase
 		var fn = CreateFunction(operation, values.Select(e => (FormattableBoolean)e));
 
 		CheckResults(fn.Execute(), results.Select(e => (FormattableBoolean)e));
+	}
+
+	[Test]
+	public void BooleanTest2()
+	{
+		var fn = FunctionCollection.GetFunction<FormattableBoolean>(BooleanFunctionOperator.Const, [new ReferenceFunctionArgument(new(Guid.Empty, new(1, 1, false, false)))]);
+
+		fn.ShiftReferenceArgumentPositions(new(1, 2));
+
+		CheckResult(((ReferenceFunctionArgument)fn.Arguments[0]).Reference.ReferencedPositions[0], new Position(2, 3));
 	}
 }

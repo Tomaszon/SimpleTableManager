@@ -241,7 +241,7 @@ public partial class Cell : CommandExecuterBase
 		}
 		else
 		{
-			ContentFunction?.SetError("Circular reference");
+			ContentFunction?.SetError("!CIRCULAR");
 		}
 	}
 

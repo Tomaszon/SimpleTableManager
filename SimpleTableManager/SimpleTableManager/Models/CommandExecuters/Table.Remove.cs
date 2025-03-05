@@ -31,6 +31,15 @@ public partial class Table
 		SelectCells(selectedCells);
 	}
 
+
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
+	public void RemoveRowAfter([MinValue(0)] int after, [MinValue(1)] int count = 1)
+	{
+		ThrowIfNot(after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
+
+		Shared.IndexArray(count).ForEach(i => RemoveRowAt(after + 1));
+	}
+
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void RemoveFirstRow()
 	{
@@ -83,15 +92,23 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void RemoveFirstColumn()
+	public void RemoveColumnAfter([MinValue(0)] int after, [MinValue(1)] int count = 1)
 	{
-		RemoveColumnAt(0);
+		ThrowIfNot(after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
+
+		Shared.IndexArray(count).ForEach(i => RemoveColumnAt(after + 1));
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void RemoveLastColumn()
+	public void RemoveFirstColumn([MinValue(1)] int count = 1)
 	{
-		RemoveColumnAt(Size.Width - 1);
+		Shared.IndexArray(count).ForEach(i => RemoveColumnAt(0));
+	}
+
+	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
+	public void RemoveLastColumn([MinValue(1)] int count = 1)
+	{
+		Shared.IndexArray(count).ForEach(i => RemoveColumnAt(Size.Width - 1));
 	}
 
 	[CommandFunction]

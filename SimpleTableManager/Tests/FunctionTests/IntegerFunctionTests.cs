@@ -73,4 +73,14 @@ public class IntegerFunctionTests : TestBase
 
 		CheckResult(fn.Execute().Single(), (FormattableBoolean)result);
 	}
+
+
+	[TestCase(NumericFunctionOperator.Greater, 5, 4, true, typeof(FormattableBoolean))]
+	public void IntegerTest4(NumericFunctionOperator functionOperator, long number1, long number2, bool result, Type expectedResultType)
+	{
+		var fn = CreateFunction(functionOperator, [number1, number2]);
+
+		CheckResults(fn.Execute(), [(FormattableBoolean)result]);
+		CheckResult(fn.GetOutType(), expectedResultType);
+	}
 }
