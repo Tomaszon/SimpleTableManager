@@ -183,7 +183,9 @@
 			}
 		},
 		"contentFunctionOperator": "setContentFunctionOperator",
-		"contentFunctionArguments": "setContentFunctionArguments/{typeSelector}",
+		"contentFunctionArguments": "setContentFunctionArguments/all",
+		"contentFunctionUnnamedArguments": "setContentFunctionArguments/unnamed",
+		"contentFunctionNamedArguments": "setContentFunctionArguments/named",
 		"verticalAlignment": "setVerticalAlignment",
 		"horizontalAlignment": "setHorizontalAlignment",
 		"padding": "setPadding",

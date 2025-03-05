@@ -53,7 +53,7 @@ public partial class Cell
 
 		SetContent(newFunction);
 	}
-	
+
 	private void SetFunction(Type functionType, Enum functionOperator, IEnumerable<IFunctionArgument> arguments1, IEnumerable<IFunctionArgument>? arguments2 = null)
 	{
 		var arguments = arguments2 is not null ? arguments1.Union(arguments2) : arguments1;
@@ -174,16 +174,25 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	//TODO check what happens in case of IShape
-	public void SetContentFunctionArguments(Type type, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
+	public void SetContentFunctionArguments(ArgumentFilter filter, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, ConvertibleTimeSpan, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
 	{
+		//UNDONE update event subscriptions and cell selections
 		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 
-		//allow positions too
-		var argType = ContentFunction.GetInType();
+		switch (filter)
+		{
+			case ArgumentFilter.All:
+				ContentFunction.Arguments = [.. arguments];
+				break;
+			case ArgumentFilter.Unnamed:
+				ContentFunction.Arguments = [.. ContentFunction.Arguments.Where(a => a.IsNamed).Union(arguments)];
+				break;
+			case ArgumentFilter.Named:
+				ContentFunction.Arguments = [.. ContentFunction.Arguments.Where(a => !a.IsNamed).Union(arguments)];
+				break;
+		}
 
-		ThrowIfNot(type.IsAssignableTo(argType), $"Arguments of type '{argType.GetFriendlyName()}' expected");
-
-		ContentFunction.Arguments = [.. arguments];
+		InvokeStateModifierCommandExecutedEvent(new(this));
 	}
 
 	[CommandFunction]

@@ -24,6 +24,8 @@
 	"rightTriangle": "derékszögű-háromszög",
 	"contentFunctionOperator": "tartalom-függvény-művelet",
 	"contentFunctionArguments": "tartalom-függvény-argumentumok",
+	"contentFunctionUnnamedArguments": "tartalom-függvény-névtelen-argumentumok",
+	"contentFunctionNamedArguments": "tartalom-függvény-megnevezett-argumentumok",
 	"verticalAlignment": "függőleges-igazítás",
 	"horizontalAlignment": "vízszintes-igazítás",
 	"padding": "kitöltés",

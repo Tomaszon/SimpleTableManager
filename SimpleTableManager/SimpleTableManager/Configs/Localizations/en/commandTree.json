@@ -24,6 +24,8 @@
 	"rightTriangle": "right-triangle",
 	"contentFunctionOperator": "content-function-operator",
 	"contentFunctionArguments": "content-function-arguments",
+	"contentFunctionUnnamedArguments": "content-function-unnamed-arguments",
+	"contentFunctionNamedArguments": "content-function-named-arguments",
 	"verticalAlignment": "vertical-alignment",
 	"horizontalAlignment": "horizontal-alignment",
 	"padding": "padding",
