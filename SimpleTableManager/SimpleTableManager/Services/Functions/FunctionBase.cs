@@ -80,31 +80,31 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		}
 		catch (InvalidCastException)
 		{
-			SetError("Invalid cast");
+			SetError("!CAST");
 
 			throw;
 		}
 		catch (NullReferenceException)
 		{
-			SetError("Null reference");
+			SetError("!NULL");
 
 			throw;
 		}
 		catch (InvalidOperationException)
 		{
-			SetError("Invalid position");
+			SetError("!POSITION");
 
 			throw;
 		}
 		catch (ArgumentException)
 		{
-			SetError("Multiple values");
+			SetError("!MULTIPLE");
 
 			throw;
 		}
 		catch (FormatException)
 		{
-			SetError("Argument error");
+			SetError("!ARGUMENT");
 
 			throw;
 		}
@@ -127,7 +127,7 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		}
 		catch (FormatException)
 		{
-			SetError("Format error");
+			SetError("!FORMAT");
 
 			throw;
 		}

@@ -4,6 +4,7 @@ namespace SimpleTableManager.Models.Enumerations;
 public enum ArgumentName
 {
 	Divider,
+	Multiplier,
 	Separator,
 	Decimals,
 	Trim,

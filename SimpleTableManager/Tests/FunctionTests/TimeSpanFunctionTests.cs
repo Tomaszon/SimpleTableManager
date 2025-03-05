@@ -7,11 +7,21 @@ public class TimeSpanFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Sum, new[] { "1.12:50:01", "10:51:02" }, "1.23:41:03")]
 	[TestCase(DateTimeFunctionOperator.Sub, new[] { "1.23:41:03", "10:51:02" }, "1.12:50:01")]
 	[TestCase(DateTimeFunctionOperator.Avg, new[] { "1.01:01:01", "3.03:03:03" }, "2.02:02:02")]
+	[TestCase(DateTimeFunctionOperator.Mul, new[] { "1.01:01:01" }, "2.02:02:02")]
+	[TestCase(DateTimeFunctionOperator.Div, new[] { "2.02:02:02" }, "1.01:01:01")]
 	public void TimeSpanTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
-		var fn = CreateFunction(operation, values.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		var na = new NamedConstFunctionArgument[]
+		{
+			new(ArgumentName.Divider, 2),
+			new(ArgumentName.Multiplier, 2)
+		};
 
-		CheckResults(fn.Execute(), results.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+		var fn = CreateFunction(operation, na, values.Select(s => ConvertibleTimeSpan.Parse(s, null)));
+
+		var result = fn.Execute();
+
+		CheckResults(result, results.Select(s => ConvertibleTimeSpan.Parse(s, null)));
 	}
 
 	[TestCase(DateTimeFunctionOperator.Days, new[] { "1.02:03:04.005" }, 1)]

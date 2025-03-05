@@ -102,6 +102,7 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 		{
 			DateTimeFunctionOperator.Sum or
 			DateTimeFunctionOperator.Sub => typeof(ConvertibleTimeSpan),
+			DateTimeFunctionOperator.Mul => typeof(TIn),
 			>= DateTimeFunctionOperator.Years and
 			<= DateTimeFunctionOperator.Milliseconds => typeof(int),
 			>= DateTimeFunctionOperator.TotalDays and

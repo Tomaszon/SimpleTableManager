@@ -8,6 +8,8 @@ public enum DateTimeFunctionOperator
 	Avg,
 	Sum,
 	Sub,
+	Mul,
+	Div,
 	Now,
 	Years,
 	Months,

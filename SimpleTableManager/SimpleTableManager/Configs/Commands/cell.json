@@ -137,6 +137,8 @@
 				"const": "setTimeSpanContentFunction/const",
 				"sum": "setTimeSpanContentFunction/sum",
 				"sub": "setTimeSpanContentFunction/sub",
+				"mul": "setTimeSpanContentFunction/mul",
+				"div": "setTimeSpanContentFunction/div",
 				"avg": "setTimeSpanContentFunction/avg",
 				"days": "setTimeSpanContentFunction/days",
 				"hours": "setTimeSpanContentFunction/hours",

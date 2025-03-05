@@ -2,6 +2,8 @@ using SimpleTableManager.Models.Enumerations.FunctionOperators;
 
 namespace SimpleTableManager.Services.Functions;
 
+[NamedArgument<double>(ArgumentName.Multiplier, 1)]
+[NamedArgument<double>(ArgumentName.Divider, 1)]
 [FunctionMappingType(typeof(ConvertibleTimeSpan))]
 public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, object>
 {
@@ -12,19 +14,35 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, object
 			DateTimeFunctionOperator.Const => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Sum => Sum().Wrap(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
+			DateTimeFunctionOperator.Mul => Mul(),
+			DateTimeFunctionOperator.Div => Div(),
 
 			_ => base.ExecuteCore()
 		};
 	}
 
-	protected ConvertibleTimeSpan Sum()
+	private ConvertibleTimeSpan Sum()
 	{
 		return UnwrappedUnnamedArguments.Aggregate(TimeSpan.Zero, (a, c) => a + c);
 	}
 
-	protected ConvertibleTimeSpan Sub()
+	private ConvertibleTimeSpan Sub()
 	{
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate((TimeSpan)UnwrappedUnnamedArguments.First(), (a, c) => a - c);
+	}
+
+	private IEnumerable<ConvertibleTimeSpan> Mul()
+	{
+		var multiplier = GetNamedArgument<double>(ArgumentName.Multiplier);
+
+		return UnwrappedUnnamedArguments.Select(a => a.Multiply(multiplier));
+	}
+
+	private IEnumerable<ConvertibleTimeSpan> Div()
+	{
+		var divider = GetNamedArgument<double>(ArgumentName.Divider);
+
+		return UnwrappedUnnamedArguments.Select(a => a.Divide(divider));
 	}
 
 	protected override ConvertibleTimeSpan Avg()
