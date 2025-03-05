@@ -101,6 +101,7 @@
 			},
 			"dateTime": {
 				"const": "setDateTimeContentFunction/const",
+				"avg": "setDateTimeContentFunction/avg",
 				"sum": "setDateTimeContentFunction/sum",
 				"now": "setDateTimeContentFunction/now",
 				"greater": "setDateTimeContentFunction/greater",
@@ -112,6 +113,7 @@
 			},
 			"date": {
 				"const": "setDateContentFunction/const",
+				"avg": "setDateContentFunction/avg",
 				"sum": "setDateContentFunction/sum",
 				"now": "setDateContentFunction/now",
 				"greater": "setDateContentFunction/greater",
@@ -123,6 +125,7 @@
 			},
 			"time": {
 				"const": "setTimeContentFunction/const",
+				"avg": "setTimeContentFunction/avg",
 				"sum": "setTimeContentFunction/sum",
 				"sub": "setTimeContentFunction/sub",
 				"now": "setTimeContentFunction/now",

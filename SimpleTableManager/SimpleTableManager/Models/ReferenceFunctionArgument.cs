@@ -127,7 +127,7 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 		var hl2 = !x2s.Contains(Shared.REF_CHAR);
 		var vl2 = !y2s.Contains(Shared.REF_CHAR);
 
-		return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, vl2, vl2)), name);
+		return new ReferenceFunctionArgument(new(t.Id, new(x1, y1, hl1, vl1), new(x2, y2, hl2, vl2)), name);
 	}
 
 	public override string ToString()

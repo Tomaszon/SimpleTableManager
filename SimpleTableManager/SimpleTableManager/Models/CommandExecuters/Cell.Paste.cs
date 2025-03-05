@@ -33,7 +33,7 @@ public partial class Cell
     [CommandFunction, CommandShortcut("pasteCellFormat")]
     public void PasteFormat()
     {
-        var stored = Table.Document.GlobalStorage.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, int>?>(GlobalStorageKey.CellFormat);
+        var stored = Table.Document.GlobalStorage.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, ConsoleColorSet, char, ValueTuple<int>>?>(GlobalStorageKey.CellFormat);
 
         if (stored is not null)
         {
@@ -42,7 +42,9 @@ public partial class Cell
             ContentAlignment = stored.Value.Item3;
             ContentColor = stored.Value.Item4;
             BorderColor = stored.Value.Item5;
-            LayerIndex = stored.Value.Item6;
+            BackgroundColor = stored.Value.Item6;
+            BackgroundCharacter = stored.Value.Item7;
+            LayerIndex = stored.Value.Rest.Item1;
         }
     }
 }

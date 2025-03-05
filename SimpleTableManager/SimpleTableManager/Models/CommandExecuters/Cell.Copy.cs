@@ -44,6 +44,8 @@ public partial class Cell
 			ContentAlignment,
 			ContentColor,
 			BorderColor,
+			BackgroundColor,
+			BackgroundCharacter,
 			LayerIndex
 		));
 	}
