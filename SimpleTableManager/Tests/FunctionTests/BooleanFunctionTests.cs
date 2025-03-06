@@ -8,6 +8,8 @@ public class BooleanFunctionTests : TestBase
 	[TestCase(BooleanFunctionOperator.And, new[] { true, false }, false)]
 	[TestCase(BooleanFunctionOperator.Or, new[] { false, true }, true)]
 	[TestCase(BooleanFunctionOperator.Not, new[] { false, true }, new[] { true, false })]
+	[TestCase(BooleanFunctionOperator.Min, new[] { false, true }, false)]
+	[TestCase(BooleanFunctionOperator.Max, new[] { false, true }, true)]
 	[TestCase(BooleanFunctionOperator.Greater, new[] { true, false }, true)]
 	[TestCase(BooleanFunctionOperator.GreaterOrEquals, new[] { true, true }, true)]
 	[TestCase(BooleanFunctionOperator.Less, new[] { false, true }, true)]

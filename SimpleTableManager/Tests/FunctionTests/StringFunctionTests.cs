@@ -8,6 +8,8 @@ public class StringFunctionTests : TestBase
 	[TestCase(StringFunctionOperator.Join, typeof(string), new[] { "alma", "körte" }, new[] { "alma|körte" })]
 	[TestCase(StringFunctionOperator.Blow, typeof(char), new[] { "string" }, new object[] { 's', 't', 'r', 'i', 'n', 'g' })]
 	[TestCase(StringFunctionOperator.Trim, typeof(string), new[] { "a ", " b" }, new[] { "a", "b" })]
+	[TestCase(StringFunctionOperator.Min, typeof(string), new[] { "alma", "körte" }, "alma")]
+	[TestCase(StringFunctionOperator.Max, typeof(string), new[] { "alma", "körte" }, "körte")]
 	public void StringTest(StringFunctionOperator operation, Type outType, string[] values, params object[] results)
 	{
 		var na = new NamedConstFunctionArgument[]

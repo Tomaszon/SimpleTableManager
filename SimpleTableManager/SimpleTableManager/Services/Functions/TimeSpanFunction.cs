@@ -5,7 +5,7 @@ namespace SimpleTableManager.Services.Functions;
 [NamedArgument<double>(ArgumentName.Multiplier, 1)]
 [NamedArgument<double>(ArgumentName.Divider, 1)]
 [FunctionMappingType(typeof(ConvertibleTimeSpan))]
-public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, object>
+public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 {
 	public override IEnumerable<object> ExecuteCore()
 	{
@@ -100,14 +100,14 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan, object
 		return UnwrappedUnnamedArguments.Select(a => a.TotalMilliseconds);
 	}
 
-	public override Type GetOutType()
-	{
+    public override Type GetOutType()
+    {
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Avg => typeof(ConvertibleTimeSpan),
+			DateTimeFunctionOperator.Mul or
+			DateTimeFunctionOperator.Div => typeof(ConvertibleTimeSpan),
 
 			_ => base.GetOutType()
 		};
-	}
+    }
 }

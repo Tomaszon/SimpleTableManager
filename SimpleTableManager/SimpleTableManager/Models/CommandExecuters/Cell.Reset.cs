@@ -28,6 +28,8 @@ namespace SimpleTableManager.Models.CommandExecuters
 			ContentAlignment = new(HorizontalAlignment.Center, VerticalAlignment.Center);
 			ContentColor = new(Settings.Current.DefaultContentColor);
 			BorderColor = new(Settings.Current.DefaultBorderColor);
+			BackgroundColor = new(Settings.Current.DefaultBackgroundColor);
+			BackgroundCharacter = Settings.Current.DefaultCellBackgroundCharacter;
 			LayerIndex = 0;
 			ContentStyle = ContentStyle.Normal;
 		}

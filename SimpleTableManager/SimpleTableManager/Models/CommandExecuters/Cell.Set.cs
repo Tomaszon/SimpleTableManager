@@ -154,14 +154,14 @@ public partial class Cell
 		SetFunction<TimeSpanFunction, DateTimeFunctionOperator>(functionOperator, arguments);
 	}
 
-	[CommandFunction(WithSelector = true)]
-	public void SetChartContentFunction(Type dataType, ChartFunctionOperator functionOperator, [ValueTypes<long, char, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<long, char, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
-	{
-		//TODO get second data type
-		var fnType = typeof(ChartFunction<,>).MakeGenericType(dataType, dataType);
+	// [CommandFunction(WithSelector = true)]
+	// public void SetChartContentFunction(Type dataType, ChartFunctionOperator functionOperator, [ValueTypes<long, char, string>, GroupingId('X')] IFunctionArgument[] x, [ValueTypes<long, char, string>, GroupingId('Y')] IFunctionArgument[]? y = null)
+	// {
+	// 	//TODO get second data type
+	// 	var fnType = typeof(ChartFunction<,>).MakeGenericType(dataType, dataType);
 
-		SetFunction(fnType, functionOperator, x, y);
-	}
+	// 	SetFunction(fnType, functionOperator, x, y);
+	// }
 
 	[CommandFunction]
 	public void SetContentFunctionOperator([MinLength(1)] string @operator)

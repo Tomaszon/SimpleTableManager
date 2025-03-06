@@ -7,6 +7,8 @@ public enum CharacterFunctionOperator
 	Concat,
 	Join,
 	Repeat,
+	Min,
+	Max,
 	Greater,
 	Less,
 	GreaterOrEquals,

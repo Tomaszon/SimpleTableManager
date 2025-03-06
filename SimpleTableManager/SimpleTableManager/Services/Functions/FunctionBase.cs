@@ -9,7 +9,7 @@ namespace SimpleTableManager.Services.Functions;
 public abstract class FunctionBase<TOperator, TIn, TOut> :
 	IFunction
 	where TOperator : struct, Enum
-	where TIn : IParsable<TIn>, IConvertible, IComparable
+	where TIn : IParsable<TIn>, IConvertible, IComparable, TOut
 {
 	public List<IFunctionArgument> Arguments { get; set; } = [];
 
@@ -230,6 +230,16 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 			a is ReferenceFunctionArgument ra ?
 				ra.Reference.ToShortString() :
 				((IConstFunctionArgument)a).Value))}";
+	}
+	
+	protected TOut Min()
+	{
+		return UnwrappedUnnamedArguments.Min()!;
+	}
+
+	protected TOut Max()
+	{
+		return UnwrappedUnnamedArguments.Max()!;
 	}
 
 	protected FormattableBoolean Greater()

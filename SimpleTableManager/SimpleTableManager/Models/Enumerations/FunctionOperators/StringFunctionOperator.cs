@@ -11,6 +11,8 @@ public enum StringFunctionOperator
 	Len,
 	Blow,
 	Like,
+	Min,
+	Max,
 	Greater,
 	Less,
 	GreaterOrEquals,

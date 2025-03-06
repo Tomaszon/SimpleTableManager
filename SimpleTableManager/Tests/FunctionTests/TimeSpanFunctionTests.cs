@@ -9,6 +9,8 @@ public class TimeSpanFunctionTests : TestBase
 	[TestCase(DateTimeFunctionOperator.Avg, new[] { "1.01:01:01", "3.03:03:03" }, "2.02:02:02")]
 	[TestCase(DateTimeFunctionOperator.Mul, new[] { "1.01:01:01" }, "2.02:02:02")]
 	[TestCase(DateTimeFunctionOperator.Div, new[] { "2.02:02:02" }, "1.01:01:01")]
+	[TestCase(DateTimeFunctionOperator.Min, new[] { "1.01:01:01", "3.03:03:03" }, "1.01:01:01")]
+	[TestCase(DateTimeFunctionOperator.Max, new[] { "1.01:01:01", "3.03:03:03" }, "3.03:03:03")]
 	public void TimeSpanTest(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var na = new NamedConstFunctionArgument[]

@@ -11,6 +11,8 @@ public enum DateTimeFunctionOperator
 	Mul,
 	Div,
 	Now,
+	Min,
+	Max,
 	Years,
 	Months,
 	Days,

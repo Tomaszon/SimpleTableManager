@@ -28,12 +28,8 @@ public class FractionNumericFunction : NumericFunctionBase<double>
 	{
 		return Operator switch
 		{
-			>= NumericFunctionOperator.Const and
-			<= NumericFunctionOperator.Round => typeof(double),
 			NumericFunctionOperator.Floor or
-			NumericFunctionOperator.Ceiling => typeof(long),			
-			>= NumericFunctionOperator.Mul and
-			<= NumericFunctionOperator.LogN => typeof(double),
+			NumericFunctionOperator.Ceiling => typeof(long),		
 
 			_ => base.GetOutType()
 		};

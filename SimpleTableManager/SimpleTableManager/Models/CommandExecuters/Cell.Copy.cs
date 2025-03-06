@@ -46,7 +46,8 @@ public partial class Cell
 			BorderColor,
 			BackgroundColor,
 			BackgroundCharacter,
-			LayerIndex
+			LayerIndex,
+			ContentStyle
 		));
 	}
 

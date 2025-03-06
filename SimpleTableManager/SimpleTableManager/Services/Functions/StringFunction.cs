@@ -19,7 +19,9 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 			StringFunctionOperator.Join => Join().Wrap(),
 			StringFunctionOperator.Len => string.Concat(UnwrappedUnnamedArguments).Length.Wrap<IConvertible>(),
 			StringFunctionOperator.Blow => UnwrappedUnnamedArguments.SelectMany(p => p.ToArray()).Cast<IConvertible>(),
-			StringFunctionOperator.Like => Like().Wrap<object>(),
+			StringFunctionOperator.Like => Like().Wrap(),
+			StringFunctionOperator.Min => Min().Wrap(),
+			StringFunctionOperator.Max => Max().Wrap(),
 			StringFunctionOperator.Greater => Greater().Wrap(),
 			StringFunctionOperator.Less => Less().Wrap(),
 			StringFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
@@ -65,7 +67,8 @@ public class StringFunction : FunctionBase<StringFunctionOperator, string, objec
 		{
 			StringFunctionOperator.Len => typeof(long),
 			StringFunctionOperator.Blow => typeof(char),
-			>= StringFunctionOperator.Like and
+			StringFunctionOperator.Like or
+			>= StringFunctionOperator.Greater and
 			<= StringFunctionOperator.NotEquals => typeof(FormattableBoolean),
 
 			_ => typeof(string)

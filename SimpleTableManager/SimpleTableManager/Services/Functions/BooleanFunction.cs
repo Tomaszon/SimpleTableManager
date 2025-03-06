@@ -15,6 +15,8 @@ public class BooleanFunction : FunctionBase<BooleanFunctionOperator, Formattable
 			BooleanFunctionOperator.Or => Or().Wrap(),
 			BooleanFunctionOperator.IsNotNull => IsNotNull().Wrap(),
 			BooleanFunctionOperator.IsNull => IsNull().Wrap(),
+			BooleanFunctionOperator.Min => Min().Wrap(),
+			BooleanFunctionOperator.Max => Max().Wrap(),
 			BooleanFunctionOperator.Greater => Greater().Wrap(),
 			BooleanFunctionOperator.Less => Less().Wrap(),
 			BooleanFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),

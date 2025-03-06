@@ -55,4 +55,14 @@ public class FractionFunctionTests : TestBase
 		CheckResults(fn.Execute(), [(FormattableBoolean)result]);
 		CheckResult(fn.GetOutType(), expectedResultType);
 	}
+
+	[TestCase(NumericFunctionOperator.Max, new[] { 4.235, 4 }, 4.235, typeof(double))]
+	[TestCase(NumericFunctionOperator.Min, new[] { 4.235, 4 }, 4, typeof(double))]
+	public void FractionTest6(NumericFunctionOperator functionOperator, double[] numbers, double expected, Type expectedResultType)
+	{
+		var fn = CreateFunction(functionOperator, numbers);
+
+		CheckResults(fn.Execute(), [expected]);
+		CheckResult(fn.GetOutType(), expectedResultType);
+	}
 }

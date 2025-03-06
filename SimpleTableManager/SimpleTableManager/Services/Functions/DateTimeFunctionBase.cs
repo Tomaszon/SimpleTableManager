@@ -2,39 +2,41 @@ using SimpleTableManager.Models.Enumerations.FunctionOperators;
 
 namespace SimpleTableManager.Services.Functions;
 
-public abstract class DateTimeFunctionBase<TIn, TOut> :
-	FunctionBase<DateTimeFunctionOperator, TIn, TOut>
+public abstract class DateTimeFunctionBase<TIn> :
+	FunctionBase<DateTimeFunctionOperator, TIn, object>
 	where TIn : IParsable<TIn>, IConvertible, IComparable
 {
-	public override IEnumerable<TOut> ExecuteCore()
+	public override IEnumerable<object> ExecuteCore()
 	{
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Avg => Avg().Wrap(),
-			DateTimeFunctionOperator.Years => Years().Cast<TOut>(),
-			DateTimeFunctionOperator.Months => Months().Cast<TOut>(),
-			DateTimeFunctionOperator.Days => Days().Cast<TOut>(),
-			DateTimeFunctionOperator.Hours => Hours().Cast<TOut>(),
-			DateTimeFunctionOperator.Minutes => Minutes().Cast<TOut>(),
-			DateTimeFunctionOperator.Seconds => Seconds().Cast<TOut>(),
-			DateTimeFunctionOperator.Milliseconds => Milliseconds().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalDays => TotalDays().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalHours => TotalHours().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalMinutes => TotalMinutes().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalSeconds => TotalSeconds().Cast<TOut>(),
-			DateTimeFunctionOperator.TotalMilliseconds => TotalMilliseconds().Cast<TOut>(),
-			DateTimeFunctionOperator.Greater => Greater().Wrap().Cast<TOut>(),
-			DateTimeFunctionOperator.Less => Less().Wrap().Cast<TOut>(),
-			DateTimeFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap().Cast<TOut>(),
-			DateTimeFunctionOperator.LessOrEquals => LessOrEquals().Wrap().Cast<TOut>(),
-			DateTimeFunctionOperator.Equals => Equals().Wrap().Cast<TOut>(),
-			DateTimeFunctionOperator.NotEquals => NotEquals().Wrap().Cast<TOut>(),
+			DateTimeFunctionOperator.Min => Min().Wrap(),
+			DateTimeFunctionOperator.Max => Max().Wrap(),
+			DateTimeFunctionOperator.Years => Years().Cast<object>(),
+			DateTimeFunctionOperator.Months => Months().Cast<object>(),
+			DateTimeFunctionOperator.Days => Days().Cast<object>(),
+			DateTimeFunctionOperator.Hours => Hours().Cast<object>(),
+			DateTimeFunctionOperator.Minutes => Minutes().Cast<object>(),
+			DateTimeFunctionOperator.Seconds => Seconds().Cast<object>(),
+			DateTimeFunctionOperator.Milliseconds => Milliseconds().Cast<object>(),
+			DateTimeFunctionOperator.TotalDays => TotalDays().Cast<object>(),
+			DateTimeFunctionOperator.TotalHours => TotalHours().Cast<object>(),
+			DateTimeFunctionOperator.TotalMinutes => TotalMinutes().Cast<object>(),
+			DateTimeFunctionOperator.TotalSeconds => TotalSeconds().Cast<object>(),
+			DateTimeFunctionOperator.TotalMilliseconds => TotalMilliseconds().Cast<object>(),
+			DateTimeFunctionOperator.Greater => Greater().Wrap(),
+			DateTimeFunctionOperator.Less => Less().Wrap(),
+			DateTimeFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
+			DateTimeFunctionOperator.LessOrEquals => LessOrEquals().Wrap(),
+			DateTimeFunctionOperator.Equals => Equals().Wrap(),
+			DateTimeFunctionOperator.NotEquals => NotEquals().Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};
 	}
 
-	protected abstract TOut Avg();
+	protected abstract object Avg();
 
 	protected virtual IEnumerable<int> Years()
 	{
@@ -100,9 +102,13 @@ public abstract class DateTimeFunctionBase<TIn, TOut> :
 	{
 		return Operator switch
 		{
+			DateTimeFunctionOperator.Const or
+			DateTimeFunctionOperator.Avg or
+			DateTimeFunctionOperator.Min or
+			DateTimeFunctionOperator.Max or
+			DateTimeFunctionOperator.Now => typeof(TIn),
 			DateTimeFunctionOperator.Sum or
 			DateTimeFunctionOperator.Sub => typeof(ConvertibleTimeSpan),
-			DateTimeFunctionOperator.Mul => typeof(TIn),
 			>= DateTimeFunctionOperator.Years and
 			<= DateTimeFunctionOperator.Milliseconds => typeof(int),
 			>= DateTimeFunctionOperator.TotalDays and

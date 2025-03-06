@@ -9,6 +9,8 @@ public enum BooleanFunctionOperator
 	Or,
 	IsNull,
 	IsNotNull,
+	Min,
+	Max,
 	Greater,
 	Less,
 	GreaterOrEquals,

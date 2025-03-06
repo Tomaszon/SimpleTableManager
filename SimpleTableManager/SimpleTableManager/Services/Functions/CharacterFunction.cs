@@ -15,6 +15,8 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, o
 			CharacterFunctionOperator.Concat => string.Concat(UnwrappedUnnamedArguments).Wrap(),
 			CharacterFunctionOperator.Join => Join().Wrap(),
 			CharacterFunctionOperator.Repeat => Repeat(),
+			CharacterFunctionOperator.Min => Min().Wrap(),
+			CharacterFunctionOperator.Max => Max().Wrap(),
 			CharacterFunctionOperator.Greater => Greater().Wrap(),
 			CharacterFunctionOperator.Less => Less().Wrap(),
 			CharacterFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
@@ -44,7 +46,9 @@ public class CharacterFunction : FunctionBase<CharacterFunctionOperator, char, o
 	{
 		return Operator switch
 		{
-			CharacterFunctionOperator.Const => typeof(char),
+			CharacterFunctionOperator.Const or
+			CharacterFunctionOperator.Min or
+			CharacterFunctionOperator.Max => typeof(char),
 			>= CharacterFunctionOperator.Greater and
 			<= CharacterFunctionOperator.NotEquals => typeof(FormattableBoolean),
 

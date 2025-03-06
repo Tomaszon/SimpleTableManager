@@ -41,14 +41,4 @@ public class IntegerNumericFunction : NumericFunctionBase<long>
 
 		return rem;
 	}
-
-	public override Type GetOutType()
-	{
-		return Operator switch
-		{
-			< NumericFunctionOperator.Greater => typeof(long),
-
-			_ => base.GetOutType()
-		};
-	}
 }

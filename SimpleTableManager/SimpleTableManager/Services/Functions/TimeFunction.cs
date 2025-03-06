@@ -4,7 +4,7 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
 [FunctionMappingType(typeof(ConvertibleTimeOnly))]
-public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, object>
+public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 {
 	public override IEnumerable<object> ExecuteCore()
 	{
@@ -79,17 +79,5 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly, object>
 	protected override IEnumerable<double> TotalMilliseconds()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.ToTimeSpan().TotalMilliseconds);
-	}
-
-	public override Type GetOutType()
-	{
-		return Operator switch
-		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Avg or
-			DateTimeFunctionOperator.Now => typeof(ConvertibleTimeOnly),
-
-			_ => base.GetOutType()
-		};
 	}
 }

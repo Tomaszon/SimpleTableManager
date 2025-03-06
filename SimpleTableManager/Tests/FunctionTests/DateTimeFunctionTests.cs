@@ -5,6 +5,8 @@ public class DateTimeFunctionTests : TestBase
 {
 	[TestCase(DateTimeFunctionOperator.Const, new[] { "0002-02-02 10:30", "0002-02-02 02:20" }, "0002-02-02 10:30", "0002-02-02 02:20")]
 	[TestCase(DateTimeFunctionOperator.Avg, new[] { "0001-01-31 02:02", "0001-02-02 03:03" }, "0001-02-01 02:32:30")]
+	[TestCase(DateTimeFunctionOperator.Min, new[] { "0001-01-31 02:02", "0001-02-02 03:03" }, "0001-01-31 02:02")]
+	[TestCase(DateTimeFunctionOperator.Max, new[] { "0001-01-31 02:02", "0001-02-02 03:03" }, "0001-02-02 03:03")]
 	public void DateTimeTest1(DateTimeFunctionOperator operation, string[] values, params string[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(s => DateTime.Parse(s)));

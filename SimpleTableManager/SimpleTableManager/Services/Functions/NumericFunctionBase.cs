@@ -83,20 +83,11 @@ public abstract class NumericFunctionBase<TIn> :
 		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a -= c);
 	}
 
-	private object Min()
-	{
-		return UnwrappedUnnamedArguments.Any() ? UnwrappedUnnamedArguments.Min() : TIn.MaxValue;
-	}
-
-	private object Max()
-	{
-		return UnwrappedUnnamedArguments.Any() ? UnwrappedUnnamedArguments.Max() : TIn.MinValue;
-	}
-
     public override Type GetOutType()
     {
         return Operator switch
 		{
+			< NumericFunctionOperator.Greater => typeof(TIn),
 			>= NumericFunctionOperator.Greater and
 			<= NumericFunctionOperator.NotEquals => typeof(FormattableBoolean),
 

@@ -5,7 +5,7 @@ namespace SimpleTableManager.Services.Functions;
 
 [NamedArgument<string>(ArgumentName.Offset, "0")]
 [FunctionMappingType(typeof(ConvertibleDateOnly))]
-public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, object>
+public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 {
 	public override IEnumerable<object> ExecuteCore()
 	{
@@ -50,17 +50,5 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly, object>
 	protected override IEnumerable<int> Days()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Day);
-	}
-
-	public override Type GetOutType()
-	{
-		return Operator switch
-		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Avg or
-			DateTimeFunctionOperator.Now => typeof(ConvertibleDateOnly),
-
-			_ => base.GetOutType()
-		};
 	}
 }
