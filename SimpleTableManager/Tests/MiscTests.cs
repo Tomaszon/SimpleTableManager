@@ -256,4 +256,33 @@ public class MiscTests : TestBase
 
 		CheckResults([timeResult, timeSpanResult, dateResult, boolResult], [1, 1, 1, 1]);
 	}
+
+	[TestCase("alma körte szilva", new[] { "alma" }, new[] { "körte" }, new[] { "szilva" })]
+	[TestCase("\\\\alma körte szilva", new[] { "\\alma" }, new[] { "körte" }, new[] { "szilva" })]
+	[TestCase("(alma körte) szilva", new[] { "alma körte" }, new[] { "szilva" })]
+	[TestCase("{alma körte} szilva", new[] { "alma", "körte" }, new[] { "szilva" })]
+	[TestCase("{alma (körte szilva)}", new[] { "alma", "körte szilva" })]
+	[TestCase("{alma \\(körte szilva\\)}", new[] { "alma", "(körte", "szilva)" })]
+	[TestCase("\\{alma \\(körte szilva\\)\\}", new[] { "{alma" }, new[] { "(körte" }, new[] { "szilva)}" })]
+	public void StackMataTests(string input, params string[][] argumentGroups)
+	{
+		var results = StackMata.ProcessArguments(input);
+
+		for (int i = 0; i < results.Count; i++)
+		{
+			CheckResults(results[i], argumentGroups[i]);
+		}
+	}
+
+	[TestCase("(alma körte", "Invalid argument merging syntax")]
+	[TestCase("(alma {körte})", "Invalid argument grouping syntax")]
+	[TestCase("alma)", "Invalid argument merging syntax")]
+	[TestCase("{alma körte", "Invalid argument grouping syntax")]
+	[TestCase("alma körte}", "Invalid argument grouping syntax")]
+	[TestCase("\\alma körte", "Invalid argument escaping syntax")]
+	[TestCase("alma körte\\", "Invalid argument escaping syntax")]
+	public void StackMataTests2(string input, string error)
+	{
+		Assert.Throws<ArgumentException>(() => StackMata.ProcessArguments(input), error);
+	}
 }
