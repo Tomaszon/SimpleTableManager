@@ -2,9 +2,9 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<StartupObject>SimpleTableManager.Program</StartupObject>
-		<LangVersion>13.0</LangVersion>
+		<LangVersion>preview</LangVersion>
 		<nullable>enable</nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Version>
