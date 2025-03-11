@@ -33,6 +33,7 @@ public static class Shared
 		return Enumerable.Min(values);
 	}
 
+	[ExcludeFromCodeCoverage]
 	public static void StepCursor(int x, int y)
 	{
 		Console.SetCursorPosition(Console.CursorLeft + x, Console.CursorTop + y);
