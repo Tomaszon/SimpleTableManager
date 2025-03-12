@@ -11,8 +11,6 @@ public abstract class DateTimeFunctionBase<TIn> :
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Avg => Avg().Wrap(),
-			DateTimeFunctionOperator.Min => Min().Wrap(),
-			DateTimeFunctionOperator.Max => Max().Wrap(),
 			DateTimeFunctionOperator.Years => Years().Cast<object>(),
 			DateTimeFunctionOperator.Months => Months().Cast<object>(),
 			DateTimeFunctionOperator.Days => Days().Cast<object>(),

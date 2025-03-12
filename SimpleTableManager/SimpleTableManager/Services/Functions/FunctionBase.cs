@@ -90,7 +90,7 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 
 			throw;
 		}
-		catch (InvalidOperationException)
+		catch (InvalidPositionException)
 		{
 			SetError("!POSITION");
 
@@ -231,15 +231,15 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 				ra.Reference.ToShortString() :
 				((IConstFunctionArgument)a).Value))}";
 	}
-	
-	protected TOut Min()
+
+	protected TOut Min(TIn @default)
 	{
-		return UnwrappedUnnamedArguments.Min()!;
+		return UnwrappedUnnamedArgumentsIfNone(@default, () => UnwrappedUnnamedArguments.Min()!);
 	}
 
-	protected TOut Max()
+	protected TOut Max(TIn @default)
 	{
-		return UnwrappedUnnamedArguments.Max()!;
+		return UnwrappedUnnamedArgumentsIfNone(@default, () => UnwrappedUnnamedArguments.Max()!);
 	}
 
 	protected FormattableBoolean Greater()
@@ -289,5 +289,10 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 
 			return true;
 		}
+	}
+
+	protected T UnwrappedUnnamedArgumentsIfNone<T>(T @default, Func<T> @else)
+	{
+		return UnwrappedUnnamedArguments.Any() ? @else.Invoke() : @default;
 	}
 }

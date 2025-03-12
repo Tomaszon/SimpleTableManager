@@ -65,55 +65,55 @@ public partial class Cell
 
 	[CommandFunction(WithSelector = true)]
 	[CommandInformation("Sets the content function based on the type of the given arguments")]
-	public void SetContent(Type type, [MinLength(1), ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, ConvertibleTimeSpan, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
+	public void SetContent(Type type, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, ConvertibleTimeSpan, Rectangle, Ellipse, RightTriangle, string>] params IFunctionArgument[] contents)
 	{
 		SetFunction(type, functionOperator: "const", contents);
 	}
 
 	// [CommandFunction(WithSelector = true)]
-	// public void SetRectangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
+	// public void SetRectangleContentFunction(Shape2dOperator functionOperator, [ValueTypes<Rectangle>] params IFunctionArgument[] arguments)
 	// {
 	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
 	// }
 
 	// [CommandFunction(WithSelector = true)]
-	// public void SetEllipseContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
+	// public void SetEllipseContentFunction(Shape2dOperator functionOperator, [ValueTypes<Ellipse>] params IFunctionArgument[] arguments)
 	// {
 	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
 	// }
 
 	// [CommandFunction(WithSelector = true)]
-	// public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [MinLength(1), ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
+	// public void SetRightTriangleContentFunction(Shape2dOperator functionOperator, [ValueTypes<RightTriangle>] params IFunctionArgument[] arguments)
 	// {
 	// 	SetFunction<Shape2dFunction, Shape2dOperator>(functionOperator, arguments);
 	// }
 
 	[CommandFunction(WithSelector = true)]
-	public void SetStringContentFunction(StringFunctionOperator functionOperator, [MinLength(1), ValueTypes<string>] params IFunctionArgument[] arguments)
+	public void SetStringContentFunction(StringFunctionOperator functionOperator, [ValueTypes<string>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<StringFunction, StringFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [MinLength(1), ValueTypes<long>] params IFunctionArgument[] arguments)
+	public void SetIntegerContentFunction(NumericFunctionOperator functionOperator, [ValueTypes<long>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<IntegerNumericFunction, NumericFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, [MinLength(1), ValueTypes<double>] params IFunctionArgument[] arguments)
+	public void SetFractionContentFunction(NumericFunctionOperator functionOperator, [ValueTypes<double>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<FractionNumericFunction, NumericFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [MinLength(1), ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
+	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<BooleanFunction, BooleanFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [MinLength(1), ValueTypes<char>] params IFunctionArgument[] arguments)
+	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [ValueTypes<char>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<CharacterFunction, CharacterFunctionOperator>(functionOperator, arguments);
 	}

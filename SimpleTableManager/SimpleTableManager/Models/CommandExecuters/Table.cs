@@ -53,7 +53,7 @@ public partial class Table : CommandExecuterBase
 	{
 		get
 		{
-			ThrowIf<InvalidOperationException>(y < 0 || y >= Size.Height || x < 0 || x >= Size.Width, "Position is out of table");
+			ThrowIf<InvalidPositionException>(y < 0 || y >= Size.Height || x < 0 || x >= Size.Width, "Position is out of table");
 
 			return Content[y * Size.Width + x];
 		}

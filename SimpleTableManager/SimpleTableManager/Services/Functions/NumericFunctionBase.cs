@@ -19,8 +19,8 @@ public abstract class NumericFunctionBase<TIn> :
 			NumericFunctionOperator.Sum => Sum().Wrap<object>(),
 			NumericFunctionOperator.Sub => Sub().Wrap(),
 			NumericFunctionOperator.Avg => Avg().Wrap(),
-			NumericFunctionOperator.Min => Min().Wrap(),
-			NumericFunctionOperator.Max => Max().Wrap(),
+			NumericFunctionOperator.Min => Min(TIn.MinValue).Wrap(),
+			NumericFunctionOperator.Max => Max(TIn.MaxValue).Wrap(),
 			NumericFunctionOperator.Mul => Multiply().Wrap(),
 			NumericFunctionOperator.Div => Divide().Wrap(),
 			NumericFunctionOperator.Pow => Power(GetNamedArgument<int>(ArgumentName.Power)),
@@ -58,7 +58,7 @@ public abstract class NumericFunctionBase<TIn> :
 			(object)Shared.IndexArray(power).Aggregate(TIn.MultiplicativeIdentity, (a, c) => a *= p));
 	}
 
-	private object Avg()
+	protected object Avg()
 	{
 		return Sum() / UnwrappedUnnamedArguments.Count().ToType<TIn>();
 	}
@@ -70,7 +70,7 @@ public abstract class NumericFunctionBase<TIn> :
 
 	protected object Divide()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a /= c);
+		return UnwrappedUnnamedArguments.Any() ? UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a /= c) : TIn.MultiplicativeIdentity;
 	}
 
 	protected TIn Sum()
@@ -80,12 +80,12 @@ public abstract class NumericFunctionBase<TIn> :
 
 	protected object Sub()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a -= c);
+		return UnwrappedUnnamedArguments.Any() ? UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First(), (a, c) => a -= c) : TIn.AdditiveIdentity;
 	}
 
-    public override Type GetOutType()
-    {
-        return Operator switch
+	public override Type GetOutType()
+	{
+		return Operator switch
 		{
 			< NumericFunctionOperator.Greater => typeof(TIn),
 			>= NumericFunctionOperator.Greater and
@@ -93,5 +93,5 @@ public abstract class NumericFunctionBase<TIn> :
 
 			_ => throw GetInvalidOperatorException()
 		};
-    }
+	}
 }

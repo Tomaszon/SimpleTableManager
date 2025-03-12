@@ -14,6 +14,8 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Offset => Offset(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
+			DateTimeFunctionOperator.Min => Min(TimeOnly.MinValue).Wrap(),
+			DateTimeFunctionOperator.Max => Max(TimeOnly.MaxValue).Wrap(),
 
 			_ => base.ExecuteCore()
 		};
@@ -26,7 +28,7 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 
 	protected ConvertibleTimeSpan Sub()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Aggregate(((TimeOnly)UnwrappedUnnamedArguments.First()).ToTimeSpan(), (a, c) => a -= c.ToTimeSpan());
+		return UnwrappedUnnamedArgumentsIfNone(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate(((TimeOnly)UnwrappedUnnamedArguments.First()).ToTimeSpan(), (a, c) => a -= c.ToTimeSpan()));
 	}
 
 	protected IEnumerable<ConvertibleTimeOnly> Offset()
@@ -36,12 +38,12 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 		return UnwrappedUnnamedArguments.Select(a => a.Add(offset));
 	}
 
-    protected override ConvertibleTimeOnly Avg()
-    {
-        return TimeOnly.FromTimeSpan(UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue.ToTimeSpan(), (a, c) => a += c.ToTimeSpan()).Divide(UnwrappedUnnamedArguments.Count()));
-    }
+	protected override ConvertibleTimeOnly Avg()
+	{
+		return UnwrappedUnnamedArgumentsIfNone(TimeOnly.MinValue, () => TimeOnly.FromTimeSpan(UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue.ToTimeSpan(), (a, c) => a += c.ToTimeSpan()).Divide(UnwrappedUnnamedArguments.Count())));
+	}
 
-    protected override IEnumerable<int> Hours()
+	protected override IEnumerable<int> Hours()
 	{
 		return UnwrappedUnnamedArguments.Select(a => a.Hour);
 	}

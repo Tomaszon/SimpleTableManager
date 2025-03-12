@@ -16,6 +16,8 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 			DateTimeFunctionOperator.Mul => Mul(),
 			DateTimeFunctionOperator.Div => Div(),
+			DateTimeFunctionOperator.Min => Min(TimeSpan.MinValue).Wrap(),
+			DateTimeFunctionOperator.Max => Max(TimeSpan.MaxValue).Wrap(),
 
 			_ => base.ExecuteCore()
 		};
@@ -28,7 +30,7 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 
 	private ConvertibleTimeSpan Sub()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Aggregate((TimeSpan)UnwrappedUnnamedArguments.First(), (a, c) => a - c);
+		return UnwrappedUnnamedArgumentsIfNone(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate((TimeSpan)UnwrappedUnnamedArguments.First(), (a, c) => a - c));
 	}
 
 	private IEnumerable<ConvertibleTimeSpan> Mul()
@@ -47,7 +49,7 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 
 	protected override ConvertibleTimeSpan Avg()
 	{
-		return Sum().Divide(UnwrappedUnnamedArguments.Count());
+		return UnwrappedUnnamedArgumentsIfNone<TimeSpan>(TimeSpan.Zero, () => Sum().Divide(UnwrappedUnnamedArguments.Count()));
 	}
 
 	protected override IEnumerable<int> Days()
@@ -100,8 +102,8 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 		return UnwrappedUnnamedArguments.Select(a => a.TotalMilliseconds);
 	}
 
-    public override Type GetOutType()
-    {
+	public override Type GetOutType()
+	{
 		return Operator switch
 		{
 			DateTimeFunctionOperator.Mul or
@@ -109,5 +111,5 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 
 			_ => base.GetOutType()
 		};
-    }
+	}
 }

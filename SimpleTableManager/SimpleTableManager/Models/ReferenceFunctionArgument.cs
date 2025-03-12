@@ -27,7 +27,9 @@ public class ReferenceFunctionArgument(CellReference reference, ArgumentName? na
 		{
 			try
 			{
-				return c.ContentFunction?.Execute() is var result && result is not null ? result : throw new NullReferenceException();
+				var result = c.ContentFunction?.Execute();
+
+				return result is not null ? result : ignoreNullReference ? [] : throw new NullReferenceException();
 			}
 			catch (NullReferenceException) when (ignoreNullReference)
 			{

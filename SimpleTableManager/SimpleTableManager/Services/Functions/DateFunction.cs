@@ -15,6 +15,8 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Offset => Offset(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
+			DateTimeFunctionOperator.Min => Min(DateOnly.MinValue).Wrap(),
+			DateTimeFunctionOperator.Max => Max(DateOnly.MaxValue).Wrap(),
 
 			_ => base.ExecuteCore()
 		};
@@ -22,7 +24,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 
 	protected ConvertibleTimeSpan Sub()
 	{
-		return UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First().ToTimeSpan(), (a, c) => a.Subtract(c.ToTimeSpan()));
+		return UnwrappedUnnamedArgumentsIfNone(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First().ToTimeSpan(), (a, c) => a.Subtract(c.ToTimeSpan())));
 	}
 
 	protected IEnumerable<ConvertibleDateOnly> Offset()
@@ -34,7 +36,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 
 	protected override ConvertibleDateOnly Avg()
 	{
-		return DateOnly.FromDateTime(new DateTime(UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.ToDateTime(null).Ticks)).Ticks / UnwrappedUnnamedArguments.Count()).Date);
+		return UnwrappedUnnamedArgumentsIfNone(DateOnly.MinValue, () => DateOnly.FromDateTime(new DateTime(UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.ToDateTime(null).Ticks)).Ticks / UnwrappedUnnamedArguments.Count()).Date));
 	}
 
 	protected override IEnumerable<int> Years()
