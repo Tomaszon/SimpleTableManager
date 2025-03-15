@@ -47,7 +47,10 @@ public partial class Document : CommandExecuterBase
 			GlobalStorage.Remove(GlobalStorageKey.CellContent);
 		}
 
-		InvokeStateModifierCommandExecutedEvent(args);
+		if (args.IsPropagable)
+		{
+			InvokeStateModifierCommandExecutedEvent(args);
+		}
 	}
 
 	[OnDeserialized]

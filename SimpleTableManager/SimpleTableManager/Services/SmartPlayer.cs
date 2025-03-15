@@ -5,6 +5,7 @@ namespace SimpleTableManager.Services;
 /// <summary>
 /// Plays sound files
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class SmartPlayer(Note[] notes)
 {
 	private readonly SemaphoreSlim _semaphoreSlim = new(1);

@@ -15,9 +15,9 @@ public static class Extensions
 
 	public static string GetFriendlyName(this Type type)
 	{
-		return Shared.FRIENDLY_TYPE_NAMES.TryGetValue(type, out var value) ?
-			value.ToUpperFirst() :
-			type.Name.ToUpperFirst();
+		var result = Shared.FRIENDLY_TYPE_NAMES.TryGetValue(type, out var value) ? value.ToUpperFirst() : type.Name.ToUpperFirst();
+
+		return result.IndexOf('`') is var index && index != -1 ? result[..index] : result;
 	}
 
 	public static void Replace<T1, T2>(this IDictionary<T1, T2> dictionary, T1 key, T2 value)

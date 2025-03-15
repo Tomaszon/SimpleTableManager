@@ -41,15 +41,15 @@ public partial class Table
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void RemoveFirstRow()
+	public void RemoveFirstRow([MinValue(1)] int count = 1)
 	{
-		RemoveRowAt(0);
+		Shared.IndexArray(count).ForEach(i => RemoveRowAt(0));
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void RemoveLastRow()
+	public void RemoveLastRow([MinValue(1)] int count = 1)
 	{
-		RemoveRowAt(Size.Height - 1);
+		Shared.IndexArray(count).ForEach(i => RemoveRowAt(Size.Height - 1));
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]

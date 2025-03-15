@@ -237,7 +237,10 @@ public partial class Cell : CommandExecuterBase
 
 		if (arg.Root != this)
 		{
-			InvokeStateModifierCommandExecutedEvent(arg);
+			if (arg.IsPropagable)
+			{
+				InvokeStateModifierCommandExecutedEvent(arg);
+			}
 		}
 		else
 		{
