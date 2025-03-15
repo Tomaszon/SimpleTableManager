@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework.Internal;
 
 namespace SimpleTableManager.Tests;
@@ -284,5 +285,33 @@ public class MiscTests : TestBase
 	public void StackMataTests2(string input, string error)
 	{
 		Assert.Throws<ArgumentException>(() => StackMata.ProcessArguments(input), error);
+	}
+
+	[TestCase(typeof(string), true, "1", 1)]
+	[TestCase(typeof(int), false, "1", 1)]
+	public void ParsableStringConverterTests(Type type, bool expectedCanConvert, string value, int expected)
+	{
+		var intConverter = new ParsableStringConverter<int>();
+
+		var canConvert = intConverter.CanConvertFrom(null, type);
+
+		if (canConvert)
+		{
+			var result = intConverter.ConvertFrom(value);
+
+			CheckResult(result!, expected);
+		}
+
+		CheckResult(canConvert, expectedCanConvert);
+	}
+
+	[TestCase(typeof(int), "Int")]
+	[TestCase(typeof(double), "Fraction")]
+	[TestCase(typeof(List<int>), "List(Int)")]
+	[TestCase(typeof(Dictionary<double, string>), "Dictionary(Fraction,String)")]
+	[TestCase(typeof(Dictionary<double, Dictionary<ConvertibleTimeOnly, ConvertibleDateOnly>>), "Dictionary(Fraction,Dictionary(Time,Date))")]
+	public void TypeNameFormatTests(Type type, string expected)
+	{
+		CheckResult(Shared.FormatTypeName(type), expected);
 	}
 }
