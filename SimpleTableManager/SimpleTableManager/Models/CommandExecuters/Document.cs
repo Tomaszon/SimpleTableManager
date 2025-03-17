@@ -66,6 +66,7 @@ public partial class Document : CommandExecuterBase
 		GlobalStorage = new GlobalStorage();
 		Tables.Clear();
 		AddNewTable(size ?? Settings.Current.DefaultTableSize);
+		IsSaved = null;
 	}
 
 	public Table GetActiveTable(out int index)
