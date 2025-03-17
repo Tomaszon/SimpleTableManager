@@ -3,35 +3,19 @@
 public partial class Table
 {
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddRowAt(int index)
+	public void AddRowAt([MinValue(0)] int index, [MinValue(1)] int count = 1)
 	{
-		ThrowIfNot(index >= 0 && index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
+		ThrowIfNot(index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
-		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+		// var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
 
-		DeselectCells(selectedCells);
+		// DeselectCells(selectedCells);
 
-		Sider.Insert(index, new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
+		AddRowAtCore(index, count);
 
-		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
+		ViewOptions.InvokeViewChangedEvent();
 
-		for (int x = 0; x < Size.Width; x++)
-		{
-			AddNewContentCell(index * Size.Width + x);
-		}
-
-		Size.Height++;
-
-		if (ViewOptions.EndPosition.Y == Size.Height - 2)
-		{
-			ViewOptions.IncreaseHeight();
-		}
-		else
-		{
-			ViewOptions.InvokeViewChangedEvent();
-		}
-
-		SelectCells(selectedCells);
+		// SelectCells(selectedCells);
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
@@ -39,51 +23,35 @@ public partial class Table
 	{
 		ThrowIfNot(after <= Size.Height, $"Index is not in the needed range: [0, {Size.Height - 1}]");
 
-		Shared.IndexArray(count).ForEach(i => AddRowAt(after + 1));
+		AddRowAtCore(after + 1, count);
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddRowFirst([MinValue(1)] int count = 1)
 	{
-		Shared.IndexArray(count).ForEach(i => AddRowAt(0));
+		AddRowAtCore(0, count);
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddRowLast([MinValue(1)] int count = 1)
 	{
-		Shared.IndexArray(count).ForEach(i => AddRowAt(Size.Height));
+		AddRowAtCore(Size.Height, count);
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
-	public void AddColumnAt([MinValue(0)] int index)
+	public void AddColumnAt([MinValue(0)] int index, [MinValue(1)] int count = 1)
 	{
 		ThrowIfNot(index <= Size.Width, $"Index is not in the needed range: [0, {Size.Width}]");
 
-		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+		AddColumnAtCore(index, count);
 
-		DeselectCells(selectedCells);
-
-		Header.Insert(index, new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
-
-		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
-
-		for (int y = 0; y < Size.Height; y++)
-		{
-			AddNewContentCell(Size.Width * y + y + index);
-		}
-
-		Size.Width++;
-
-		if (ViewOptions.EndPosition.X == Size.Width - 2)
-		{
-			ViewOptions.IncreaseWidth();
-		}
-		else
-		{
-			ViewOptions.InvokeViewChangedEvent();
-		}
-
-		SelectCells(selectedCells);
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
@@ -91,19 +59,25 @@ public partial class Table
 	{
 		ThrowIfNot(after <= Size.Width, $"Index is not in the needed range: [0, {Size.Width - 1}]");
 
-		Shared.IndexArray(count).ForEach(i => AddColumnAt(after + 1));
+		AddColumnAtCore(after + 1, count);
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddColumnFirst([MinValue(1)] int count = 1)
 	{
-		Shared.IndexArray(count).ForEach(i => AddColumnAt(0));
+		AddColumnAtCore(0, count);
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]
 	public void AddColumnLast([MinValue(1)] int count = 1)
 	{
-		Shared.IndexArray(count).ForEach(i => AddColumnAt(Size.Width));
+		AddColumnAtCore(Size.Width, count);
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction]

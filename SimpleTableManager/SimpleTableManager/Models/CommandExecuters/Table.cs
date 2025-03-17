@@ -119,6 +119,13 @@ public partial class Table : CommandExecuterBase
 		ViewOptions.ViewChanged += OnViewChanged;
 	}
 
+	private void RemoveDeadCellReferences()
+	{
+		Content.Where(c =>
+			c.ReferencedObject is not null &&
+			!Content.Contains((Cell)c.ReferencedObject)).ForEach(c => c.ResetReferenceCell());
+	}
+
 	public List<Cell> ColumnAt(int x)
 	{
 		return this[x, 0, x, Size.Height - 1];
@@ -335,5 +342,118 @@ public partial class Table : CommandExecuterBase
 	private void ShowAllColumnsCore()
 	{
 		Shared.IndexArray(Size.Width).ForEach(ShowColumnAtCore);
+	}
+
+	private void AddColumnAtCore(int index, int count)
+	{
+		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+
+		DeselectCells(selectedCells);
+
+		for (int i = 0; i < count; i++)
+		{
+			Header.Insert(index, new IndexCell(this, IndexCellType.Header, index, Settings.Current.IndexCellLeftArrow, Settings.Current.IndexCellRightArrow));
+
+			for (int y = 0; y < Size.Height; y++)
+			{
+				AddNewContentCell(Size.Width * y + y + index);
+			}
+
+			Size.Width++;
+
+			if (ViewOptions.EndPosition.X == Size.Width - 2)
+			{
+				ViewOptions.EndPosition.X++;
+			}
+		}
+
+		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
+
+		SelectCells(selectedCells);
+	}
+
+	private void AddRowAtCore(int index, int count)
+	{
+		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+
+		DeselectCells(selectedCells);
+
+		for (int i = 0; i < count; i++)
+		{
+			Sider.Insert(index, new IndexCell(this, IndexCellType.Sider, index, Settings.Current.IndexCellUpArrow, Settings.Current.IndexCellDownArrow));
+
+			for (int x = 0; x < Size.Width; x++)
+			{
+				AddNewContentCell(index * Size.Width + x);
+			}
+
+			Size.Height++;
+
+			if (ViewOptions.EndPosition.Y == Size.Height - 2)
+			{
+				ViewOptions.EndPosition.Y++;
+			}
+		}
+
+		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
+
+		SelectCells(selectedCells);
+	}
+
+	private void RemoveColumnAtCore(int index, int count)
+	{
+		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+
+		DeselectCells(selectedCells);
+
+		for (int i = 0; i < count; i++)
+		{
+			Header.RemoveAt(index);
+
+			for (int y = 0; y < Size.Height; y++)
+			{
+				Content.RemoveAt(Size.Width * y - y + index);
+			}
+
+			Size.Width--;
+
+			if (ViewOptions.EndPosition.X == Size.Width)
+			{
+				ViewOptions.EndPosition.X--;
+			}
+		}
+
+		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
+
+		RemoveDeadCellReferences();
+
+		SelectCells(selectedCells);
+	}
+
+	private void RemoveRowAtCore(int index, int count)
+	{
+		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
+
+		DeselectCells(selectedCells);
+
+		for (int i = 0; i < count; i++)
+		{
+			Sider.RemoveAt(index);
+
+			Content.RemoveRange(index * Size.Width, Size.Width);
+
+			Size.Height--;
+
+			if (ViewOptions.EndPosition.Y == Size.Height)
+			{
+				ViewOptions.EndPosition.Y--;
+			}
+		}
+
+		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
+
+		RemoveDeadCellReferences();
+
+		SelectCells(selectedCells);
 	}
 }

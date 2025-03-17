@@ -252,7 +252,7 @@ public partial class Cell : CommandExecuterBase
 	{
 		UpdateReferenceSubscription();
 
-		InvokeStateModifierCommandExecutedEvent(new(this));
+		InvokeStateModifierCommandExecutedEvent(new(this, isPropagable: false));
 	}
 
 	private void UpdateReferenceSubscription()

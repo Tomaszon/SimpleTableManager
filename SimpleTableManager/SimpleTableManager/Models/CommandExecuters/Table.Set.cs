@@ -13,28 +13,28 @@ public partial class Table
 	{
 		ThrowIfNot(size.Width > 0 && size.Height > 0, "Can not decrease table size under 1 column or 1 row!");
 
-		while (Size.Width != size.Width)
+		var widthDifference = size.Width - Size.Width;
+		var heightDifference = size.Height - Size.Height;
+
+		if (widthDifference < 0)
 		{
-			if (Size.Width > size.Width)
-			{
-				RemoveLastColumn();
-			}
-			else
-			{
-				AddColumnLast();
-			}
+			RemoveColumnAtCore(Size.Width + widthDifference, -widthDifference);
 		}
-		while (Size.Height != size.Height)
+		else if (widthDifference > 0)
 		{
-			if (Size.Height > size.Height)
-			{
-				RemoveLastRow();
-			}
-			else
-			{
-				AddRowLast();
-			}
+			AddColumnAtCore(Size.Width, widthDifference);
 		}
+
+		if (heightDifference < 0)
+		{
+			RemoveRowAtCore(Size.Height + heightDifference, -heightDifference);
+		}
+		else if (heightDifference > 0)
+		{
+			AddRowAtCore(Size.Height, heightDifference);
+		}
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
 	[CommandFunction]
