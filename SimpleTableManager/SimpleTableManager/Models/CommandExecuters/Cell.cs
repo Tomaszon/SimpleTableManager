@@ -117,7 +117,7 @@ public partial class Cell : CommandExecuterBase
 
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-		ContentFunction?.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
+		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
 			var table = doc[r.ReferencedTableId];
 
@@ -139,7 +139,7 @@ public partial class Cell : CommandExecuterBase
 
 		var doc = InstanceMap.Instance.GetInstance<Document>()!;
 
-		ContentFunction?.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
+		ContentFunction?.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 		{
 			var table = doc[r.ReferencedTableId];
 
@@ -161,7 +161,7 @@ public partial class Cell : CommandExecuterBase
 
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 			{
 				var table = doc[r.ReferencedTableId];
 
@@ -169,7 +169,7 @@ public partial class Cell : CommandExecuterBase
 				{
 					if (table.TryGetCellAt(p, out var c) && c != cell && c != root)
 					{
-						TertiarySelectionRecursive(c, false, root);
+						TertiarySelectionRecursive(c, true, root);
 					}
 				});
 			});
@@ -191,7 +191,7 @@ public partial class Cell : CommandExecuterBase
 
 		if (cell.ContentFunction is not null)
 		{
-			cell.ContentFunction.UnnamedReferenceArguments.Select(a => a.Reference).ForEach(r =>
+			cell.ContentFunction.ReferenceArguments.Select(a => a.Reference).ForEach(r =>
 			{
 				var table = doc[r.ReferencedTableId];
 
@@ -199,7 +199,7 @@ public partial class Cell : CommandExecuterBase
 				{
 					if (table.TryGetCellAt(p, out var c) && c != cell && c != root)
 					{
-						TertiaryDeselectionRecursive(c, false, root);
+						TertiaryDeselectionRecursive(c, true, root);
 					}
 				});
 			});
