@@ -6,14 +6,14 @@ public class LockablePosition(int x, int y, bool horizontallyLocked = true, bool
 
 	public bool IsVerticallyLocked { get; set; } = verticallyLocked;
 
-	public void Shift(Size size)
+	public void Shift(Size size, bool ignoreLocking = false)
 	{
-		if (!IsHorizontallyLocked)
+		if (!IsHorizontallyLocked || ignoreLocking)
 		{
 			X += size.Width;
 		}
 
-		if (!IsVerticallyLocked)
+		if (!IsVerticallyLocked || ignoreLocking)
 		{
 			Y += size.Height;
 		}

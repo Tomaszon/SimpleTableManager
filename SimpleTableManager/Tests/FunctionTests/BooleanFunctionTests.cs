@@ -36,7 +36,7 @@ public class BooleanFunctionTests : TestBase
 	{
 		var fn = FunctionCollection.GetFunction<FormattableBoolean>(BooleanFunctionOperator.Const, [new ReferenceFunctionArgument(new(Guid.Empty, new(1, 1, false, false)))]);
 
-		fn.ShiftReferenceArgumentPositions(new(1, 2));
+		fn.ShiftReferenceArgumentPositions(Guid.Empty, new(1, 2));
 
 		CheckResult(((ReferenceFunctionArgument)fn.Arguments[0]).Reference.ReferencedPositions[0], new Position(2, 3));
 	}

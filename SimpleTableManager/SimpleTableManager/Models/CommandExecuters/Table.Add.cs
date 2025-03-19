@@ -7,15 +7,9 @@ public partial class Table
 	{
 		ThrowIfNot(index <= Size.Height, $"Index is not in the needed range: [0, {Size.Height}]");
 
-		// var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
-
-		// DeselectCells(selectedCells);
-
 		AddRowAtCore(index, count);
 
 		ViewOptions.InvokeViewChangedEvent();
-
-		// SelectCells(selectedCells);
 	}
 
 	[CommandFunction(ClearsCache = true, Clears = GlobalStorageKey.CellContent)]

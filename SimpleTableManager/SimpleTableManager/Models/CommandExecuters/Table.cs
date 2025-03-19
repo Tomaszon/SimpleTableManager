@@ -369,6 +369,9 @@ public partial class Table : CommandExecuterBase
 
 		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
 
+		Content.ForEach(c =>
+			c.ContentFunction?.ShiftReferenceArgumentPositions(Id, new(count, 0), new(index, 0), true));
+
 		SelectCells(selectedCells);
 	}
 
@@ -396,6 +399,9 @@ public partial class Table : CommandExecuterBase
 		}
 
 		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
+
+		Content.ForEach(c =>
+			c.ContentFunction?.ShiftReferenceArgumentPositions(Id, new(0, count), new(0, index), true));
 
 		SelectCells(selectedCells);
 	}
@@ -425,6 +431,9 @@ public partial class Table : CommandExecuterBase
 
 		Shared.IndexArray(Header.Count).ForEach(i => Header[i].Index = i);
 
+		Content.ForEach(c =>
+			c.ContentFunction?.ShiftReferenceArgumentPositions(Id, new(-count, 0), new(index, 0), true));
+
 		RemoveDeadCellReferences();
 
 		SelectCells(selectedCells);
@@ -451,6 +460,9 @@ public partial class Table : CommandExecuterBase
 		}
 
 		Shared.IndexArray(Sider.Count).ForEach(i => Sider[i].Index = i);
+
+		Content.ForEach(c =>
+			c.ContentFunction?.ShiftReferenceArgumentPositions(Id, new(0, -count), new(0, index), true));
 
 		RemoveDeadCellReferences();
 

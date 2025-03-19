@@ -15,13 +15,19 @@ public class CellReference(Guid referencedTableId, LockablePosition positionFrom
 		this(referencedTableId, position, position)
 	{ }
 
-	public void ShiftReferencedPositions(Size size)
+	public void ShiftReferencedPositions(Size size, Position? referencePosition = null, bool ignoreLocking = false)
 	{
-		PositionFrom.Shift(size);
-		
-		if (!ReferenceEquals(PositionFrom, PositionTo))
+		referencePosition ??= new(0, 0);
+
+		if (PositionFrom.X >= referencePosition.X && PositionFrom.Y >= referencePosition.Y)
 		{
-			PositionTo.Shift(size);
+			PositionFrom.Shift(size, ignoreLocking);
+		}
+
+		if (!ReferenceEquals(PositionFrom, PositionTo) &&
+			PositionTo.X >= referencePosition.X && PositionTo.Y >= referencePosition.Y)
+		{
+			PositionTo.Shift(size, ignoreLocking);
 		}
 	}
 

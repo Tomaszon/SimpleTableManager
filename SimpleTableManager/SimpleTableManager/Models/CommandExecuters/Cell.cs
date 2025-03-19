@@ -222,6 +222,10 @@ public partial class Cell : CommandExecuterBase
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 
 		UpdateReferenceSubscription();
+
+		_cachedFormattedContent = [];
+
+		ContentFunction?.ClearError();
 	}
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs arg)

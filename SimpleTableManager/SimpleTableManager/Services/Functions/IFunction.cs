@@ -38,8 +38,10 @@ public interface IFunction
 
 	Type GetOutType();
 
-	void ShiftReferenceArgumentPositions(Size size)
+	void ShiftReferenceArgumentPositions(Guid tableId, Size size, Position? referencePosition = null, bool ignoreLocking = false)
 	{
-		ReferenceArguments.ForEach(a => a.Reference.ShiftReferencedPositions(size));
+		ReferenceArguments.Where(a =>
+			a.Reference.ReferencedTableId == tableId).ForEach(a =>
+				a.Reference.ShiftReferencedPositions(size, referencePosition, ignoreLocking));
 	}
 }
