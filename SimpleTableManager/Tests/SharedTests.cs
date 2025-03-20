@@ -1,3 +1,5 @@
+using SimpleTableManager.Models.CommandExecuters;
+
 namespace SimpleTableManager.Tests;
 
 [ExcludeFromCodeCoverage]
@@ -47,5 +49,57 @@ public class SharedTests : TestBase
 	public void ConvertBytesToOtherSizesTest(long value, string expected)
 	{
 		CheckResult(Shared.ConvertBytesToOtherSizes(value), expected);
+	}
+
+	[TestCase("C:\\alma.txt", "", "C:\\alma.txt")]
+	[TestCase("alma", "txt", "{0}\\alma.txt")]
+	public void GetWorkFilePathTest(string fileName, string extension, string expected)
+	{
+		expected = expected.Replace("{0}", Settings.Current.DefaultWorkDirectory);
+
+		CheckResult(Shared.GetWorkFilePath(fileName, extension), expected);
+	}
+
+	[TestCase(typeof(Table), new string[] { "deselectAllCells", "selectAllCells", "moveSelectionLeft", "moveSelectionRight", "moveSelectionUp", "moveSelectionDown", "exportTable" }, new string[] { nameof(Table.DeselectAll), nameof(Table.SelectAll), nameof(Table.MoveSelectionLeft), nameof(Table.MoveSelectionRight), nameof(Table.MoveSelectionUp), nameof(Table.MoveSelectionDown), nameof(Table.Export) })]
+	public void GetMethodsTest(Type type, string[] shortcuts, string[] methodNames)
+	{
+		var methods = Shared.GetMethods<CommandShortcutAttribute>(type, k => k.Key.Key);
+
+		CheckResults([.. methods.Keys.Select(e => e.ToLower()).Order()], shortcuts.Select(e => e.ToLower()).Order());
+
+		CheckResults(methods.Values.Select(m => m.Name.ToLower()).Order(), methodNames.Select(e => e.ToLower()).Order());
+	}
+
+	[Test]
+	public void PopulateDocumentTest()
+	{
+		var document = new Document(new(10, 5));
+
+		var (w, h) = document.GetActiveTable().Size;
+		CheckResults([w, h], [10, 5]);
+
+		var state = Shared.SerializeObject(document);
+
+		using var ms = new MemoryStream();
+		using var sw = new StreamWriter(ms);
+		using var sr = new StreamReader(ms);
+
+		sw.Write(state);
+
+		sw.Flush();
+
+		ms.Position = 0;
+
+		Shared.PopulateDocument(sr, document);
+
+		sr.Close();
+		sw.Close();
+		ms.Close();
+
+		document.GetActiveTable().SetSize(new(2, 3));
+
+		(w, h) = document.GetActiveTable().Size;
+
+		CheckResults([w, h], [2, 3]);
 	}
 }
