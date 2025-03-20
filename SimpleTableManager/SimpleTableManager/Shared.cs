@@ -168,4 +168,18 @@ public static class Shared
 	{
 		return string.Join(separator, values.Where(v => v.Any()).Select(p => string.Join(separator, p)));
 	}
+
+	public static string ConvertBytesToOtherSizes(long bytes)
+	{
+		const double bytesInMB = 1_048_576;
+		const double bytesInKB = 1024;
+
+		return (double)bytes switch
+		{
+			> bytesInMB / 2 => $"{double.Round(bytes / bytesInMB, 2)} MB",
+			> bytesInKB / 2 => $"{double.Round(bytes / bytesInKB, 2)} KB",
+
+			_ => $"{bytes} B"
+		};
+	}
 }

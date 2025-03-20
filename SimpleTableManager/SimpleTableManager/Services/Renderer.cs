@@ -184,7 +184,7 @@ public static class Renderer
 		{
 			var title = $"{document.Metadata.Title} by {document.Metadata.Author}{(document.IsSaved is null ? "" : document.IsSaved == true ? Settings.Current.AutoSave ? " - (Autosaved)" : " - (Saved)" : " - (Unsaved)")}";
 			var createTime = document.Metadata.CreateTime is not null ? $"{document.Metadata.CreateTime}" : "Not saved yet";
-			var size = document.Metadata.Size is not null ? $"{document.Metadata.Size} bytes" : "Not saved yet";
+			var size = document.Metadata.Size is not null ? $"{Shared.ConvertBytesToOtherSizes(document.Metadata.Size.Value)}" : "Not saved yet";
 			var path = document.Metadata.Path is not null ? document.Metadata.Path : "Not saved yet";
 
 			var infoTable = new Table(null!, "", 2, 3)

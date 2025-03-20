@@ -38,4 +38,14 @@ public class SharedTests : TestBase
 
 		CheckResult(expected, result);
 	}
+
+	[TestCase(50, "50 B")]
+	[TestCase(500, "500 B")]
+	[TestCase(5_000, "4.88 KB")]
+	[TestCase(50_000, "48.83 KB")]
+	[TestCase(5_000_000, "4.77 MB")]
+	public void ConvertBytesToOtherSizesTest(long value, string expected)
+	{
+		CheckResult(Shared.ConvertBytesToOtherSizes(value), expected);
+	}
 }
