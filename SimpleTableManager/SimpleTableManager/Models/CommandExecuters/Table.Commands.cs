@@ -21,33 +21,41 @@ public partial class Table
 	}
 
 	[CommandFunction]
-	public void HideColumnAt([MinValue(0)] int x)
+	public void HideColumnsAt(params IEnumerable<int> xs)
 	{
-		HiddenColumns.Add(x);
+		ThrowIf(xs.Any(e => e < 0 || e >= Size.Width), $"Index is not in the needed range: [0, {Size.Width}]");
+
+		xs.ForEach(x => HiddenColumns.Add(x));
 
 		HideAndFilterCells();
 	}
 
 	[CommandFunction]
-	public void HideRowAt([MinValue(0)] int y)
+	public void HideRowsAt(params IEnumerable<int> ys)
 	{
-		HiddenRows.Add(y);
+		ThrowIf(ys.Any(e => e < 0 || e >= Size.Height), $"Index is not in the needed range: [0, {Size.Height}]");
+
+		ys.ForEach(y => HiddenRows.Add(y));
 
 		HideAndFilterCells();
 	}
 
 	[CommandFunction]
-	public void ShowColumnAt([MinValue(0)] int x)
+	public void ShowColumnsAt(params IEnumerable<int> xs)
 	{
-		HiddenColumns.Remove(x);
+		ThrowIf(xs.Any(e => e < 0 || e >= Size.Width), $"Index is not in the needed range: [0, {Size.Width}]");
+
+		xs.ForEach(x => HiddenColumns.Remove(x));
 
 		HideAndFilterCells();
 	}
 
 	[CommandFunction]
-	public void ShowRowAt([MinValue(0)] int y)
+	public void ShowRowsAt(params IEnumerable<int> ys)
 	{
-		HiddenRows.Remove(y);
+		ThrowIf(ys.Any(e => e < 0 || e >= Size.Height), $"Index is not in the needed range: [0, {Size.Height}]");
+
+		ys.ForEach(y => HiddenRows.Remove(y));
 
 		HideAndFilterCells();
 	}

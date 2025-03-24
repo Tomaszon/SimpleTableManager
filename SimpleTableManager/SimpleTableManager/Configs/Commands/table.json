@@ -22,7 +22,7 @@
 	"remove": {
 		"row": {
 			"at": "removeRowAt",
-			"after" :"removeRowAfter",
+			"after": "removeRowAfter",
 			"first": "removeFirstRow",
 			"last": "removeLastRow"
 		},
@@ -32,7 +32,7 @@
 		},
 		"column": {
 			"at": "removeColumnAt",
-			"after" :"removeColumnAfter",
+			"after": "removeColumnAfter",
 			"first": "removeFirstColumn",
 			"last": "removeLastColumn"
 		},
@@ -99,27 +99,29 @@
 		"view": "resetViewOptions"
 	},
 	"hide": {
-		"row": {
-			"at": "hideRowAt"
+		"rows": {
+			"at": "hideRowsAt"
 		},
-		"column": {
-			"at": "hideColumnAt"
+		"columns": {
+			"at": "hideColumnsAt"
 		}
 	},
 	"show": {
-		"row": {
-			"at": "showRowAt",
+		"rows": {
+			"at": "showRowsAt",
 			"all": "showAllRows"
 		},
-		"column": {
-			"at": "showColumnAt",
+		"columns": {
+			"at": "showColumnsAt",
 			"all": "showAllColumns"
 		},
 		"cell": {
 			"details": "showCellDetails",
 			"contentFunction": "showCellContentFunction",
-			"all": "showAllCells",
 			"comment": "showCellComments"
+		},
+		"cells": {
+			"all": "showAllCells"
 		},
 		"rowFilters": "showRowFilters",
 		"columnFilters": "showColumnFilters"
