@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework.Internal;
+﻿using NUnit.Framework.Internal;
 
 namespace SimpleTableManager.Tests;
 

@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 [ParseFormat("[size]", "^\\[(?<s>\\d+)\\]$")]
 [method: JsonConstructor]

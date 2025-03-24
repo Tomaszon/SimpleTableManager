@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 [ParseFormat("true|false", "^(?<true>true)|(?<false>false)$")]
 [ParseFormat("yes|no", "^(?<true>yes)|(?<false>no)$")]

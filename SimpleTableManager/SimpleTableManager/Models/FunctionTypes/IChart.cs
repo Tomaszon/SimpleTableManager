@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 public interface IChart :
 	IConvertibleBase,

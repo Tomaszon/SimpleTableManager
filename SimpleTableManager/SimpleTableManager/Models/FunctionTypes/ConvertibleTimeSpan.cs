@@ -1,5 +1,4 @@
-
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 [ParseFormat("d", "^(?<d>\\d+)$")]
 [ParseFormat("d.hh", "^(?<d>\\d+)\\.(?<h>\\d{2})$")]

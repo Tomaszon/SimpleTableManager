@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 public abstract class ConvertibleBase<T> :
 	ParsableBase<T>,

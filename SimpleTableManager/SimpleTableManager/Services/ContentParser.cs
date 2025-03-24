@@ -48,7 +48,8 @@ public static class ContentParser
 
 	public static object? ParseConstStringValue(Type targetType, string value)
 	{
-		var converter = targetType.Namespace == $"{nameof(SimpleTableManager)}.{nameof(Models)}" ?
+		var converter = targetType.Namespace == $"{nameof(SimpleTableManager)}.{nameof(Models)}" ||
+			targetType.Namespace == $"{nameof(SimpleTableManager)}.{nameof(Models)}.{nameof(Models.FunctionTypes)}" ?
 			(TypeConverter)Activator.CreateInstance(typeof(ParsableStringConverter<>).MakeGenericType(targetType))! :
 			TypeDescriptor.GetConverter(targetType);
 

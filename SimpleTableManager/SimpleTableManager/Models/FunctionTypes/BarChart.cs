@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 public class BarChart<TDataX, TDataY>(IEnumerable<TDataX> xs, IEnumerable<TDataY> ys) :
 	ChartBase<TDataX, TDataY>(xs, ys)

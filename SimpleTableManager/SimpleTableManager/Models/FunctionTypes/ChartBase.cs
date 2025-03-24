@@ -1,4 +1,4 @@
-namespace SimpleTableManager.Models;
+namespace SimpleTableManager.Models.FunctionTypes;
 
 public abstract class ChartBase<TDataX, TDataY>(IEnumerable<TDataX> xs, IEnumerable<TDataY> ys) :
 	IChart
