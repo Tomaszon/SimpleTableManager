@@ -137,6 +137,8 @@
 	"isNotNull": "is-not-null",
 	"repeat": "repeat",
 	"now": "now",
+	"yesterday": "yesterday",
+	"tomorrow": "tomorrow",
 	"area": "area",
 	"perimeter": "perimeter",
 	"chart": "chart",

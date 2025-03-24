@@ -10,6 +10,8 @@ public abstract class DateTimeFunctionBase<TIn> :
 	{
 		return Operator switch
 		{
+			DateTimeFunctionOperator.Const or
+			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<object>(),
 			DateTimeFunctionOperator.Avg => Avg().Wrap(),
 			DateTimeFunctionOperator.Years => Years().Cast<object>(),
 			DateTimeFunctionOperator.Months => Months().Cast<object>(),
@@ -104,7 +106,9 @@ public abstract class DateTimeFunctionBase<TIn> :
 			DateTimeFunctionOperator.Avg or
 			DateTimeFunctionOperator.Min or
 			DateTimeFunctionOperator.Max or
-			DateTimeFunctionOperator.Now => typeof(TIn),
+			DateTimeFunctionOperator.Now or
+			DateTimeFunctionOperator.Tomorrow or
+			DateTimeFunctionOperator.Yesterday => typeof(TIn),
 			DateTimeFunctionOperator.Sum or
 			DateTimeFunctionOperator.Sub => typeof(ConvertibleTimeSpan),
 			>= DateTimeFunctionOperator.Years and

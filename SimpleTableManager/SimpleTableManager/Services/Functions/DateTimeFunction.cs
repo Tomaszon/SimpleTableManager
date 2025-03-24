@@ -10,8 +10,8 @@ public class DateTimeFunction : DateTimeFunctionBase<DateTime>
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments.Cast<object>(),
+			DateTimeFunctionOperator.Yesterday or
+			DateTimeFunctionOperator.Tomorrow => UnwrappedUnnamedArguments.Cast<object>(),
 			DateTimeFunctionOperator.Offset => Offset().Cast<object>(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 			DateTimeFunctionOperator.Min => Min(DateTime.MinValue).Wrap(),

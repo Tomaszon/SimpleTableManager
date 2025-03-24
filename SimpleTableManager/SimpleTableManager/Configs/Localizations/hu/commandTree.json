@@ -137,6 +137,8 @@
 	"isNotNull": "nem-üres",
 	"repeat": "ismétlés",
 	"now": "most",
+	"yesterday": "tegnap",
+	"tomorrow": "holnap",
 	"area": "terület",
 	"perimeter": "kerület",
 	"chart": "diagram",

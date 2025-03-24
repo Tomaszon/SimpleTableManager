@@ -10,8 +10,6 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Offset => Offset(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 			DateTimeFunctionOperator.Min => Min(TimeOnly.MinValue).Wrap(),

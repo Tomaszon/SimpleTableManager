@@ -121,9 +121,18 @@ public partial class Cell
 	[CommandFunction(WithSelector = true)]
 	public void SetDateTimeContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<DateTime>] params IFunctionArgument[] arguments)
 	{
-		var args = functionOperator == DateTimeFunctionOperator.Now ?
-			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<DateTime>(DateTime.Now)) :
-			arguments;
+		var arg = functionOperator switch
+		{
+			DateTimeFunctionOperator.Now => new ConstFunctionArgument<DateTime>(DateTime.Now),
+
+			DateTimeFunctionOperator.Yesterday => new ConstFunctionArgument<DateTime>(DateTime.Now.Add(new(-1, 0, 0, 0))),
+
+			DateTimeFunctionOperator.Tomorrow => new ConstFunctionArgument<DateTime>(DateTime.Now.Add(new(1, 0, 0, 0))),
+
+			_ => null
+		};
+
+		var args = arg is not null ? arguments.Where(a => a.IsNamed).Append(arg) : arguments;
 
 		SetFunction<DateTimeFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}
@@ -131,9 +140,18 @@ public partial class Cell
 	[CommandFunction(WithSelector = true)]
 	public void SetDateContentFunction(DateTimeFunctionOperator functionOperator, [ValueTypes<ConvertibleDateOnly>] params IFunctionArgument[] arguments)
 	{
-		var args = functionOperator == DateTimeFunctionOperator.Now ?
-			arguments.Where(a => a.IsNamed).Append(new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now))) :
-			arguments;
+		var arg = functionOperator switch
+		{
+			DateTimeFunctionOperator.Now => new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now)),
+
+			DateTimeFunctionOperator.Yesterday => new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now.Add(new(-1, 0, 0, 0)))),
+
+			DateTimeFunctionOperator.Tomorrow => new ConstFunctionArgument<ConvertibleDateOnly>(DateOnly.FromDateTime(DateTime.Now.Add(new(1, 0, 0, 0)))),
+
+			_ => null
+		};
+
+		var args = arg is not null ? arguments.Where(a => a.IsNamed).Append(arg) : arguments;
 
 		SetFunction<DateFunction, DateTimeFunctionOperator>(functionOperator, args);
 	}

@@ -11,8 +11,8 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 	{
 		return Operator switch
 		{
-			DateTimeFunctionOperator.Const or
-			DateTimeFunctionOperator.Now => UnwrappedUnnamedArguments,
+			DateTimeFunctionOperator.Yesterday or
+			DateTimeFunctionOperator.Tomorrow => UnwrappedUnnamedArguments,
 			DateTimeFunctionOperator.Offset => Offset(),
 			DateTimeFunctionOperator.Sub => Sub().Wrap(),
 			DateTimeFunctionOperator.Min => Min(DateOnly.MinValue).Wrap(),
