@@ -30,9 +30,13 @@ public partial class Table : CommandExecuterBase
 
 	public Cell CornerCell { get; set; } = default!;
 
-	public Dictionary<int, string> RowFilters = [];
+	public HashSet<int> HiddenRows { get; set; } = [];
 
-	public Dictionary<int, string> ColumnFilters = [];
+	public HashSet<int> HiddenColumns { get; set; } = [];
+
+	public Dictionary<int, string> RowFilters { get; set; } = [];
+
+	public Dictionary<int, string> ColumnFilters { get; set; } = [];
 
 	public Dictionary<int, List<Cell>> Columns =>
 		Shared.IndexArray(Size.Width).ToDictionary(x => x, ColumnAt);
@@ -334,14 +338,36 @@ public partial class Table : CommandExecuterBase
 		RowAt(y).ForEach(c => c.Visibility.IsRowHidden = false);
 	}
 
-	private void ShowAllRowsCore()
+	private void HideAndFilterCells()
 	{
 		Shared.IndexArray(Size.Height).ForEach(ShowRowAtCore);
+		Shared.IndexArray(Size.Width).ForEach(ShowColumnAtCore);
+
+		ApplyFilterCore(ColumnFilters, Columns, HideRowAtCore);
+		ApplyFilterCore(RowFilters, Rows, HideColumnAtCore);
+
+		HiddenColumns.ForEach(i => HideColumnAtCore(i));
+		HiddenRows.ForEach(i => HideRowAtCore(i));
+
+		ViewOptions.InvokeViewChangedEvent();
 	}
 
-	private void ShowAllColumnsCore()
+	private static void ApplyFilterCore(Dictionary<int, string> filters, Dictionary<int, List<Cell>> cells, Action<int> action)
 	{
-		Shared.IndexArray(Size.Width).ForEach(ShowColumnAtCore);
+		foreach (var filter in filters)
+		{
+			for (int i = 0; i < cells[filter.Key].Count; i++)
+			{
+				if (cells[filter.Key][i].ContentFunction is null ||
+					cells[filter.Key][i].GetFormattedContents().All(v =>
+						!Regex.IsMatch(v, filter.Value, RegexOptions.IgnoreCase)) &&
+					cells[filter.Key][i].ContentFunction?.Execute().All(v =>
+						!Regex.IsMatch(v?.ToString() ?? "", filter.Value, RegexOptions.IgnoreCase)) == true)
+				{
+					action(i);
+				}
+			}
+		}
 	}
 
 	private void AddColumnAtCore(int index, int count)

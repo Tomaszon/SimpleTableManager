@@ -96,7 +96,7 @@ public partial class Table
 	{
 		RowFilters.Remove(y);
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
@@ -104,7 +104,7 @@ public partial class Table
 	{
 		ColumnFilters.Remove(x);
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
@@ -112,7 +112,7 @@ public partial class Table
 	{
 		RowFilters.Clear();
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
@@ -120,7 +120,7 @@ public partial class Table
 	{
 		ColumnFilters.Clear();
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
@@ -129,6 +129,6 @@ public partial class Table
 		ColumnFilters.Clear();
 		RowFilters.Clear();
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 }

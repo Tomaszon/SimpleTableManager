@@ -8,35 +8,6 @@ public partial class Table
 		ViewOptions.Set(0, 0, Math.Max(Size.Width - 1, 0), Math.Max(Size.Height - 1, 0));
 	}
 
-	private void ApplyFilters()
-	{
-		ShowAllRowsCore();
-		ShowAllColumnsCore();
-
-		ApplyFilterCore(ColumnFilters, Columns, HideRowAtCore);
-		ApplyFilterCore(RowFilters, Rows, HideColumnAtCore);
-
-		ViewOptions.InvokeViewChangedEvent();
-	}
-
-	private static void ApplyFilterCore(Dictionary<int, string> filters, Dictionary<int, List<Cell>> cells, Action<int> action)
-	{
-		foreach (var filter in filters)
-		{
-			for (int i = 0; i < cells[filter.Key].Count; i++)
-			{
-				if (cells[filter.Key][i].ContentFunction is null ||
-					cells[filter.Key][i].GetFormattedContents().All(v =>
-						!Regex.IsMatch(v, filter.Value, RegexOptions.IgnoreCase)) &&
-					cells[filter.Key][i].ContentFunction?.Execute().All(v =>
-						!Regex.IsMatch(v?.ToString() ?? "", filter.Value, RegexOptions.IgnoreCase)) == true)
-				{
-					action(i);
-				}
-			}
-		}
-	}
-
 	[CommandFunction]
 	public Dictionary<int, string> ShowRowFilters()
 	{
@@ -52,66 +23,58 @@ public partial class Table
 	[CommandFunction]
 	public void HideColumnAt([MinValue(0)] int x)
 	{
-		HideColumnAtCore(x);
+		HiddenColumns.Add(x);
 
-		ColumnFilters.Remove(x);
-
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
 	public void HideRowAt([MinValue(0)] int y)
 	{
-		HideRowAtCore(y);
+		HiddenRows.Add(y);
 
-		RowFilters.Remove(y);
-
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
 	public void ShowColumnAt([MinValue(0)] int x)
 	{
-		ShowColumnAtCore(x);
+		HiddenColumns.Remove(x);
 
-		ColumnFilters.Remove(x);
-
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
 	public void ShowRowAt([MinValue(0)] int y)
 	{
-		ShowRowAtCore(y);
+		HiddenRows.Remove(y);
 
-		RowFilters.Remove(y);
-
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
 	public void ShowAllRows()
 	{
-		ShowAllRowsCore();
+		HiddenRows.Clear();
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
 	public void ShowAllColumns()
 	{
-		ShowAllColumnsCore();
+		HiddenColumns.Clear();
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
 	public void ShowAllCells()
 	{
-		ShowAllColumnsCore();
-		ShowAllRowsCore();
+		HiddenRows.Clear();
+		HiddenColumns.Clear();
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction(StateModifier = false)]

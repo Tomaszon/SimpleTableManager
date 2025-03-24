@@ -79,7 +79,7 @@ public partial class Table
 	{
 		RowFilters.Replace(y, filterExpression);
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 
 	[CommandFunction]
@@ -87,6 +87,6 @@ public partial class Table
 	{
 		ColumnFilters.Replace(x, filterExpression);
 
-		ApplyFilters();
+		HideAndFilterCells();
 	}
 }
