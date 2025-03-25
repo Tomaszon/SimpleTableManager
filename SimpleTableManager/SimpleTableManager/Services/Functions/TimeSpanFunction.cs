@@ -30,7 +30,7 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 
 	private ConvertibleTimeSpan Sub()
 	{
-		return UnwrappedUnnamedArgumentsIfNone(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate((TimeSpan)UnwrappedUnnamedArguments.First(), (a, c) => a - c));
+		return UnwrappedUnnamedArgumentsIfAny(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate((TimeSpan)UnwrappedUnnamedArguments.First(), (a, c) => a - c));
 	}
 
 	private IEnumerable<ConvertibleTimeSpan> Mul()
@@ -49,7 +49,7 @@ public class TimeSpanFunction : DateTimeFunctionBase<ConvertibleTimeSpan>
 
 	protected override ConvertibleTimeSpan Avg()
 	{
-		return UnwrappedUnnamedArgumentsIfNone<TimeSpan>(TimeSpan.Zero, () => Sum().Divide(UnwrappedUnnamedArguments.Count()));
+		return UnwrappedUnnamedArgumentsIfAny<TimeSpan>(TimeSpan.Zero, () => Sum().Divide(UnwrappedUnnamedArguments.Count()));
 	}
 
 	protected override IEnumerable<int> Days()

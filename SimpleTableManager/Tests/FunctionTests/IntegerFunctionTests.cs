@@ -83,4 +83,17 @@ public class IntegerFunctionTests : TestBase
 		CheckResults(fn.Execute(), [(FormattableBoolean)result]);
 		CheckResult(fn.GetOutType(), expectedResultType);
 	}
+
+	[TestCase(NumericFunctionOperator.Sum, new long[] { 1, 2, 3, 4, 5 }, ArgumentName.Greater, 3, 9)]
+	[TestCase(NumericFunctionOperator.Sum, new long[] { 1, 2, 3, 4, 5 }, ArgumentName.GreaterOrEquals, 3, 12)]
+	[TestCase(NumericFunctionOperator.Sum, new long[] { 1, 2, 3, 4, 5 }, ArgumentName.Less, 3, 3)]
+	[TestCase(NumericFunctionOperator.Sum, new long[] { 1, 2, 3, 4, 5 }, ArgumentName.LessOrEquals, 3, 6)]
+	[TestCase(NumericFunctionOperator.Sum, new long[] { 1, 2, 3, 4, 5 }, ArgumentName.Equals, 3, 3)]
+	[TestCase(NumericFunctionOperator.Sum, new long[] { 1, 2, 3, 4, 5 }, ArgumentName.NotEquals, 3, 12)]
+	public void IntegerTest5(NumericFunctionOperator functionOperator, long[] values, ArgumentName filter, long filterValue, long expected)
+	{
+		var fn = CreateFunction(functionOperator, [new(filter, filterValue)], values);
+
+		CheckResult(fn.Execute().First(), expected);
+	}
 }

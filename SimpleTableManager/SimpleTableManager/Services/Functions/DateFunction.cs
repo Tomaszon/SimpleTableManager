@@ -24,7 +24,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 
 	protected ConvertibleTimeSpan Sub()
 	{
-		return UnwrappedUnnamedArgumentsIfNone(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First().ToTimeSpan(), (a, c) => a.Subtract(c.ToTimeSpan())));
+		return UnwrappedUnnamedArgumentsIfAny(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate(UnwrappedUnnamedArguments.First().ToTimeSpan(), (a, c) => a.Subtract(c.ToTimeSpan())));
 	}
 
 	protected IEnumerable<ConvertibleDateOnly> Offset()
@@ -36,7 +36,7 @@ public class DateFunction : DateTimeFunctionBase<ConvertibleDateOnly>
 
 	protected override ConvertibleDateOnly Avg()
 	{
-		return UnwrappedUnnamedArgumentsIfNone(DateOnly.MinValue, () => DateOnly.FromDateTime(new DateTime(UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.ToDateTime(null).Ticks)).Ticks / UnwrappedUnnamedArguments.Count()).Date));
+		return UnwrappedUnnamedArgumentsIfAny(DateOnly.MinValue, () => DateOnly.FromDateTime(new DateTime(UnwrappedUnnamedArguments.Aggregate(DateTime.MinValue, (a, c) => new DateTime(a.Ticks + c.ToDateTime(null).Ticks)).Ticks / UnwrappedUnnamedArguments.Count()).Date));
 	}
 
 	protected override IEnumerable<int> Years()

@@ -17,5 +17,11 @@ public enum ArgumentName
 	Last,
 	Offset,
 	Reference,
-	IgnoreNullReference
+	Greater,
+	Less,
+	GreaterOrEquals,
+	LessOrEquals,
+	Equals,
+	NotEquals,
+	IgnoreNullReference,
 }

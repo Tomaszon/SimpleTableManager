@@ -45,7 +45,17 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 			var last = GetNamedArgument<int>(ArgumentName.Last);
 			var ignoreNullReference = GetNamedArgument<bool>(ArgumentName.IgnoreNullReference);
 
-			return UnnamedArguments.TakeAround(first, last).SelectMany(a => a.Resolve(ignoreNullReference)).Select(a => ((IConvertible)a).ToType<TIn>());
+
+			var args = UnnamedArguments.TakeAround(first, last).SelectMany(a => a.Resolve(ignoreNullReference)).Select(a => ((IConvertible)a).ToType<TIn>());
+
+			args = FilterCore(args, ArgumentName.Greater, GreaterComparer);
+			args = FilterCore(args, ArgumentName.Less, LessComparer);
+			args = FilterCore(args, ArgumentName.GreaterOrEquals, GreaterOrEqualsComparer);
+			args = FilterCore(args, ArgumentName.LessOrEquals, LessOrEqualsComparer);
+			args = FilterCore(args, ArgumentName.Equals, EqualsComparer);
+			args = FilterCore(args, ArgumentName.NotEquals, NotEqualsComparer);
+
+			return args;
 		}
 	}
 
@@ -133,6 +143,18 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		}
 	}
 
+	private static Func<int, bool> GreaterComparer => e => e == 1;
+
+	private static Func<int, bool> LessComparer => e => e == -1;
+
+	private static Func<int, bool> GreaterOrEqualsComparer => e => e >= 0;
+
+	private static Func<int, bool> LessOrEqualsComparer => e => e <= 0;
+
+	private static Func<int, bool> EqualsComparer => e => e == 0;
+
+	private static Func<int, bool> NotEqualsComparer => e => e != 0;
+
 	public virtual Type GetOutType()
 	{
 		return typeof(TOut);
@@ -161,35 +183,35 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 	public bool TryGetNamedArgument<T>(ArgumentName key, [NotNullWhen(true)] out T? value)
 		where T : IParsable<T>, IConvertible
 	{
-		try
-		{
-			value = GetNamedArgument<T>(key);
-
-			return true;
-		}
-		catch (ArgumentNullException)
-		{
-			value = default;
-
-			return false;
-		}
-	}
-
-	public T GetNamedArgument<T>(ArgumentName key)
-		where T : IParsable<T>, IConvertible
-	{
 		if (NamedArguments.TryGetValue(key, out var argument))
 		{
 			var results = argument.Resolve(false) ?? throw new NullReferenceException();
 
 			var result = results.Single();
 
-			return result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : ((IConvertible)result).ToType<T>();
+			value = result is string s ? T.Parse(s, CultureInfo.CurrentUICulture) : ((IConvertible)result).ToType<T>();
+
+			return true;
 		}
 
 		if (GetType().GetCustomAttributes<NamedArgumentAttribute<T>>().SingleOrDefault(p => p.Key == key) is var attribute && attribute is { })
 		{
-			return attribute.Value;
+			value = attribute.Value;
+
+			return true;
+		}
+
+		value = default;
+
+		return false;
+	}
+
+	public T GetNamedArgument<T>(ArgumentName key)
+		where T : IParsable<T>, IConvertible
+	{
+		if (TryGetNamedArgument<T>(key, out var value))
+		{
+			return value;
 		}
 
 		throw new ArgumentNullException($"Missing named argument '{key}'");
@@ -234,42 +256,42 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 
 	protected TOut Min(TIn @default)
 	{
-		return UnwrappedUnnamedArgumentsIfNone(@default, () => UnwrappedUnnamedArguments.Min()!);
+		return UnwrappedUnnamedArgumentsIfAny(@default, () => UnwrappedUnnamedArguments.Min()!);
 	}
 
 	protected TOut Max(TIn @default)
 	{
-		return UnwrappedUnnamedArgumentsIfNone(@default, () => UnwrappedUnnamedArguments.Max()!);
+		return UnwrappedUnnamedArgumentsIfAny(@default, () => UnwrappedUnnamedArguments.Max()!);
 	}
 
 	protected FormattableBoolean Greater()
 	{
-		return CompareCore(e => e == 1);
+		return CompareCore(GreaterComparer);
 	}
 
 	protected FormattableBoolean Less()
 	{
-		return CompareCore(e => e == -1);
+		return CompareCore(LessComparer);
 	}
 
 	protected FormattableBoolean GreaterOrEquals()
 	{
-		return CompareCore(e => e >= 0);
+		return CompareCore(GreaterOrEqualsComparer);
 	}
 
 	protected FormattableBoolean LessOrEquals()
 	{
-		return CompareCore(e => e <= 0);
+		return CompareCore(LessOrEqualsComparer);
 	}
 
 	protected FormattableBoolean Equals()
 	{
-		return CompareCore(e => e == 0);
+		return CompareCore(EqualsComparer);
 	}
 
 	protected FormattableBoolean NotEquals()
 	{
-		return CompareCore(e => e != 0);
+		return CompareCore(NotEqualsComparer);
 	}
 
 	private bool CompareCore(Func<int, bool> comparer)
@@ -291,7 +313,18 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 		}
 	}
 
-	protected T UnwrappedUnnamedArgumentsIfNone<T>(T @default, Func<T> @else)
+
+	private IEnumerable<TIn> FilterCore(IEnumerable<TIn> args, ArgumentName argumentName, Func<int, bool> comparer)
+	{
+		if (TryGetNamedArgument<TIn>(argumentName, out var reference))
+		{
+			return args.Where(a => comparer(a.CompareTo(reference)));
+		}
+
+		return args;
+	}
+
+	protected T UnwrappedUnnamedArgumentsIfAny<T>(T @default, Func<T> @else)
 	{
 		return UnwrappedUnnamedArguments.Any() ? @else.Invoke() : @default;
 	}

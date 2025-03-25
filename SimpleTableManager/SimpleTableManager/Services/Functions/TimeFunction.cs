@@ -26,7 +26,7 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 
 	protected ConvertibleTimeSpan Sub()
 	{
-		return UnwrappedUnnamedArgumentsIfNone(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate(((TimeOnly)UnwrappedUnnamedArguments.First()).ToTimeSpan(), (a, c) => a -= c.ToTimeSpan()));
+		return UnwrappedUnnamedArgumentsIfAny(TimeSpan.Zero, () => UnwrappedUnnamedArguments.Skip(1).Aggregate(((TimeOnly)UnwrappedUnnamedArguments.First()).ToTimeSpan(), (a, c) => a -= c.ToTimeSpan()));
 	}
 
 	protected IEnumerable<ConvertibleTimeOnly> Offset()
@@ -38,7 +38,7 @@ public class TimeFunction : DateTimeFunctionBase<ConvertibleTimeOnly>
 
 	protected override ConvertibleTimeOnly Avg()
 	{
-		return UnwrappedUnnamedArgumentsIfNone(TimeOnly.MinValue, () => TimeOnly.FromTimeSpan(UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue.ToTimeSpan(), (a, c) => a += c.ToTimeSpan()).Divide(UnwrappedUnnamedArguments.Count())));
+		return UnwrappedUnnamedArgumentsIfAny(TimeOnly.MinValue, () => TimeOnly.FromTimeSpan(UnwrappedUnnamedArguments.Aggregate(TimeOnly.MinValue.ToTimeSpan(), (a, c) => a += c.ToTimeSpan()).Divide(UnwrappedUnnamedArguments.Count())));
 	}
 
 	protected override IEnumerable<int> Hours()
