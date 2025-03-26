@@ -221,8 +221,6 @@ public partial class Cell : CommandExecuterBase
 		Table.ViewOptions.ViewChanged += OnTableViewChanged;
 		StateModifierCommandExecutedEvent += OnStateModifierCommandExecuted;
 
-		UpdateReferenceSubscription();
-
 		_cachedFormattedContent = [];
 
 		ContentFunction?.ClearError();

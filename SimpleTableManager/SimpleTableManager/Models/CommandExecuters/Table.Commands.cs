@@ -5,7 +5,7 @@ public partial class Table
 	[CommandFunction]
 	public void ResetViewOptions()
 	{
-		ViewOptions.Set(0, 0, Math.Max(Size.Width - 1, 0), Math.Max(Size.Height - 1, 0));
+		ResetViewOptionsCore();
 	}
 
 	[CommandFunction]

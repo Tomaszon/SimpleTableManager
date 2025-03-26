@@ -301,14 +301,16 @@ public static class Renderer
 
 			if (Console.WindowWidth - horizontalDecrement < size.Width)
 			{
-				table.ViewOptions.DecreaseWidth();
+				table.ViewOptions.DecreaseWidth(false);
 			}
 			else if (Console.WindowHeight - _FREE_LINES - verticalDecrement < size.Height)
 			{
-				table.ViewOptions.DecreaseHeight();
+				table.ViewOptions.DecreaseHeight(false);
 			}
 			else
 			{
+				table.ViewOptions.InvokeViewChangedEvent();
+
 				return size;
 			}
 		}

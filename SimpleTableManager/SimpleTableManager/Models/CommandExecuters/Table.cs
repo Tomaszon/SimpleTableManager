@@ -89,12 +89,18 @@ public partial class Table : CommandExecuterBase
 		Name = name;
 
 		CornerCell = new(this, @"y \ x");
-		Shared.IndexArray(columnCount).ForEach(x => AddColumnLast());
-		Shared.IndexArray(rowCount).ForEach(y => AddRowLast());
 
-		ResetViewOptions();
+		AddColumnAtCore(0, columnCount);
+		AddRowAtCore(0, rowCount);
+
+		ResetViewOptionsCore(false);
 
 		ViewOptions.ViewChanged += OnViewChanged;
+	}
+
+	private void ResetViewOptionsCore(bool triggerEvent = true)
+	{
+		ViewOptions.Set(0, 0, Math.Max(Size.Width - 1, 0), Math.Max(Size.Height - 1, 0), triggerEvent);
 	}
 
 	public override void OnStateModifierCommandExecuted(IStateModifierCommandExecuter sender, StateModifierCommandExecutedEventArgs args)

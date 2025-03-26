@@ -12,16 +12,19 @@ public class ViewOptions : ValidatorBase
 
 	public ViewOptions(int x1, int y1, int x2, int y2)
 	{
-		Set(x1, y1, x2, y2);
+		Set(x1, y1, x2, y2, false);
 	}
 
 	[MemberNotNull(nameof(StartPosition)), MemberNotNull(nameof(EndPosition))]
-	public void Set(int x1, int y1, int x2, int y2)
+	public void Set(int x1, int y1, int x2, int y2, bool triggerEvent = true)
 	{
 		StartPosition = new(x1, y1);
 		EndPosition = new(x2, y2);
 
-		ViewChanged?.Invoke();
+		if (triggerEvent)
+		{
+			ViewChanged?.Invoke();
+		}
 	}
 
 	public void InvokeViewChangedEvent()
@@ -29,35 +32,47 @@ public class ViewOptions : ValidatorBase
 		ViewChanged?.Invoke();
 	}
 
-	public void IncreaseWidth()
+	public void IncreaseWidth(bool triggerEvent = true)
 	{
 		EndPosition.X++;
 
-		ViewChanged?.Invoke();
+		if (triggerEvent)
+		{
+			ViewChanged?.Invoke();
+		}
 	}
 
-	public void DecreaseWidth()
+	public void DecreaseWidth(bool triggerEvent = true)
 	{
 		ThrowIf<InvalidOperationException>(EndPosition.X <= StartPosition.X, "Can not decrease view width under 0 columns!");
-		
+
 		EndPosition.X = EndPosition.X - 1;
 
-		ViewChanged?.Invoke();
+		if (triggerEvent)
+		{
+			ViewChanged?.Invoke();
+		}
 	}
 
-	public void IncreaseHeight()
+	public void IncreaseHeight(bool triggerEvent = true)
 	{
 		EndPosition.Y++;
 
-		ViewChanged?.Invoke();
+		if (triggerEvent)
+		{
+			ViewChanged?.Invoke();
+		}
 	}
 
-	public void DecreaseHeight()
+	public void DecreaseHeight(bool triggerEvent = true)
 	{
 		ThrowIf<InvalidOperationException>(EndPosition.Y <= StartPosition.Y, "Can not decrease view height under 0 rows!");
 
 		EndPosition.Y = EndPosition.Y - 1;
 
-		ViewChanged?.Invoke();
+		if (triggerEvent)
+		{
+			ViewChanged?.Invoke();
+		}
 	}
 }
