@@ -710,10 +710,18 @@ public partial class SmartConsole
 			Console.Write(c);
 			_buffer.Insert(_insertIndex, c);
 			_insertIndex++;
-			var rest = new Span<char>();
-			_buffer.CopyTo(_insertIndex, rest, _buffer.Length);
-			Console.Write(rest);
-			Shared.StepCursor(-rest.Length, 0);
+
+			if (_buffer.Length > _insertIndex)
+			{
+				var count = _buffer.Length - _insertIndex;
+
+				Span<char> rest = stackalloc char[count];
+
+				_buffer.CopyTo(_insertIndex, rest, count);
+
+				Console.Write(rest);
+				Shared.StepCursor(-rest.Length, 0);
+			}
 		}
 
 		return true;
