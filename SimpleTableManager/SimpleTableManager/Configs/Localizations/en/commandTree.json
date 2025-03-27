@@ -156,5 +156,6 @@
 	"totalHours": "total-hours",
 	"totalMinutes": "total-minutes",
 	"totalSeconds": "total-seconds",
-	"totalMilliseconds": "total-milliseconds"
+	"totalMilliseconds": "total-milliseconds",
+	"contentAndFormat": "content-and-format"
 }

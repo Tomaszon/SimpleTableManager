@@ -194,24 +194,25 @@ public partial class Cell
 	//TODO check what happens in case of IShape
 	public void SetContentFunctionArguments(ArgumentFilter filter, [ValueTypes<long, double, char, FormattableBoolean, ConvertibleTimeOnly, ConvertibleDateOnly, DateTime, ConvertibleTimeSpan, Rectangle, Ellipse, RightTriangle, string>] params IEnumerable<IFunctionArgument> arguments)
 	{
-		throw new NotImplementedException("Reworks needed");
 		//REWORK update event subscriptions and cell selections
-		// ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
+		ThrowIf<InvalidOperationException>(validator: ContentFunction is null, "Content function is null!");
 
-		// switch (filter)
-		// {
-		// 	case ArgumentFilter.All:
-		// 		ContentFunction.Arguments = [.. arguments];
-		// 		break;
-		// 	case ArgumentFilter.Unnamed:
-		// 		ContentFunction.Arguments = [.. ContentFunction.Arguments.Where(a => a.IsNamed).Union(arguments)];
-		// 		break;
-		// 	case ArgumentFilter.Named:
-		// 		ContentFunction.Arguments = [.. ContentFunction.Arguments.Where(a => !a.IsNamed).Union(arguments)];
-		// 		break;
-		// }
+		switch (filter)
+		{
+			case ArgumentFilter.All:
+				throw new NotImplementedException("Reworks needed");
+			// ContentFunction.Arguments = [.. arguments];
+			// break;
+			case ArgumentFilter.Unnamed:
+				throw new NotImplementedException("Reworks needed");
+			// ContentFunction.Arguments = [.. ContentFunction.Arguments.Where(a => a.IsNamed).Union(arguments)];
+			// break;
+			case ArgumentFilter.Named:
+				ContentFunction.Arguments = [.. ContentFunction.Arguments.Where(a => !a.IsNamed).Union(arguments)];
+				break;
+		}
 
-		// InvokeStateModifierCommandExecutedEvent(new(this));
+		InvokeStateModifierCommandExecutedEvent(new(this));
 	}
 
 	[CommandFunction]

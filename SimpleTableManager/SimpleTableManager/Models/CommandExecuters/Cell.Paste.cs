@@ -7,11 +7,7 @@ public partial class Cell
     [CommandFunction, CommandShortcut("pasteCellContent")]
     public void PasteContent()
     {
-        var stored = Table.Document.GlobalStorage.TryGet<(Position, IFunction)>(GlobalStorageKey.CellContent);
-
-        var diff = stored.Item1 is not null ? Table[this] - stored.Item1 : null;
-
-        SetContent(stored.Item2, diff);
+        PasteContentCore();
     }
 
     [CommandFunction]
@@ -32,6 +28,27 @@ public partial class Cell
 
     [CommandFunction, CommandShortcut("pasteCellFormat")]
     public void PasteFormat()
+    {
+        PasteFormatCore();
+    }
+
+    [CommandFunction, CommandShortcut("pasteContentAndFormat")]
+    public void PasteContentAndFormat()
+    {
+        PasteFormatCore();
+        PasteContentCore();
+    }
+
+    private void PasteContentCore()
+    {
+        var stored = Table.Document.GlobalStorage.TryGet<(Position, IFunction)>(GlobalStorageKey.CellContent);
+
+        var diff = stored.Item1 is not null ? Table[this] - stored.Item1 : null;
+
+        SetContent(stored.Item2, diff);
+    }
+
+    private void PasteFormatCore()
     {
         var stored = Table.Document.GlobalStorage.TryGet<ValueTuple<Size, ContentPadding, ContentAlignment, ConsoleColorSet, ConsoleColorSet, ConsoleColorSet, char, ValueTuple<int, ContentStyle>>?>(GlobalStorageKey.CellFormat);
 

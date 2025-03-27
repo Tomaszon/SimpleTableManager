@@ -34,7 +34,7 @@ public partial class Cell
 		CopyContentTo(table, table[positionFrom, positionTo].Select(c => table[c]));
 	}
 
-	[CommandFunction, CommandShortcut("copyCellFormat")]
+	[CommandFunction(StateModifier = false), CommandShortcut("copyCellFormat")]
 	public void CopyFormat()
 	{
 		Table.Document.GlobalStorage.Add(GlobalStorageKey.CellFormat,
@@ -49,6 +49,13 @@ public partial class Cell
 			LayerIndex,
 			ContentStyle
 		));
+	}
+
+	[CommandFunction(StateModifier = false), CommandShortcut("copyContentAndFormat")]
+	public void CopyContentAndFormat()
+	{
+		CopyContent();
+		CopyFormat();
 	}
 
 	private void CopyContentTo(Table table, [MinLength(1)] IEnumerable<Position> positions)

@@ -156,5 +156,6 @@
 	"totalHours": "teljes-órák",
 	"totalMinutes": "teljes-percek",
 	"totalSeconds": "teljes-másodpercek",
-	"totalMilliseconds": "teljes-ezredmásodpercek"
+	"totalMilliseconds": "teljes-ezredmásodpercek",
+	"contentAndFormat": "tartalom-és-formázás"
 }

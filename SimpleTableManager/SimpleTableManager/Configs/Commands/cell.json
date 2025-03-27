@@ -221,6 +221,9 @@
 		"referenceCell": "setReferenceCell",
 		"contentStyle": "setContentStyle"
 	},
+	"add": {
+		"contentFunctionArguments": "addContentFunctionArguments"
+	},
 	"reset": {
 		"content": "resetContent",
 		"comment": "resetComment",
@@ -253,13 +256,15 @@
 				"cellRange": "copyContentToRange"
 			}
 		},
-		"format": "copyFormat"
+		"format": "copyFormat",
+		"contentAndFormat": "copyContentAndFormat"
 	},
 	"paste": {
 		"content": {
 			"to": "pasteContent",
 			"from": "pasteContentFrom"
 		},
-		"format": "pasteFormat"
+		"format": "pasteFormat",
+		"contentAndFormat": "pasteContentAndFormat"
 	}
 }
