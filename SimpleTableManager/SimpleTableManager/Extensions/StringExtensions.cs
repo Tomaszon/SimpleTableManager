@@ -6,29 +6,26 @@ public static class StringExtensions
 	{
 		int leftPadding = (totalWidth - value.Length) / 2;
 
-		value = value.PadLeft(value.Length + leftPadding);
-		value = value.PadRight(totalWidth);
-
-		return value;
+		return value.PadLeft(value.Length + leftPadding).PadRight(totalWidth);
 	}
 
 	public static string AppendLeft(this string value, char c, int count)
 	{
-		return new string(c, count) + value;
+		return $"{c.ToReadOnlySpan(count)}{value}";
 	}
 
 	public static string AppendRight(this string value, char c, int count)
 	{
-		return value + new string(c, count);
+		return $"{value}{c.ToReadOnlySpan(count)}";
 	}
 
 	public static string AppendLeftRight(this string value, char c, int countToLeft, int countToRight)
 	{
-		return value.AppendLeft(c, countToLeft).AppendRight(c, countToRight);
+		return $"{c.ToReadOnlySpan(countToLeft)}{value}{c.ToReadOnlySpan(countToRight)}";
 	}
 
 	public static string ToUpperFirst(this string value)
 	{
-		return $"{value.First().ToString().ToUpper()}{new string([.. value.Skip(1)])}";
+		return $"{char.ToUpper(value.First())}{string.Concat(value.ToArray()[1..])}";
 	}
 }

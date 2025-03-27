@@ -36,8 +36,8 @@ public partial class SmartConsole
 				Console.Write(c);
 			}
 
-			Console.WriteLine("\n");
-			Console.WriteLine(new string('\n', Settings.Current.CommandHintRowCount));
+			Console.WriteLine('\n');
+			Console.WriteLine('\n'.ToReadOnlySpan(Settings.Current.CommandHintRowCount));
 		}
 
 		Console.Write(_COMMAND_LINE_PREFIX);
@@ -248,7 +248,7 @@ public partial class SmartConsole
 		MoveCursorToHintRow(top);
 
 		Shared.IndexArray(Settings.Current.CommandHintRowCount).ForEach(i =>
-			Console.WriteLine(new string(' ', Console.WindowWidth)));
+			Console.WriteLine(' '.ToReadOnlySpan(Console.WindowWidth)));
 
 		if (restoreCursorPosition)
 		{
@@ -514,7 +514,7 @@ public partial class SmartConsole
 			Shared.StepCursor(-1, 0);
 			var clearLength = _buffer.Length - _insertIndex + 1;
 			_buffer.Remove(_insertIndex - 1, 1);
-			Console.Write(new string(' ', clearLength));
+			Console.Write(' '.ToReadOnlySpan(clearLength));
 			Shared.StepCursor(-clearLength, 0);
 			_insertIndex--;
 
@@ -549,7 +549,7 @@ public partial class SmartConsole
 		{
 			var clearLength = _buffer.Length - _insertIndex;
 			_buffer.Remove(_insertIndex, 1);
-			Console.Write(new string(' ', clearLength));
+			Console.Write(' '.ToReadOnlySpan(clearLength));
 			Shared.StepCursor(-clearLength, 0);
 
 			var rest = _buffer.ToString()[_insertIndex..];
@@ -710,7 +710,8 @@ public partial class SmartConsole
 			Console.Write(c);
 			_buffer.Insert(_insertIndex, c);
 			_insertIndex++;
-			var rest = _buffer.ToString()[_insertIndex..];
+			var rest = new Span<char>();
+			_buffer.CopyTo(_insertIndex, rest, _buffer.Length);
 			Console.Write(rest);
 			Shared.StepCursor(-rest.Length, 0);
 		}
@@ -730,7 +731,7 @@ public partial class SmartConsole
 	private static bool ClearBuffer()
 	{
 		Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
-		Console.Write(new string(' ', _buffer.Length));
+		Console.Write(' '.ToReadOnlySpan(_buffer.Length));
 		Console.SetCursorPosition(_COMMAND_LINE_PREFIX.Length, Console.CursorTop);
 
 		_buffer.Clear();

@@ -613,7 +613,7 @@ public static class Renderer
 
 	private static void RenderBorderSegment(BorderType border, int count = 1)
 	{
-		Console.Write(new string(BorderCharacters.Get(border), count));
+		Console.Write(BorderCharacters.Get(border).ToReadOnlySpan(count));
 	}
 
 	private static void RenderCellContent(Cell cell, Position position, Size size, bool ignoreRenderingMode, bool showSelection)
@@ -707,7 +707,7 @@ public static class Renderer
 
 			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
-			Console.Write(new string(cell.BackgroundCharacter, leftPaddingSize));
+			Console.Write(cell.BackgroundCharacter.ToReadOnlySpan(leftPaddingSize));
 
 			ChangeToCellContentColors(cell);
 
@@ -767,7 +767,7 @@ public static class Renderer
 
 			ChangeToCellBackgroundColors(cell);
 			ShowIndexCellSelection(showSelection);
-			Console.Write(new string(cell.BackgroundCharacter, rightPaddingSize));
+			Console.Write(cell.BackgroundCharacter.ToReadOnlySpan(rightPaddingSize));
 		});
 	}
 

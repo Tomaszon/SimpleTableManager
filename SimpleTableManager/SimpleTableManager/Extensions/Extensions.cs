@@ -36,4 +36,9 @@ public static class Extensions
 	{
 		return ex.InnerException is null ? ex : ex.InnerException.GetInnermostException();
 	}
+
+	public static ReadOnlySpan<char> ToReadOnlySpan(this char c, int count)
+	{
+		return new ReadOnlySpan<char>([.. Enumerable.Repeat(c, count)]);
+	}
 }
