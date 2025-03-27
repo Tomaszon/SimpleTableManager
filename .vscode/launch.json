@@ -14,9 +14,6 @@
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"sourceFileMap": {
-				"/Views": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/Views"
-			},
 			"justMyCode": true
 		},
 		{
@@ -32,9 +29,6 @@
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"sourceFileMap": {
-				"/Views": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/Views"
-			},
 			"justMyCode": true
 		},
 		{
@@ -45,15 +39,26 @@
 			"program": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/bin/Release/SimpleTableManager.dll",
 			"console": "externalTerminal",
 			"args": [],
-			"cwd": "${workspaceFolder}/SimpleTableManager/SimpleTableManager",
+			"cwd": "${workspaceFolder}/SimpleTableManager/Tests",
 			"stopAtEntry": false,
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Production"
 			},
-			"sourceFileMap": {
-				"/Views": "${workspaceFolder}/SimpleTableManager/SimpleTableManager/Views"
-			},
 			"justMyCode": true
 		},
+		{
+			"name": "Benchmark Launch",
+			"type": "coreclr",
+			"request": "launch",
+			"program": "${workspaceFolder}/SimpleTableManager/Tests/bin/Release/SimpleTableManager.Tests.dll",
+			"console": "externalTerminal",
+			"args": [],
+			"cwd": "${workspaceFolder}/SimpleTableManager/Tests",
+			"stopAtEntry": false,
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Production"
+			},
+			"justMyCode": true
+		}
 	]
 }

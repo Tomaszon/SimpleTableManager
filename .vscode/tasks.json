@@ -95,11 +95,12 @@
 			"label": "buildRelease",
 			"command": "echo",
 			"args": [
-				"All dependent projects built"
+				"All dependent projects built",
 			],
 			"type": "shell",
 			"dependsOn": [
-				"stmBuildRelease"
+				"stmBuildRelease",
+				"testsBuildRelease"
 			],
 			"dependsOrder": "sequence",
 			"problemMatcher": "$msCompile",
@@ -117,6 +118,24 @@
 			"args": [
 				"build",
 				"${workspaceFolder}/SimpleTableManager/SimpleTableManager/SimpleTableManager.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary",
+				"-c",
+				"Release"
+			],
+			"problemMatcher": "$msCompile",
+			"isBuildCommand": true
+		},
+		{
+			"label": "testsBuildRelease",
+			"command": "dotnet",
+			"type": "process",
+			"dependsOn": [
+				"testsClean"
+			],
+			"args": [
+				"build",
+				"${workspaceFolder}/SimpleTableManager/Tests/SimpleTableManager.Tests.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary",
 				"-c",
