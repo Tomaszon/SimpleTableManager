@@ -322,7 +322,7 @@ public partial class SmartConsole
 				Console.Write(" ");
 			}
 
-			if (partialKey is not null && !availableKey.key.StartsWith(partialKey))
+			if (partialKey is not null && !availableKey.key.StartsWith(partialKey, StringComparison.OrdinalIgnoreCase))
 			{
 				Console.ForegroundColor = Settings.Current.NotAvailableContentColor.Foreground;
 			}

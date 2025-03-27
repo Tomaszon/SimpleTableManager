@@ -34,7 +34,7 @@ public class AutoComplete
 
 		_autoCompleteLength = nextKey.Length - (partialKey?.Length ?? 0);
 
-		matchingKeyCount = _keys.Count(k => k.StartsWith(partialKey ?? ""));
+		matchingKeyCount = _keys.Count(k => k.StartsWith(partialKey ?? "", StringComparison.OrdinalIgnoreCase));
 
 		return nextKey;
 	}
@@ -43,7 +43,7 @@ public class AutoComplete
 	{
 		_index = backwards ? _index > 0 ? _index - 1 : _keys.Count - 1 : _index < _keys.Count - 1 ? _index + 1 : 0;
 
-		if (partialKey is not null && !_keys[_index].StartsWith(partialKey))
+		if (partialKey is not null && !_keys[_index].StartsWith(partialKey, StringComparison.OrdinalIgnoreCase))
 		{
 			StepIndex(partialKey, backwards);
 		}
