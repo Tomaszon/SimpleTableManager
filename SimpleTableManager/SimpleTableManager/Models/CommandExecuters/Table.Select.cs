@@ -2,11 +2,6 @@
 
 public partial class Table
 {
-	private void SelectCell(Cell cell)
-	{
-		cell.Select();
-	}
-
 	public void SelectCells(IEnumerable<Cell> cells)
 	{
 		cells.ForEach(c => c.Select());
@@ -17,16 +12,16 @@ public partial class Table
 	{
 		if (deselectCurrent)
 		{
-			DeselectAll();
+			DeselectAllCore();
 		}
 
-		SelectCell(this[position]);
+		this[position].Select();
 	}
 
 	[CommandFunction]
 	public void SelectCells([MinLength(1)] params IEnumerable<Position> positions)
 	{
-		positions.ForEach(p => SelectCell(this[p]));
+		positions.ForEach(p => this[p].Select());
 	}
 
 	[CommandFunction]
@@ -34,10 +29,10 @@ public partial class Table
 	{
 		if (deselectCurrent)
 		{
-			DeselectAll();
+			DeselectAllCore();
 		}
 
-		this[positionFrom, positionTo].ForEach(SelectCell);
+		this[positionFrom, positionTo].ForEach(c => c.Select());
 	}
 
 	[CommandFunction]
@@ -45,10 +40,10 @@ public partial class Table
 	{
 		if (deselectCurrent)
 		{
-			DeselectAll();
+			DeselectAllCore();
 		}
 
-		ColumnAt(x).ForEach(SelectCell);
+		ColumnAt(x).ForEach(c => c.Select());
 	}
 
 	[CommandFunction]
@@ -56,16 +51,16 @@ public partial class Table
 	{
 		if (deselectCurrent)
 		{
-			DeselectAll();
+			DeselectAllCore();
 		}
 
-		RowAt(y).ForEach(SelectCell);
+		RowAt(y).ForEach(c => c.Select());
 	}
 
 	[CommandFunction, CommandShortcut("selectAllCells")]
 	public void SelectAll()
 	{
-		Content.ForEach(SelectCell);
+		Content.ForEach(c => c.Select());
 	}
 
 	[CommandFunction, CommandShortcut]
@@ -80,7 +75,7 @@ public partial class Table
 			return new Position((position.X + 1) % Size.Width, position.Y);
 		}).ToList();
 
-		DeselectAll();
+		DeselectAllCore();
 		SelectCells(newPositions);
 	}
 
@@ -96,7 +91,7 @@ public partial class Table
 			return new Position((position.X - 1 + Size.Width) % Size.Width, position.Y);
 		}).ToList();
 
-		DeselectAll();
+		DeselectAllCore();
 		SelectCells(newPositions);
 	}
 
@@ -112,7 +107,7 @@ public partial class Table
 			return new Position(position.X, (position.Y + 1) % Size.Height);
 		}).ToList();
 
-		DeselectAll();
+		DeselectAllCore();
 		SelectCells(newPositions);
 	}
 
@@ -128,7 +123,7 @@ public partial class Table
 			return new Position(position.X, (position.Y - 1 + Size.Height) % Size.Height);
 		}).ToList();
 
-		DeselectAll();
+		DeselectAllCore();
 		SelectCells(newPositions);
 	}
 }

@@ -17,6 +17,7 @@ public class CellReference(Guid referencedTableId, LockablePosition positionFrom
 
 	public void ShiftReferencedPositions(Size size, Position? referencePosition = null, bool ignoreLocking = false)
 	{
+		//TODO resolve shifting to negative regime on table resizing
 		referencePosition ??= new(0, 0);
 
 		if (PositionFrom.X >= referencePosition.X && PositionFrom.Y >= referencePosition.Y)
@@ -48,8 +49,10 @@ public class CellReference(Guid referencedTableId, LockablePosition positionFrom
 
 		var table = doc[ReferencedTableId].Name;
 
+		var isCurrentTable = doc.GetActiveTable().Id == ReferencedTableId;
+
 		return PositionFrom.Equals(PositionTo) ?
-			$"{table}:{PositionFrom.ToShortString()}" :
-			$"{table}:{PositionFrom.ToShortString()}-{PositionTo.ToShortString()}";
+			$"{(isCurrentTable ? "" : $"{table}:")}{PositionFrom.ToShortString()}" :
+			$"{(isCurrentTable ? "" : $"{table}:")}{PositionFrom.ToShortString()}-{PositionTo.ToShortString()}";
 	}
 }

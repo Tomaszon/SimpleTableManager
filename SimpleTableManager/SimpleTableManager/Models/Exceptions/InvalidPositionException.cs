@@ -1,3 +1,3 @@
 namespace SimpleTableManager.Models.Exceptions;
 
-public class InvalidPositionException : Exception;
+public class InvalidPositionException(string? message) : Exception(message);

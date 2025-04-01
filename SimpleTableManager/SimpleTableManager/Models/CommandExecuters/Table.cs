@@ -380,7 +380,7 @@ public partial class Table : CommandExecuterBase
 	{
 		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
 
-		DeselectCells(selectedCells);
+		DeselectCellsCore(selectedCells);
 
 		for (int i = 0; i < count; i++)
 		{
@@ -411,7 +411,7 @@ public partial class Table : CommandExecuterBase
 	{
 		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
 
-		DeselectCells(selectedCells);
+		DeselectCellsCore(selectedCells);
 
 		for (int i = 0; i < count; i++)
 		{
@@ -442,7 +442,7 @@ public partial class Table : CommandExecuterBase
 	{
 		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
 
-		DeselectCells(selectedCells);
+		DeselectCellsCore(selectedCells);
 
 		for (int i = 0; i < count; i++)
 		{
@@ -475,7 +475,7 @@ public partial class Table : CommandExecuterBase
 	{
 		var selectedCells = Content.Where(c => c.Selection.IsPrimarySelected).ToList();
 
-		DeselectCells(selectedCells);
+		DeselectCellsCore(selectedCells);
 
 		for (int i = 0; i < count; i++)
 		{
@@ -499,5 +499,15 @@ public partial class Table : CommandExecuterBase
 		RemoveDeadCellReferences();
 
 		SelectCells(selectedCells);
+	}
+
+	private void DeselectAllCore()
+	{
+		Content.ForEach(c => c.Deselect());
+	}
+
+	private static void DeselectCellsCore(IEnumerable<Cell> cells)
+	{
+		cells.ForEach(c => c.Deselect());
 	}
 }

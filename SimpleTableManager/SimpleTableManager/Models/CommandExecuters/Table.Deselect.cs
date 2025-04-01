@@ -2,20 +2,10 @@
 
 public partial class Table
 {
-	public void DeselectCell(Cell cell)
-	{
-		cell.Deselect();
-	}
-
-	public void DeselectCells(IEnumerable<Cell> cells)
-	{
-		cells.ForEach(c => c.Deselect());
-	}
-
 	[CommandFunction]
 	public void DeselectCell(Position position)
 	{
-		DeselectCell(this[position]);
+		this[position].Deselect();
 	}
 
 	[CommandFunction]
@@ -27,24 +17,24 @@ public partial class Table
 	[CommandFunction]
 	public void DeselectCellRange(Position positionFrom, Position positionTo)
 	{
-		this[positionFrom, positionTo].ForEach(DeselectCell);
+		this[positionFrom, positionTo].ForEach(c => c.Deselect());
 	}
 
 	[CommandFunction]
 	public void DeselectColumn([MinValue(0)] int x)
 	{
-		ColumnAt(x).ForEach(DeselectCell);
+		ColumnAt(x).ForEach(c => c.Deselect());
 	}
 
 	[CommandFunction]
 	public void DeselectRow([MinValue(0)] int y)
 	{
-		RowAt(y).ForEach(DeselectCell);
+		RowAt(y).ForEach(c => c.Deselect());
 	}
 
 	[CommandFunction, CommandShortcut("deselectAllCells")]
 	public void DeselectAll()
 	{
-		Content.ForEach(DeselectCell);
+		Content.ForEach(c => c.Deselect());
 	}
 }

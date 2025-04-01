@@ -7,11 +7,11 @@ namespace SimpleTableManager.Tests;
 public class CellReferenceTests : TestBase
 {
 	[Test]
-	[TestCase(1, 2, 1, 2, "T:Table0,X:1,Y:2", "Table0:1:2")]
-	[TestCase(1, 2, 1, 2, "T:Table0,X:*1,Y:*2", "Table0:*1:*2", false, false, false, false)]
-	[TestCase(1, 2, 3, 4, "T:Table0,X:1,Y:2-X:3,Y:4", "Table0:1:2-3:4")]
-	[TestCase(1, 2, 3, 4, "T:Table0,X:*1,Y:*2-X:*3,Y:*4", "Table0:*1:*2-*3:*4", false, false, false, false)]
-	[TestCase(1, 2, 3, 4, "T:Table0,X:*1,Y:*2-X:3,Y:4", "Table0:*1:*2-3:4", false, false)]
+	[TestCase(1, 2, 1, 2, "T:Table0,X:1,Y:2", "1:2")]
+	[TestCase(1, 2, 1, 2, "T:Table0,X:*1,Y:*2", "*1:*2", false, false, false, false)]
+	[TestCase(1, 2, 3, 4, "T:Table0,X:1,Y:2-X:3,Y:4", "1:2-3:4")]
+	[TestCase(1, 2, 3, 4, "T:Table0,X:*1,Y:*2-X:*3,Y:*4", "*1:*2-*3:*4", false, false, false, false)]
+	[TestCase(1, 2, 3, 4, "T:Table0,X:*1,Y:*2-X:3,Y:4", "*1:*2-3:4", false, false)]
 	public void ReferenceToString(int x1, int y1, int x2, int y2, string s1, string s2, bool x1Locked = true, bool y1Locked = true, bool x2Locked = true, bool y2Locked = true)
 	{
 		var id = InstanceMap.Instance.GetInstances<Table>().First()!.Id;

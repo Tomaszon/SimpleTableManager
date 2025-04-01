@@ -224,6 +224,9 @@
 	"add": {
 		"contentFunctionArguments": "addContentFunctionArguments"
 	},
+	"remove": {
+		"contentFunctionArguments": "removeContentFunctionArguments"
+	},
 	"reset": {
 		"content": "resetContent",
 		"comment": "resetComment",
