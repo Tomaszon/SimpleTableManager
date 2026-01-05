@@ -71,6 +71,10 @@ public class FormattableBoolean(bool value) :
 	{
 		return format switch
 		{
+			
+			"tf" or
+			"t" or
+			"f" => _value ? "T" : "F",
 			"yn" or
 			"y" or
 			"n" => _value ? "Y" : "N",

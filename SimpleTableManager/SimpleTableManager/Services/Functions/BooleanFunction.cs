@@ -3,26 +3,26 @@ using SimpleTableManager.Models.Enumerations.FunctionOperators;
 namespace SimpleTableManager.Services.Functions;
 
 [FunctionMappingType(typeof(FormattableBoolean))]
-public class BooleanFunction : FunctionBase<BooleanFunctionOperator, FormattableBoolean, FormattableBoolean>
+public class BooleanFunction : FunctionBase<LogicalFunctionOperator, FormattableBoolean, FormattableBoolean>
 {
 	public override IEnumerable<FormattableBoolean> ExecuteCore()
 	{
 		return Operator switch
 		{
-			BooleanFunctionOperator.Const => UnwrappedUnnamedArguments,
-			BooleanFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
-			BooleanFunctionOperator.And => And().Wrap(),
-			BooleanFunctionOperator.Or => Or().Wrap(),
-			BooleanFunctionOperator.IsNotNull => IsNotNull().Wrap(),
-			BooleanFunctionOperator.IsNull => IsNull().Wrap(),
-			BooleanFunctionOperator.Min => Min(false).Wrap(),
-			BooleanFunctionOperator.Max => Max(true).Wrap(),
-			BooleanFunctionOperator.Greater => Greater().Wrap(),
-			BooleanFunctionOperator.Less => Less().Wrap(),
-			BooleanFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
-			BooleanFunctionOperator.LessOrEquals => LessOrEquals().Wrap(),
-			BooleanFunctionOperator.Equals => Equals().Wrap(),
-			BooleanFunctionOperator.NotEquals => NotEquals().Wrap(),
+			LogicalFunctionOperator.Const => UnwrappedUnnamedArguments,
+			LogicalFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
+			LogicalFunctionOperator.And => And().Wrap(),
+			LogicalFunctionOperator.Or => Or().Wrap(),
+			LogicalFunctionOperator.IsNotNull => IsNotNull().Wrap(),
+			LogicalFunctionOperator.IsNull => IsNull().Wrap(),
+			LogicalFunctionOperator.Min => Min(false).Wrap(),
+			LogicalFunctionOperator.Max => Max(true).Wrap(),
+			LogicalFunctionOperator.Greater => Greater().Wrap(),
+			LogicalFunctionOperator.Less => Less().Wrap(),
+			LogicalFunctionOperator.GreaterOrEquals => GreaterOrEquals().Wrap(),
+			LogicalFunctionOperator.LessOrEquals => LessOrEquals().Wrap(),
+			LogicalFunctionOperator.Equals => Equals().Wrap(),
+			LogicalFunctionOperator.NotEquals => NotEquals().Wrap(),
 
 			_ => throw GetInvalidOperatorException()
 		};

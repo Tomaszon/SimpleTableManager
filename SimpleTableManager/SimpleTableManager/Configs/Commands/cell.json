@@ -75,7 +75,7 @@
 				"equals": "setFractionContentFunction/equals",
 				"notEquals": "setFractionContentFunction/notEquals"
 			},
-			"bool": {
+			"boolean": {
 				"const": "setBooleanContentFunction/const",
 				"not": "setBooleanContentFunction/not",
 				"and": "setBooleanContentFunction/and",

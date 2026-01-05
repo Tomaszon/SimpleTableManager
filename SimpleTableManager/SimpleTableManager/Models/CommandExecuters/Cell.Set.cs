@@ -107,9 +107,9 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
-	public void SetBooleanContentFunction(BooleanFunctionOperator functionOperator, [ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
+	public void SetBooleanContentFunction(LogicalFunctionOperator functionOperator, [ValueTypes<FormattableBoolean>] params IFunctionArgument[] arguments)
 	{
-		SetFunction<BooleanFunction, BooleanFunctionOperator>(functionOperator, arguments);
+		SetFunction<BooleanFunction, LogicalFunctionOperator>(functionOperator, arguments);
 	}
 
 	[CommandFunction(WithSelector = true)]
