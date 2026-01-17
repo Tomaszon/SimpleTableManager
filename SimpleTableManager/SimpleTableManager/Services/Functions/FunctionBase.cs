@@ -53,7 +53,7 @@ public abstract class FunctionBase<TOperator, TIn, TOut> :
 			args = FilterCore(args, ArgumentName.GreaterOrEquals, GreaterOrEqualsComparer);
 			args = FilterCore(args, ArgumentName.LessOrEquals, LessOrEqualsComparer);
 			args = FilterCore(args, ArgumentName.Equals, EqualsComparer);
-			args = FilterCore(args, ArgumentName.NotEquals, NotEqualsComparer);
+			args = FilterCore(args, argumentName: ArgumentName.NotEquals, NotEqualsComparer);
 
 			return args;
 		}

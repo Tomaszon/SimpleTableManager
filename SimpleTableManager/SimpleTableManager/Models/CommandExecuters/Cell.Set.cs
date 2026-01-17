@@ -113,6 +113,12 @@ public partial class Cell
 	}
 
 	[CommandFunction(WithSelector = true)]
+	public void SetTrileanContentFunction(LogicalFunctionOperator functionOperator, [ValueTypes<Trilean>] params IFunctionArgument[] arguments)
+	{
+		SetFunction<TrileanFunction, LogicalFunctionOperator>(functionOperator, arguments);
+	}
+
+	[CommandFunction(WithSelector = true)]
 	public void SetCharacterContentFunction(CharacterFunctionOperator functionOperator, [ValueTypes<char>] params IFunctionArgument[] arguments)
 	{
 		SetFunction<CharacterFunction, CharacterFunctionOperator>(functionOperator, arguments);

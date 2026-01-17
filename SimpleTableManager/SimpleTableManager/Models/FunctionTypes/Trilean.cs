@@ -1,7 +1,8 @@
 namespace SimpleTableManager.Models.FunctionTypes;
 
-[ParseFormat("true|unknown|false", "^(?<true>true)|(?<unknown>unknown)|(?<false>false)$")]
-[ParseFormat("yes|maybe|no", "^(?<true>yes)|(?<false>no)$")]
+[ParseFormat("true|unknown|false", "^(?<3>true)|(?<2>unknown)|(?<1>false)$")]
+[ParseFormat("yes|maybe|no", "^(?<3>yes)|(?<2>maybe)|(?<1>no)$")]
+[ParseFormat("1|0|-1", "^(?<3>1)|(?<2>0)|(?<1>-1)$")]
 public class Trilean(int value) :
 	ConvertibleBase<Trilean>,
 	IParsable<Trilean>,
@@ -15,7 +16,7 @@ public class Trilean(int value) :
 	{
 		var name = args.Values.Single(g => g.Success && g.Name != "0").Name;
 
-		return int.Parse(name);
+		return int.Parse(name) - 2;
 	}
 
 	public static implicit operator int(Trilean value)

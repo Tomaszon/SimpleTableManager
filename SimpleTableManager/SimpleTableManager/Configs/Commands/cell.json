@@ -91,6 +91,9 @@
 				"equals": "setBooleanContentFunction/equals",
 				"notEquals": "setBooleanContentFunction/notEquals"
 			},
+			"trilean": {
+				"const": "setTrileanContentFunction/const"
+			},
 			"char": {
 				"const": "setCharacterContentFunction/const",
 				"concat": "setCharacterContentFunction/concat",

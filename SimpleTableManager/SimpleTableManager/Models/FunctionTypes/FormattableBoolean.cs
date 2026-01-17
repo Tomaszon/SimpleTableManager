@@ -2,6 +2,7 @@ namespace SimpleTableManager.Models.FunctionTypes;
 
 [ParseFormat("true|false", "^(?<true>true)|(?<false>false)$")]
 [ParseFormat("yes|no", "^(?<true>yes)|(?<false>no)$")]
+[ParseFormat("1|0", "^(?<true>1)|(?<false>0)$")]
 public class FormattableBoolean(bool value) :
 	ConvertibleBase<FormattableBoolean>,
 	IParsable<FormattableBoolean>,
