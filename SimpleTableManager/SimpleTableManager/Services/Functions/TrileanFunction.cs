@@ -10,9 +10,9 @@ public class TrileanFunction : FunctionBase<LogicalFunctionOperator, Trilean, Tr
 		return Operator switch
 		{
 			LogicalFunctionOperator.Const => UnwrappedUnnamedArguments,
-			// LogicalFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
-			// LogicalFunctionOperator.And => And().Wrap(),
-			// LogicalFunctionOperator.Or => Or().Wrap(),
+			LogicalFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
+			LogicalFunctionOperator.And => And().Wrap(),
+			LogicalFunctionOperator.Or => Or().Wrap(),
 			// LogicalFunctionOperator.IsNotNull => IsNotNull().Wrap(),
 			// LogicalFunctionOperator.IsNull => IsNull().Wrap(),
 			// LogicalFunctionOperator.Min => Min(false).Wrap(),
@@ -28,15 +28,15 @@ public class TrileanFunction : FunctionBase<LogicalFunctionOperator, Trilean, Tr
 		};
 	}
 
-	// private FormattableBoolean And()
-	// {
-	// 	return UnwrappedUnnamedArguments.All(a => a);
-	// }
+	private Trilean And()
+	{
+		return UnwrappedUnnamedArguments.Min() ?? 0;
+	}
 
-	// private FormattableBoolean Or()
-	// {
-	// 	return UnwrappedUnnamedArguments.Any(a => a);
-	// }
+	private Trilean Or()
+	{
+		return UnwrappedUnnamedArguments.Max() ?? 0;
+	}
 
 	// private FormattableBoolean IsNull()
 	// {

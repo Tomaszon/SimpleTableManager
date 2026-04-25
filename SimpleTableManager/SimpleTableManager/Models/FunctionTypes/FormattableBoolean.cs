@@ -48,6 +48,11 @@ public class FormattableBoolean(bool value) :
 		return false;
 	}
 
+	public Trilean ToTrilean(IFormatProvider? provider)
+	{
+		return _value;
+	}
+
 	public override bool ToBoolean(IFormatProvider? provider)
 	{
 		return this;

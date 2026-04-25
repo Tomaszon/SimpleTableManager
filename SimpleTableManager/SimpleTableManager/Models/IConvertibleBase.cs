@@ -19,9 +19,15 @@ public interface IConvertibleBase : IConvertible
 			Type t when t == typeof(char) => ToChar(provider),
 			Type t when t == typeof(string) => ToString(provider),
 			Type t when t == typeof(DateTime) => ToDateTime(provider),
+			Type t when t == typeof(Trilean) => ToTrilean(provider),
 
 			_ => throw new InvalidCastException($"Can not cast {GetType().Name} to {conversionType.Name}")
 		};
+	}
+
+	Trilean ToTrilean(IFormatProvider? provider)
+	{
+		throw new InvalidCastException($"Can not cast {GetType().Name} to trilean");
 	}
 
 	string IConvertible.ToString(IFormatProvider? provider)

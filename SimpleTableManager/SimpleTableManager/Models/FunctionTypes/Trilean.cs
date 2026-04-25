@@ -1,16 +1,23 @@
 namespace SimpleTableManager.Models.FunctionTypes;
 
+public enum TrileanValue
+{
+	True = 1,
+	Unknown = 0,
+	False = -1
+}
+
 [ParseFormat("true|unknown|false", "^(?<3>true)|(?<2>unknown)|(?<1>false)$")]
 [ParseFormat("yes|maybe|no", "^(?<3>yes)|(?<2>maybe)|(?<1>no)$")]
 [ParseFormat("1|0|-1", "^(?<3>1)|(?<2>0)|(?<1>-1)$")]
-public class Trilean(int value) :
+public class Trilean(TrileanValue value) :
 	ConvertibleBase<Trilean>,
 	IParsable<Trilean>,
 	IParsableCore<Trilean>,
 	IComparable,
 	IFormattable
 {
-	private readonly int _value = value;
+	private readonly TrileanValue _value = value;
 
 	public static Trilean ParseCore(GroupCollection args, IFormatProvider? formatProvider = null)
 	{
@@ -21,12 +28,12 @@ public class Trilean(int value) :
 
 	public static implicit operator int(Trilean value)
 	{
-		return value._value;
+		return (int)value._value;
 	}
 
 	public static implicit operator Trilean(int value)
 	{
-		return new(value);
+		return new((TrileanValue)value);
 	}
 
 	public static implicit operator bool(Trilean value)
@@ -36,19 +43,19 @@ public class Trilean(int value) :
 
 	public static implicit operator Trilean(bool value)
 	{
-		return new(Convert.ToInt32(value));
+		return new((TrileanValue)Convert.ToInt32(value));
 	}
 
 	public static Trilean operator !(Trilean value)
 	{
-		return new Trilean(-value._value);
+		return new Trilean((TrileanValue)(-(int)value._value));
 	}
 
 	public new Trilean Equals(object? obj)
 	{
 		if (obj is Trilean t)
 		{
-			var mul = t._value * _value;
+			var mul = (int)t._value * (int)_value;
 
 			return mul switch
 			{
@@ -77,17 +84,17 @@ public class Trilean(int value) :
 
 	public override int ToInt32(IFormatProvider? provider)
 	{
-		return _value;
+		return (int)_value;
 	}
 
 	public override long ToInt64(IFormatProvider? provider)
 	{
-		return _value;
+		return (long)_value;
 	}
 
 	public override double ToDouble(IFormatProvider? provider)
 	{
-		return _value;
+		return (double)_value;
 	}
 
 	public string ToString(string? format, IFormatProvider? formatProvider)

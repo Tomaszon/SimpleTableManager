@@ -5,9 +5,9 @@ namespace SimpleTableManager.Tests.FunctionTests;
 [ExcludeFromCodeCoverage]
 public class BooleanFunctionTests : TestBase
 {
+	[TestCase(LogicalFunctionOperator.Not, new[] { false, true }, new[] { true, false })]
 	[TestCase(LogicalFunctionOperator.And, new[] { true, false }, false)]
 	[TestCase(LogicalFunctionOperator.Or, new[] { false, true }, true)]
-	[TestCase(LogicalFunctionOperator.Not, new[] { false, true }, new[] { true, false })]
 	[TestCase(LogicalFunctionOperator.Min, new[] { false, true }, false)]
 	[TestCase(LogicalFunctionOperator.Max, new[] { false, true }, true)]
 	[TestCase(LogicalFunctionOperator.Greater, new[] { true }, true)]
@@ -58,5 +58,18 @@ public class BooleanFunctionTests : TestBase
 		CheckResult(fn.GetFriendlyName(), typeof(FormattableBoolean).GetFriendlyName());
 		CheckResult(fn.Operator, LogicalFunctionOperator.Const);
 		CheckResult(e.GetType(), typeof(InvalidOperationException));
+	}
+
+	[TestCase(LogicalFunctionOperator.Not, new object[] { false, true, TrileanValue.Unknown }, new object[] { true, TrileanValue.False, TrileanValue.Unknown })]
+	// [TestCase(LogicalFunctionOperator.And, new[] { true, false }, false)]
+	// [TestCase(LogicalFunctionOperator.Or, new[] { false, true }, true)]
+	public void TrileanTest(LogicalFunctionOperator operation, object[] values, params object[] results)
+	{
+		Trilean b = (Trilean)0;
+		Trilean a = (Trilean)values.First();
+
+		var fn = CreateFunction(operation, values.Select(e => (Trilean)e));
+
+		CheckResults(fn.Execute(), results.Select(e => (Trilean)e));
 	}
 }
