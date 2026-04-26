@@ -1,12 +1,5 @@
 namespace SimpleTableManager.Models.FunctionTypes;
 
-public enum TrileanValue
-{
-	True = 1,
-	Unknown = 0,
-	False = -1
-}
-
 [ParseFormat("true|unknown|false", "^(?<3>true)|(?<2>unknown)|(?<1>false)$")]
 [ParseFormat("yes|maybe|no", "^(?<3>yes)|(?<2>maybe)|(?<1>no)$")]
 [ParseFormat("1|0|-1", "^(?<3>1)|(?<2>0)|(?<1>-1)$")]
@@ -26,6 +19,16 @@ public class Trilean(TrileanValue value) :
 		return int.Parse(name) - 2;
 	}
 
+	public static implicit operator Trilean(TrileanValue value)
+	{
+		return new(value);
+	}
+
+	public static implicit operator TrileanValue(Trilean value)
+	{
+		return value._value;
+	}
+
 	public static implicit operator int(Trilean value)
 	{
 		return (int)value._value;
@@ -43,7 +46,7 @@ public class Trilean(TrileanValue value) :
 
 	public static implicit operator Trilean(bool value)
 	{
-		return new((TrileanValue)Convert.ToInt32(value));
+		return new(value ? TrileanValue.True : TrileanValue.False);
 	}
 
 	public static Trilean operator !(Trilean value)
@@ -51,25 +54,22 @@ public class Trilean(TrileanValue value) :
 		return new Trilean((TrileanValue)(-(int)value._value));
 	}
 
-	public new Trilean Equals(object? obj)
+	public override bool Equals(object? obj)
 	{
 		if (obj is Trilean t)
 		{
-			var mul = (int)t._value * (int)_value;
-
-			return mul switch
-			{
-				> 0 => 1,
-				< 0 => -1,
-				_ => 0
-			};
+			return _value == t._value;
 		}
 		else if (obj is bool b)
 		{
-			return _value > 0 && b || _value < 0 && !b;
+			return _value == TrileanValue.True && b || _value == TrileanValue.False && !b;
+		}
+		else if (obj is TrileanValue v)
+		{
+			return _value == v;
 		}
 
-		return -1;
+		return false;
 	}
 
 	public override bool ToBoolean(IFormatProvider? provider)

@@ -98,16 +98,6 @@ public class MiscTests : TestBase
 	}
 
 	[Test]
-	public void BooleanTest()
-	{
-		var fb = FormattableBoolean.Parse("yes", null);
-
-		CheckResults([fb.Equals(true), fb.Equals(null)], [true, false]);
-		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt32(null), fb!.ToInt64(null), fb!.ToDouble(null)], [true, 1, 1L, 1d]);
-		CheckResults([fb.ToString(), fb.ToString("yn", null), fb.ToString("yesno", null), fb.ToString("10", null)], ["True", "Y", "Yes", "1"]);
-	}
-
-	[Test]
 	public void MetadataTest()
 	{
 		_ = new Metadata()

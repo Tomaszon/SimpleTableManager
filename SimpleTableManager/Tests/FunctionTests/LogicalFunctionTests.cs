@@ -3,8 +3,18 @@ using SimpleTableManager.Services.Functions;
 namespace SimpleTableManager.Tests.FunctionTests;
 
 [ExcludeFromCodeCoverage]
-public class BooleanFunctionTests : TestBase
+public class LogicalFunctionTests : TestBase
 {
+	[Test]
+	public void BooleanTest()
+	{
+		var fb = FormattableBoolean.Parse("yes", null);
+
+		CheckResults([fb.Equals(true), fb.Equals(null)], [true, false]);
+		CheckResults<object>([fb!.ToBoolean(null), fb!.ToInt32(null), fb!.ToInt64(null), fb!.ToDouble(null)], [true, 1, 1L, 1d]);
+		CheckResults([fb.ToString(), fb.ToString("yn", null), fb.ToString("yesno", null), fb.ToString("10", null)], ["True", "Y", "Yes", "1"]);
+	}
+
 	[TestCase(LogicalFunctionOperator.Not, new[] { false, true }, new[] { true, false })]
 	[TestCase(LogicalFunctionOperator.And, new[] { true, false }, false)]
 	[TestCase(LogicalFunctionOperator.Or, new[] { false, true }, true)]
@@ -60,16 +70,27 @@ public class BooleanFunctionTests : TestBase
 		CheckResult(e.GetType(), typeof(InvalidOperationException));
 	}
 
-	[TestCase(LogicalFunctionOperator.Not, new object[] { false, true, TrileanValue.Unknown }, new object[] { true, TrileanValue.False, TrileanValue.Unknown })]
-	// [TestCase(LogicalFunctionOperator.And, new[] { true, false }, false)]
-	// [TestCase(LogicalFunctionOperator.Or, new[] { false, true }, true)]
-	public void TrileanTest(LogicalFunctionOperator operation, object[] values, params object[] results)
+	[TestCase(LogicalFunctionOperator.Not, new[] { TrileanValue.False, TrileanValue.True, TrileanValue.Unknown }, new[] { TrileanValue.True, TrileanValue.False, TrileanValue.Unknown })]
+	[TestCase(LogicalFunctionOperator.And, new[] { TrileanValue.True, TrileanValue.False }, TrileanValue.False)]
+	[TestCase(LogicalFunctionOperator.And, new[] { TrileanValue.True, TrileanValue.Unknown }, TrileanValue.Unknown)]
+	[TestCase(LogicalFunctionOperator.Or, new[] { TrileanValue.False, TrileanValue.True }, TrileanValue.True)]
+	[TestCase(LogicalFunctionOperator.Or, new[] { TrileanValue.Unknown, TrileanValue.True }, TrileanValue.True)]
+	[TestCase(LogicalFunctionOperator.Min, new[] { TrileanValue.True, TrileanValue.Unknown }, TrileanValue.Unknown)]
+	[TestCase(LogicalFunctionOperator.Max, new[] { TrileanValue.Unknown, TrileanValue.False }, TrileanValue.Unknown)]
+	public void TrileanTest(LogicalFunctionOperator operation, TrileanValue[] values, params TrileanValue[] results)
 	{
-		Trilean b = (Trilean)0;
-		Trilean a = (Trilean)values.First();
-
 		var fn = CreateFunction(operation, values.Select(e => (Trilean)e));
 
-		CheckResults(fn.Execute(), results.Select(e => (Trilean)e));
+		CheckResults(fn.Execute(), results);
+	}
+
+	[TestCase(LogicalFunctionOperator.Not, new[] { false, true }, new[] { true, false })]
+	[TestCase(LogicalFunctionOperator.And, new[] { true, false }, false)]
+	[TestCase(LogicalFunctionOperator.Or, new[] { false, true }, true)]
+	public void TrileanTest2(LogicalFunctionOperator operation, bool[] values, params bool[] results)
+	{
+		var fn = CreateFunction(operation, values.Select(e => (Trilean)e));
+
+		CheckResults(fn.Execute(), results);
 	}
 }
