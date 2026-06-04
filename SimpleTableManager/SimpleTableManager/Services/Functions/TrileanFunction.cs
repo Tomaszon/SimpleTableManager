@@ -13,8 +13,8 @@ public class TrileanFunction : FunctionBase<LogicalFunctionOperator, Trilean, Tr
 			LogicalFunctionOperator.Not => UnwrappedUnnamedArguments.Select(a => !a),
 			LogicalFunctionOperator.And => And().Wrap(),
 			LogicalFunctionOperator.Or => Or().Wrap(),
-			// LogicalFunctionOperator.IsNotNull => IsNotNull().Wrap(),
-			// LogicalFunctionOperator.IsNull => IsNull().Wrap(),
+			LogicalFunctionOperator.IsNotNull => IsNotNull().Wrap(),
+			LogicalFunctionOperator.IsNull => IsNull().Wrap(),
 			LogicalFunctionOperator.Min => Min(false).Wrap(),
 			LogicalFunctionOperator.Max => Max(true).Wrap(),
 			// LogicalFunctionOperator.Greater => Greater().Wrap(),
@@ -38,38 +38,38 @@ public class TrileanFunction : FunctionBase<LogicalFunctionOperator, Trilean, Tr
 		return UnwrappedUnnamedArguments.Max() ?? 0;
 	}
 
-	// private FormattableBoolean IsNull()
-	// {
-	// 	return Arguments.All(a =>
-	// 	{
-	// 		try
-	// 		{
-	// 			_ = a.Resolve(false).GetEnumerator().MoveNext();
+	private Trilean IsNull()
+	{
+		return Arguments.All(a =>
+		{
+			try
+			{
+				_ = a.Resolve(false).GetEnumerator().MoveNext();
 
-	// 			return false;
+				return false;
 
-	// 		}
-	// 		catch (NullReferenceException)
-	// 		{
-	// 			return true;
-	// 		}
-	// 	});
-	// }
+			}
+			catch (NullReferenceException)
+			{
+				return true;
+			}
+		});
+	}
 
-	// private FormattableBoolean IsNotNull()
-	// {
-	// 	return Arguments.Any(a =>
-	// 	{
-	// 		try
-	// 		{
-	// 			_ = a.Resolve(false).GetEnumerator().MoveNext();
+	private Trilean IsNotNull()
+	{
+		return Arguments.Any(a =>
+		{
+			try
+			{
+				_ = a.Resolve(false).GetEnumerator().MoveNext();
 
-	// 			return true;
-	// 		}
-	// 		catch (NullReferenceException)
-	// 		{
-	// 			return false;
-	// 		}
-	// 	});
-	// }
+				return true;
+			}
+			catch (NullReferenceException)
+			{
+				return false;
+			}
+		});
+	}
 }

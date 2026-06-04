@@ -34,6 +34,8 @@ public class LogicalFunctionTests : TestBase
 	[TestCase(LogicalFunctionOperator.NotEquals, new[] { true, false }, true)]
 	[TestCase(LogicalFunctionOperator.IsNull, new[] { true }, false)]
 	[TestCase(LogicalFunctionOperator.IsNotNull, new[] { true }, true)]
+	[TestCase(LogicalFunctionOperator.IsNull, new bool[] { }, true)]
+	[TestCase(LogicalFunctionOperator.IsNotNull, new bool[] { }, false)]
 	public void BooleanTest(LogicalFunctionOperator operation, bool[] values, params bool[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(e => (FormattableBoolean)e));
@@ -77,6 +79,10 @@ public class LogicalFunctionTests : TestBase
 	[TestCase(LogicalFunctionOperator.Or, new[] { TrileanValue.Unknown, TrileanValue.True }, TrileanValue.True)]
 	[TestCase(LogicalFunctionOperator.Min, new[] { TrileanValue.True, TrileanValue.Unknown }, TrileanValue.Unknown)]
 	[TestCase(LogicalFunctionOperator.Max, new[] { TrileanValue.Unknown, TrileanValue.False }, TrileanValue.Unknown)]
+	[TestCase(LogicalFunctionOperator.IsNull, new[] { TrileanValue.True }, TrileanValue.False)]
+	[TestCase(LogicalFunctionOperator.IsNotNull, new[] { TrileanValue.True }, TrileanValue.True)]
+	[TestCase(LogicalFunctionOperator.IsNull, new TrileanValue[] { }, TrileanValue.True)]
+	[TestCase(LogicalFunctionOperator.IsNotNull, new TrileanValue[] { }, TrileanValue.False)]
 	public void TrileanTest(LogicalFunctionOperator operation, TrileanValue[] values, params TrileanValue[] results)
 	{
 		var fn = CreateFunction(operation, values.Select(e => (Trilean)e));
