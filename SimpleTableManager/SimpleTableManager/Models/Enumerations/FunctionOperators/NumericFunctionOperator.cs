@@ -30,5 +30,7 @@ public enum NumericFunctionOperator
 	Equals,
 	NotEquals,
 	GreaterOrEquals,
-	LessOrEquals
+	LessOrEquals,
+	Fact,
+	Term
 }

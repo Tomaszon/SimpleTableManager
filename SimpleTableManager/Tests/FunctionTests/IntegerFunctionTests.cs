@@ -20,6 +20,8 @@ public class IntegerFunctionTests : TestBase
 	[TestCase(NumericFunctionOperator.Pow, new long[] { 4, 3 }, new long[] { 16, 9 })]
 	[TestCase(NumericFunctionOperator.Avg, new long[] { 4, 2 }, 3)]
 	[TestCase(NumericFunctionOperator.Mul, new long[] { 4, 2, 3 }, 24)]
+	[TestCase(NumericFunctionOperator.Fact, new long[] { 0, 1, 2, 3, 4, 5 }, new long[] { 1, 1, 2, 6, 24, 120 })]
+	[TestCase(NumericFunctionOperator.Term, new long[] { 0, 1, 2, 3, 4, 5 }, new long[] { 0, 1, 3, 6, 10, 15 })]
 	public void IntegerTest1(NumericFunctionOperator operation, long[] values, params long[] results)
 	{
 		var fn = CreateFunction(operation, [new NamedConstFunctionArgument(ArgumentName.Power, 2)], values);
