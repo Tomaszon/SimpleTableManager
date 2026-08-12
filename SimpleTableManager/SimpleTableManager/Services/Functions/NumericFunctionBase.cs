@@ -89,7 +89,7 @@ public abstract class NumericFunctionBase<TIn> :
 		{
 			< NumericFunctionOperator.Greater => typeof(TIn),
 			>= NumericFunctionOperator.Greater and
-			<= NumericFunctionOperator.NotEquals => typeof(FormattableBoolean),
+			<= NumericFunctionOperator.LessOrEquals => typeof(FormattableBoolean),
 
 			_ => throw GetInvalidOperatorException()
 		};

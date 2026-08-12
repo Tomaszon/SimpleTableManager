@@ -158,5 +158,7 @@
 	"totalMinutes": "total-minutes",
 	"totalSeconds": "total-seconds",
 	"totalMilliseconds": "total-milliseconds",
-	"contentAndFormat": "content-and-format"
+	"contentAndFormat": "content-and-format",
+	"fact": "fact",
+	"term": "term"
 }

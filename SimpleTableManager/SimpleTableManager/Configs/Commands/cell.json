@@ -46,7 +46,9 @@
 				"greaterOrEquals": "setIntegerContentFunction/greaterOrEquals",
 				"lessOrEquals": "setIntegerContentFunction/lessOrEquals",
 				"equals": "setIntegerContentFunction/equals",
-				"notEquals": "setIntegerContentFunction/notEquals"
+				"notEquals": "setIntegerContentFunction/notEquals",
+				"fact": "setIntegerContentFunction/fact",
+				"term": "setIntegerContentFunction/term"
 			},
 			"fraction": {
 				"const": "setFractionContentFunction/const",
